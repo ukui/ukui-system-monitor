@@ -24,15 +24,19 @@ PKGCONFIG += libgtop-2.0 \
              libsystemd
 
 
+
 inst1.files += ../ukui-system-monitor.desktop
 inst1.path = /usr/share/applications/
+
 
 
 target.source += $$TARGET
 target.path = /usr/bin
 
+
 INSTALLS += target \
             inst1
+
 
 unix {
     UI_DIR = .ui
