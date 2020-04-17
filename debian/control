@@ -5,13 +5,6 @@ Maintainer: Ubuntu Developers <ubuntu-devel-discuss@list.ubuntu.net>
 XSBC-Original-Maintainer: Ubuntu Kylin Team <ubuntukylin-members@list.launch    pad.net>
 Uploaders: tangguang <tangguang@tj.kylinos.cn>
 Build-Depends: debhelper-compat (= 12),
-		python3-all (>= 3.1),
-                python3-apt (>= 0.7.100.3~),
-                python3-dev,
-                python3-lxml,
-                python3-dbus,
-                python3-piston-mini-client,
-                python3-xdg,
                 qtbase5-dev (>= 5.1),
                 libqt5svg5-dev,
                 qt5-qmake,
@@ -28,14 +21,7 @@ Standards-Version: 4.3.0
 
 Package: ukui-system-monitor
 Architecture: amd64 arm64 armhf i386
-Depends: python3-dbus,
-          python3-psutil,
-          python3-lxml,
-          python3-xdg,
-          python3-apt (>= 0.7.100.3~),
-          python3-pil,
-          python3-piston-mini-client,
-          inotify-hookable,
+Depends:  inotify-hookable,
           bsdutils (>= 1:2.27.1),
           hdparm,
           lm-sensors,
@@ -45,6 +31,5 @@ Depends: python3-dbus,
           cpufrequtils,
           pciutils,
           ${misc:Depends},
-          ${python3:Depends},
           ${shlibs:Depends},
 Description:A simple system monitor written in QT

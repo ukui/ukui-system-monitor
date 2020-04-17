@@ -1,0 +1,15 @@
+[Desktop Entry]
+Name=Ukui System Monitor
+Name[zh_CN]=麒麟系统监视器
+GenericName=Ukui System Monitor
+GenericName[zh_CN]=麒麟系统监视器
+Comment=Ukui System Monitor
+Comment[zh_CN]=麒麟系统监视器
+Keywords=guide; 
+Exec=/usr/bin/ukui-system-monitor
+Icon=kylin-system-monitor
+Terminal=false
+Type=Application
+NoDisplay=false
+Categories=System;Utility; 
+StartupNotify=false
