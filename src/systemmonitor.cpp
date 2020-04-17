@@ -50,7 +50,7 @@ SystemMonitor::SystemMonitor(QWidget *parent)
     this->setWindowTitle(tr("Kylin System Monitor"));
 //    this->setWindowIcon(QIcon(":/model/res/plugin/processmanager.png"));
 //    this->setWindowIcon(QIcon(":/img/processmanager.png"));
-    this->setWindowIcon(QIcon::fromTheme("Kylin-System-Monitor"));
+    this->setWindowIcon(QIcon::fromTheme("kylin-system-monitor"));
 
     this->resize(900, 600);
     setMinimumSize(640, 480);
