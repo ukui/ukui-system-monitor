@@ -1,0 +1,23 @@
+<RCC>
+    <qresource prefix="/">
+        <file>img/close.png</file>
+        <file>img/fullscreen.png</file>
+        <file>img/minimize.png</file>
+        <file>img/processmanager.png</file>
+        <file>translation/kylin-assistant_bo.ts</file>
+        <file>translation/kylin-assistant_de.qm</file>
+        <file>translation/kylin-assistant_de.ts</file>
+        <file>translation/kylin-assistant_es.qm</file>
+        <file>translation/kylin-assistant_es.ts</file>
+        <file>translation/kylin-assistant_fr.qm</file>
+        <file>translation/kylin-assistant_fr.ts</file>
+        <file>translation/kylin-assistant_ru.qm</file>
+        <file>translation/kylin-assistant_ru.ts</file>
+        <file>translation/kylin-assistant_zh_CN.qm</file>
+        <file>translation/kylin-assistant_zh_CN.ts</file>
+        <file>img/user_proc.png</file>
+        <file>img/all_proc.png</file>
+        <file>img/active_proc.png</file>
+        <file>img/search.png</file>
+    </qresource>
+</RCC>
