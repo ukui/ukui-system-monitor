@@ -1,4 +1,4 @@
-ukui-system-monitor (0.1.0.4kord-1) v101; urgency=medium
+ukui-system-monitor (0.1.0.4kord-1) unstable; urgency=medium
 
   * change debian/contorl in v101
 
