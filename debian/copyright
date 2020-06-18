@@ -1,9 +1,15 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: ukui-system-monitor
 Upstream-Contact: Ubuntu Kylin Team <ubuntukylin-members@lists.launchpad.net>
-Source: https://github.com/KylinAppCenter/ukui-system-monitor
+Source: https://github.com/ukui/ukui-system-monitor
 
-Files: *
+Files: debian/*
+       component/*
+       src/*
+       widget/*
+       shell/*
+       ukui-system-monitor.desktop
+       ukui-system-monitor.pro 
 Copyright: 2013-2017, National University of Defense Technology(NUDT) & Tianjin Kylin Ltd.
 License: GPL-3
  his program is free software; you can redistribute it and/or

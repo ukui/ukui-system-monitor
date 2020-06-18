@@ -1,4 +1,3 @@
-
 /*
  * Copyright (C) 2013 ~ 2018 National University of Defense Technology(NUDT) & Tianjin Kylin Ltd.
  *

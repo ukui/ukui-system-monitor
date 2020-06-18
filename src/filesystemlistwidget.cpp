@@ -409,7 +409,7 @@ void FileSystemListWidget::paintEvent(QPaintEvent *)
                 font.setPixelSize(14);
                 painter.setFont(font);
                 painter.setPen(QPen(palette().color(QPalette::WindowText)));   //#999999
-
+//                painter.setPen(QPen(QColor("#cc00ff")));
                 if (this->columnTitles[counter] == tr("Device") || this->columnTitles[counter] == tr("Directory") || this->columnTitles[counter] == tr("Used"))
                     painter.drawText(QRect(posX + this->m_titlePadding, 0, itemWidth, this->m_titleHeight), Qt::AlignCenter, this->columnTitles[counter]);
                 else
@@ -421,10 +421,11 @@ void FileSystemListWidget::paintEvent(QPaintEvent *)
 //                h_separatorPath.addRect(QRectF(posX, rect().y() + this->m_titleHeight - 1, itemWidth, 1));
 //                painter.fillPath(h_separatorPath, QColor("#e0e0e0"));
 
-                if (counter < titleItemsWidths.size()) {//垂直分割线
+                if (counter < titleItemsWidths.size()) {                       //垂直分割线,文件系统的标题栏的垂直下划线
                     QPainterPath v_separatorPath;
                     v_separatorPath.addRect(QRectF(rect().x() + posX - 1, rect().y() + 10, 1, this->m_titleHeight - 15));
 //                    painter.fillPath(v_separatorPath, QColor(QPalette::WindowText));  //"#e0e0e0"
+                    painter.setOpacity(0.20);
                     painter.fillPath(v_separatorPath,palette().color(QPalette::WindowText));
                 }
 

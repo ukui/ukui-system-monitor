@@ -96,7 +96,7 @@ void FileSystemListItem::drawBackground(QRect rect, QPainter *painter, int index
 void FileSystemListItem::drawForeground(QRect rect, QPainter *painter, int column, int, bool isSelect, bool isSeparator)
 {
     setFontSize(*painter, 14);
-    painter->setOpacity(1);
+    painter->setOpacity(0.85);
     //painter->setPen(QPen(QColor("#000000")));
     if (column == 0) {
         painter->drawPixmap(QRect(rect.x() + padding, rect.y() + (rect.height() - iconSize) / 2, iconSize, iconSize), QPixmap(":/img/drive-harddisk-system.png"));

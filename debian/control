@@ -2,7 +2,7 @@ Source: ukui-system-monitor
 Section: misc
 Priority: optional
 Maintainer: Ubuntu Developers <ubuntu-devel-discuss@list.ubuntu.net>
-XSBC-Original-Maintainer: Ubuntu Kylin Team <ubuntukylin-members@list.launch    pad.net>
+XSBC-Original-Maintainer: Ubuntu Kylin Team <ubuntukylin-members@list.launchpad.net>
 Uploaders: tangguang <tangguang@tj.kylinos.cn>
 Build-Depends:  debhelper-compat (= 12),
                 qtbase5-dev (>= 5.1),
@@ -32,4 +32,6 @@ Depends:  inotify-hookable,
           pciutils,
           ${misc:Depends},
           ${shlibs:Depends},
-Description:A simple system monitor written in QT
+Description: This deb is written by Qt5,Ukui-system-monitor has several 
+ improved interfaces which using Qt5.
+
