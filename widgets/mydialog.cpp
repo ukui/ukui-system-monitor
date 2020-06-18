@@ -80,7 +80,7 @@ MyDialog::MyDialog(const QString &title, const QString &message, QWidget *parent
     setTitle(title);
     setMessage(message);
 
-    this->moveToCenter();
+    //this->moveToCenter();
 }
 
 MyDialog::~MyDialog()

@@ -5,6 +5,13 @@
 #include <QWidget>
 #include <QLabel>
 #include <QPixmap>
+#include <QPainter>
+#include <QStyleOption>
+#include <QGSettings/QGSettings>
+#include <QApplication>
+
+#include "shell/customstyle.h"
+#include "../shell/macro.h"
 
 class QVBoxLayout;
 
@@ -12,7 +19,7 @@ class MyUnderLineButton : public QWidget
 {
     Q_OBJECT
 
-    enum UnderLineButtonState {Normal, Hover, Press, Checked};
+    enum ButtonState {Normal, Hover, Press, Checked};
 
 public:
     MyUnderLineButton(QWidget * parent=0);
@@ -21,7 +28,8 @@ public:
     void setChecked(bool flag);
     bool isChecked();
     void setName(const QString &name);
-    UnderLineButtonState getButtonState() const;
+    ButtonState getButtonState() const;
+    void initThemeMode();
 
 signals:
     void clicked();
@@ -32,17 +40,23 @@ protected:
     void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
     void mouseReleaseEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
     void mouseMoveEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
+    void paintEvent(QPaintEvent *event) override;
 
 private:
     void updateStyleSheet();
-    void setState(UnderLineButtonState state);
+    void setState(ButtonState state);
 
 private:
-    UnderLineButtonState m_state;
+    ButtonState m_state;
+    ButtonState m_button_state;
     bool m_isChecked;
     QLabel *m_textLabel = nullptr;
-    QLabel *m_underlineLabel = nullptr;
+    //QLabel *m_underlineLabel = nullptr;
     QVBoxLayout *m_layout = nullptr;
+
+    QGSettings * qtSettings;
+    QString currentThemeMode;
+
 };
 
 #endif // MYUNDERLINEBUTTON_H

@@ -24,8 +24,11 @@
 #include <QObject>
 #include <QPainter>
 #include <QPen>
+#include <QGSettings/QGSettings>
 
 #include "filesystemdata.h"
+#include "shell/customstyle.h"
+#include "../shell/macro.h"
 
 class FileSystemListItem : public QObject
 {
@@ -36,17 +39,22 @@ public:
     
     bool isSameItem(FileSystemListItem *item);
     void drawCellBackground(QRect rect, QPainter *painter, int level);
-    void drawBackground(QRect rect, QPainter *painter, int index, bool isSelect);
+    void drawBackground(QRect rect, QPainter *painter, int index, bool isSelect, QString currentTheme);
     void drawForeground(QRect rect, QPainter *painter, int column, int index, bool isSelect, bool isSeparator);
 
     QString getDeviceName() const;
     QString getDirectory() const;
+
+    void initThemeMode();
     
 private:
     FileSystemData *m_data;
     int iconSize;
     int padding;
     int textPadding;
+
+    QGSettings * qtSettings;
+    QString currentThemeMode;
 };
 
 #endif // FILESYSTEMLISTITEM_H

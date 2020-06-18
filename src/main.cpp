@@ -1,6 +1,10 @@
 #include <QApplication>
 #include <QTranslator>
+#include <QObject>
+
+#include "framelessExtended/framelesshandle.h"
 #include "systemmonitor.h"
+#include "shell/customstyle.h"
 
 int main(int argc, char *argv[])
 {
@@ -20,9 +24,19 @@ int main(int argc, char *argv[])
     }
 
 
+
+
     SystemMonitor *monitor=new SystemMonitor();
+    monitor->setAttribute(Qt::WA_DeleteOnClose);
     monitor->show();
+
+    FramelessHandle * pHandle = new FramelessHandle(monitor);
+    pHandle->activateOn(monitor);
+
+    auto style = new InternalStyle(nullptr);
+    app.setStyle(style);
+
     app.exec();
-    delete monitor;
+//    delete monitor;
     return 0;
 }

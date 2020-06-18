@@ -8,6 +8,15 @@ MyTristateButton::MyTristateButton(QWidget *parent)
 {
     setCheckable(false);//setCheckable(true);
     updateIcon();
+    this->setStyleSheet("QLabel{background-color:transparent;border:none;}");
+    m_pClearTextButton = new QPushButton;
+    //QPixmap fileName(":/img/button-close-default-add-background-three.svg");
+    this->setFixedSize(19, 21);
+    m_pClearTextButton->setIconSize(QSize(9, 9));
+
+    m_pClearTextButton->setStyleSheet("QPushButton{border-image:url(:/image/button-close-default-add-background-three.svg)}");
+    QHBoxLayout *cancel_h_BoxLayout = new QHBoxLayout(this);
+    cancel_h_BoxLayout->addWidget(m_pClearTextButton);
 }
 
 MyTristateButton::~MyTristateButton()

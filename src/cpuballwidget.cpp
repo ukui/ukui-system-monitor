@@ -33,7 +33,16 @@ qreal gradientDistance(qreal x)
 
 CpuBallWidget::CpuBallWidget(QWidget *parent) : QWidget(parent)
 {
+    const QByteArray idd(THEME_QT_SCHEMA);
+
+    if(QGSettings::isSchemaInstalled(idd))
+    {
+        qtSettings = new QGSettings(idd);
+    }
+
     this->setFixedSize(210, 210);
+
+    initThemeMode();
 
     m_frontImagePath = "://res/wave_front.png";
     m_backimagePath = "://res/wave_back.png";
@@ -42,11 +51,13 @@ CpuBallWidget::CpuBallWidget(QWidget *parent) : QWidget(parent)
     m_xBackOffset = this->width();
     m_prevPercentValue = 0.0;
     m_percentValue = 0.0;
-    m_progressText = QString("%1%").arg(QString::number(m_percentValue, 'f', 1));
+    m_progressText = QString("%1%").arg(QString::number(m_percentValue, 'f', 1));   //把小数转化为字符串，1是小数点后几位,此为小数点后1位
+    qDebug()<<"m_progressText----------------"<<m_progressText;
 
     m_shadowEffect = new QGraphicsDropShadowEffect(this);
-    m_shadowEffect->setOffset(0, 3);
-    m_shadowEffect->setColor(QColor(232, 232, 232, 127));
+    m_shadowEffect->setOffset(0, 0);
+//    m_shadowEffect->setColor(QColor(232, 232, 232, 127));
+    m_shadowEffect->setColor(QColor("transparent"));
     m_shadowEffect->setBlurRadius(10);
     this->setGraphicsEffect(m_shadowEffect);
 
@@ -74,6 +85,24 @@ CpuBallWidget::~CpuBallWidget()
     }
 }
 
+void CpuBallWidget::initThemeMode()
+{
+    //监听主题改变
+    connect(qtSettings, &QGSettings::changed, this, [=](const QString &key)
+    {
+        if (key == "styleName")
+        {
+            auto style = qtSettings->get(key).toString();
+            qApp->setStyle(new InternalStyle(style));
+            currentThemeMode = qtSettings->get(MODE_QT_KEY).toString();
+            qDebug()<<"监听主题改变-------------------->"<<currentThemeMode<<endl;
+            qApp->setStyle(new InternalStyle(currentThemeMode));
+            repaint();
+        }
+    });
+    currentThemeMode = qtSettings->get(MODE_QT_KEY).toString();
+}
+
 void CpuBallWidget::loadWaveImage()
 {
     QImageReader frontReader(m_frontImagePath);
@@ -82,7 +111,7 @@ void CpuBallWidget::loadWaveImage()
 //    w = w * this->width() / 100;
 //    h = h * this->height() / 100;
     QImage image(w, h, QImage::Format_ARGB32_Premultiplied);//QImage::Format_ARGB32
-    image.fill(Qt::transparent);
+    image.fill(Qt::transparent);  //Qt::transparent
     image.load(m_frontImagePath);
     /*QPainter painter(&image);
 //    painter.setCompositionMode(QPainter::CompositionMode_Source);
@@ -180,9 +209,13 @@ void CpuBallWidget::paintEvent(QPaintEvent *)
     } else if (currentPercent > 55) {
         m_shadowEffect->setColor(QColor(255, 193, 37, 127));//黄
     } else {
-        m_shadowEffect->setColor(QColor(232, 232, 232, 127));//灰
+//        m_shadowEffect->setColor(QColor(232, 232, 232, 127));//灰 the last parameters stands for the degree of the background
+//        m_shadowEffect->setColor(QColor(204,0,255,50));
+        m_shadowEffect->setColor(QColor(255,255,255,255));
+//        m_shadowEffect->setColor(palette().color(QPalette::Base));
     }
-    wavePainter.fillRect(waveRectImage.rect(), QColor(255, 255, 255, 127));
+    wavePainter.fillRect(waveRectImage.rect(), QColor(255, 255, 255, 50));
+//    wavePainter.fillRect(waveRectImage.rect(),palette().color("QPalette::Base)");
 
     //Step2:波浪区域
     //CompositionMode_SourceOver保证波浪出现的时候其背景为通明的
@@ -208,9 +241,10 @@ void CpuBallWidget::paintEvent(QPaintEvent *)
 
     //Step4:占用率文字描述
     QFont font = wavePainter.font();
-    font.setPixelSize(44);//waveSize.height() * 20 / this->height()
+    font.setPixelSize(40);//waveSize.height() * 20 / this->height()
     wavePainter.setFont(font);
-    wavePainter.setPen(Qt::white);
+//    wavePainter.setPen(Qt::white);
+    wavePainter.setPen(QPen(palette().color(QPalette::WindowText)));
     wavePainter.drawText(QRect(rect.x(), rect.y() + rect.height()*2/3, rect.width(), rect.height()/3), Qt::AlignHCenter, m_progressText);
     wavePainter.end();
 
@@ -228,7 +262,7 @@ void CpuBallWidget::paintEvent(QPaintEvent *)
     QPainter maskPainter(&maskPixmap);
     maskPainter.setRenderHint(QPainter::Antialiasing, true);
     maskPainter.setPen(QPen(Qt::white, 1));
-    maskPainter.fillPath(path, QBrush(Qt::white));
+    maskPainter.fillPath(path, QBrush(Qt::white));   //Qt::white
     m_painter.setCompositionMode(QPainter::CompositionMode_SourceOver);//默认模式,源的alpha将目标顶部的像素混合
     m_painter.drawImage(0, 0, maskPixmap.toImage());
 

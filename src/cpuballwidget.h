@@ -22,6 +22,11 @@
 
 #include <QWidget>
 #include <QTimer>
+#include <QGSettings/QGSettings>
+#include <QApplication>
+
+#include "shell/customstyle.h"
+#include "../shell/macro.h"
 
 class QGraphicsDropShadowEffect;
 
@@ -37,6 +42,7 @@ public:
     void updateCpuPercent(double value);
     void startTimer();
     void stopTimer();
+    void initThemeMode();
 
 public slots:
     void onRepaintWaveImage();
@@ -63,6 +69,9 @@ private:
 
     double m_animationCounts;
     int m_animationIndex;
+
+    QGSettings * qtSettings;
+    QString currentThemeMode;
 };
 
 #endif // CPUBALLWIDGET_H

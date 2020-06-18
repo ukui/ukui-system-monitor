@@ -22,13 +22,48 @@
 #include <QDebug>
 #include <QLocale>
 #include "util.h"
+#include "../shell/macro.h"
+static int number = 0;
 
 ProcessListItem::ProcessListItem(ProcData info)
 {
+
+    const QByteArray idd(THEME_QT_SCHEMA);
+    if(QGSettings::isSchemaInstalled(idd))
+    {
+        qtSettings = new QGSettings(idd);
+    }
     m_data = info;
-    iconSize = 16;
+    iconSize = 20;
     padding = 14;
-    textPadding = 5;
+    textPadding = 10;
+    //initThemeMode();
+}
+
+ProcessListItem::~ProcessListItem()
+{
+    if (qtSettings) {
+        delete qtSettings;
+    }
+}
+
+void ProcessListItem::initThemeMode()
+{
+    //监听主题改变
+    connect(qtSettings, &QGSettings::changed, this, [=](const QString &key)
+    {
+
+        if (key == "styleName")
+        {
+            auto style = qtSettings->get(key).toString();
+            qApp->setStyle(new InternalStyle(style));
+            currentThemeMode = qtSettings->get(MODE_QT_KEY).toString();
+            qDebug()<<"监听主题改变-------------------->"<<currentThemeMode<<endl;
+            qApp->setStyle(new InternalStyle(currentThemeMode));
+            //repaint();
+        }
+    });
+    currentThemeMode = qtSettings->get(MODE_QT_KEY).toString();
 }
 
 bool ProcessListItem::isSameItem(ProcessListItem *item)
@@ -42,28 +77,53 @@ void ProcessListItem::drawCellBackground(QRect rect, QPainter *painter, int leve
     path.addRect(QRectF(rect.x(), rect.y(), rect.width(), rect.height()));
     painter->setOpacity(0.5);//0.1
     if (level == 0) {
-        painter->fillPath(path, QColor("#fff4c4"));
+        //painter->fillPath(path, QColor("#131414"));
+        //painter->setOpacity(0.08);
     }
     else if (level == 1) {
-        painter->fillPath(path, QColor("#f9eca8"));
+//        painter->fillPath(path, QColor("#131414"));
+//        painter->setOpacity(0.08);
     }
     else {
-        painter->fillPath(path, QColor("#fca71d"));
+//        painter->fillPath(path, QColor("#131414"));
+//        painter->setOpacity(0.08);
     }
 }
 
-void ProcessListItem::drawBackground(QRect rect, QPainter *painter, int index, bool isSelect)
+void ProcessListItem::drawBackground(QRect rect, QPainter *painter, int index, bool isSelect ,QString currentThemeMode)
 {
     QPainterPath path;
     path.addRect(QRectF(rect));
 
     if (isSelect) {
-        painter->setOpacity(0.1);
-        painter->fillPath(path, QColor("#2bb6ea"));
+////        painter->setOpacity(0.08);
+//        if(currentThemeMode == "ukui-white")
+//        {
+//            painter->setOpacity(0.08);
+//            painter->fillPath(path, QColor("#000000"));
+//        }
+
+//        if(currentThemeMode == "ukui-black")
+//        {
+//            painter->setOpacity(0.08);
+//            painter->fillPath(path, QColor("#ffffff"));
+//        }
+        painter->setOpacity(0.08);
+        painter->fillPath(path,QColor("palette(windowText)"));
+
     }
     else {
-        painter->setOpacity(1);
-        painter->fillPath(path, QColor("#ffffff"));
+        painter->setOpacity(0.08);
+        if(currentThemeMode == "ukui-white")
+        {
+            painter->fillPath(path, QColor("#ffffff"));
+        }
+
+        if(currentThemeMode == "ukui-black")
+        {
+            painter->fillPath(path,QColor("#131414"));
+        }
+
 //        if (index % 2 == 0) {
 //            painter->fillPath(path, QColor("#ffffff"));
 //        } else {
@@ -74,9 +134,9 @@ void ProcessListItem::drawBackground(QRect rect, QPainter *painter, int index, b
 
 void ProcessListItem::drawForeground(QRect rect, QPainter *painter, int column, int, bool isSelect, bool isSeparator)
 {
-    setFontSize(*painter, 12);
-    painter->setOpacity(1);
-    painter->setPen(QPen(QColor("#000000")));
+    setFontSize(*painter, 14);
+    painter->setOpacity(0.85);
+    //painter->setPen(QPen(QColor(QPalette::Base)));
     if (column == 0) {
         painter->drawPixmap(QRect(rect.x() + padding, rect.y() + (rect.height() - iconSize) / 2, iconSize, iconSize), m_data.iconPixmap);
         QString name = m_data.processName;
@@ -99,7 +159,7 @@ void ProcessListItem::drawForeground(QRect rect, QPainter *painter, int column, 
         QFontMetrics fm(font);
         QString procName = fm.elidedText(name, Qt::ElideRight, nameMaxWidth);
         painter->drawText(QRect(rect.x() + iconSize + padding * 2, rect.y(), nameMaxWidth, rect.height()), Qt::AlignLeft | Qt::AlignVCenter, procName);
-        if (isSeparator) {
+        if (!isSeparator) {
             painter->setOpacity(0.8);
             QPainterPath separatorPath;
             separatorPath.addRect(QRectF(rect.x() + rect.width() - 1, rect.y(), 1, rect.height()));
@@ -110,7 +170,7 @@ void ProcessListItem::drawForeground(QRect rect, QPainter *painter, int column, 
         if (!m_data.user.isEmpty()) {
             painter->drawText(QRect(rect.x(), rect.y(), rect.width() - textPadding, rect.height()), Qt::AlignRight | Qt::AlignVCenter, m_data.user);
         }
-        if (isSeparator) {
+        if (!isSeparator) {
             painter->setOpacity(0.8);
             QPainterPath separatorPath;
             separatorPath.addRect(QRectF(rect.x() + rect.width() - 1, rect.y(), 1, rect.height()));
@@ -121,7 +181,7 @@ void ProcessListItem::drawForeground(QRect rect, QPainter *painter, int column, 
         if (!m_data.m_status.isEmpty()) {
             painter->drawText(QRect(rect.x(), rect.y(), rect.width() - textPadding, rect.height()), Qt::AlignRight | Qt::AlignVCenter, m_data.m_status);
         }
-        if (isSeparator) {
+        if (!isSeparator) {
             painter->setOpacity(0.8);
             QPainterPath separatorPath;
             separatorPath.addRect(QRectF(rect.x() + rect.width() - 1, rect.y(), 1, rect.height()));
@@ -130,16 +190,16 @@ void ProcessListItem::drawForeground(QRect rect, QPainter *painter, int column, 
     }
     else if (column == 3) {
         if (m_data.cpu < 10) {
-            this->drawCellBackground(QRect(rect.x(), rect.y(), rect.width(), rect.height()), painter, 0);
+            //this->drawCellBackground(QRect(rect.x(), rect.y(), rect.width(), rect.height()), painter, 0);
         }
         else if (m_data.cpu < 33) {
-            this->drawCellBackground(QRect(rect.x(), rect.y(), rect.width(), rect.height()), painter, 1);
+            //this->drawCellBackground(QRect(rect.x(), rect.y(), rect.width(), rect.height()), painter, 1);
         }
         else {
-            this->drawCellBackground(QRect(rect.x(), rect.y(), rect.width(), rect.height()), painter, 2);
+            //this->drawCellBackground(QRect(rect.x(), rect.y(), rect.width(), rect.height()), painter, 2);
         }
         painter->drawText(QRect(rect.x(), rect.y(), rect.width() - textPadding, rect.height()), Qt::AlignRight | Qt::AlignVCenter, QString("%1%").arg(m_data.cpu));
-        if (isSeparator) {
+        if (!isSeparator) {
             painter->setOpacity(0.8);
             QPainterPath separatorPath;
             separatorPath.addRect(QRectF(rect.x() + rect.width() - 1, rect.y(), 1, rect.height()));
@@ -148,11 +208,11 @@ void ProcessListItem::drawForeground(QRect rect, QPainter *painter, int column, 
     }
     else if (column == 4) {
         painter->drawText(QRect(rect.x(), rect.y(), rect.width() - padding, rect.height()), Qt::AlignRight | Qt::AlignVCenter, QString("%1").arg(m_data.pid));
-        if (isSeparator) {
+        if (!isSeparator) {
             painter->setOpacity(0.8);
-            QPainterPath separatorPath;
-            separatorPath.addRect(QRectF(rect.x() + rect.width() - 1, rect.y(), 1, rect.height()));
-            painter->fillPath(separatorPath, QColor("#e0e0e0"));
+//            QPainterPath separatorPath;
+//            separatorPath.addRect(QRectF(rect.x() + rect.width() - 1, rect.y(), 1, rect.height()));
+//            painter->fillPath(separatorPath, QColor("#e0e0e0"));
         }
     }
     else if (column == 5) {
@@ -161,11 +221,11 @@ void ProcessListItem::drawForeground(QRect rect, QPainter *painter, int column, 
         QFontMetrics fm(font);
         QString command = fm.elidedText(m_data.commandLine, Qt::ElideRight, commandMaxWidth);
         painter->drawText(QRect(rect.x(), rect.y(), commandMaxWidth, rect.height()), Qt::AlignLeft | Qt::AlignVCenter, command);
-        if (isSeparator) {
+        if (!isSeparator) {
             painter->setOpacity(0.8);
-            QPainterPath separatorPath;
-            separatorPath.addRect(QRectF(rect.x() + rect.width() - 1, rect.y(), 1, rect.height()));
-            painter->fillPath(separatorPath, QColor("#e0e0e0"));
+//            QPainterPath separatorPath;
+//            separatorPath.addRect(QRectF(rect.x() + rect.width() - 1, rect.y(), 1, rect.height()));
+//            painter->fillPath(separatorPath, QColor("#CC00FF"));  //e0e0e0
         }
     }
     else if (column == 6) {
@@ -173,17 +233,17 @@ void ProcessListItem::drawForeground(QRect rect, QPainter *painter, int column, 
             painter->setOpacity(1);
             QString memory = QString(g_format_size_full(m_data.m_memory, G_FORMAT_SIZE_IEC_UNITS));
             if (m_data.m_memory < 102400000) {//<100M
-                this->drawCellBackground(QRect(rect.x(), rect.y(), rect.width(), rect.height()), painter, 0);
+                //this->drawCellBackground(QRect(rect.x(), rect.y(), rect.width(), rect.height()), painter, 0);
             }
             else if (m_data.m_memory < 1024000000) {//1G
-                this->drawCellBackground(QRect(rect.x(), rect.y(), rect.width(), rect.height()), painter, 1);
+                //this->drawCellBackground(QRect(rect.x(), rect.y(), rect.width(), rect.height()), painter, 1);
             }
             else {
-                this->drawCellBackground(QRect(rect.x(), rect.y(), rect.width(), rect.height()), painter, 2);
+                //this->drawCellBackground(QRect(rect.x(), rect.y(), rect.width(), rect.height()), painter, 2);
             }
             painter->drawText(QRect(rect.x(), rect.y(), rect.width() - textPadding, rect.height()), Qt::AlignRight | Qt::AlignVCenter, memory);
         }
-        if (isSeparator) {
+        if (!isSeparator) {
             painter->setOpacity(0.8);
             QPainterPath separatorPath;
             separatorPath.addRect(QRectF(rect.x() + rect.width() - 1, rect.y(), 1, rect.height()));
@@ -192,7 +252,7 @@ void ProcessListItem::drawForeground(QRect rect, QPainter *painter, int column, 
     }
     else if (column == 7) {
         painter->drawText(QRect(rect.x(), rect.y(), rect.width() - textPadding, rect.height()), Qt::AlignLeft | Qt::AlignVCenter, getNiceLevel(m_data.m_nice));
-        if (isSeparator) {
+        if (!isSeparator) {
             painter->setOpacity(0.8);
             QPainterPath separatorPath;
             separatorPath.addRect(QRectF(rect.x() + rect.width() - 1, rect.y(), 1, rect.height()));

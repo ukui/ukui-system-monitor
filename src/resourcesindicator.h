@@ -24,6 +24,11 @@
 #include <QObject>
 #include <QWidget>
 #include <QPixmap>
+#include <QGSettings/QGSettings>
+#include <QApplication>
+
+#include "shell/customstyle.h"
+#include "../shell/macro.h"
 
 class ResourcesIndicator : public QWidget
 {
@@ -40,6 +45,7 @@ public:
     void setTitle(const QString &title);
     void updatePercentAndInfo(double percent, const QString &info);
     ResourcesState getResourcesState() const;
+    void initThemeMode();
 
 signals:
     void clicked();
@@ -69,6 +75,11 @@ private:
     QColor m_outsideBorderColor;
     QColor m_bgColor;
     QColor m_borderColor;
+
+    QGSettings * qtSettings;
+    QString currentThemeMode;
+
+    int typeObject;
 };
 
 #endif // RESOURCESINDICATOR_H

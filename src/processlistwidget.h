@@ -22,11 +22,13 @@
 #define PROCESSLISTWIDGET_H
 
 #include "processlistitem.h"
+#include "shell/customstyle.h"
 
 #include <QList>
 #include <QPixmap>
 #include <QTimer>
 #include <QWidget>
+#include <QGSettings/QGSettings>
 
 typedef bool (* SortFunction) (const ProcessListItem *item1, const ProcessListItem *item2, bool sort);
 typedef bool (* SearchFunction) (const ProcessListItem *item, QString text);
@@ -75,6 +77,8 @@ public:
 
     bool mouseAtScrollArea(int x);
     bool mouseAtTitleArea(int y);
+    
+    void initThemeMode();
 
 signals:
     void rightMouseClickedItems(QPoint pos, QList<ProcessListItem*> items);
@@ -124,6 +128,9 @@ private:
 
     QPixmap m_downArrowPixmap;
     QPixmap m_upArrowPixmap;
+
+    QGSettings * qtSettings;
+    QString currentThemeMode;
 };
 
 #endif // PROCESSLISTWIDGET_H

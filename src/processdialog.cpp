@@ -114,6 +114,8 @@ ProcessDialog::ProcessDialog(QList<bool> toBeDisplayedColumns, int currentSortIn
     connect(m_processListWidget, &ProcessListWidget::rightMouseClickedItems, this, &ProcessDialog::popupMenu, Qt::QueuedConnection);
     m_layout->addWidget(m_processListWidget);
 
+//    this->setStyleSheet("border:none;background:rgb(00,00,00);");
+
     whose_processes = "user";
     proSettings->beginGroup("PROCESS");
     whose_processes = proSettings->value("WhoseProcesses", whose_processes).toString();
@@ -132,13 +134,13 @@ ProcessDialog::ProcessDialog(QList<bool> toBeDisplayedColumns, int currentSortIn
 
 
     QWidget *w = new QWidget;
-    w->setFixedHeight(50);
-    m_categoryLayout = new QHBoxLayout(w);
+    w->setFixedHeight(0);
+    m_categoryLayout = new QHBoxLayout(w);       //give up adding new widget
     m_categoryLayout->setContentsMargins(0, 0, 6, 3);
     m_categoryLayout->setSpacing(10);
     processCategory = new ProcessCategory(tabIndex);
     connect(processCategory, SIGNAL(activeWhoseProcessList(int)), this, SLOT(onActiveWhoseProcess(int)));
-    m_categoryLayout->addWidget(processCategory, 0, Qt::AlignRight);
+//    m_categoryLayout->addWidget(processCategory, 0, Qt::AlignRight);
     m_layout->addWidget(w);
 
 

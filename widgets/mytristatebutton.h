@@ -5,6 +5,9 @@
 #include <QWidget>
 #include <QLabel>
 #include <QPixmap>
+#include <QEvent>
+#include <QBoxLayout>
+#include <QPushButton>
 
 class MyTristateButton : public QLabel
 {
@@ -55,6 +58,7 @@ private:
     void setState(ButtonState state);
 
 private:
+    QPushButton *m_pClearTextButton;
     ButtonState m_state = Normal;
     bool m_isChecked = false;
     bool m_isCheckable = false;

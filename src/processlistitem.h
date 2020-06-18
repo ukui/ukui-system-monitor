@@ -24,6 +24,11 @@
 #include <QObject>
 #include <QPainter>
 #include <QPen>
+#include <QGSettings/QGSettings>
+#include <QApplication>
+#include <QWidget>
+
+#include "shell/customstyle.h"
 #include "processdata.h"
 
 class ProcessListItem : public QObject
@@ -32,10 +37,11 @@ class ProcessListItem : public QObject
     
 public:
     ProcessListItem(ProcData info);
+    ~ProcessListItem();
     
     bool isSameItem(ProcessListItem *item);
     void drawCellBackground(QRect rect, QPainter *painter, int level);
-    void drawBackground(QRect rect, QPainter *painter, int index, bool isSelect);
+    void drawBackground(QRect rect, QPainter *painter, int index, bool isSelect ,QString currentTheme);
     void drawForeground(QRect rect, QPainter *painter, int column, int index, bool isSelect, bool isSeparator);
     static bool doSearch(const ProcessListItem *item, QString text);
     static bool sortByName(const ProcessListItem *item1, const ProcessListItem *item2, bool descendingSort);
@@ -56,12 +62,17 @@ public:
     QString getStatus() const;
     long getNice() const;
     QString getCommandLine() const;
+
+    void initThemeMode();
     
 private:
     ProcData m_data;
     int iconSize;
     int padding;
     int textPadding;
+
+    QGSettings * qtSettings;
+    QString currentThemeMode;
 };
 
 #endif // PROCESSLISTITEM_H

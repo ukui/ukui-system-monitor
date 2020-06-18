@@ -6,8 +6,19 @@
 #include <QLineEdit>
 #include <QPropertyAnimation>
 #include <QLabel>
+#include <QStyleOption>
+#include <QPainter>
+#include <QPainterPath>
+#include <QPushButton>
+#include <QWidgetAction>
+#include <QGSettings/QGSettings>
+#include <QApplication>
+
+#include "shell/customstyle.h"
 
 #include "mytristatebutton.h"
+
+class QGsettings;
 
 class MySearchEdit : public QFrame
 {
@@ -19,12 +30,15 @@ public:
     void setPlaceHolder(const QString &text);
     const QString searchedText() const;
     QLineEdit *getLineEdit() const;
+    void initThemeMode();
 
 public slots:
     void clearEdit();
     void setEditFocus();
     void setText(const QString & text);
     void clearAndFocusEdit();
+private slots:
+    void textChageSlots(const QString &text);
 
 signals:
     void textChanged();
@@ -35,6 +49,7 @@ protected:
     void mousePressEvent(QMouseEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);
     bool eventFilter(QObject *object, QEvent *event);
+//    void paintEvent(QEvent *event);
 
 private:
     QPropertyAnimation *m_animation = nullptr;
@@ -45,6 +60,10 @@ private:
     QLabel *m_searchBtn = nullptr;
     QLabel *m_placeHolder = nullptr;
     MyTristateButton *m_clearBtn = nullptr;
+    QPushButton *m_pClearTextButton =nullptr;
+    QPixmap drawSymbolicColoredPixmap(const QPixmap &source);
+    QGSettings * qtSettings;
+    QString currentThemeMode;
 };
 
 #endif // MYSEARCHEDIT_H

@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: Ubuntu Developers <ubuntu-devel-discuss@list.ubuntu.net>
 XSBC-Original-Maintainer: Ubuntu Kylin Team <ubuntukylin-members@list.launch    pad.net>
 Uploaders: tangguang <tangguang@tj.kylinos.cn>
-Build-Depends: debhelper-compat (= 12),
+Build-Depends:  debhelper-compat (= 12),
                 qtbase5-dev (>= 5.1),
                 libqt5svg5-dev,
                 qt5-qmake,
@@ -13,21 +13,21 @@ Build-Depends: debhelper-compat (= 12),
                 pkg-config,
                 libglib2.0-dev (>= 2.46.0),
                 libgtop2-dev,
-                libsystemd-dev (>= 209) [linux-any]
+                libsystemd-dev (>= 209) [linux-any],
+                libgsettings-qt-dev
 Standards-Version: 4.3.0
 #Homepage: <insert the upstream URL, if relevant>
 #Vcs-Browser: https://salsa.debian.org/debian/systemmonitor
 #Vcs-Git: https://salsa.debian.org/debian/systemmonitor.git
 
 Package: ukui-system-monitor
-Architecture: amd64 arm64 armhf i386
+Architecture: any
 Depends:  inotify-hookable,
           bsdutils (>= 1:2.27.1),
           hdparm,
           lm-sensors,
           ethtool,
           lshw,
-          dmidecode [amd64 arm64 armhf i386],
           cpufrequtils,
           pciutils,
           ${misc:Depends},

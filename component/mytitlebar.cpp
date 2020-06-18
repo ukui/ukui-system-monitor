@@ -34,7 +34,7 @@ MyTitleBar::MyTitleBar(const QString &title, bool needMin, QWidget *parent)
     this->setWindowFlags(Qt::FramelessWindowHint);//this->setWindowFlags(this->windowFlags() | Qt::FramelessWindowHint  | Qt::WindowCloseButtonHint);
 //    this->setWindowFlags(Qt::Window | Qt::FramelessWindowHint | Qt::WindowMinimizeButtonHint);//Attention: Qt::WindowCloseButtonHint make showMinimized() valid
 
-    this->setMouseTracking(true);
+//    this->setMouseTracking(true);
     this->setFixedHeight(TITLE_BAR_HEIGHT);
 
     this->setAutoFillBackground(true);

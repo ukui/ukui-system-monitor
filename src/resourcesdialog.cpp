@@ -147,8 +147,9 @@ ResouresDialog::ResouresDialog(QWidget *parent)
     splitter->setHandleWidth(1);
 
     m_stack = new QStackedWidget(this);
-    m_stack->setStyleSheet("QStackedWidget{background: rgb(255, 255, 255);}");
-//    m_stack->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+//    m_stack->setStyleSheet("QStackedWidget{background:rgb(255,255,255);}");
+    m_stack->setStyleSheet("QStackedWidget{background(palette(base));}");
+    m_stack->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
     m_resourcesCategory = new ResourcesCategory(0);
     connect(m_resourcesCategory, SIGNAL(switchResoucesPage(int)), this, SLOT(onSwitchResoucesPage(int)));
@@ -168,8 +169,15 @@ ResouresDialog::ResouresDialog(QWidget *parent)
     /*m_hlayout->addWidget(m_resourcesCategory);
 //    m_hlayout->addLayout(m_vlayout);
     m_hlayout->addWidget(m_stack);*/
+    QWidget *placeWidget = new QWidget();
+    placeWidget->setFixedWidth(34);
     splitter->addWidget(m_resourcesCategory);
+    splitter->addWidget(placeWidget);
     splitter->addWidget(m_stack);
+    qDebug()<<"m_resourcesCategory"<<m_resourcesCategory->width()<<m_resourcesCategory->height();
+    qDebug()<<"m_stack"<<m_stack->width()<<m_stack->height();
+    qDebug()<<"m_resourcesCategory"<<m_resourcesCategory->geometry().x()<<m_resourcesCategory->geometry().y();
+    qDebug()<<"m_stack"<<m_stack->geometry().x()<<m_stack->geometry().y();
     m_hlayout->addWidget(splitter);
 
     connect(this, SIGNAL(updateNetworkStatus(long,long,long,long)), m_networkWidget, SLOT(onUpdateNetworkStatus(long,long,long,long)), Qt::QueuedConnection);

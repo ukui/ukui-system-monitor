@@ -4,6 +4,11 @@
 #include <QObject>
 #include <QWidget>
 #include <QPixmap>
+#include <QGSettings/QGSettings>
+#include <QApplication>
+
+#include "../shell/macro.h"
+#include "shell/customstyle.h"
 
 class NetworkIndicator : public QWidget
 {
@@ -21,6 +26,7 @@ public:
 //    void updateNetworkPainterPath(QPainterPath downloadPath, QPainterPath uploadPath);
 
     NetworkState getNetworkState() const;
+    void initThemeMode();
 
 public slots:
     void onUpdateNetworkStatus(long recvTotalBytes, long sentTotalBytes, long recvRateKbs, long sentRateKbs);
@@ -65,6 +71,9 @@ private:
     long m_sentTotalBytes;
     long m_recvRateBytes;
     long m_sentRateBytes;
+
+    QGSettings * qtSettings;
+    QString currentThemeMode;
 };
 
 #endif // NETWORKINDICATOR_H

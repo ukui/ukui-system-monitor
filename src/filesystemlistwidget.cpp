@@ -32,7 +32,7 @@
 
 FileSystemListWidget::FileSystemListWidget(QList<bool> toBeDisplayedColumns, QWidget *parent) : QWidget(parent)
   ,m_titlePadding(10)
-  ,m_titleHeight(34)
+  ,m_titleHeight(40)
   ,m_rowHeight(29)
   ,m_offSet(0)
   ,m_origOffset(0)
@@ -41,14 +41,21 @@ FileSystemListWidget::FileSystemListWidget(QList<bool> toBeDisplayedColumns, QWi
   ,m_titlePressColumn(-1)
   ,m_mouseAtScrollArea(false)
   ,m_mouseDragScrollbar(false)
-{
+{  
+    const QByteArray idd(THEME_QT_SCHEMA);
+
+    if(QGSettings::isSchemaInstalled(idd))
+    {
+        qtSettings = new QGSettings(idd);
+    }
+
     this->m_lastItem = NULL;
     this->m_listItems = new QList<FileSystemListItem*>();
     this->m_selectedItems = new QList<FileSystemListItem*>();
 
     this->columnTitles << tr("Device") << tr("Directory") << tr("Type") << tr("Total") << tr("Free") << tr("Available") << tr("Used");
     QList<int> widths;
-    widths << 150 << -1 << 60 << 60 << 60 << 60 << 180;//-1时让改行填充所有剩余空间
+    widths << 150 << -1 << 80 << 80 << 80 << 80 << 180;//-1时让该行填充所有剩余空间
 
     QFont font;
     font.setPixelSize(12);//需要和填充所有剩余空间的那个的文字字体大小一致 font.setPointSize(9)
@@ -92,6 +99,25 @@ void FileSystemListWidget::clearItems()
 {
     qDeleteAll(this->m_listItems->begin(), this->m_listItems->end());
     this->m_listItems->clear();
+}
+
+void FileSystemListWidget::initThemeMode()
+{
+    //监听主题改变
+    connect(qtSettings, &QGSettings::changed, this, [=](const QString &key)
+    {
+
+        if (key == "styleName")
+        {
+            auto style = qtSettings->get(key).toString();
+            qApp->setStyle(new InternalStyle(style));
+            currentThemeMode = qtSettings->get(MODE_QT_KEY).toString();
+            qDebug()<<"监听主题改变-------------------->"<<currentThemeMode<<endl;
+            qApp->setStyle(new InternalStyle(currentThemeMode));
+            repaint();
+        }
+    });
+    currentThemeMode = qtSettings->get(MODE_QT_KEY).toString();
 }
 
 void FileSystemListWidget::addSelectedItems(QList<FileSystemListItem*> items, bool recordLastItem)
@@ -318,24 +344,55 @@ void FileSystemListWidget::wheelEvent(QWheelEvent *event)
 
 void FileSystemListWidget::paintEvent(QPaintEvent *)
 {
+//    QPainter painter(this);
+//    painter.setRenderHint(QPainter::Antialiasing, true);
+
+//    QList<int> titleItemsWidths = getTitleItemsWidths();
+
+//    painter.setOpacity(0.05);
+
+//    int penWidth = 1;
+//    QPainterPath framePath;
+//    framePath.addRoundedRect(QRect(rect().x() + penWidth, rect().y() + penWidth, rect().width() - penWidth * 2, rect().height() - penWidth * 2), 5, 5);//背景弧度
+//    painter.setClipPath(framePath);
+
     QPainter painter(this);
-    painter.setRenderHint(QPainter::Antialiasing, true);
+        painter.setRenderHint(QPainter::Antialiasing, true);
 
-    QList<int> titleItemsWidths = getTitleItemsWidths();
+        QList<int> titleItemsWidths = getTitleItemsWidths();
 
-    painter.setOpacity(0.05);
+        int penWidth = 0;
+//        QPainterPath framePath;
+//        framePath.addRoundedRect(QRect(rect().x() + penWidth, rect().y() + penWidth, rect().width() - penWidth * 2, rect().height() - penWidth * 2), 0, 0);//背景弧度
+//        painter.setClipPath(framePath);
 
-    int penWidth = 1;
-    QPainterPath framePath;
-    framePath.addRoundedRect(QRect(rect().x() + penWidth, rect().y() + penWidth, rect().width() - penWidth * 2, rect().height() - penWidth * 2), 5, 5);//背景弧度
-    painter.setClipPath(framePath);
+        // draw border
+        QPainterPath path;
+        path.addRoundedRect(rect().adjusted(2, 2, -2, -2), 0, 0);
+        painter.setClipRect(QRect(), Qt::NoClip);
+//        QPen pen2(QColor(Qt::red));
+//        pen2.setWidth(1);
+//        painter.setPen(pen2);
+//        painter.drawPath(path);
+        painter.setPen(Qt::NoPen);
+        //painter.fillRect(this->rect(),QColor(0,0,FF,0x20));
+
+        painter.setOpacity(0.05);
+        //framePath.setFillRule(Qt::ImhNone);
 
     //标题的背景
     if (this->m_titleHeight > 0) {
+//        QPainterPath titlePath;
+//        titlePath.addRect(QRectF(rect().x(), rect().y(), rect().width(), this->m_titleHeight));
+//        painter.setOpacity(0.02);
+//        //painter.fillPath(titlePath, QColor("#ffffff"));
+//        painter.fillPath(titlePath,QColor("palette(windowText)"));
         QPainterPath titlePath;
         titlePath.addRect(QRectF(rect().x(), rect().y(), rect().width(), this->m_titleHeight));
-        painter.setOpacity(0.02);
-        painter.fillPath(titlePath, QColor("#ffffff"));
+        //painter.setOpacity(1);
+        painter.fillPath(titlePath, QColor("palette(windowText)"));
+//        painter.fillPath(titlePath,QColor("#ffffff"));
+        //painter.fillPath(titlePath, QColor("#CC00FF"));
     }
 
     int title_Y = 0;
@@ -346,27 +403,29 @@ void FileSystemListWidget::paintEvent(QPaintEvent *)
         for (int itemWidth:titleItemsWidths) {
             if (itemWidth > 0) {
                 //标题文字
-                painter.setOpacity(1);
+                //title
+                painter.setOpacity(0.57);
                 QFont font = painter.font();
-                font.setPixelSize(12);
+                font.setPixelSize(14);
                 painter.setFont(font);
-                painter.setPen(QPen(QColor("#999999")));
+                painter.setPen(QPen(palette().color(QPalette::WindowText)));   //#999999
 
                 if (this->columnTitles[counter] == tr("Device") || this->columnTitles[counter] == tr("Directory") || this->columnTitles[counter] == tr("Used"))
-                    painter.drawText(QRect(posX + this->m_titlePadding, 0, itemWidth, this->m_titleHeight), Qt::AlignBottom | Qt::AlignLeft, this->columnTitles[counter]);
+                    painter.drawText(QRect(posX + this->m_titlePadding, 0, itemWidth, this->m_titleHeight), Qt::AlignCenter, this->columnTitles[counter]);
                 else
-                    painter.drawText(QRect(posX, 0, itemWidth - this->m_titlePadding, this->m_titleHeight), Qt::AlignBottom | Qt::AlignRight, this->columnTitles[counter]);
+                    painter.drawText(QRect(posX, 0, itemWidth - this->m_titlePadding, this->m_titleHeight), Qt::AlignCenter, this->columnTitles[counter]);
 
                 //水平下划线
-                painter.setOpacity(0.8);
-                QPainterPath h_separatorPath;
-                h_separatorPath.addRect(QRectF(posX, rect().y() + this->m_titleHeight - 1, itemWidth, 1));
-                painter.fillPath(h_separatorPath, QColor("#e0e0e0"));
+//                painter.setOpacity(0.8);
+//                QPainterPath h_separatorPath;
+//                h_separatorPath.addRect(QRectF(posX, rect().y() + this->m_titleHeight - 1, itemWidth, 1));
+//                painter.fillPath(h_separatorPath, QColor("#e0e0e0"));
 
                 if (counter < titleItemsWidths.size()) {//垂直分割线
                     QPainterPath v_separatorPath;
-                    v_separatorPath.addRect(QRectF(rect().x() + posX - 1, rect().y() + 5, 1, this->m_titleHeight - 5));
-                    painter.fillPath(v_separatorPath, QColor("#e0e0e0"));
+                    v_separatorPath.addRect(QRectF(rect().x() + posX - 1, rect().y() + 10, 1, this->m_titleHeight - 15));
+//                    painter.fillPath(v_separatorPath, QColor(QPalette::WindowText));  //"#e0e0e0"
+                    painter.fillPath(v_separatorPath,palette().color(QPalette::WindowText));
                 }
 
                 posX += itemWidth;
@@ -382,7 +441,7 @@ void FileSystemListWidget::paintEvent(QPaintEvent *)
     painter.setOpacity(0.05);
     QPainterPath backgroundPath;
     backgroundPath.addRect(QRectF(rect().x(), rect().y() + this->m_titleHeight, rect().width(), rect().height() - this->m_titleHeight));
-    painter.fillPath(backgroundPath, QColor("#ffffff"));
+    //painter.fillPath(backgroundPath, QColor("palette(windowText)"));
 
     //挂载的磁盘文件系统信息
     QPainterPath scrollAreaPath;
@@ -393,11 +452,11 @@ void FileSystemListWidget::paintEvent(QPaintEvent *)
         if (rowCounter > ((this->m_offSet - this->m_rowHeight) / this->m_rowHeight)) {
             QPainterPath itemPath;
             itemPath.addRect(QRect(0, title_Y + rowCounter * this->m_rowHeight - this->m_offSet, rect().width(), this->m_rowHeight));
-            painter.setClipPath((framePath.intersected(scrollAreaPath)).intersected(itemPath));
+//            painter.setClipPath((framePath.intersected(scrollAreaPath)).intersected(itemPath));
 
             bool isSelect = this->m_selectedItems->contains(item);
             painter.save();
-            item->drawBackground(QRect(0, title_Y + rowCounter * this->m_rowHeight - this->m_offSet, rect().width(), this->m_rowHeight), &painter, rowCounter, isSelect);
+            item->drawBackground(QRect(0, title_Y + rowCounter * this->m_rowHeight - this->m_offSet, rect().width(), this->m_rowHeight), &painter, rowCounter, isSelect, currentThemeMode);
             painter.restore();
 
             int columnCounter = 0;
@@ -421,7 +480,7 @@ void FileSystemListWidget::paintEvent(QPaintEvent *)
         }
         rowCounter++;
     }
-    painter.setClipPath(framePath);
+//    painter.setClipPath(framePath);
 
     //没有挂载的磁盘文件系统信息时绘制提示文字
     if (this->m_listItems->size() == 0) {
@@ -438,7 +497,7 @@ void FileSystemListWidget::paintEvent(QPaintEvent *)
 //    framePen.setColor(QColor("#F5F5F5"));
 //    painter.setPen(framePen);
     painter.setOpacity(0.2);
-    painter.drawPath(framePath);
+//    painter.drawPath(framePath);
 
     //垂直滚动条
     if (this->m_mouseAtScrollArea) {

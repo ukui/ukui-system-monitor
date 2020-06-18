@@ -25,6 +25,7 @@
 #include "processworker.h"
 #include "processlistitem.h"
 #include "processlistwidget.h"
+#include "monitortitlewidget.h"
 
 #include <QLabel>
 #include <QMap>
@@ -82,6 +83,7 @@ public slots:
     void onActiveWhoseProcess(int index);
     void changeProcPriority(int nice);
     void refreshProcessList();
+
 
 protected:
 //    void paintEvent(QPaintEvent *event);

@@ -50,7 +50,7 @@ inline QString formatMemory(guint64 size)
 MemoryCircle::MemoryCircle(QWidget *parent)
     : QWidget(parent)
 {
-    this->setFixedSize(400, 300);
+    this->setFixedSize(400, 400);
 
     circleRadius = 128/2; //半径
     rectWidth = 100; //文本框宽
@@ -79,14 +79,42 @@ void MemoryCircle::drawCircle(QPainter &painter, bool isSwap)
 
     QPen pen;
     if (isSwap)
-        pen.setColor(QColor("#fc7416"));
+    {
+        painter.setOpacity(1);
+        pen.setColor(QColor("#fc7416"));  //#fc7416
+    }
     else
-        pen.setColor(QColor("#9528b4"));
+    {
+        painter.setOpacity(1);
+        pen.setColor(QColor("#9528b4"));  //#9528b4 #DC143C
+    }
     pen.setWidth(1);
     painter.setPen(pen);
-//    painter.setBrush(circleGradient);
-    painter.setBrush(QBrush(QColor("#ffffff")));
+//    painter.setOpacity(0);
+////    painter.setBrush(circleGradient);
+//    if(isSwap)
+//    {
+//        qDebug()<<"jif7777777777777777777777";
+//        painter.setOpacity(1);
+//        painter.setBrush(QBrush(QColor("#f29b76")));     //#ffffff
+//    }
+////        painter.setBrush(QBrush(palette().color(QPalette::Base)));
+//    else
+//    {
+//        qDebug()<<"jif888888888888888888888";
+//        painter.setOpacity(1);
+//        painter.setBrush(QBrush(QColor("#9528b4")));
+//    }
+//    painter.setBrush(QBrush(QColor("#131414")));
+    painter.setOpacity(1);
+    if(isSwap)
+        painter.setBrush(QBrush(QColor(0xf2,0x9b,0x76,0x55)));
+    else
+        painter.setBrush(QBrush(QColor(0x95,0x28,0xb4,0x55)));
 
+
+
+    painter.setOpacity(0.57);
     if (isSwap)
         painter.drawEllipse(swapcenter, circleRadius, circleRadius);
     else
@@ -110,11 +138,13 @@ void MemoryCircle::drawColorPie(QPainter &painter, bool isSwap)
             painter.setPen(Qt::NoPen);
         else {
             QPen pen;
+//            pen.setColor(QColor(palette().color(QPalette::WindowText)));  //#fc7416
+            painter.setOpacity(0.4);
             pen.setColor(QColor("#fc7416"));
             pen.setWidth(1);
             painter.setPen(pen);
         }
-        painter.setBrush(QBrush(QColor("#fef5f1")));
+        painter.setBrush(QBrush(QColor("#f29b76")));      //#fef5f1
         float swapcurrentPie = - (360 * (mi.swappercent/100)); //负数顺时针
         painter.drawPie(swappieRect, 90*16, swapcurrentPie*16);//绘制扇形，90*16为初始，12点钟位置
     }
@@ -123,11 +153,14 @@ void MemoryCircle::drawColorPie(QPainter &painter, bool isSwap)
             painter.setPen(Qt::NoPen);
         else {
             QPen pen;
+            //pen.setColor(QColor("palette(base)"));  //#9528b4
+//            pen.setColor(palette().color(QPalette::WindowText));
+            painter.setOpacity(0.4);
             pen.setColor(QColor("#9528b4"));
             pen.setWidth(1);
             painter.setPen(pen);
         }
-        painter.setBrush(QBrush(QColor("#f4e9f7")));
+        painter.setBrush(QBrush(QColor("#9528B4"))); //#f4e9f7
         float currentPie = - (360 * (mi.percent/100)); //负数顺时针，0*16为3点钟位置
         painter.drawPie(pieRect, 90*16, currentPie*16); //绘制扇形，90*16为初始，12点钟位置
     }
@@ -135,29 +168,34 @@ void MemoryCircle::drawColorPie(QPainter &painter, bool isSwap)
 
 void MemoryCircle::drawTextInfo(QPainter &painter)
 {
+    painter.setOpacity(0.57);
     setFontSize(painter, 20);
-    painter.setPen(QPen(QColor("#000000")));
+    painter.setPen(QPen(palette().color(QPalette::WindowText)));  //#000000
     painter.drawText(QRect(center.x()-circleRadius, center.y() + circleRadius + 10, circleRadius*2, 30), Qt::AlignCenter, tr("Memory"));
     painter.drawText(QRect(swapcenter.x()-circleRadius, swapcenter.y() + circleRadius + 10, circleRadius*2, 30), Qt::AlignCenter, tr("Swap"));
 
     //draw title
     setFontSize(painter, 12);
-    painter.setPen(QPen(QColor("#999999")));
-    painter.drawText(QRect(center.x()-circleRadius, center.y() + circleRadius + 40, circleRadius*2, 30), Qt::AlignLeft |Qt::AlignVCenter, tr("Used(Percent)"));
-    painter.drawText(QRect(swapcenter.x()-circleRadius, swapcenter.y() + circleRadius + 40, circleRadius*2, 30), Qt::AlignLeft |Qt::AlignVCenter, tr("Used(Percent)"));
-    painter.drawText(QRect(center.x()-circleRadius, center.y() + circleRadius + 100, circleRadius*2, 30), Qt::AlignLeft |Qt::AlignVCenter, tr("Total"));
-    painter.drawText(QRect(swapcenter.x()-circleRadius, swapcenter.y() + circleRadius + 100, circleRadius*2, 30), Qt::AlignLeft |Qt::AlignVCenter, tr("Total"));
+//    painter.setPen(QPen(QColor("#999999")));  //#999999
+
+    painter.setOpacity(0.57);
+    painter.setPen(QPen(palette().color(QPalette::WindowText)));
+    painter.drawText(QRect(center.x()-circleRadius, center.y() + circleRadius + 60, circleRadius*2, 30), Qt::AlignLeft |Qt::AlignVCenter, tr("Used(Percent)"));
+    painter.drawText(QRect(swapcenter.x()-circleRadius, swapcenter.y() + circleRadius + 60, circleRadius*2, 30), Qt::AlignLeft |Qt::AlignVCenter, tr("Used(Percent)"));
+    painter.drawText(QRect(center.x()-circleRadius, center.y() + circleRadius + 130, circleRadius*2, 30), Qt::AlignLeft |Qt::AlignVCenter, tr("Total"));
+    painter.drawText(QRect(swapcenter.x()-circleRadius, swapcenter.y() + circleRadius + 130, circleRadius*2, 30), Qt::AlignLeft |Qt::AlignVCenter, tr("Total"));
 
     //draw text data
+    painter.setOpacity(1);
     setFontSize(painter, 20);
     QFontMetrics fm = painter.fontMetrics();
-    painter.setPen(QPen(QColor("#000000")));
+    painter.setPen(QPen(palette().color(QPalette::WindowText)));
     const QString memeryUsed = tr("%1(%2%)").arg(formatMemory(mi.user)).arg(QString::number(mi.percent, 'f', 1));
     const QString swapUsed = tr("%1(%2%)").arg(formatMemory(mi.swapused)).arg(QString::number(mi.swappercent, 'f', 1));
-    painter.drawText(QRect(center.x()-circleRadius, center.y() + circleRadius + 70, fm.width(memeryUsed), 30), Qt::AlignLeft |Qt::AlignVCenter, memeryUsed);
-    painter.drawText(QRect(swapcenter.x()-circleRadius, swapcenter.y() + circleRadius + 70, fm.width(swapUsed), 30), Qt::AlignLeft |Qt::AlignVCenter, swapUsed);
-    painter.drawText(QRect(center.x()-circleRadius, center.y() + circleRadius + 130, circleRadius*2, 30), Qt::AlignLeft |Qt::AlignVCenter, formatMemory(mi.total));
-    painter.drawText(QRect(swapcenter.x()-circleRadius, swapcenter.y() + circleRadius + 130, circleRadius*2, 30), Qt::AlignLeft |Qt::AlignVCenter, formatMemory(mi.swaptotal));
+    painter.drawText(QRect(center.x()-circleRadius, center.y() + circleRadius + 90, fm.width(memeryUsed), 30), Qt::AlignLeft |Qt::AlignVCenter, memeryUsed);
+    painter.drawText(QRect(swapcenter.x()-circleRadius, swapcenter.y() + circleRadius + 90, fm.width(swapUsed), 30), Qt::AlignLeft |Qt::AlignVCenter, swapUsed);
+    painter.drawText(QRect(center.x()-circleRadius, center.y() + circleRadius + 160, circleRadius*2, 30), Qt::AlignLeft |Qt::AlignVCenter, formatMemory(mi.total));
+    painter.drawText(QRect(swapcenter.x()-circleRadius, swapcenter.y() + circleRadius + 160, circleRadius*2, 30), Qt::AlignLeft |Qt::AlignVCenter, formatMemory(mi.swaptotal));
 }
 
 void MemoryCircle::onUpdateMemoryStatus()

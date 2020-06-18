@@ -22,11 +22,14 @@
 #define FILESYSTEMLISTWIDGET_H
 
 #include "filesystemlistitem.h"
+#include "shell/customstyle.h"
+#include "../shell/macro.h"
 
 #include <QList>
 #include <QPixmap>
 #include <QTimer>
 #include <QWidget>
+#include <QGSettings/QGSettings>
 
 class FileSystemListWidget : public QWidget
 {
@@ -54,6 +57,8 @@ public:
 
     bool mouseAtScrollArea(int x);
     bool mouseAtTitleArea(int y);
+
+    void initThemeMode();
 
 signals:
     void rightMouseClickedItem(QPoint pos);
@@ -91,6 +96,9 @@ private:
     int m_titleHoverColumn;
     int m_titlePadding;
     int m_titlePressColumn;
+
+    QGSettings * qtSettings;
+    QString currentThemeMode;
 };
 
 #endif // PROCESSLISTWIDGET_H
