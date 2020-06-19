@@ -90,7 +90,28 @@ inline int getCoreCounts()
 
 inline QString getIdelRate(unsigned long &runSeconds, unsigned long &idleSeconds)
 {
+    const int BUF_SIZE = 1024;
+    char buf[BUF_SIZE];
+
     int cpuNumber = getCoreCounts();
+//    FILE *fp = NULL;
+//    fp = fopen("cat /proc/cpuinfo |grep cores|uniq" , "r");
+//    if(!fp)
+//    {
+//        syslog(LOG_ERR, "Error occurred when popen cmd 'nmcli connection show'");
+//        qDebug()<<"Error occurred when popen cmd 'nmcli connection show";
+//    }
+
+//    int a;
+//        fgets(buf, BUF_SIZE, fp);
+//        QString strSlist = "";
+//        QString line(buf);
+//        strSlist = line.trimmed();
+//        a = line.toInt();
+
+
+//    qDebug()<<"aaaaaaaaaaaaaaaa"<<a;
+
 
     QString rate;
     QFile file("/proc/uptime");
@@ -113,7 +134,7 @@ inline QString getIdelRate(unsigned long &runSeconds, unsigned long &idleSeconds
             }
             else
                 idleSeconds = idleStr.toLong();
-            rate = QString::number((idleSeconds * 1.0) /(runSeconds *1.0 * cpuNumber) * 100, 'f', 0) + "%";
+            rate = QString::number((idleSeconds * 1.0) /(runSeconds *1.0 * cpuNumber) * 100/cpuNumber, 'f', 0) + "%";
             break;
         }
         file.close();
@@ -190,16 +211,24 @@ inline void readFile(const QString &fileName)
 
 CpuRateWidget::CpuRateWidget(QWidget *parent) : QWidget(parent)
 {
+    const QByteArray idd(THEME_QT_SCHEMA);
+    if(QGSettings::isSchemaInstalled(idd))
+    {
+        qtSettings = new QGSettings(idd);
+    }
+
     m_layout = new QVBoxLayout(this);
-    m_layout->setContentsMargins(0, 0, 0, 0);
+    m_layout->setContentsMargins(0, 0, 30, 0);
 
     QWidget *w = new QWidget;
     m_contentLayout = new QHBoxLayout(w);
     m_contentLayout->setContentsMargins(0, 0, 0, 0);
-    m_contentLayout->setSpacing(50);
-    m_layout->addWidget(w, 0, Qt::AlignCenter);
+    m_contentLayout->setSpacing(30);
+    m_layout->addWidget(w, 0, Qt::AlignTop);
 
     initWidgets();
+
+    initThemeMode();
 
     m_cpuBall->startTimer();
 
@@ -219,6 +248,56 @@ CpuRateWidget::CpuRateWidget(QWidget *parent) : QWidget(parent)
     len = size;
 //    dmi_table_decode(buf, len, num, ver, flags);
 //    dmi_decode(&h, ver);*/
+}
+
+void CpuRateWidget::initThemeMode()
+{
+    //监听主题改变
+    connect(qtSettings, &QGSettings::changed, this, [=](const QString &key)
+    {
+
+        if (key == "styleName")
+        {
+            auto style = qtSettings->get(key).toString();
+            qApp->setStyle(new InternalStyle(style));
+            currentThemeMode = qtSettings->get(MODE_QT_KEY).toString();
+            qDebug()<<"监听主题改变-------------------->"<<currentThemeMode<<endl;
+            qApp->setStyle(new InternalStyle(currentThemeMode));
+            //repaint();
+            if(currentThemeMode == "ukui-white")
+            {
+                m_cpuRateTitle->setStyleSheet("QLabel{background:transparent;font-size:12px;color:rgba(0,0,0,0.57);}"); //#999999
+                m_cpuIdleRateTitle->setStyleSheet("QLabel{background:transparent;font-size:12px;color:rgba(0,0,0,0.57);}");
+                m_cpuRunTimeTitle->setStyleSheet("QLabel{background:transparent;font-size:12px;color:rgba(0,0,0,0.57);}");
+                m_cpuIdleTimeTitle->setStyleSheet("QLabel{background:transparent;font-size:12px;color:rgba(0,0,0,0.57);}");
+            }
+
+            if(currentThemeMode == "ukui-black")
+            {
+                m_cpuRateTitle->setStyleSheet("QLabel{background:transparent;font-size:12px;color:rgba(255,255,255,0.57);}"); //#999999
+                m_cpuIdleRateTitle->setStyleSheet("QLabel{background:transparent;font-size:12px;color:rgba(255,255,255,0.57);}");
+                m_cpuRunTimeTitle->setStyleSheet("QLabel{background:transparent;font-size:12px;color:rgba(255,255,255,0.57);}");
+                m_cpuIdleTimeTitle->setStyleSheet("QLabel{background:transparent;font-size:12px;color:rgba(255,255,255,0.57);}");
+            }
+        }
+    });
+    currentThemeMode = qtSettings->get(MODE_QT_KEY).toString();
+    if(currentThemeMode == "ukui-white")
+    {
+        m_cpuRateTitle->setStyleSheet("QLabel{background:transparent;font-size:12px;color:rgba(0,0,0,0.57);}"); //#999999
+        m_cpuIdleRateTitle->setStyleSheet("QLabel{background:transparent;font-size:12px;color:rgba(0,0,0,0.57);}");
+        m_cpuRunTimeTitle->setStyleSheet("QLabel{background:transparent;font-size:12px;color:rgba(0,0,0,0.57);}");
+        m_cpuIdleTimeTitle->setStyleSheet("QLabel{background:transparent;font-size:12px;color:rgba(0,0,0,0.57);}");
+    }
+
+    if(currentThemeMode == "ukui-black")
+    {
+        m_cpuRateTitle->setStyleSheet("QLabel{background:transparent;font-size:12px;color:rgba(255,255,255,0.57);}"); //#999999
+        m_cpuIdleRateTitle->setStyleSheet("QLabel{background:transparent;font-size:12px;color:rgba(255,255,255,0.57);}");
+        m_cpuRunTimeTitle->setStyleSheet("QLabel{background:transparent;font-size:12px;color:rgba(255,255,255,0.57);}");
+        m_cpuIdleTimeTitle->setStyleSheet("QLabel{background:transparent;font-size:12px;color:rgba(255,255,255,0.57);}");
+    }
+
 }
 
 CpuRateWidget::~CpuRateWidget()
@@ -250,6 +329,7 @@ CpuRateWidget::~CpuRateWidget()
 void CpuRateWidget::initWidgets()
 {
     QWidget *w = new QWidget;
+    qDebug()<<"qqqqqqqqqqqqqqqqqqq"<<w->width()<<"qqqqqqqqqqqqqqqqqqqqq"<<w->height();
 //    w->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
     m_labelLayout = new QVBoxLayout(w);
     m_labelLayout->setContentsMargins(0, 0, 0, 0);
@@ -257,31 +337,31 @@ void CpuRateWidget::initWidgets()
 
     QLabel *m_title = new QLabel(tr("CPU"));
     m_title->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-    m_title->setStyleSheet("background:transparent;font-size:24px;color:#000000");
+    m_title->setStyleSheet("background:transparent;font-size:24px;color:palette(windowText)");   //#000000
 
     m_cpuRateTitle = new QLabel;
-    m_cpuRateTitle->setStyleSheet("QLabel{background:transparent;font-size:12px;color:#999999;}");
+//    m_cpuRateTitle->setStyleSheet("QLabel{background:transparent;font-size:12px;color:palette(windowText);}"); //#999999
     m_cpuRateTitle->setText(tr("Occupancy rate"));
     m_cpuRateText = new QLabel;
-    m_cpuRateText->setStyleSheet("QLabel{background:transparent;font-size:20px;color:#000000;}");
+    m_cpuRateText->setStyleSheet("QLabel{background:transparent;font-size:20px;color:palette(windowTexg);}");  //#000000
 
     m_cpuIdleRateTitle = new QLabel;
-    m_cpuIdleRateTitle->setStyleSheet("QLabel{background:transparent;font-size:12px;color:#999999;}");
+//    m_cpuIdleRateTitle->setStyleSheet("QLabel{background:transparent;font-size:12px;color:palette(windowTexg);}");
     m_cpuIdleRateTitle->setText(tr("Idle rate"));
     m_cpuIdleRateText = new QLabel;
-    m_cpuIdleRateText->setStyleSheet("QLabel{background:transparent;font-size:20px;color:#000000;}");
+    m_cpuIdleRateText->setStyleSheet("QLabel{background:transparent;font-size:20px;color:palette(windowTexg);}");
 
     m_cpuRunTimeTitle = new QLabel;
-    m_cpuRunTimeTitle->setStyleSheet("QLabel{background:transparent;font-size:12px;color:#999999;}");
+//    m_cpuRunTimeTitle->setStyleSheet("QLabel{background:transparent;font-size:12px;color:palette(windowTexg);}");
     m_cpuRunTimeTitle->setText(tr("The running time of system"));
     m_cpuRunTimeText = new QLabel;
-    m_cpuRunTimeText->setStyleSheet("QLabel{background:transparent;font-size:20px;color:#000000;}");
+    m_cpuRunTimeText->setStyleSheet("QLabel{background:transparent;font-size:20px;color:palette(windowTexg);}");
 
     m_cpuIdleTimeTitle = new QLabel;
-    m_cpuIdleTimeTitle->setStyleSheet("QLabel{background:transparent;font-size:12px;color:#999999;}");
+//    m_cpuIdleTimeTitle->setStyleSheet("QLabel{background:transparent;font-size:12px;color:palette(windowTexg);}");
     m_cpuIdleTimeTitle->setText(tr("The idle time of system"));
     m_cpuIdleTimeText = new QLabel;
-    m_cpuIdleTimeText->setStyleSheet("QLabel{background:transparent;font-size:20px;color:#000000;}");
+    m_cpuIdleTimeText->setStyleSheet("QLabel{background:transparent;font-size:20px;color:palette(windowTexg);}");
 
     QVBoxLayout *cpuRateLayout = new QVBoxLayout;
     cpuRateLayout->setSpacing(10);
@@ -294,7 +374,7 @@ void CpuRateWidget::initWidgets()
     cpuIdleRateLayout->addWidget(m_cpuIdleRateText);
 
     QHBoxLayout *rateLayout = new QHBoxLayout;
-    rateLayout->setSpacing(30);
+    rateLayout->setSpacing(80);
     rateLayout->addLayout(cpuRateLayout);
     rateLayout->addLayout(cpuIdleRateLayout);
 
@@ -311,7 +391,7 @@ void CpuRateWidget::initWidgets()
 
 
     m_labelLayout->setContentsMargins(0, 0, 0, 0);
-    m_labelLayout->setSpacing(10);
+    m_labelLayout->setSpacing(50);
     m_labelLayout->addWidget(m_title);
     m_labelLayout->addLayout(rateLayout);
     m_labelLayout->addLayout(cpuRunTimeLayout);
@@ -330,14 +410,17 @@ void CpuRateWidget::refreshData(double cpu)
     unsigned long idletime;
     QString rate = getIdelRate(runtime, idletime);
     m_cpuIdleRateText->setText(rate);
+//    qDebug()<<"rate-----------"<<rate;
     m_cpuRunTimeText->setText(convertTimeToString(runtime));
+//    qDebug()<<"runtime----------"<<runtime;
     m_cpuIdleTimeText->setText(convertTimeToString(idletime));
+//    qDebug()<<"idletime---------"<<idletime;
 }
 
 void CpuRateWidget::onUpdateCpuPercent(double value)
 {
-    this->refreshData(value);
-    m_cpuBall->updateCpuPercent(value);
+    this->refreshData(value);                  //about the cpurateForm showing
+    m_cpuBall->updateCpuPercent(value);     //about the cpuballWidget showing
 }
 
 void CpuRateWidget::startTimer()

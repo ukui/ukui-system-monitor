@@ -1,7 +1,20 @@
 /*
- * 参考代码原属主：公孙二狗
- * 链接地址：http://www.qtdebug.com/qtbook-paint-smooth-curve/
- * https://www.codeproject.com/Articles/31859/Draw-a-Smooth-Curve-through-a-Set-of-D-Points-wit%EF%BC%8C%E6%A0%B8%E5%BF%83%E6%98%AF%E4%BD%BF%E7%94%A8%E6%9B%B2%E7%BA%BF%E4%B8%8A%E7%9A%84%E7%82%B9%E8%AE%A1%E7%AE%97%E5%87%BA%E8%B4%9D%E5%A1%9E%E5%B0%94%E6%9B%B2%E7%BA%BF%E7%9A%84%E4%B8%A4%E4%B8%AA%E6%8E%A7%E5%88%B6%E7%82%B9%EF%BC%8C%E7%84%B6%E5%90%8E%E4%BD%BF%E7%94%A8%E8%B4%9D%E5%A1%9E%E5%B0%94%E6%9B%B2%E7%BA%BF%E7%94%9F%E6%88%90%E5%B9%B3%E6%BB%91%E6%9B%B2%E7%BA%BF%EF%BC%8C%E5%BE%88%E6%83%AD%E6%84%A7%E7%9A%84%E6%98%AF%E7%94%9F%E6%88%90%E6%8E%A7%E5%88%B6%E7%82%B9%E7%9A%84%E7%AE%97%E6%B3%95%E7%BB%86%E8%8A%82%E6%88%91%E6%B2%A1%E7%9C%8B%E6%87%82%EF%BC%8C%E5%8F%AA%E4%B8%8D%E8%BF%87%E6%98%AF%E4%BD%9C%E4%BA%86%E4%B8%80%E6%AC%A1%E6%90%AC%E8%BF%90%E5%B7%A5%EF%BC%8C%E6%8A%8A%E7%A8%8B%E5%BA%8F%E7%A7%BB%E6%A4%8D%E5%88%B0%E4%BA%86
+ * Copyright (C) 2013 ~ 2018 National University of Defense Technology(NUDT) & Tianjin Kylin Ltd.
+ *
+ * Authors:
+ *  Kobe Lee    xiangli@ubuntukylin.com/kobe24_lixiang@126.com
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; version 3.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "smoothcurvegenerator.h"

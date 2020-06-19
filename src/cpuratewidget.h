@@ -24,6 +24,12 @@
 #include <QLabel>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
+#include <stdio.h>
+#include <sys/syslog.h>
+#include <QGSettings/QGSettings>
+
+#include "shell/customstyle.h"
+#include "../shell/customstyle.h"
 
 class CpuBallWidget;
 
@@ -40,6 +46,7 @@ public:
     void stopTimer();
 
     void initWidgets();
+    void initThemeMode();
 
 public slots:
     void onUpdateCpuPercent(double value);
@@ -57,6 +64,9 @@ private:
     QHBoxLayout *m_contentLayout = nullptr;
     QVBoxLayout *m_labelLayout = nullptr;
     QVBoxLayout *m_layout = nullptr;
+
+    QGSettings * qtSettings;
+    QString currentThemeMode;
 };
 
 #endif // CPURATEWIDGET_H

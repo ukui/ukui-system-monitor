@@ -7,21 +7,26 @@
 QT += core
 
 isEqual(QT_MAJOR_VERSION, 5) {
-    QT += widgets gui svg
+    QT += widgets gui svg x11extras
 }
 
 TARGET = ukui-system-monitor
 TEMPLATE = app
 DESTDIR = ..
 
+LIBS += -L/usr/lib/ -lX11
 
+CONFIG        += link_pkgconfig \
+                 C++11
 #gio-2.0
 #LIBS +=-lgio-2.0 -lglib-2.0
 
 CONFIG +=  c++11\
            link_pkgconfig
 PKGCONFIG += libgtop-2.0 \
-             libsystemd
+             libsystemd \
+             gsettings-qt
+
 
 
 
@@ -45,6 +50,8 @@ unix {
 }
 
 HEADERS += \
+    shell/customstyle.h \
+    ../shell/macro.h \
     systemmonitor.h \
     processmanager.h \
     processdialog.h \
@@ -83,10 +90,15 @@ HEADERS += \
     filesystemlistitem.h \
     filesystemwatcher.h \
     renicedialog.h \
-    ../component/mytitlebar.h
+    ../component/mytitlebar.h \
+    framelessExtended/cursorposcalculator.h \
+    framelessExtended/framelesshandle.h \
+    framelessExtended/framelesshandleprivate.h \
+    framelessExtended/widgethandlerealize.h
 
 SOURCES += \
     main.cpp \
+    shell/customstyle.cpp \
     systemmonitor.cpp \
     processmanager.cpp \
     processdialog.cpp \
@@ -123,7 +135,10 @@ SOURCES += \
     filesystemlistitem.cpp \
     filesystemwatcher.cpp \
     renicedialog.cpp \
-    ../component/mytitlebar.cpp
+    ../component/mytitlebar.cpp \
+    framelessExtended/cursorposcalculator.cpp \
+    framelessExtended/framelesshandle.cpp \
+    framelessExtended/widgethandlerealize.cpp
 
 OTHER_FILES += \
     systemmonitor.json
@@ -133,3 +148,5 @@ OTHER_FILES += \
 
 RESOURCES += \
     res.qrc
+TRANSLATIONS += \
+    translation/kylin-assistant_zh_CN.ts \

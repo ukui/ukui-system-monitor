@@ -1,3 +1,22 @@
+/*
+ * Copyright (C) 2013 ~ 2018 National University of Defense Technology(NUDT) & Tianjin Kylin Ltd.
+ *
+ * Authors:
+ *  Kobe Lee    xiangli@ubuntukylin.com/kobe24_lixiang@126.com
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; version 3.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #include "networkindicator.h"
 #include "smoothcurvegenerator.h"
 
@@ -16,13 +35,33 @@ NetworkIndicator::NetworkIndicator(QWidget *parent)
     ,m_rectTotalHeight(38)
     ,m_rectTotalWidth(58)
     ,m_outsideBorderColor(Qt::transparent)
-    ,m_bgColor(QColor("#ffffff"))
 {
+    const QByteArray idd(THEME_QT_SCHEMA);
+
+    if(QGSettings::isSchemaInstalled(idd))
+    {
+        qtSettings = new QGSettings(idd);
+    }
+
     this->setFixedSize(188, 56);
+
+    initThemeMode();
     m_netMaxHeight = 30;
     m_pointSpace = 5;
 
+    if(currentThemeMode == "ukui-white")
+    {
+        this->m_bgColor = QColor(0xff,0xff,0xff,0);
+    }
+    else if(currentThemeMode == "ukui-black")
+    {
+        this->m_bgColor = QColor(0x13,0x14,0x14,0);
+    }
+
     m_pointsCount = int((this->width() -2) / m_pointSpace);
+//    qDebug()<<this->width()<<"wwwwjwjwjwwjwjwjwwjwjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj";
+//    qDebug()<<"m_pointSpace"<<m_pointSpace<<"wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwj";
+//    qDebug()<<"m_pointsCount"<<m_pointsCount<<"jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj";
     m_downloadSpeedList = new QList<long>();
     for (int i = 0; i < m_pointsCount; i++) {
         m_downloadSpeedList->append(0);
@@ -43,6 +82,25 @@ NetworkIndicator::~NetworkIndicator()
     delete m_downloadSpeedList;
     delete m_uploadSpeedList;
     delete m_gridY;
+}
+
+void NetworkIndicator::initThemeMode()
+{
+    //监听主题改变
+    connect(qtSettings, &QGSettings::changed, this, [=](const QString &key)
+    {
+        if (key == "styleName")
+        {
+            auto style = qtSettings->get(key).toString();
+            qApp->setStyle(new InternalStyle(style));
+            currentThemeMode = qtSettings->get(MODE_QT_KEY).toString();
+            qDebug()<<"监听主题改变-------------------->"<<currentThemeMode<<endl;
+            qApp->setStyle(new InternalStyle(currentThemeMode));
+            repaint();
+            updateBgColor();
+        }
+    });
+    currentThemeMode = qtSettings->get(MODE_QT_KEY).toString();
 }
 
 void NetworkIndicator::enterEvent(QEvent *event)
@@ -72,7 +130,7 @@ void NetworkIndicator::mousePressEvent(QMouseEvent *event)
     if (event->button() != Qt::LeftButton)
         return;
 
-    setNetworkState(Press);
+    setNetworkState(Checked);
 
     event->accept();
     //QWidget::mousePressEvent(event);
@@ -109,19 +167,45 @@ void NetworkIndicator::updateBgColor()
     switch (m_state) {
     case Hover:
         this->m_outsideBorderColor = Qt::transparent;
-        this->m_bgColor = QColor("#f6fcfe");
+        if(currentThemeMode == "ukui-white")
+        {
+            this->m_bgColor = QColor(13,14,14,49);  //#f6fcfe
+        }
+        else
+        {
+            this->m_bgColor = QColor(255,255,255,49);
+        }
         break;
     case Press:
         this->m_outsideBorderColor = Qt::transparent;
         this->m_bgColor = QColor("#f6fcfe");
         break;
     case Checked:
-        this->m_outsideBorderColor = QColor("#009944");
-        this->m_bgColor = QColor("#e9f8fd");
+//        this->m_outsideBorderColor = QColor("#009944");
+        this->m_outsideBorderColor = Qt::transparent;
+        qDebug()<<"1234567879.000";
+//        this->m_outsideBorderColor = QColor("#0973b4");
+        this->m_outsideBorderColor = Qt::transparent;
+        if(currentThemeMode == "ukui-white")
+        {
+            this->m_bgColor = QColor(0x13,0x14,0x14,19); //#e9f8fd
+        }
+        else
+        {
+            this->m_bgColor = QColor(0xff,0xff,0xff,9);
+        }
         break;
     default:
         this->m_outsideBorderColor = Qt::transparent;
-        this->m_bgColor = QColor("#ffffff");
+        if(currentThemeMode == "ukui-white")
+        {
+            this->m_bgColor = QColor(0xff,0xff,0xff,0);
+        }
+        else if(currentThemeMode == "ukui-black")
+        {
+            this->m_bgColor = QColor(0x13,0x14,0x14,0);
+        }
+
         break;
     }
     repaint();
@@ -240,7 +324,7 @@ void NetworkIndicator::paintEvent(QPaintEvent *event)
     //background of rect
     painter.setOpacity(1);
     QPainterPath path;
-    path.addRect(QRectF(1, 1, width()-2, height()-2));
+    path.addRoundedRect(QRectF(1, 1, width()-2, height()-2),4,4);
     painter.fillPath(path, this->m_bgColor);
 
     painter.translate((rect().width() - m_pointsCount * m_pointSpace) / 2 + 2, 40);//将坐标第原点移动到该点

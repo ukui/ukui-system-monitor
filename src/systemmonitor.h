@@ -24,11 +24,16 @@
 #include "processdialog.h"
 #include "resourcesdialog.h"
 #include "filesystemdialog.h"
+#include "shell/customstyle.h"
+#include "../shell/macro.h"
 
 #include <QFrame>
 #include <QStackedWidget>
 #include <QLabel>
 #include <QSettings>
+#include <QGSettings/QGSettings>
+
+#include <QtX11Extras/QX11Info>
 
 class SystemMonitor : public QFrame
 {
@@ -49,6 +54,7 @@ public:
     QList<bool> getReadyDisplayFileSysColumns();
 
     void moveCenter();
+    void initThemeMode();
 
 public slots:
     void recordProcessVisibleColumn(int, bool, QList<bool> columnVisible);
@@ -58,11 +64,12 @@ public slots:
 
 protected:
     void resizeEvent(QResizeEvent *e) override;
-//    void paintEvent(QPaintEvent *);
+    void paintEvent(QPaintEvent *);
     void closeEvent(QCloseEvent *event);
     void mouseMoveEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
     void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
     void mouseReleaseEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
+
 
 private:
     QStackedWidget  *m_sysMonitorStack = nullptr;
@@ -75,6 +82,9 @@ private:
 
     QPoint dragPosition;
     bool mousePressed;
+    
+    QGSettings * qtSettings;
+    QString currentThemeMode;
 };
 
 #endif // SYSTEMMONITOR_H

@@ -22,6 +22,11 @@
 #define NETWORKFLOW_H
 
 #include <QWidget>
+#include <QGSettings/QGSettings>
+#include <QStyleOption>
+
+#include "shell/customstyle.h"
+#include "../shell/macro.h"
 
 class NetworkFlow : public QWidget
 {
@@ -29,6 +34,7 @@ class NetworkFlow : public QWidget
 
 public:
     NetworkFlow(QWidget *parent = 0);
+    void initThemeMode();
     ~NetworkFlow();
 
 public slots:
@@ -60,6 +66,10 @@ private:
 
     QString receiveText;
     QString sendText;
+
+    QGSettings * qtSettings;
+    QString currentThemeMode;
+
 };
 
 #endif // NETWORKFLOW_H

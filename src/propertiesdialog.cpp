@@ -76,7 +76,7 @@ PropertiesDialog::PropertiesDialog(QWidget *parent, pid_t processId) : QDialog(p
     startTimeLayout->setContentsMargins(0, 0, 0, 0);*/
 
     m_logoLabel = new QLabel();
-    m_logoLabel->setStyleSheet("QLabel{background:transparent;border:none;}");
+    m_logoLabel->setStyleSheet("QLabel{background:#CC00FF;border:none;}");
     m_logoLabel->setFixedSize(44, 58);
     m_logoLabel->setContentsMargins(0, 0, 0, 0);
     m_logoLabel->setPixmap(QPixmap(":/res/sub_logo.png"));

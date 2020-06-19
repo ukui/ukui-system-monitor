@@ -37,7 +37,7 @@ NetworkWidget::NetworkWidget(QWidget *parent) : QWidget(parent)
 
     m_title = new QLabel(tr("Network"));
     m_title->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-    m_title->setStyleSheet("background:transparent;font-size:24px;color:#000000");
+    m_title->setStyleSheet("background:transparent;font-size:24px;color:palette(windowText)");
     /*QFont font = m_title->font();
     font.setPointSize(24);
     font.setWeight(QFont::Light);
@@ -46,9 +46,10 @@ NetworkWidget::NetworkWidget(QWidget *parent) : QWidget(parent)
     m_networkFlow = new NetworkFlow;
 
     m_widgetLayout->addWidget(m_title);
+    m_widgetLayout->addSpacing(27);
     m_widgetLayout->addWidget(m_networkFlow);
 
-    mainLayout->addWidget(w, 0, Qt::AlignCenter);
+    mainLayout->addWidget(w, 0, Qt::AlignTop);
 
 //    math1_radio = new QRadioButton();
 //    math2_radio = new QRadioButton();

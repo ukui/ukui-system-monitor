@@ -23,6 +23,7 @@
 
 #include <QDebug>
 
+//add button intformation in this file
 ResourcesCategory::ResourcesCategory(int tabIndex, QWidget *parent)
     : QWidget(parent)
     ,activeIndex(tabIndex)

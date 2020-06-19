@@ -101,13 +101,23 @@ inline QString formatNetworkRate(guint64 rate)
 }
 
 NetworkFlow::NetworkFlow(QWidget *parent) : QWidget(parent)
-  ,m_outsideBorderColor(QColor("#009944"))
-  ,m_bgColor(QColor("#ffffff"))
+  ,m_outsideBorderColor(QColor("transparent"))
   ,m_downloadColor(QColor("#009944"))
   ,m_uploadColor(QColor("#e60012"))
-{
+{    
+
+    const QByteArray idd(THEME_QT_SCHEMA);
+
+    if(QGSettings::isSchemaInstalled(idd))
+    {
+        qDebug()<<";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;";
+        qtSettings = new QGSettings(idd);
+    }
+
+    initThemeMode();
     setFixedSize(403, 300);
 
+    //this->setStyleSheet("background:rgba(204,0,255,0.06);");
     receiveText = tr("Receive");
     sendText = tr("Send");
 
@@ -132,6 +142,26 @@ NetworkFlow::NetworkFlow(QWidget *parent) : QWidget(parent)
     connect(ui->showSmoothCurveCheckBox, SIGNAL(clicked(bool)), this, SLOT(update()));
     connect(ui->smoothCurveGeneratorComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(update()));
     ui->generateCurveButton->click();*/
+}
+
+void NetworkFlow::initThemeMode()
+{
+
+    //监听主题改变
+    connect(qtSettings, &QGSettings::changed, this, [=](const QString &key)
+    {
+        if (key == "styleName")
+        {
+            auto style = qtSettings->get(key).toString();
+            qApp->setStyle(new InternalStyle(style));
+            currentThemeMode = qtSettings->get(MODE_QT_KEY).toString();
+            qDebug()<<"监听主题改变-------------------->"<<currentThemeMode<<endl;
+            qApp->setStyle(new InternalStyle(currentThemeMode));
+        }
+        repaint();
+//        update();
+    });
+    currentThemeMode = qtSettings->get(MODE_QT_KEY).toString();
 }
 
 NetworkFlow::~NetworkFlow()
@@ -215,6 +245,7 @@ void NetworkFlow::onUpdateNetworkStatus(long recvTotalBytes, long sentTotalBytes
 void NetworkFlow::paintEvent(QPaintEvent *)
 {
     QPainter painter(this);
+
     painter.setRenderHint(QPainter::Antialiasing, true);//反走样,绘制出来的线条会出现锯齿
 
     int penSize = 1;
@@ -231,9 +262,25 @@ void NetworkFlow::paintEvent(QPaintEvent *)
     painter.drawPath(borderPath);
 
     //background of rect
-    painter.setOpacity(1);
+    painter.setOpacity(0.08);
     QPainterPath framePath;
-    framePath.addRect(QRectF(gridX, gridY, gridWidth, gridHeight));
+    QStyleOption opt;
+    opt.init(this);
+    //framePath.addRect(QRectF(gridX, gridY, gridWidth, gridHeight));
+    //m_bgColor(QColor("#000000"))
+    if(currentThemeMode == "ukui-white")
+    {
+        m_bgColor = (QColor("#131414"));
+    }
+
+    if(currentThemeMode == "ukui-black")
+    {
+        qDebug()<<"9517538246";
+        m_bgColor = (QColor("#ffffff"));
+    }
+    
+//    framePath.addRoundedRect(QRectF(gridX, gridY, gridWidth, gridHeight),6,6);
+    framePath.addRoundedRect(QRectF(gridX, gridY, gridWidth, gridHeight),4,4);
     painter.fillPath(framePath, this->m_bgColor);//painter.drawPath(framePath);
 
     painter.save();
@@ -259,7 +306,8 @@ void NetworkFlow::paintEvent(QPaintEvent *)
     QFontMetrics fm = painter.fontMetrics();
     int receiveTextWidth = fm.width(this->receiveText);
     int sendTextWidth = fm.width(this->sendText);
-    painter.setPen(QPen(QColor("#000000"), 1));
+    painter.setOpacity(0.57);
+    painter.setPen(QPen(palette().color(QPalette::WindowText), 1));
     painter.drawText(QRect(gridX, gridHeight + 10, receiveTextWidth, 30), Qt::AlignLeft | Qt::AlignVCenter, this->receiveText);
     painter.drawText(QRect(gridX + receiveTextWidth*2, gridHeight + 10, sendTextWidth, 30), Qt::AlignLeft | Qt::AlignVCenter, this->sendText);
     painter.setPen(QPen(QColor("#009944"), 1));
@@ -269,23 +317,25 @@ void NetworkFlow::paintEvent(QPaintEvent *)
 
     int contentWidth = 180;
     //draw title
+    painter.setOpacity(0.57);
     setFontSize(painter, 12);
-    painter.setPen(QPen(QColor("#999999")));
-    painter.drawText(QRect(gridX, gridHeight + 40, contentWidth, 30), Qt::AlignLeft |Qt::AlignVCenter, tr("Receiving"));
-    painter.drawText(QRect(gridX + contentWidth, gridHeight + 40, contentWidth, 30), Qt::AlignLeft |Qt::AlignVCenter, tr("Sending"));
-    painter.drawText(QRect(gridX, gridHeight + 100, contentWidth, 30), Qt::AlignLeft |Qt::AlignVCenter, tr("Total Received"));
-    painter.drawText(QRect(gridX + contentWidth, gridHeight + 100, contentWidth, 30), Qt::AlignLeft |Qt::AlignVCenter, tr("Total Sent"));
+    painter.setPen(QPen(palette().color(QPalette::WindowText)));
+    painter.drawText(QRect(gridX, gridHeight + 50, contentWidth, 30), Qt::AlignLeft |Qt::AlignVCenter, tr("Receiving"));
+    painter.drawText(QRect(gridX + contentWidth, gridHeight + 50, contentWidth, 30), Qt::AlignLeft |Qt::AlignVCenter, tr("Sending"));
+    painter.drawText(QRect(gridX, gridHeight + 130, contentWidth, 30), Qt::AlignLeft |Qt::AlignVCenter, tr("Total Received"));
+    painter.drawText(QRect(gridX + contentWidth, gridHeight + 130, contentWidth, 30), Qt::AlignLeft |Qt::AlignVCenter, tr("Total Sent"));
 
     //draw text data
+    painter.setOpacity(1);
     setFontSize(painter, 20);
     QFontMetrics fms = painter.fontMetrics();
-    painter.setPen(QPen(QColor("#000000")));
+    painter.setPen(QPen(palette().color(QPalette::WindowText)));
     const QString downloadRate = formatNetworkRate(m_recvRateBytes);
     const QString downloadContent = formatNetwork(m_recvTotalBytes);//接收
     const QString uploadRate = formatNetworkRate(m_sentRateBytes);
     const QString uploadContent = formatNetwork(m_sentTotalBytes);
-    painter.drawText(QRect(gridX, gridHeight + 70, fms.width(downloadRate), 30), Qt::AlignLeft |Qt::AlignVCenter, downloadRate);
-    painter.drawText(QRect(gridX + contentWidth, gridHeight + 70, fms.width(uploadRate), 30), Qt::AlignLeft |Qt::AlignVCenter, uploadRate);
-    painter.drawText(QRect(gridX, gridHeight + 130, fms.width(downloadContent), 30), Qt::AlignLeft |Qt::AlignVCenter, downloadContent);
-    painter.drawText(QRect(gridX + contentWidth, gridHeight + 130, fms.width(uploadContent), 30), Qt::AlignLeft |Qt::AlignVCenter, uploadContent);
+    painter.drawText(QRect(gridX, gridHeight + 80, fms.width(downloadRate), 30), Qt::AlignLeft |Qt::AlignVCenter, downloadRate);
+    painter.drawText(QRect(gridX + contentWidth, gridHeight + 80, fms.width(uploadRate), 30), Qt::AlignLeft |Qt::AlignVCenter, uploadRate);
+    painter.drawText(QRect(gridX, gridHeight + 160, fms.width(downloadContent), 30), Qt::AlignLeft |Qt::AlignVCenter, downloadContent);
+    painter.drawText(QRect(gridX + contentWidth, gridHeight + 160, fms.width(uploadContent), 30), Qt::AlignLeft |Qt::AlignVCenter, uploadContent);
 }

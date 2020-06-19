@@ -28,6 +28,7 @@ ProcessManager::ProcessManager(QObject *parent)
     : QObject(parent)
 {
     process_dialog = new SystemMonitor;
+    //process_dialog->setStyleSheet();
 }
 
 ProcessManager::~ProcessManager()

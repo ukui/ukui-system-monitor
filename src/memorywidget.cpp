@@ -1,3 +1,22 @@
+/*
+ * Copyright (C) 2013 ~ 2018 National University of Defense Technology(NUDT) & Tianjin Kylin Ltd.
+ *
+ * Authors:
+ *  Kobe Lee    xiangli@ubuntukylin.com/kobe24_lixiang@126.com
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; version 3.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #include "memorywidget.h"
 #include "memorycircle.h"
 
@@ -11,13 +30,14 @@ MemoryWidget::MemoryWidget(QWidget *parent)
     mainLayout->setContentsMargins(0, 0, 0, 0);
 
     QWidget *w = new QWidget;
+    qDebug()<<"wodew"<<w->width()<<w->height();
     m_widgetLayout = new QVBoxLayout(w);
     m_widgetLayout->setContentsMargins(0, 0, 0, 0);
     m_widgetLayout->setSpacing(0);
 
     m_title = new QLabel(tr("Memory"));
-    m_title->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-    m_title->setStyleSheet("background:transparent;font-size:24px;color:#000000");
+    m_title->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);  //Qt::AlignLeft | Qt::AlignVCenter
+    m_title->setStyleSheet("background:transparent;font-size:24px;color:palette(windowText)");
     /*QFont font = m_title->font();
     font.setPointSize(24);
     font.setWeight(QFont::Light);
@@ -27,9 +47,10 @@ MemoryWidget::MemoryWidget(QWidget *parent)
     connect(m_memoryCircle, SIGNAL(rebackMemoryInfo(QString,double)), this, SIGNAL(rebackMemoryInfo(QString,double)));
 
     m_widgetLayout->addWidget(m_title);
+    //m_widgetLayout->addSpacing(27);
     m_widgetLayout->addWidget(m_memoryCircle);
 
-    mainLayout->addWidget(w, 0, Qt::AlignCenter);
+    mainLayout->addWidget(w, 0, Qt::AlignTop);  //Qt::AlignCenter
 }
 
 MemoryWidget::~MemoryWidget()

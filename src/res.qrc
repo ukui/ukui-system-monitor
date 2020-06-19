@@ -19,5 +19,10 @@
         <file>img/all_proc.png</file>
         <file>img/active_proc.png</file>
         <file>img/search.png</file>
+        <file>img/down_arrow.png</file>
+        <file>img/up_arrow.png</file>
+        <file>img/button-close-default-add-background-three.svg</file>
+        <file>img/drive-harddisk-system.png</file>
+        <file>img/kylin-system-monitor.png</file>
     </qresource>
 </RCC>
