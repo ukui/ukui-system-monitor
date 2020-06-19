@@ -4,33 +4,4 @@ ukui-system-monitor (0.1.0.4kord-1) unstable; urgency=medium
 
  -- renxinyu <renxinyu@kylinos.cn>  Tue, 09 Jun 2020 11:02:37 +0800
 
-ukui-system-monitor (0.1.0.0kord-1ubuntu9~rc10) v100; urgency=medium
-
-  * build it in v100 again
-
- -- renxinyu <renxinyu@kylinos.cn>  Tue, 09 Jun 2020 09:56:09 +0800
-
-ukui-system-monitor (0.1.0.0kord-1ubuntu9~rc9) v100; urgency=medium
- 
-  * build it in v100 
-
- -- renxinyu <renxinyu@kylinos.cn>  Mon, 08 Jun 2020 17:56:07 +0800
-
-ukui-system-monitor (0.1.0.3kord-1ubuntu1) v101; urgency=medium
-
-  * change debian/rules
-
- -- renxinyu <renxinyu@kylinos.cn>  Mon, 08 Jun 2020 17:48:14 +0800
-
-ukui-system-monitor (0.1.0.2kord-1) v101; urgency=medium
-
-  * build in v10.1 again
-
- -- renxinyu <renxinyu@kylinos.cn>  Mon, 08 Jun 2020 16:56:57 +0800
-
-ukui-system-monitor (0.1.0.0kord-3) v101; urgency=medium
-
-  * build in v10.1
-
- -- renxinyu <renxinyu@kylinos.cn>  Mon, 08 Jun 2020 16:41:46 +0800
 
