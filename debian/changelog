@@ -2,7 +2,7 @@ ukui-system-monitor (0.1.0.5-1) unstable; urgency=medium
 
   * change debian/contorl and change debian changelog
 
- -- renxinyu <renxinyu@kylinos.cn>  Tue, 09 Jun 2020 11:02:37 +0800
+ -- renxinyu <renxinyu@kylinos.cn>  Tue, 19 Jun 2020 11:02:37 +0800
 
 ukui-system-monitor (0.1.0.0kord-1ubuntu9~rc10) v100; urgency=medium
 
