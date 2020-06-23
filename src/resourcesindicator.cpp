@@ -23,6 +23,7 @@
 #include <QMouseEvent>
 #include <QEvent>
 #include <QPainter>
+#include <QPainterPath>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QDebug>

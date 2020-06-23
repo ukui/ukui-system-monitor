@@ -23,6 +23,7 @@
 
 #include <QObject>
 #include <QPainter>
+#include <QPainterPath>
 #include <QPen>
 #include <QGSettings/QGSettings>
 #include <QApplication>

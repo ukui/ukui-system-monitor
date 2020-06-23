@@ -21,6 +21,7 @@
 #include <QCollator>
 #include <QDebug>
 #include <QLocale>
+#include <QPainterPath>
 #include "util.h"
 
 

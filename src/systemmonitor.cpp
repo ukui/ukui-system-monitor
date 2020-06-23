@@ -30,6 +30,7 @@
 #include <QApplication>
 #include <QScreen>
 #include <QGraphicsDropShadowEffect>
+#include <QPainterPath>
 #include <X11/Xlib.h>
 
 extern void qt_blurImage(QImage &blurImage, qreal radius, bool quality, int transposed);
