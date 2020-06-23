@@ -1,7 +1,5 @@
-ukui-system-monitor (0.1.0.4kord-1) unstable; urgency=medium
+ukui-system-monitor (1.0.0-1) unstable; urgency=medium
 
-  * change debian/contorl in v101
+  * Initial release.
 
- -- renxinyu <renxinyu@kylinos.cn>  Tue, 09 Jun 2020 11:02:37 +0800
-
-
+ -- Kevin Duan <duankaiwen@ubuntukylin.com>  Fri, 17 Apr 2020 10:26:07 +0800

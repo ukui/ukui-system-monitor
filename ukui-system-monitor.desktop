@@ -11,5 +11,5 @@ Icon=kylin-system-monitor
 Terminal=false
 Type=Application
 NoDisplay=false
-Categories=System;Utility; 
+Categories=System;Utility;
 StartupNotify=false
