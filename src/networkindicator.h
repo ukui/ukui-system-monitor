@@ -25,6 +25,7 @@
 #include <QPixmap>
 #include <QGSettings/QGSettings>
 #include <QApplication>
+#include <QPainterPath>
 
 #include "../shell/macro.h"
 #include "shell/customstyle.h"

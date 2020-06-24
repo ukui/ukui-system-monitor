@@ -22,6 +22,7 @@
 #include <QApplication>
 #include <QDebug>
 #include <QPainter>
+#include <QPainterPath>
 #include <QImageReader>
 #include <QGraphicsDropShadowEffect>
 

@@ -26,6 +26,7 @@
 #include <QStyleFactory>
 #include <QWheelEvent>
 #include <QPainter>
+#include <QPainterPath>
 #include <QtMath>
 #include <QPen>
  static int number = 0;

@@ -23,6 +23,7 @@
 
 #include <QWidget>
 #include <QGSettings/QGSettings>
+#include <QPainterPath>
 #include <QStyleOption>
 
 #include "shell/customstyle.h"
