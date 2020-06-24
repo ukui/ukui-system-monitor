@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: Ubuntu Developers <ubuntu-devel-discuss@list.ubuntu.net>
 Uploaders: handsome_feng <jianfengli@ubuntukylin.com>,
            Kevin Duan <duankaiwen@ubuntukylin.com>
-Build-Depends: debhelper-compat (= 13),
+Build-Depends: debhelper-compat (= 12),
                qtbase5-dev (>= 5.1),
                libqt5svg5-dev,
                qt5-qmake,
@@ -17,22 +17,23 @@ Build-Depends: debhelper-compat (= 13),
                libgsettings-qt-dev,
                libqt5x11extras5-dev
 Standards-Version: 4.5.0
+Rules-Requires-Root: no
 Homepage: https://www.ukui.org
 Vcs-Browser: https://github.com/ukui/ukui-system-monitor
 Vcs-Git: https://github.com/ukui/ukui-system-monitor.git
 
 Package: ukui-system-monitor
 Architecture: any
-Depends:  inotify-hookable,
-          bsdutils (>= 1:2.27.1),
-          hdparm,
-          lm-sensors,
-          ethtool,
-          lshw,
-          cpufrequtils,
-          pciutils,
-          ${misc:Depends},
-          ${shlibs:Depends},
-Description:Monitor for UKUI desktop environment 
+Depends: inotify-hookable,
+         bsdutils (>= 1:2.27.1),
+         hdparm,
+         lm-sensors,
+         ethtool,
+         lshw,
+         cpufrequtils,
+         pciutils,
+         ${misc:Depends},
+         ${shlibs:Depends}
+Description: Monitor for UKUI desktop environment
  This package is a simple system monitor written
  in QT,This package is maintained by Kylin Team.
