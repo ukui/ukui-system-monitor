@@ -50,6 +50,15 @@ FileSystemListWidget::FileSystemListWidget(QList<bool> toBeDisplayedColumns, QWi
         qtSettings = new QGSettings(idd);
     }
 
+    const QByteArray id(THEME_QT_SCHEMA);
+
+    if(QGSettings::isSchemaInstalled(id))
+    {
+        fontSettings = new QGSettings(id);
+    }
+
+    initFontSize();
+
     this->m_lastItem = NULL;
     this->m_listItems = new QList<FileSystemListItem*>();
     this->m_selectedItems = new QList<FileSystemListItem*>();
@@ -119,6 +128,18 @@ void FileSystemListWidget::initThemeMode()
         }
     });
     currentThemeMode = qtSettings->get(MODE_QT_KEY).toString();
+}
+
+void FileSystemListWidget::initFontSize()
+{
+    connect(fontSettings,&QGSettings::changed,[=](QString key)
+    {
+        if("systemFont" == key || "systemFontSize" == key)
+        {
+            fontSize = fontSettings->get(FONT_SIZE).toInt();
+        }
+    });
+    fontSize = fontSettings->get(FONT_SIZE).toInt();
 }
 
 void FileSystemListWidget::addSelectedItems(QList<FileSystemListItem*> items, bool recordLastItem)
@@ -407,7 +428,7 @@ void FileSystemListWidget::paintEvent(QPaintEvent *)
                 //title
                 painter.setOpacity(0.57);
                 QFont font = painter.font();
-                font.setPixelSize(14);
+                font.setPixelSize(fontSize);
                 painter.setFont(font);
                 painter.setPen(QPen(palette().color(QPalette::WindowText)));   //#999999
 //                painter.setPen(QPen(QColor("#cc00ff")));

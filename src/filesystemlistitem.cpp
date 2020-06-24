@@ -40,6 +40,16 @@ FileSystemListItem::FileSystemListItem(FileSystemData *info)
     {
         qtSettings = new QGSettings(idd);
     }
+
+    const QByteArray id(THEME_QT_SCHEMA);
+
+    if(QGSettings::isSchemaInstalled(id))
+    {
+        qDebug()<<"installl fontSettings----->"<<endl;
+        fontSettings = new QGSettings(id);
+    }
+
+    initFontSize();
 }
 
 void FileSystemListItem::initThemeMode()
@@ -59,6 +69,28 @@ void FileSystemListItem::initThemeMode()
         }
     });
     currentThemeMode = qtSettings->get(MODE_QT_KEY).toString();
+}
+
+void FileSystemListItem::initFontSize()
+{
+    connect(fontSettings,&QGSettings::changed,this,[=](QString key)
+    {
+        if("systemFont" == key || "systemFontSize" == key)
+        {
+            qDebug()<<"i have come in 111";
+
+            fontSize = fontSettings->get(FONT_SIZE).toInt();
+//            repaint();
+//            for(auto widget:qApp->allWidgets())
+//            {
+//                widget->repaint();
+//                widget->setFont(fSize);
+//            }
+            qDebug()<<fontSize<<"wwj,wotmzhendeshifunigedajiba";
+        }
+        qDebug()<<"i have come in 222";
+    });
+    fontSize = fontSettings->get(FONT_SIZE).toInt();
 }
 
 bool FileSystemListItem::isSameItem(FileSystemListItem *item)
@@ -96,7 +128,7 @@ void FileSystemListItem::drawBackground(QRect rect, QPainter *painter, int index
 
 void FileSystemListItem::drawForeground(QRect rect, QPainter *painter, int column, int, bool isSelect, bool isSeparator)
 {
-    setFontSize(*painter, 14);
+    setFontSize(*painter, fontSize);
     painter->setOpacity(0.85);
     //painter->setPen(QPen(QColor("#000000")));
     if (column == 0) {

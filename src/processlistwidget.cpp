@@ -58,6 +58,16 @@ ProcessListWidget::ProcessListWidget(QList<bool> toBeDisplayedColumns, QWidget *
     {
         qtSettings = new QGSettings(idd);
     }
+
+    const QByteArray id(THEME_QT_SCHEMA);
+
+    if(QGSettings::isSchemaInstalled(id))
+    {
+        fontSettings = new QGSettings(id);
+    }
+
+    initFontSize();
+
     this->m_searchFunc = NULL;
     this->m_searchText = "";
     this->m_lastItem = NULL;
@@ -121,6 +131,18 @@ void ProcessListWidget::initThemeMode()
         }
     });
     currentThemeMode = qtSettings->get(MODE_QT_KEY).toString();
+}
+
+void ProcessListWidget::initFontSize()
+{
+    connect(fontSettings,&QGSettings::changed,[=](QString key)
+    {
+        if("systemFont" == key || "systemFontSize" == key)
+        {
+            fontSize = fontSettings->get(FONT_SIZE).toInt();
+        }
+    });
+    fontSize = fontSettings->get(FONT_SIZE).toInt();
 }
 
 ProcessListWidget::~ProcessListWidget()
@@ -837,7 +859,7 @@ void ProcessListWidget::paintEvent(QPaintEvent *)
                 painter.setOpacity(0.57);
                 QFont font = painter.font();
 //                font.setPointSize(10);
-                font.setPixelSize(14);
+                font.setPixelSize(fontSize);
                 painter.setFont(font);
                 if(currentThemeMode == "ukui-white")
                 {

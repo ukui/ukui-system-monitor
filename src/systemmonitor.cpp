@@ -83,8 +83,8 @@ SystemMonitor::SystemMonitor(QWidget *parent)
 
 
     //this->setFixedSize(900, 600);
-    this->resize(760,590);
-    setMinimumSize(640, 480);
+    this->resize(MAINWINDOWWIDTH,MAINWINDOWHEIGHT);
+    setMinimumSize(640, 480);  //set the minimum size of the mainwindow
 
     proSettings = new QSettings(KYLIN_COMPANY_SETTING, KYLIN_SETTING_FILE_NAME_SETTING);
     proSettings->setIniCodec("UTF-8");

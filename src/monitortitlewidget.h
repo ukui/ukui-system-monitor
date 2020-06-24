@@ -51,6 +51,7 @@ public:
     void initWidgets();
     void setSearchEditFocus();
     void initThemeMode();
+    void initFontSize();
 
 public slots:
     void onRefreshSearchResult();
@@ -98,8 +99,12 @@ private:
     QPushButton *m_resourceButton = nullptr;
     QPushButton *m_filesystemButton = nullptr;
     QComboBox *m_changeBox;
+    QLabel *titleLabel;
 
-    QGSettings * qtSettings;
+    int fontSize;
+
+    QGSettings *qtSettings;
+    QGSettings *fontSettings;
     QString currentThemeMode;
 };
 

@@ -46,6 +46,7 @@ public:
     QString getDirectory() const;
 
     void initThemeMode();
+    void initFontSize();
     
 private:
     FileSystemData *m_data;
@@ -53,7 +54,10 @@ private:
     int padding;
     int textPadding;
 
+    int fontSize;
+
     QGSettings * qtSettings;
+    QGSettings *fontSettings;
     QString currentThemeMode;
 };
 

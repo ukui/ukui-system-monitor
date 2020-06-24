@@ -59,6 +59,7 @@ public:
     bool mouseAtTitleArea(int y);
 
     void initThemeMode();
+    void initFontSize();
 
 signals:
     void rightMouseClickedItem(QPoint pos);
@@ -97,7 +98,10 @@ private:
     int m_titlePadding;
     int m_titlePressColumn;
 
+    int fontSize;
+
     QGSettings * qtSettings;
+    QGSettings *fontSettings;
     QString currentThemeMode;
 };
 

@@ -49,6 +49,7 @@ public:
     void setName(const QString &name);
     ButtonState getButtonState() const;
     void initThemeMode();
+    void initFontSize();
 
 signals:
     void clicked();
@@ -73,7 +74,10 @@ private:
     //QLabel *m_underlineLabel = nullptr;
     QVBoxLayout *m_layout = nullptr;
 
-    QGSettings * qtSettings;
+    int fontSize;
+
+    QGSettings *qtSettings;
+    QGSettings *fontSettings;
     QString currentThemeMode;
 
 };

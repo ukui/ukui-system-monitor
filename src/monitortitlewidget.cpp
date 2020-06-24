@@ -45,8 +45,17 @@ MonitorTitleWidget::MonitorTitleWidget(QSettings *settings, QWidget *parent)
         qtSettings = new QGSettings(idd);
     }
 
+    const QByteArray id(THEME_QT_SCHEMA);
+
+    if(QGSettings::isSchemaInstalled(id))
+    {
+        fontSettings = new QGSettings(id);
+    }
+
+    initFontSize();
+
     m_changeBox = new QComboBox();
-    m_changeBox->setFixedSize(100,32);
+    m_changeBox->setFixedSize(NORMALWIDTH,NORMALHEIGHT);
     m_changeBox->addItem(tr("Active Processes"));
     m_changeBox->addItem(tr("My Processes"));
     m_changeBox->addItem(tr("All Process"));
@@ -58,6 +67,10 @@ MonitorTitleWidget::MonitorTitleWidget(QSettings *settings, QWidget *parent)
 
 
     m_changeBox->setView(new  QListView());
+
+    QFont changeBoxFont;
+    changeBoxFont.setPointSize(fontSize-2);
+    m_changeBox->setFont(changeBoxFont);
 
     initThemeMode();
 
@@ -100,7 +113,9 @@ MonitorTitleWidget::MonitorTitleWidget(QSettings *settings, QWidget *parent)
 
 
 
+
     initWidgets();
+
 }
 
 void MonitorTitleWidget::initThemeMode()
@@ -125,8 +140,8 @@ void MonitorTitleWidget::initThemeMode()
                                            "QComboBox::drop-down{border:0px;width:30px;}"
                                            "QComboBox::down-arrow{image:url(:/img/down_arrow.png);}"
                                            "QComboBox QAbstractItemView {margin:0px 0px 0px 0px;padding: 0px 0px;border-radius:0px;background-color:palette(windowText);outline:0px;}"
-                                           "QComboBox QAbstractItemView::item{border-radius:0px;font-size:13px;color:rgba(0,0,0,0.57);height: 32px;background-color:palette(base);outline:0px;}"
-                                           "QComboBox QAbstractItemView::item:hover{border-radius:0px;font-size:13px;color(palette(windowText));background-color:#3D6BE5;outline:0px;}"
+                                           "QComboBox QAbstractItemView::item{border-radius:0px;color:rgba(0,0,0,0.57);height: 32px;background-color:palette(base);outline:0px;}"
+                                           "QComboBox QAbstractItemView::item:hover{border-radius:0px;color(palette(windowText));background-color:#3D6BE5;outline:0px;}"
                                            );
                 this->setObjectName("MonitorTitle");
                 this->setStyleSheet("QFrame#MonitorTitle{background:rgba(255,255,255,0);border-top-left-radius:6px;border-top-right-radius:6px;color: palette(windowText);}");
@@ -178,6 +193,25 @@ void MonitorTitleWidget::initThemeMode()
         this->setStyleSheet("QFrame#MonitorTitle{background:rgba(13,14,14,0);border-top-left-radius:6px;border-top-right-radius:6px;color: palette(windowText);}");
     }
 
+}
+
+void MonitorTitleWidget::initFontSize()
+{
+    connect(fontSettings,&QGSettings::changed,[=](QString key)
+    {
+        if("systemFont" == key || "systemFontSize" == key)
+        {
+            fontSize = fontSettings->get(FONT_SIZE).toInt();
+        }
+        QFont font;
+        font.setPointSize(fontSize-2);
+        titleLabel->setFont(font);
+
+        QFont changeBoxFont;
+        changeBoxFont.setPointSize(fontSize-2);
+        m_changeBox->setFont(changeBoxFont);
+    });
+    fontSize = fontSettings->get(FONT_SIZE).toInt();
 }
 
 MonitorTitleWidget::~MonitorTitleWidget()
@@ -359,9 +393,12 @@ void MonitorTitleWidget::initTitlebarMiddleContent()
     m_titleMiddleLayout = new QHBoxLayout(w);
     m_titleMiddleLayout->setContentsMargins(0, 18, 0, 0);
 
-    QLabel *titleLabel = new QLabel;
+    titleLabel = new QLabel;
     QLabel *picLabel = new QLabel;
-    titleLabel->setStyleSheet("QLabel{background-color:transparent;color:palette(windowText); font-size:14px;}");
+    QFont font;
+    font.setPointSize(fontSize-2);
+    titleLabel->setFont(font);
+    titleLabel->setStyleSheet("QLabel{background-color:transparent;color:palette(windowText);}");
     titleLabel->setText(tr("Kylin System Monitor"));
     picLabel->setPixmap(QPixmap(":img/kylin-system-monitor.png"));
     m_titleMiddleLayout->addWidget(picLabel);
@@ -631,7 +668,7 @@ void MonitorTitleWidget::initWidgets()
     //m_searchEdit->setVisible(true);
     //m_searchEdit->raise();
     m_searchEdit->setPlaceHolder(tr("Enter the relevant info of process"));
-    m_searchEdit->setFixedSize(222, 30);
+    m_searchEdit->setFixedSize(SPECIALWIDTH, NORMALHEIGHT);
     //m_searchEdit->getLineEdit()->installEventFilter(this);
 
     m_layout = new QVBoxLayout(this);

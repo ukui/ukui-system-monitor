@@ -33,6 +33,15 @@ ProcessListItem::ProcessListItem(ProcData info)
     {
         qtSettings = new QGSettings(idd);
     }
+
+    const QByteArray id(THEME_QT_SCHEMA);
+    if(QGSettings::isSchemaInstalled(id))
+    {
+        fontSettings = new QGSettings(id);
+    }
+
+    initFontSize();
+
     m_data = info;
     iconSize = 20;
     padding = 14;
@@ -64,6 +73,18 @@ void ProcessListItem::initThemeMode()
         }
     });
     currentThemeMode = qtSettings->get(MODE_QT_KEY).toString();
+}
+
+void ProcessListItem::initFontSize()
+{
+    connect(fontSettings,&QGSettings::changed,this,[=](QString key)
+    {
+        if("systemFont" == key || "systemFontSize" == key)
+        {
+            fontSize = fontSettings->get(FONT_SIZE).toInt();
+        }
+    });
+    fontSize = fontSettings->get(FONT_SIZE).toInt();
 }
 
 bool ProcessListItem::isSameItem(ProcessListItem *item)
@@ -134,7 +155,7 @@ void ProcessListItem::drawBackground(QRect rect, QPainter *painter, int index, b
 
 void ProcessListItem::drawForeground(QRect rect, QPainter *painter, int column, int, bool isSelect, bool isSeparator)
 {
-    setFontSize(*painter, 14);
+    setFontSize(*painter, fontSize);
     painter->setOpacity(0.85);
     //painter->setPen(QPen(QColor(QPalette::Base)));
     if (column == 0) {
