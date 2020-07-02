@@ -157,8 +157,7 @@ MySearchEdit::MySearchEdit(QWidget *parent)
 QPixmap MySearchEdit::drawSymbolicColoredPixmap(const QPixmap &source)
 {
 //    qDebug()<<"wwj,wozhendeshishishishsishishsishsihsishsishsishsihs"<<currentThemeMode;
-    if(currentThemeMode == "ukui-white")
-    {
+    if(currentThemeMode == "ukui-white") {
         QImage img = source.toImage();
         for (int x = 0; x < img.width(); x++)
         {
@@ -176,9 +175,7 @@ QPixmap MySearchEdit::drawSymbolicColoredPixmap(const QPixmap &source)
         }
         return QPixmap::fromImage(img);
     }
-
-    if(currentThemeMode == "ukui-black")
-    {
+    else if(currentThemeMode == "ukui-black") {
         QImage img = source.toImage();
         for (int x = 0; x < img.width(); x++)
         {
@@ -190,6 +187,24 @@ QPixmap MySearchEdit::drawSymbolicColoredPixmap(const QPixmap &source)
                         color.setRed(255);
                         color.setGreen(255);
                         color.setBlue(255);
+                        img.setPixelColor(x, y, color);
+                }
+            }
+        }
+        return QPixmap::fromImage(img);
+    }
+    else {
+        QImage img = source.toImage();
+        for (int x = 0; x < img.width(); x++)
+        {
+            for (int y = 0; y < img.height(); y++)
+            {
+                auto color = img.pixelColor(x, y);
+                if (color.alpha() > 0)
+                {
+                        color.setRed(61);
+                        color.setGreen(107);
+                        color.setBlue(229);
                         img.setPixelColor(x, y, color);
                 }
             }
