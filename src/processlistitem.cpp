@@ -114,12 +114,12 @@ void ProcessListItem::drawBackground(QRect rect, QPainter *painter, int index, b
     }
     else {
         painter->setOpacity(0.08);
-        if(currentThemeMode == "ukui-white")
+        if(currentThemeMode == "ukui-light" || currentThemeMode == "ukui-default" || currentThemeMode == "ukui-white")
         {
             painter->fillPath(path, QColor("#ffffff"));
         }
 
-        if(currentThemeMode == "ukui-black")
+        if(currentThemeMode == "ukui-dark" || currentThemeMode == "ukui-black")
         {
             painter->fillPath(path,QColor("#131414"));
         }

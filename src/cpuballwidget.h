@@ -22,7 +22,7 @@
 
 #include <QWidget>
 #include <QTimer>
-#include <QGSettings/QGSettings>
+#include <qgsettings.h>
 #include <QApplication>
 
 #include "shell/customstyle.h"

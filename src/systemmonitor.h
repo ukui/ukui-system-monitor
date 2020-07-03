@@ -31,7 +31,7 @@
 #include <QStackedWidget>
 #include <QLabel>
 #include <QSettings>
-#include <QGSettings/QGSettings>
+#include <qgsettings.h>
 
 #include <QtX11Extras/QX11Info>
 

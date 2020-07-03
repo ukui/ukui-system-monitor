@@ -74,13 +74,18 @@ DISK_INFO add_disk(const glibtop_mountentry *entry, gboolean show_all_fs)
     guint64 bused, bfree, bavail, btotal;
     gint percentage;
     glibtop_get_fsusage(&usage, entry->mountdir);
+    qDebug()<<entry->mountdir<<"1111111111111111111mountdir";
+    qDebug()<<"usage.blocks----"<<usage.blocks;
     if (usage.blocks == 0) {
+        qDebug()<<"222222";
         return disk;
     }
     if(strcmp(entry->devname,"none")==0 || strcmp(entry->devname,"tmpfs")==0){
+        qDebug()<<"333333";
         return disk;
     }
     if(strstr(entry->type, "tmpfs")) {
+        qDebug()<<"444444";
         return disk;
     }
     fsusage_stats(&usage, &bused, &bfree, &bavail, &btotal, &percentage);
@@ -93,7 +98,7 @@ DISK_INFO add_disk(const glibtop_mountentry *entry, gboolean show_all_fs)
     disk.bavail = bavail;
     disk.bused = bused;
     disk.valid = 1;
-//    qDebug() << disk.devname;//设备
+//    qDebug() << disk.devname<<"how i can get it ";//设备
 //    qDebug() << disk.mountdir;//目录
 //    qDebug() << disk.type;//类型
 //    qDebug() << disk.percentage;
@@ -141,15 +146,18 @@ void FileSystemWorker::onFileSystemListChanged()
     guint i;
     gboolean show_all_fs = TRUE;
     entries = glibtop_get_mountlist(&mountlist, show_all_fs);
+    qDebug()<<"number---"<<mountlist.number;
     for (i = 0; i < mountlist.number; i++) {
         DISK_INFO disk = add_disk(&entries[i], show_all_fs);
         if (disk.valid == 1) {
             std::string formatted_dev = make_string(g_strdup(disk.devname));
             QString dev_name = QString::fromStdString(formatted_dev);
+            qDebug()<<"dev name wwwjwjwjwjwjw"<<dev_name;
             //QString dev_name = QString(QLatin1String(disk.devname));
             newDiskList.append(dev_name);
 
             if (!this->isDeviceContains(dev_name)) {
+                qDebug()<<"if iiiiiiiiii";
                 FileSystemData *info = new FileSystemData(this);
                 info->setDevName(dev_name);
 
@@ -165,6 +173,7 @@ void FileSystemWorker::onFileSystemListChanged()
                 this->addDiskInfo(dev_name, info);
             }
             else {//update info which had exists
+                qDebug()<<"elseelseelseelse";
                 FileSystemData *info = this->getDiskInfo(dev_name);
                 if (info) {
                     std::string formatted_mountdir(make_string(g_strdup(disk.mountdir)));

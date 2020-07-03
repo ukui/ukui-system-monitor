@@ -118,7 +118,7 @@ void MonitorTitleWidget::initThemeMode()
             qDebug()<<"监听主题改变-------------------->"<<currentThemeMode<<endl;
             qApp->setStyle(new InternalStyle(currentThemeMode));
             //repaint();
-            if (currentThemeMode == "ukui-white")
+            if (currentThemeMode == "ukui-light" || currentThemeMode == "ukui-default" || currentThemeMode == "ukui-white")
             {
                 qDebug()<<"the theme is white";
                 m_changeBox->setStyleSheet("QComboBox{background:rgba(13,14,14,0.08);border-radius:6px;color:rgba(0,0,0,0.57)}"
@@ -133,7 +133,7 @@ void MonitorTitleWidget::initThemeMode()
 
             }
 
-            if (currentThemeMode == "ukui-black")
+            if (currentThemeMode == "ukui-dark" || currentThemeMode == "ukui-black")
             {
                 qDebug()<<"the theme is black";
                 m_changeBox->setStyleSheet("QComboBox{background:rgba(255,255,255,0.08);border-radius:6px;color:rgba(255,255,255,0.57)}"
@@ -152,7 +152,7 @@ void MonitorTitleWidget::initThemeMode()
     });
     qDebug()<<"come in Monitor opacity";
     currentThemeMode = qtSettings->get(MODE_QT_KEY).toString();
-    if (currentThemeMode == "ukui-white")
+    if (currentThemeMode == "ukui-light" || currentThemeMode == "ukui-default" || currentThemeMode == "ukui-white")
     {
         m_changeBox->setStyleSheet("QComboBox{background:rgba(13,14,14,0.08);border-radius:6px;color:rgba(0,0,0,0.57)}"
                                    "QComboBox::drop-down{border:0px;width:30px;}"
@@ -165,7 +165,7 @@ void MonitorTitleWidget::initThemeMode()
         this->setStyleSheet("QFrame#MonitorTitle{background:rgba(255,255,255,0);border-top-left-radius:6px;border-top-right-radius:6px;color: palette(windowText);}");
     }
 
-    if (currentThemeMode == "ukui-black")
+    if (currentThemeMode == "ukui-dark" || currentThemeMode == "ukui-black")
     {
         m_changeBox->setStyleSheet("QComboBox{background:rgba(255,255,255,0.08);border-radius:6px;color:rgba(255,255,255,0.57)}"
                                    "QComboBox::drop-down{border:0px;width:30px;}"

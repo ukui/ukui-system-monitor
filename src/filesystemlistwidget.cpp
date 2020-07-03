@@ -42,7 +42,7 @@ FileSystemListWidget::FileSystemListWidget(QList<bool> toBeDisplayedColumns, QWi
   ,m_titlePressColumn(-1)
   ,m_mouseAtScrollArea(false)
   ,m_mouseDragScrollbar(false)
-{  
+{
     const QByteArray idd(THEME_QT_SCHEMA);
 
     if(QGSettings::isSchemaInstalled(idd))

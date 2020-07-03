@@ -25,7 +25,7 @@
 #include <QSettings>
 #include <QComboBox>
 #include <QListView>
-#include <QGSettings/QGSettings>
+#include <qgsettings.h>
 
 #include "shell/customstyle.h"
 #include "../shell/macro.h"

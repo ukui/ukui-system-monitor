@@ -24,7 +24,7 @@
 #include <QObject>
 #include <QWidget>
 #include <QPixmap>
-#include <QGSettings/QGSettings>
+#include <qgsettings.h>
 #include <QApplication>
 
 #include "shell/customstyle.h"

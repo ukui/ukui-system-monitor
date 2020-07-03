@@ -63,7 +63,7 @@ FileSystemDialog::FileSystemDialog(QList<bool> toBeDisplayedColumns, QSettings *
 
     this->refreshFileSysList();
 
-    m_fileSystemWatcher = FileSystemWatcher::instance();
+    m_fileSystemWatcher = FileSystemWatcher::instance();  //it will emit a signal to tell us if the device is added or removed
     connect(m_fileSystemWatcher, &FileSystemWatcher::deviceAdded, this, [=] (const QString &dev) {
         this->refreshFileSysList();
     });

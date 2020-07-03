@@ -24,7 +24,7 @@
 #include <QObject>
 #include <QPainter>
 #include <QPen>
-#include <QGSettings/QGSettings>
+#include <qgsettings.h>
 
 #include "filesystemdata.h"
 #include "shell/customstyle.h"
