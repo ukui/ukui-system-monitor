@@ -109,12 +109,12 @@ void FileSystemListItem::drawBackground(QRect rect, QPainter *painter, int index
     }
     else {
         painter->setOpacity(0.08);
-        if(currentTheme == "ukui-white")
+        if(currentTheme == "ukui-light" || currentTheme == "ukui-default" || currentTheme == "ukui-white")
         {
             painter->fillPath(path, QColor("#ffffff"));
         }
 
-        if(currentTheme == "ukui-black")
+        if(currentTheme == "ukui-dark" || currentTheme == "ukui-black")
         {
             painter->fillPath(path, QColor("#000000"));
         }

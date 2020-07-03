@@ -55,11 +55,11 @@ ResourcesIndicator::ResourcesIndicator(int flag, QWidget *parent)
 
     initThemeMode();
 
-    if(currentThemeMode == "ukui-white")
+    if(currentThemeMode == "ukui-light" || currentThemeMode == "ukui-default" || currentThemeMode == "ukui-white")
     {
         this->m_bgColor = QColor(0xff,0xff,0xff,0);    //button's lowest background
     }
-    else if(currentThemeMode == "ukui-black")
+    else if(currentThemeMode == "ukui-dark" || currentThemeMode == "ukui-black")
     {
         this->m_bgColor = QColor(0x13,0x14,0x14,0);
     }
@@ -173,7 +173,7 @@ void ResourcesIndicator::updateBgColor()
         qDebug()<<"Hover---";
 //        if()
         this->m_outsideBorderColor = Qt::transparent;
-        if(currentThemeMode == "ukui-white")
+        if(currentThemeMode == "ukui-light"  || currentThemeMode == "ukui-default" || currentThemeMode == "ukui-white")
         {
             this->m_bgColor = QColor(13,14,14,49);  //#f6fcfe
         }
@@ -191,7 +191,7 @@ void ResourcesIndicator::updateBgColor()
         qDebug()<<"1234567879.000";
 //        this->m_outsideBorderColor = QColor("#0973b4");
         this->m_outsideBorderColor = Qt::transparent;
-        if(currentThemeMode == "ukui-white")
+        if(currentThemeMode == "ukui-light" || currentThemeMode == "ukui-default" || currentThemeMode == "ukui-white")
         {
             this->m_bgColor = QColor(0x13,0x14,0x14,19); //#e9f8fd
         }
@@ -206,12 +206,12 @@ void ResourcesIndicator::updateBgColor()
         this->m_outsideBorderColor = Qt::transparent;
 //        this->m_bgColor = QColor("#ffffff");
 //        this->m_outsideBorderColor = palette().color(QPalette::Base);
-        if(currentThemeMode == "ukui-white")
+        if(currentThemeMode == "ukui-light" || currentThemeMode == "ukui-default" || currentThemeMode == "ukui-white")
         {
             qDebug()<<"ifiamcommingin";
             this->m_bgColor = QColor(0xff,0xff,0xff,0);
         }
-        else if(currentThemeMode == "ukui-black")
+        else if(currentThemeMode == "ukui-dark" || currentThemeMode == "ukui-black")
         {
             qDebug()<<"iiiiiiiiiiiii";
             this->m_bgColor = QColor(0x13,0x14,0x14,0);

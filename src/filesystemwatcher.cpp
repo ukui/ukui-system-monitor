@@ -86,7 +86,7 @@ bool FileSystemWatcher::clearWatcher()
     }
 }
 
-void FileSystemWatcher::onMountDeviceFileContentsChanged()
+void FileSystemWatcher::onMountDeviceFileContentsChanged()  //emit the signal if the devie is added or removed
 {
     QSet<QString> nowFileSet = getFileContentsLineByLine(DEVICE_MOUNT_PONINT_RECORD_FILE);
     for(const QString &mountPath: nowFileSet - m_origFileSet) {

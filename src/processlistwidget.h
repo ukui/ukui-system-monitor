@@ -29,7 +29,7 @@
 #include <QPixmap>
 #include <QTimer>
 #include <QWidget>
-#include <QGSettings/QGSettings>
+#include <qgsettings.h>
 
 typedef bool (* SortFunction) (const ProcessListItem *item1, const ProcessListItem *item2, bool sort);
 typedef bool (* SearchFunction) (const ProcessListItem *item, QString text);

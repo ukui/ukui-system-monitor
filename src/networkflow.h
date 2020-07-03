@@ -22,7 +22,7 @@
 #define NETWORKFLOW_H
 
 #include <QWidget>
-#include <QGSettings/QGSettings>
+#include <qgsettings.h>
 #include <QPainterPath>
 #include <QStyleOption>
 

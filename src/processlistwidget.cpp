@@ -861,12 +861,12 @@ void ProcessListWidget::paintEvent(QPaintEvent *)
 //                font.setPointSize(10);
                 font.setPixelSize(fontSize);
                 painter.setFont(font);
-                if(currentThemeMode == "ukui-white")
+                if(currentThemeMode == "ukui-light" || currentThemeMode == "ukui-default" || currentThemeMode == "ukui-white")
                 {
                     painter.setPen(QPen(QColor("#000000")));
                 }
 
-                if(currentThemeMode == "ukui-black")
+                if(currentThemeMode == "ukui-dark" || currentThemeMode == "ukui-black")
                 {
                     painter.setPen(QPen(QColor("#ffffff")));
                 }

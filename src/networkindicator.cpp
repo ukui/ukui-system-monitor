@@ -49,11 +49,11 @@ NetworkIndicator::NetworkIndicator(QWidget *parent)
     m_netMaxHeight = 30;
     m_pointSpace = 5;
 
-    if(currentThemeMode == "ukui-white")
+    if(currentThemeMode == "ukui-light" || currentThemeMode == "ukui-default" || currentThemeMode == "ukui-white")
     {
         this->m_bgColor = QColor(0xff,0xff,0xff,0);
     }
-    else if(currentThemeMode == "ukui-black")
+    else if(currentThemeMode == "ukui-dark" || currentThemeMode == "ukui-black")
     {
         this->m_bgColor = QColor(0x13,0x14,0x14,0);
     }
@@ -167,7 +167,7 @@ void NetworkIndicator::updateBgColor()
     switch (m_state) {
     case Hover:
         this->m_outsideBorderColor = Qt::transparent;
-        if(currentThemeMode == "ukui-white")
+        if(currentThemeMode == "ukui-light" || currentThemeMode == "ukui-default" || currentThemeMode == "ukui-white")
         {
             this->m_bgColor = QColor(13,14,14,49);  //#f6fcfe
         }
@@ -186,7 +186,7 @@ void NetworkIndicator::updateBgColor()
         qDebug()<<"1234567879.000";
 //        this->m_outsideBorderColor = QColor("#0973b4");
         this->m_outsideBorderColor = Qt::transparent;
-        if(currentThemeMode == "ukui-white")
+        if(currentThemeMode == "ukui-light" || currentThemeMode == "ukui-default" || currentThemeMode == "ukui-white")
         {
             this->m_bgColor = QColor(0x13,0x14,0x14,19); //#e9f8fd
         }
@@ -197,11 +197,11 @@ void NetworkIndicator::updateBgColor()
         break;
     default:
         this->m_outsideBorderColor = Qt::transparent;
-        if(currentThemeMode == "ukui-white")
+        if(currentThemeMode == "ukui-light" || currentThemeMode == "ukui-default" || currentThemeMode == "ukui-white")
         {
             this->m_bgColor = QColor(0xff,0xff,0xff,0);
         }
-        else if(currentThemeMode == "ukui-black")
+        else if(currentThemeMode == "ukui-dark" || currentThemeMode == "ukui-black")
         {
             this->m_bgColor = QColor(0x13,0x14,0x14,0);
         }

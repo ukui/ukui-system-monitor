@@ -163,7 +163,7 @@ MySearchEdit::MySearchEdit(QWidget *parent)
 QPixmap MySearchEdit::drawSymbolicColoredPixmap(const QPixmap &source)
 {
 //    qDebug()<<"wwj,wozhendeshishishishsishishsishsihsishsishsishsihs"<<currentThemeMode;
-    if(currentThemeMode == "ukui-white")
+    if(currentThemeMode == "ukui-light" || currentThemeMode == "ukui-default" || currentThemeMode == "ukui-white")
     {
         QImage img = source.toImage();
         for (int x = 0; x < img.width(); x++)
@@ -183,7 +183,7 @@ QPixmap MySearchEdit::drawSymbolicColoredPixmap(const QPixmap &source)
         return QPixmap::fromImage(img);
     }
 
-    if(currentThemeMode == "ukui-black")
+    else if(currentThemeMode == "ukui-dark" || currentThemeMode == "ukui-black")
     {
         QImage img = source.toImage();
         for (int x = 0; x < img.width(); x++)
@@ -196,6 +196,26 @@ QPixmap MySearchEdit::drawSymbolicColoredPixmap(const QPixmap &source)
                         color.setRed(255);
                         color.setGreen(255);
                         color.setBlue(255);
+                        img.setPixelColor(x, y, color);
+                }
+            }
+        }
+        return QPixmap::fromImage(img);
+    }
+
+    else
+    {
+        QImage img = source.toImage();
+        for (int x = 0; x < img.width(); x++)
+        {
+            for (int y = 0; y < img.height(); y++)
+            {
+                auto color = img.pixelColor(x, y);
+                if (color.alpha() > 0)
+                {
+                        color.setRed(0);
+                        color.setGreen(0);
+                        color.setBlue(0);
                         img.setPixelColor(x, y, color);
                 }
             }
@@ -370,7 +390,7 @@ void MySearchEdit::initThemeMode()
             qApp->setStyle(new InternalStyle(currentThemeMode));
             m_pClearTextButton->setIcon(drawSymbolicColoredPixmap(QPixmap::fromImage(QIcon::fromTheme(":/img/button-close-default-add-background-three.svg").pixmap(24,24).toImage())));
 
-            if(currentThemeMode == "ukui-white")
+            if(currentThemeMode == "ukui-light" || currentThemeMode == "ukui-default" || currentThemeMode == "ukui-white")
             {
                 m_edit->setStyleSheet("QLineEdit{background:transparent;border-radius:4px;color:#00000;padding-right:12px;padding-bottom: 2px;}"); //#CC00FF transparent
                 m_placeHolder->setStyleSheet("QLabel{background-color:transparent;color:rgba(0,0,0,0.57);margin: 2 0 0 0 px;}");
@@ -378,7 +398,7 @@ void MySearchEdit::initThemeMode()
                 this->setStyleSheet("QFrame#SearchBtn{background:rgba(13,14,14,0.08);border-radius:4px;}");
             }
 
-            if(currentThemeMode == "ukui-black")
+            if(currentThemeMode == "ukui-dark" || currentThemeMode == "ukui-black")
             {
                 m_edit->setStyleSheet("QLineEdit{background:transparent;border-radius:4px;color:#FFFFFF;padding-right:12px;padding-bottom: 2px;}"); //#CC00FF transparent
                 m_placeHolder->setStyleSheet("QLabel{background-color:transparent;color:rgba(255,255,255,0.57);margin: 2 0 0 0 px;}");
@@ -393,7 +413,7 @@ void MySearchEdit::initThemeMode()
     qDebug()<<"监听主题改变-------------------->"<<currentThemeMode<<endl;
     qApp->setStyle(new InternalStyle(currentThemeMode));
     m_pClearTextButton->setIcon(drawSymbolicColoredPixmap(QPixmap::fromImage(QIcon::fromTheme(":/img/button-close-default-add-background-three.svg").pixmap(24,24).toImage())));
-    if(currentThemeMode == "ukui-white")
+    if(currentThemeMode == "ukui-light" || currentThemeMode == "ukui-default" || currentThemeMode == "ukui-white")
     {
         m_edit->setStyleSheet("QLineEdit{background:transparent;border-radius:4px;color:#00000;padding-right:12px;padding-bottom: 2px;}"); //#CC00FF transparent
         m_placeHolder->setStyleSheet("QLabel{background-color:transparent;color:rgba(0,0,0,0.57);margin: 2 0 0 0 px;}");
@@ -401,7 +421,7 @@ void MySearchEdit::initThemeMode()
         this->setStyleSheet("QFrame#SearchBtn{background:rgba(13,14,14,0.08);border-radius:4px;}");
     }
 
-    if(currentThemeMode == "ukui-black")
+    if(currentThemeMode == "ukui-dark" || currentThemeMode == "ukui-black")
     {
         m_edit->setStyleSheet("QLineEdit{background:transparent;border-radius:4px;color:#FFFFFF;padding-right:12px;padding-bottom: 2px;}"); //#CC00FF transparent
         m_placeHolder->setStyleSheet("QLabel{background-color:transparent;color:rgba(255,255,255,0.57);margin: 2 0 0 0 px;}");

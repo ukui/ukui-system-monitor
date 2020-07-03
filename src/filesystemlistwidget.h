@@ -29,7 +29,7 @@
 #include <QPixmap>
 #include <QTimer>
 #include <QWidget>
-#include <QGSettings/QGSettings>
+#include <qgsettings.h>
 
 class FileSystemListWidget : public QWidget
 {

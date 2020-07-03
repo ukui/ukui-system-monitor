@@ -30,7 +30,7 @@
 #include <QPainterPath>
 #include <QPushButton>
 #include <QWidgetAction>
-#include <QGSettings/QGSettings>
+#include <qgsettings.h>
 #include <QApplication>
 
 #include "shell/customstyle.h"

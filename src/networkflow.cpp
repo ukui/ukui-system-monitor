@@ -268,12 +268,12 @@ void NetworkFlow::paintEvent(QPaintEvent *)
     opt.init(this);
     //framePath.addRect(QRectF(gridX, gridY, gridWidth, gridHeight));
     //m_bgColor(QColor("#000000"))
-    if(currentThemeMode == "ukui-white")
+    if(currentThemeMode == "ukui-light" || currentThemeMode == "ukui-default" || currentThemeMode == "ukui-white")
     {
         m_bgColor = (QColor("#131414"));
     }
 
-    if(currentThemeMode == "ukui-black")
+    if(currentThemeMode == "ukui-dark" || currentThemeMode == "ukui-black")
     {
         qDebug()<<"9517538246";
         m_bgColor = (QColor("#ffffff"));

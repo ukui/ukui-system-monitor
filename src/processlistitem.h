@@ -25,7 +25,7 @@
 #include <QPainter>
 #include <QPainterPath>
 #include <QPen>
-#include <QGSettings/QGSettings>
+#include <qgsettings.h>
 #include <QApplication>
 #include <QWidget>
 

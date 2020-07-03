@@ -26,7 +26,7 @@
 #include <QPixmap>
 #include <QPainter>
 #include <QStyleOption>
-#include <QGSettings/QGSettings>
+#include <qgsettings.h>
 #include <QApplication>
 
 #include "shell/customstyle.h"

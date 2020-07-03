@@ -264,7 +264,7 @@ void CpuRateWidget::initThemeMode()
             qDebug()<<"监听主题改变-------------------->"<<currentThemeMode<<endl;
             qApp->setStyle(new InternalStyle(currentThemeMode));
             //repaint();
-            if(currentThemeMode == "ukui-white")
+            if(currentThemeMode == "ukui-light" || currentThemeMode == "ukui-default" || currentThemeMode =="ukui-white")
             {
                 m_cpuRateTitle->setStyleSheet("QLabel{background:transparent;font-size:12px;color:rgba(0,0,0,0.57);}"); //#999999
                 m_cpuIdleRateTitle->setStyleSheet("QLabel{background:transparent;font-size:12px;color:rgba(0,0,0,0.57);}");
@@ -272,7 +272,7 @@ void CpuRateWidget::initThemeMode()
                 m_cpuIdleTimeTitle->setStyleSheet("QLabel{background:transparent;font-size:12px;color:rgba(0,0,0,0.57);}");
             }
 
-            if(currentThemeMode == "ukui-black")
+            if(currentThemeMode == "ukui-dark" || currentThemeMode == "ukui-black")
             {
                 m_cpuRateTitle->setStyleSheet("QLabel{background:transparent;font-size:12px;color:rgba(255,255,255,0.57);}"); //#999999
                 m_cpuIdleRateTitle->setStyleSheet("QLabel{background:transparent;font-size:12px;color:rgba(255,255,255,0.57);}");
@@ -282,7 +282,7 @@ void CpuRateWidget::initThemeMode()
         }
     });
     currentThemeMode = qtSettings->get(MODE_QT_KEY).toString();
-    if(currentThemeMode == "ukui-white")
+    if(currentThemeMode == "ukui-light" || currentThemeMode == "ukui-default" || currentThemeMode == "ukui-white")
     {
         m_cpuRateTitle->setStyleSheet("QLabel{background:transparent;font-size:12px;color:rgba(0,0,0,0.57);}"); //#999999
         m_cpuIdleRateTitle->setStyleSheet("QLabel{background:transparent;font-size:12px;color:rgba(0,0,0,0.57);}");
@@ -290,7 +290,7 @@ void CpuRateWidget::initThemeMode()
         m_cpuIdleTimeTitle->setStyleSheet("QLabel{background:transparent;font-size:12px;color:rgba(0,0,0,0.57);}");
     }
 
-    if(currentThemeMode == "ukui-black")
+    if(currentThemeMode == "ukui-dark" || currentThemeMode == "ukui-black")
     {
         m_cpuRateTitle->setStyleSheet("QLabel{background:transparent;font-size:12px;color:rgba(255,255,255,0.57);}"); //#999999
         m_cpuIdleRateTitle->setStyleSheet("QLabel{background:transparent;font-size:12px;color:rgba(255,255,255,0.57);}");

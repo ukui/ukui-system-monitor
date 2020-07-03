@@ -23,6 +23,7 @@
 
 #include <QObject>
 #include <QMap>
+#include <QDebug>
 
 #include "filesystemdata.h"
 

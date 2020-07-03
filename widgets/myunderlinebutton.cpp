@@ -84,13 +84,13 @@ void MyUnderLineButton::initThemeMode()
             qDebug()<<"监听主题改变-------------------->"<<currentThemeMode<<endl;
             qApp->setStyle(new InternalStyle(currentThemeMode));
             //repaint();
-            if (currentThemeMode == "ukui-white")
+            if (currentThemeMode == "ukui-light" || currentThemeMode == "ukui-default" || currentThemeMode == "ukui-white")
             {
                 m_textLabel->setStyleSheet("QLabel{background-color:transparent;color:rgba(0,0,0,0.57);text-align:center;}"); //ffffff
 
             }
 
-            if (currentThemeMode == "ukui-black")
+            if (currentThemeMode == "ukui-dark" || currentThemeMode == "ukui-black")
             {
                 m_textLabel->setStyleSheet("QLabel{background-color:transparent;color:rgba(255,255,255,0.57); text-align:center;}"); //ffffff
 
@@ -101,13 +101,13 @@ void MyUnderLineButton::initThemeMode()
         updateStyleSheet();
     });
     currentThemeMode = qtSettings->get(MODE_QT_KEY).toString();
-    if (currentThemeMode == "ukui-white")
+    if (currentThemeMode == "ukui-light" || currentThemeMode == "ukui-default" || currentThemeMode == "ukui-white")
     {
         m_textLabel->setStyleSheet("QLabel{background-color:transparent;color:rgba(0,0,0,0.57); text-align:center;}"); //ffffff
 
     }
 
-    if (currentThemeMode == "ukui-black")
+    if (currentThemeMode == "ukui-dark" || currentThemeMode == "ukui-black")
     {
         m_textLabel->setStyleSheet("QLabel{background-color:transparent;color:rgba(255,255,255,0.57); font-size:20px;text-align:center;}"); //ffffff
 
@@ -209,7 +209,7 @@ void MyUnderLineButton::updateStyleSheet()
         //m_underlineLabel->hide();
         break;
     case Normal:
-        if(currentThemeMode == "ukui-white")
+        if(currentThemeMode == "ukui-light" || currentThemeMode == "ukui-default" || currentThemeMode == "ukui-white")
         {
             m_textLabel->setStyleSheet("QLabel{back-color:transparent;color:rgba(0,0,0,0.57); text-align:center;}");
         }
@@ -305,7 +305,7 @@ void MyUnderLineButton::paintEvent(QPaintEvent *event)
     case Normal:
     {
 //        p.setOpacity(0.57);
-        if(currentThemeMode == "ukui-white")
+        if(currentThemeMode == "ukui-light" || currentThemeMode == "ukui-default" || currentThemeMode == "ukui-white")
         {
             p.setBrush(QBrush(QColor(0x13,0x14,0x14,0x19)));
         }
