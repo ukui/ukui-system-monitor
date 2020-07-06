@@ -26,7 +26,7 @@
 #include <QVBoxLayout>
 #include <stdio.h>
 #include <sys/syslog.h>
-#include <QGSettings/QGSettings>
+#include <qgsettings.h>
 
 #include "shell/customstyle.h"
 #include "../shell/customstyle.h"

@@ -24,7 +24,18 @@
  */
 #define THEME_QT_SCHEMA "org.ukui.style"
 #define MODE_QT_KEY "style-name"
+#define FONT_SIZE "system-font-size"
 /* QT图标主题 */
 #define ICON_QT_KEY "icon-theme-name"
+
+/*
+ * about the size of every single control
+ */
+#define NORMALHEIGHT 30
+#define SPECIALWIDTH 200
+#define NORMALWIDTH 100
+#define MAINWINDOWHEIGHT 590
+#define MAINWINDOWWIDTH 760
+#define SEARCHBUTTON 16
 
 #endif

@@ -30,10 +30,11 @@
 #include <QPainterPath>
 #include <QPushButton>
 #include <QWidgetAction>
-#include <QGSettings/QGSettings>
+#include <qgsettings.h>
 #include <QApplication>
 
 #include "shell/customstyle.h"
+#include "../shell/macro.h"
 
 #include "mytristatebutton.h"
 
@@ -50,6 +51,7 @@ public:
     const QString searchedText() const;
     QLineEdit *getLineEdit() const;
     void initThemeMode();
+    void initFontSize();
 
 public slots:
     void clearEdit();
@@ -81,7 +83,11 @@ private:
     MyTristateButton *m_clearBtn = nullptr;
     QPushButton *m_pClearTextButton =nullptr;
     QPixmap drawSymbolicColoredPixmap(const QPixmap &source);
-    QGSettings * qtSettings;
+
+    int fontSize;
+
+    QGSettings *qtSettings;
+    QGSettings *fontSettings;
     QString currentThemeMode;
 };
 

@@ -29,7 +29,7 @@
 #include <QPixmap>
 #include <QTimer>
 #include <QWidget>
-#include <QGSettings/QGSettings>
+#include <qgsettings.h>
 
 class FileSystemListWidget : public QWidget
 {
@@ -59,6 +59,7 @@ public:
     bool mouseAtTitleArea(int y);
 
     void initThemeMode();
+    void initFontSize();
 
 signals:
     void rightMouseClickedItem(QPoint pos);
@@ -97,7 +98,10 @@ private:
     int m_titlePadding;
     int m_titlePressColumn;
 
+    int fontSize;
+
     QGSettings * qtSettings;
+    QGSettings *fontSettings;
     QString currentThemeMode;
 };
 

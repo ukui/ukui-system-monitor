@@ -37,10 +37,23 @@ MyUnderLineButton::MyUnderLineButton(QWidget *parent)
         qtSettings = new QGSettings(idd);
     }
 
-    this->setFixedSize(100, 32);    
+    const QByteArray id(THEME_QT_SCHEMA);
+
+    if(QGSettings::isSchemaInstalled(id))
+    {
+        fontSettings = new QGSettings(id);
+    }
+
+    initFontSize();
+
+    this->setFixedSize(NORMALWIDTH, NORMALHEIGHT+2);
     m_textLabel = new QLabel;
+//    QFont ftSize;
+//    ftSize.setPointSize(fontSize);
+//    m_textLabel->setFont(ftSize);
 
     initThemeMode();
+
 
 //    m_underlineLabel = new QLabel;
 //    m_underlineLabel->setFixedSize(52, 2);
@@ -56,6 +69,9 @@ MyUnderLineButton::MyUnderLineButton(QWidget *parent)
 
 void MyUnderLineButton::initThemeMode()
 {
+    QFont font;
+    font.setPointSize(fontSize -2);
+    m_textLabel->setFont(font);
     //监听主题改变
     connect(qtSettings, &QGSettings::changed, this, [=](const QString &key)
     {
@@ -68,14 +84,16 @@ void MyUnderLineButton::initThemeMode()
             qDebug()<<"监听主题改变-------------------->"<<currentThemeMode<<endl;
             qApp->setStyle(new InternalStyle(currentThemeMode));
             //repaint();
-            if (currentThemeMode == "ukui-white")
+            if (currentThemeMode == "ukui-light" || currentThemeMode == "ukui-default" || currentThemeMode == "ukui-white")
             {
-                m_textLabel->setStyleSheet("QLabel{background-color:transparent;color:rgba(0,0,0,0.57); font-size:14px;text-align:center;}"); //ffffff
+                m_textLabel->setStyleSheet("QLabel{background-color:transparent;color:rgba(0,0,0,0.57);text-align:center;}"); //ffffff
+
             }
 
-            if (currentThemeMode == "ukui-black")
+            if (currentThemeMode == "ukui-dark" || currentThemeMode == "ukui-black")
             {
-                m_textLabel->setStyleSheet("QLabel{background-color:transparent;color:rgba(255,255,255,0.57); font-size:14px;text-align:center;}"); //ffffff
+                m_textLabel->setStyleSheet("QLabel{background-color:transparent;color:rgba(255,255,255,0.57); text-align:center;}"); //ffffff
+
             }
 
         }
@@ -83,15 +101,29 @@ void MyUnderLineButton::initThemeMode()
         updateStyleSheet();
     });
     currentThemeMode = qtSettings->get(MODE_QT_KEY).toString();
-    if (currentThemeMode == "ukui-white")
+    if (currentThemeMode == "ukui-light" || currentThemeMode == "ukui-default" || currentThemeMode == "ukui-white")
     {
-        m_textLabel->setStyleSheet("QLabel{background-color:transparent;color:rgba(0,0,0,0.57); font-size:14px;text-align:center;}"); //ffffff
+        m_textLabel->setStyleSheet("QLabel{background-color:transparent;color:rgba(0,0,0,0.57); text-align:center;}"); //ffffff
+
     }
 
-    if (currentThemeMode == "ukui-black")
+    if (currentThemeMode == "ukui-dark" || currentThemeMode == "ukui-black")
     {
-        m_textLabel->setStyleSheet("QLabel{background-color:transparent;color:rgba(255,255,255,0.57); font-size:14px;text-align:center;}"); //ffffff
+        m_textLabel->setStyleSheet("QLabel{background-color:transparent;color:rgba(255,255,255,0.57); font-size:20px;text-align:center;}"); //ffffff
+
     }
+}
+
+void MyUnderLineButton::initFontSize()
+{
+    connect(fontSettings,&QGSettings::changed,[=](QString key)
+    {
+        if("systemFont" == key || "systemFontSize" == key)
+        {
+            fontSize = fontSettings->get(FONT_SIZE).toInt();
+        }
+    });
+    fontSize = fontSettings->get(FONT_SIZE).toInt();
 }
 
 MyUnderLineButton::~MyUnderLineButton()
@@ -161,6 +193,9 @@ void MyUnderLineButton::mouseMoveEvent(QMouseEvent *event)
 
 void MyUnderLineButton::updateStyleSheet()
 {
+    QFont font;
+    font.setPointSize(fontSize - 3);
+    m_textLabel->setFont(font);
     switch (m_state) {
 //    case Hover:
 //        m_textLabel->setStyleSheet("QLabel{background-color:transparent;color:#778899; font-size:14px;text-align:center;font-weight:bold;}");
@@ -169,17 +204,18 @@ void MyUnderLineButton::updateStyleSheet()
     case Press:
         this->setObjectName("OnlyBackground");
         this->setStyleSheet("onlyBackground#QPushButton{background:#3d6be5;}");
-        m_textLabel->setStyleSheet("QLabel{background-color:#3d6be5;color:#ffffff; font-size:14px;text-align:center;font-weight:bold;}");
+        m_textLabel->setStyleSheet("QLabel{background-color:#3d6be5;color:#ffffff; text-align:center;font-weight:bold;}");
+
         //m_underlineLabel->hide();
         break;
     case Normal:
-        if(currentThemeMode == "ukui-white")
+        if(currentThemeMode == "ukui-light" || currentThemeMode == "ukui-default" || currentThemeMode == "ukui-white")
         {
-            m_textLabel->setStyleSheet("QLabel{back-color:transparent;color:rgba(0,0,0,0.57); font-size:14px;text-align:center;}");
+            m_textLabel->setStyleSheet("QLabel{back-color:transparent;color:rgba(0,0,0,0.57); text-align:center;}");
         }
         else
         {
-            m_textLabel->setStyleSheet("QLabel{back-color:transparent;color:rgba(255,255,255,0.57); font-size:14px;text-align:center;}");
+            m_textLabel->setStyleSheet("QLabel{back-color:transparent;color:rgba(255,255,255,0.57); text-align:center;}");
         }
 //    case Normal:
 
@@ -269,7 +305,7 @@ void MyUnderLineButton::paintEvent(QPaintEvent *event)
     case Normal:
     {
 //        p.setOpacity(0.57);
-        if(currentThemeMode == "ukui-white")
+        if(currentThemeMode == "ukui-light" || currentThemeMode == "ukui-default" || currentThemeMode == "ukui-white")
         {
             p.setBrush(QBrush(QColor(0x13,0x14,0x14,0x19)));
         }

@@ -25,7 +25,7 @@
 #include <QPainter>
 #include <QPainterPath>
 #include <QPen>
-#include <QGSettings/QGSettings>
+#include <qgsettings.h>
 #include <QApplication>
 #include <QWidget>
 
@@ -65,6 +65,7 @@ public:
     QString getCommandLine() const;
 
     void initThemeMode();
+    void initFontSize();
     
 private:
     ProcData m_data;
@@ -72,7 +73,10 @@ private:
     int padding;
     int textPadding;
 
-    QGSettings * qtSettings;
+    int fontSize;
+
+    QGSettings *qtSettings;
+    QGSettings *fontSettings;
     QString currentThemeMode;
 };
 

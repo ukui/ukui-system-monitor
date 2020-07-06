@@ -26,14 +26,6 @@
 #include <QFocusEvent>
 #include <QResizeEvent>
 
-/**
- * QT主题
- */
-#define THEME_QT_SCHEMA "org.ukui.style"
-#define MODE_QT_KEY "style-name"
-/* QT图标主题 */
-#define ICON_QT_KEY "icon-theme-name"
-
 MySearchEdit::MySearchEdit(QWidget *parent)
     : QFrame(parent)
     ,m_showCurve(QEasingCurve::OutCubic)    
@@ -47,6 +39,12 @@ MySearchEdit::MySearchEdit(QWidget *parent)
         qtSettings = new QGSettings(idd);
     }
 
+    const QByteArray id(THEME_QT_SCHEMA);
+
+    if(QGSettings::isSchemaInstalled(id))
+    {
+        fontSettings = new QGSettings(id);
+    }
 
     this->setWindowFlags(Qt::FramelessWindowHint);
     //this->setStyleSheet("QFrame{background-color:#00376a;border-radius:0px;}");
@@ -57,7 +55,7 @@ MySearchEdit::MySearchEdit(QWidget *parent)
 //    this->setStyleSheet("QFrame#SearchBtn{background:rgba(77,88,99,0.08);border-radius:4px;}");
     m_searchBtn = new QLabel;
     m_searchBtn->setStyleSheet("QLabel{background-color:transparent;border:none;background-image:url(:/img/search.png);}");
-    m_searchBtn->setFixedSize(16, 16);
+    m_searchBtn->setFixedSize(SEARCHBUTTON, SEARCHBUTTON);
 
 //    m_clearBtn = new MyTristateButton;
 //    QPushButton *m_clearBtn = new QPushButton();
@@ -87,9 +85,11 @@ MySearchEdit::MySearchEdit(QWidget *parent)
 
     connect(m_edit, &QLineEdit::textChanged, this, &MySearchEdit::textChageSlots);
 
+    initFontSize();
+
     QFont SearchLine;
     SearchLine = m_edit->font();
-    SearchLine.setPixelSize(14);
+    SearchLine.setPixelSize(fontSize);
     SearchLine.setFamily("Noto Sans CJK SC");
     m_edit->setFont(SearchLine);
     m_edit->setStyleSheet("color:palette(windowText)");
@@ -104,8 +104,14 @@ MySearchEdit::MySearchEdit(QWidget *parent)
     });
     //m_edit->setPlaceholderText("enter process info");
 
+
+
     m_placeHolder = new QLabel;  //about the font
-//    m_placeHolder->setStyleSheet("QLabel{background-color:transparent;color:rgba(0,0,0,0.57);font-size:14px;margin: 2 0 0 0 px;}");
+    QFont font;
+    font.setPointSize(fontSize-2);
+    m_placeHolder->setFont(font);
+
+//    m_placeHolder->setStyleSheet("QLabel{background-color:transparent;color:rgba(0,0,0,0.57);margin: 2 0 0 0 px;}");
 
     initThemeMode();
 
@@ -157,7 +163,8 @@ MySearchEdit::MySearchEdit(QWidget *parent)
 QPixmap MySearchEdit::drawSymbolicColoredPixmap(const QPixmap &source)
 {
 //    qDebug()<<"wwj,wozhendeshishishishsishishsishsihsishsishsishsihs"<<currentThemeMode;
-    if(currentThemeMode == "ukui-white") {
+    if(currentThemeMode == "ukui-light" || currentThemeMode == "ukui-default" || currentThemeMode == "ukui-white")
+    {
         QImage img = source.toImage();
         for (int x = 0; x < img.width(); x++)
         {
@@ -175,7 +182,9 @@ QPixmap MySearchEdit::drawSymbolicColoredPixmap(const QPixmap &source)
         }
         return QPixmap::fromImage(img);
     }
-    else if(currentThemeMode == "ukui-black") {
+
+    else if(currentThemeMode == "ukui-dark" || currentThemeMode == "ukui-black")
+    {
         QImage img = source.toImage();
         for (int x = 0; x < img.width(); x++)
         {
@@ -193,7 +202,9 @@ QPixmap MySearchEdit::drawSymbolicColoredPixmap(const QPixmap &source)
         }
         return QPixmap::fromImage(img);
     }
-    else {
+
+    else
+    {
         QImage img = source.toImage();
         for (int x = 0; x < img.width(); x++)
         {
@@ -202,9 +213,9 @@ QPixmap MySearchEdit::drawSymbolicColoredPixmap(const QPixmap &source)
                 auto color = img.pixelColor(x, y);
                 if (color.alpha() > 0)
                 {
-                        color.setRed(61);
-                        color.setGreen(107);
-                        color.setBlue(229);
+                        color.setRed(0);
+                        color.setGreen(0);
+                        color.setBlue(0);
                         img.setPixelColor(x, y, color);
                 }
             }
@@ -379,18 +390,18 @@ void MySearchEdit::initThemeMode()
             qApp->setStyle(new InternalStyle(currentThemeMode));
             m_pClearTextButton->setIcon(drawSymbolicColoredPixmap(QPixmap::fromImage(QIcon::fromTheme(":/img/button-close-default-add-background-three.svg").pixmap(24,24).toImage())));
 
-            if(currentThemeMode == "ukui-white")
+            if(currentThemeMode == "ukui-light" || currentThemeMode == "ukui-default" || currentThemeMode == "ukui-white")
             {
                 m_edit->setStyleSheet("QLineEdit{background:transparent;border-radius:4px;color:#00000;padding-right:12px;padding-bottom: 2px;}"); //#CC00FF transparent
-                m_placeHolder->setStyleSheet("QLabel{background-color:transparent;color:rgba(0,0,0,0.57);font-size:14px;margin: 2 0 0 0 px;}");
+                m_placeHolder->setStyleSheet("QLabel{background-color:transparent;color:rgba(0,0,0,0.57);margin: 2 0 0 0 px;}");
                 this->setObjectName("SearchBtn");
                 this->setStyleSheet("QFrame#SearchBtn{background:rgba(13,14,14,0.08);border-radius:4px;}");
             }
 
-            if(currentThemeMode == "ukui-black")
+            if(currentThemeMode == "ukui-dark" || currentThemeMode == "ukui-black")
             {
                 m_edit->setStyleSheet("QLineEdit{background:transparent;border-radius:4px;color:#FFFFFF;padding-right:12px;padding-bottom: 2px;}"); //#CC00FF transparent
-                m_placeHolder->setStyleSheet("QLabel{background-color:transparent;color:rgba(255,255,255,0.57);font-size:14px;margin: 2 0 0 0 px;}");
+                m_placeHolder->setStyleSheet("QLabel{background-color:transparent;color:rgba(255,255,255,0.57);margin: 2 0 0 0 px;}");
                 this->setObjectName("SearchBtn");
                 this->setStyleSheet("QFrame#SearchBtn{background:rgba(255,255,255,0.08);border-radius:4px;}");
             }
@@ -402,19 +413,37 @@ void MySearchEdit::initThemeMode()
     qDebug()<<"监听主题改变-------------------->"<<currentThemeMode<<endl;
     qApp->setStyle(new InternalStyle(currentThemeMode));
     m_pClearTextButton->setIcon(drawSymbolicColoredPixmap(QPixmap::fromImage(QIcon::fromTheme(":/img/button-close-default-add-background-three.svg").pixmap(24,24).toImage())));
-    if(currentThemeMode == "ukui-white")
+    if(currentThemeMode == "ukui-light" || currentThemeMode == "ukui-default" || currentThemeMode == "ukui-white")
     {
         m_edit->setStyleSheet("QLineEdit{background:transparent;border-radius:4px;color:#00000;padding-right:12px;padding-bottom: 2px;}"); //#CC00FF transparent
-        m_placeHolder->setStyleSheet("QLabel{background-color:transparent;color:rgba(0,0,0,0.57);font-size:14px;margin: 2 0 0 0 px;}");
+        m_placeHolder->setStyleSheet("QLabel{background-color:transparent;color:rgba(0,0,0,0.57);margin: 2 0 0 0 px;}");
         this->setObjectName("SearchBtn");
         this->setStyleSheet("QFrame#SearchBtn{background:rgba(13,14,14,0.08);border-radius:4px;}");
     }
 
-    if(currentThemeMode == "ukui-black")
+    if(currentThemeMode == "ukui-dark" || currentThemeMode == "ukui-black")
     {
         m_edit->setStyleSheet("QLineEdit{background:transparent;border-radius:4px;color:#FFFFFF;padding-right:12px;padding-bottom: 2px;}"); //#CC00FF transparent
-        m_placeHolder->setStyleSheet("QLabel{background-color:transparent;color:rgba(255,255,255,0.57);font-size:14px;margin: 2 0 0 0 px;}");
+        m_placeHolder->setStyleSheet("QLabel{background-color:transparent;color:rgba(255,255,255,0.57);margin: 2 0 0 0 px;}");
         this->setObjectName("SearchBtn");
         this->setStyleSheet("QFrame#SearchBtn{background:rgba(255,255,255,0.08);border-radius:4px;}");
     }
+}
+
+void MySearchEdit::initFontSize()
+{
+    connect(fontSettings,&QGSettings::changed,[=](QString key)
+    {
+        if("systemFont" == key || "systemFontSize" == key)
+        {
+            fontSize = fontSettings->get(FONT_SIZE).toInt();
+        }
+        QFont font;
+        font.setPointSize(fontSize - 2);
+        m_placeHolder->setFont(font);
+        QFont searchLineFont;
+        searchLineFont.setPointSize(fontSize);
+        m_edit->setFont(searchLineFont);
+    });
+    fontSize = fontSettings->get(FONT_SIZE).toInt();
 }
