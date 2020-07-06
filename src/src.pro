@@ -150,3 +150,4 @@ RESOURCES += \
     res.qrc
 TRANSLATIONS += \
     translation/kylin-assistant_zh_CN.ts \
+    translation/kylin-assistant_tr.ts
