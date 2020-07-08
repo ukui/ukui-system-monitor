@@ -38,4 +38,11 @@
 #define MAINWINDOWWIDTH 760
 #define SEARCHBUTTON 16
 
+#define SERVICE_NAME_SIZE 64
+#define UKUI_SYSTEM_MONITOR_PATH "/"
+#define UKUI_SYSTEM_MONITOR_SERVICE "com.ukuisystemmonitor.hotel"
+#define UKUI_SYSTEM_MONITOR_INTERFACE "com.systemmonitor.hotel"
+
+#define PADDING 1.5
+
 #endif

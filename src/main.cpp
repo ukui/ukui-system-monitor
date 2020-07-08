@@ -24,6 +24,7 @@
 #include "framelessExtended/framelesshandle.h"
 #include "systemmonitor.h"
 #include "shell/customstyle.h"
+#include "maincontroller.h"
 
 int main(int argc, char *argv[])
 {
@@ -45,15 +46,17 @@ int main(int argc, char *argv[])
 
 
 
-    SystemMonitor *monitor=new SystemMonitor();
-    monitor->setAttribute(Qt::WA_DeleteOnClose);
-    monitor->show();
+//    SystemMonitor *monitor=new SystemMonitor();
+//    monitor->setAttribute(Qt::WA_DeleteOnClose);
+//    monitor->show();
 
-    FramelessHandle * pHandle = new FramelessHandle(monitor);
-    pHandle->activateOn(monitor);
+//    FramelessHandle * pHandle = new FramelessHandle(monitor);
+//    pHandle->activateOn(monitor);
 
     auto style = new InternalStyle(nullptr);
     app.setStyle(style);
+
+    MainController *ctrl = MainController::self();
 
     app.exec();
 //    delete monitor;

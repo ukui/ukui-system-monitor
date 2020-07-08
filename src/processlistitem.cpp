@@ -189,7 +189,12 @@ void ProcessListItem::drawForeground(QRect rect, QPainter *painter, int column, 
     }
     else if (column == 1) {
         if (!m_data.user.isEmpty()) {
-            painter->drawText(QRect(rect.x(), rect.y(), rect.width() - textPadding, rect.height()), Qt::AlignRight | Qt::AlignVCenter, m_data.user);
+            QString name = m_data.user;
+            int userMaxWidth = rect.width()  - padding * PADDING ;
+            QFont font = painter->font();
+            QFontMetrics fm(font);
+            QString userName = fm.elidedText(name, Qt::ElideRight, userMaxWidth);
+            painter->drawText(QRect(rect.x(), rect.y(), rect.width() - textPadding, rect.height()), Qt::AlignLeft | Qt::AlignVCenter, userName);
         }
         if (!isSeparator) {
             painter->setOpacity(0.8);
