@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT += core
+QT += core dbus
 
 isEqual(QT_MAJOR_VERSION, 5) {
     QT += widgets gui svg x11extras
@@ -94,7 +94,8 @@ HEADERS += \
     framelessExtended/cursorposcalculator.h \
     framelessExtended/framelesshandle.h \
     framelessExtended/framelesshandleprivate.h \
-    framelessExtended/widgethandlerealize.h
+    framelessExtended/widgethandlerealize.h \
+    maincontroller.h
 
 SOURCES += \
     main.cpp \
@@ -138,7 +139,8 @@ SOURCES += \
     ../component/mytitlebar.cpp \
     framelessExtended/cursorposcalculator.cpp \
     framelessExtended/framelesshandle.cpp \
-    framelessExtended/widgethandlerealize.cpp
+    framelessExtended/widgethandlerealize.cpp \
+    maincontroller.cpp
 
 OTHER_FILES += \
     systemmonitor.json
