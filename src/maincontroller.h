@@ -16,33 +16,36 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef QWER_H
-#define QWER_H
 
-/**
- * QT主题
- */
-#define THEME_QT_SCHEMA "org.ukui.style"
-#define MODE_QT_KEY "style-name"
-#define FONT_SIZE "system-font-size"
-/* QT图标主题 */
-#define ICON_QT_KEY "icon-theme-name"
+#ifndef _MAINCONTROL_H_
+#define _MAINCONTROL_H_
 
-/*
- * about the size of every single control
- */
-#define NORMALHEIGHT 30
-#define SPECIALWIDTH 200
-#define NORMALWIDTH 100
-#define MAINWINDOWHEIGHT 590
-#define MAINWINDOWWIDTH 760
-#define SEARCHBUTTON 16
+#include <QObject>
+#include <QtDBus/QDBusConnection>
+#include <QtDBus/QDBusAbstractAdaptor>
+#include <QtDBus/QDBusInterface>
+#include <QtDBus/QDBusReply>
+#include <QtDBus/QDBusConnectionInterface>
+#include <unistd.h>
 
-#define SERVICE_NAME_SIZE 64
-#define UKUI_SYSTEM_MONITOR_PATH "/"
-#define UKUI_SYSTEM_MONITOR_SERVICE "com.ukuisystemmonitor.hotel"
-#define UKUI_SYSTEM_MONITOR_INTERFACE "com.systemmonitor.hotel"
+#include "systemmonitor.h"
+#include "../shell/macro.h"
+#include "framelessExtended/framelesshandle.h"
 
-#define PADDING 1.5
+class MainController : public QObject
+{
+    Q_OBJECT
+public:
+    static MainController* self();
+    virtual ~MainController();
+private:
+    explicit MainController();
+    void init();
+    void creatDBusService();
+    int IsNotRunning();
+private:
+    static MainController *mSelf;
+    SystemMonitor * monitor;
+};
 
-#endif
+#endif //_MAINCONTROL_H_

@@ -31,6 +31,7 @@
 
 #include "shell/customstyle.h"
 #include "processdata.h"
+#include "../shell/macro.h"
 
 class ProcessListItem : public QObject
 {
