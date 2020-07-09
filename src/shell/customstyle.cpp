@@ -34,6 +34,11 @@ InternalStyle::InternalStyle(const QString &styleName, QObject *parent) : QProxy
 
 }
 
+InternalStyle::~InternalStyle()
+{
+
+}
+
 void InternalStyle::drawPrimitive(QStyle::PrimitiveElement element, const QStyleOption *option, QPainter *painter, const QWidget *widget) const
 {
     //qDebug()<<element;
@@ -210,4 +215,9 @@ void InternalStyle::polish(QWidget *widget)
         pal.setColor(QPalette::Base, pal.alternateBase().color());
         widget->setPalette(pal);
     }
+}
+
+void InternalStyle::unpolish(QWidget *widget)
+{
+    QProxyStyle::unpolish(widget);
 }

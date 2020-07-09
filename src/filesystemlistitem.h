@@ -36,6 +36,7 @@ class FileSystemListItem : public QObject
     
 public:
     FileSystemListItem(FileSystemData *info);
+    ~FileSystemListItem();
     
     bool isSameItem(FileSystemListItem *item);
     void drawCellBackground(QRect rect, QPainter *painter, int level);

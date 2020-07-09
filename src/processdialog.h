@@ -102,6 +102,7 @@ private:
     QAction *m_endAction = nullptr;//结束
     QAction *m_killAction = nullptr;//杀死
     ProcessCategory *processCategory = nullptr;
+    ProcessListItem *item = nullptr;
 
   QMenu *m_priorityMenu;
   MyActionGroup * priorityGroup;

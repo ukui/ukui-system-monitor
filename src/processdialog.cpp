@@ -256,6 +256,7 @@ ProcessDialog::~ProcessDialog()
     delete m_propertiyAction;
     delete m_menu;
     delete actionPids;
+    delete item;
 
     QLayoutItem *child;
     while ((child = m_categoryLayout->takeAt(0)) != 0) {
@@ -586,7 +587,7 @@ void ProcessDialog::refreshProcessList()
         info.processName = QString::fromStdString(it->second->name);
         info.commandLine = QString::fromStdString(it->second->arguments);
 
-        ProcessListItem *item = new ProcessListItem(info);
+        item = new ProcessListItem(info);
         items << item;
     }
 
