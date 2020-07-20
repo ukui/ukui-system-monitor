@@ -54,6 +54,10 @@ ProcessListItem::~ProcessListItem()
     if (qtSettings) {
         delete qtSettings;
     }
+    if(fontSettings)
+    {
+        delete fontSettings;
+    }
 }
 
 void ProcessListItem::initThemeMode()
@@ -257,7 +261,8 @@ void ProcessListItem::drawForeground(QRect rect, QPainter *painter, int column, 
     else if (column == 6) {
         if (m_data.m_memory > 0) {
             painter->setOpacity(1);
-            QString memory = QString(g_format_size_full(m_data.m_memory, G_FORMAT_SIZE_IEC_UNITS));
+            char *memory = g_format_size_full(m_data.m_memory, G_FORMAT_SIZE_IEC_UNITS);
+            QString Memory = QString(memory);
             if (m_data.m_memory < 102400000) {//<100M
                 //this->drawCellBackground(QRect(rect.x(), rect.y(), rect.width(), rect.height()), painter, 0);
             }
@@ -267,7 +272,8 @@ void ProcessListItem::drawForeground(QRect rect, QPainter *painter, int column, 
             else {
                 //this->drawCellBackground(QRect(rect.x(), rect.y(), rect.width(), rect.height()), painter, 2);
             }
-            painter->drawText(QRect(rect.x(), rect.y(), rect.width() - textPadding, rect.height()), Qt::AlignRight | Qt::AlignVCenter, memory);
+            painter->drawText(QRect(rect.x(), rect.y(), rect.width() - textPadding, rect.height()), Qt::AlignRight | Qt::AlignVCenter, Memory);
+            g_free(memory);
         }
         if (!isSeparator) {
             painter->setOpacity(0.8);

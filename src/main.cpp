@@ -60,5 +60,6 @@ int main(int argc, char *argv[])
 
     app.exec();
 //    delete monitor;
+    delete ctrl;
     return 0;
 }

@@ -52,7 +52,7 @@ void MainController::init()                   //init select
     }
     else
     {
-        qDebug()<<"ukui-flash-disk is running";  //or finish the process
+        qDebug()<<"ukui-system-monior is running";  //or finish the process
         exit(0);
     }
 }

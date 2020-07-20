@@ -41,6 +41,7 @@ class InternalStyle : public QProxyStyle
     Q_OBJECT
 public:
     explicit InternalStyle(const QString &styleName, QObject *parent = nullptr);
+    ~InternalStyle();
 
     void drawPrimitive(QStyle::PrimitiveElement element, const QStyleOption *option, QPainter *painter, const QWidget *widget) const;
     void drawControl(QStyle::ControlElement element,
@@ -52,6 +53,7 @@ public:
 
     void polish(QPalette &pal);
     void polish(QWidget *widget);
+    void unpolish(QWidget *widget);
 
 signals:
 

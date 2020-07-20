@@ -52,6 +52,19 @@ FileSystemListItem::FileSystemListItem(FileSystemData *info)
     initFontSize();
 }
 
+FileSystemListItem::~FileSystemListItem()
+{
+    if(qtSettings)
+    {
+        delete qtSettings;
+    }
+
+    if(fontSettings)
+    {
+        delete fontSettings;
+    }
+}
+
 void FileSystemListItem::initThemeMode()
 {
     //监听主题改变
