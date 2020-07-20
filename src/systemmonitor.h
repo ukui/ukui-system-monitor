@@ -1,8 +1,9 @@
 /*
- * Copyright (C) 2013 ~ 2018 National University of Defense Technology(NUDT) & Tianjin Kylin Ltd.
+ * Copyright (C) 2020, KylinSoft Co., Ltd.
  *
  * Authors:
  *  Kobe Lee    xiangli@ubuntukylin.com/kobe24_lixiang@126.com
+ *  rxy         renxinyu@kylinos.cn
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -55,6 +56,7 @@ public:
 
     void moveCenter();
     void initThemeMode();
+    void getTransparentData();
 
 public slots:
     void recordProcessVisibleColumn(int, bool, QList<bool> columnVisible);
@@ -83,8 +85,11 @@ private:
     QPoint dragPosition;
     bool mousePressed;
     
-    QGSettings * qtSettings;
+    QGSettings *qtSettings;
     QString currentThemeMode;
+
+    QGSettings *opacitySettings;
+    double m_transparency;
 };
 
 #endif // SYSTEMMONITOR_H

@@ -1,8 +1,9 @@
 /*
- * Copyright (C) 2013 ~ 2018 National University of Defense Technology(NUDT) & Tianjin Kylin Ltd.
+ * Copyright (C) 2020, KylinSoft Co., Ltd.
  *
  * Authors:
  *  Kobe Lee    xiangli@ubuntukylin.com/kobe24_lixiang@126.com
+ *  rxy         renxinyu@kylinos.cn
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -69,6 +70,12 @@ SystemMonitor::SystemMonitor(QWidget *parent)
         qtSettings = new QGSettings(idd);
     }
 
+    const QByteArray idtrans(THEME_QT_TRANS);
+
+    if(QGSettings::isSchemaInstalled(idtrans))
+    {
+        opacitySettings = new QGSettings(idtrans);
+    }
 
 
     this->setAutoFillBackground(true);
@@ -93,6 +100,7 @@ SystemMonitor::SystemMonitor(QWidget *parent)
     this->initPanelStack();
     this->initConnections();
     initThemeMode();
+    getTransparentData();
     connect(m_titleWidget,SIGNAL(changeProcessItemDialog(int)),process_dialog,SLOT(onActiveWhoseProcess(int)));
     //边框阴影效果
 //    QGraphicsDropShadowEffect *shadow_effect = new QGraphicsDropShadowEffect(this);
@@ -146,6 +154,30 @@ void SystemMonitor::initThemeMode()
     currentThemeMode = qtSettings->get(MODE_QT_KEY).toString();
     qDebug()<<"hahahahaaha"<<currentThemeMode;
 }
+
+void SystemMonitor::getTransparentData()
+{
+    connect(opacitySettings,&QGSettings::changed, this, [=](const QString &key)
+    {
+        if(key == "transparency")
+        {
+            if (!opacitySettings)
+            {
+                m_transparency = 90.0;
+            }
+
+            QStringList keys = opacitySettings->keys();
+            if (keys.contains("transparency"))
+            {
+                m_transparency = opacitySettings->get("transparency").toDouble();
+            }
+        }
+        repaint();
+    });
+    m_transparency = opacitySettings->get("transparency").toDouble();
+    qDebug()<<"i love you babay --------------"<<m_transparency;
+}
+
 
 SystemMonitor::~SystemMonitor()
 {
@@ -249,7 +281,7 @@ void SystemMonitor::paintEvent(QPaintEvent *event)
     QPainter p(this);
 
 
-    p.setOpacity(0.90);
+    p.setOpacity(m_transparency/100);
     Q_UNUSED(event);
 
     p.setRenderHint(QPainter::Antialiasing);

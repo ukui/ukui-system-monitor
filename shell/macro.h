@@ -1,8 +1,9 @@
 /*
- * Copyright (C) 2013 ~ 2018 National University of Defense Technology(NUDT) & Tianjin Kylin Ltd.
+ * Copyright (C) 2020, KylinSoft Co., Ltd.
  *
  * Authors:
  *  Kobe Lee    xiangli@ubuntukylin.com/kobe24_lixiang@126.com
+ *  rxy     renxinyu@kylinos.cn
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,6 +26,7 @@
 #define THEME_QT_SCHEMA "org.ukui.style"
 #define MODE_QT_KEY "style-name"
 #define FONT_SIZE "system-font-size"
+#define THEME_QT_TRANS "org.ukui.control-center.personalise"
 /* QT图标主题 */
 #define ICON_QT_KEY "icon-theme-name"
 

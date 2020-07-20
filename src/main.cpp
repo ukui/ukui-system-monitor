@@ -1,8 +1,9 @@
 /*
- * Copyright (C) 2013 ~ 2018 National University of Defense Technology(NUDT) & Tianjin Kylin Ltd.
+ * Copyright (C) 2020, KylinSoft Co., Ltd.
  *
  * Authors:
  *  Kobe Lee    xiangli@ubuntukylin.com/kobe24_lixiang@126.com
+ *  rxy         renxinyu@kylinos.cn
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,6 +21,7 @@
 #include <QApplication>
 #include <QTranslator>
 #include <QObject>
+#include <QDesktopWidget>
 
 #include "framelessExtended/framelesshandle.h"
 #include "systemmonitor.h"
@@ -44,8 +46,6 @@ int main(int argc, char *argv[])
     }
 
 
-
-
 //    SystemMonitor *monitor=new SystemMonitor();
 //    monitor->setAttribute(Qt::WA_DeleteOnClose);
 //    monitor->show();
@@ -55,6 +55,14 @@ int main(int argc, char *argv[])
 
     auto style = new InternalStyle(nullptr);
     app.setStyle(style);
+
+    if (QApplication::desktop()->width() >= 2560)
+    {
+        #if (QT_VERSION >= QT_VERSION_CHECK(5, 6, 0))
+                QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+                QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
+        #endif
+    }
 
     MainController *ctrl = MainController::self();
 
