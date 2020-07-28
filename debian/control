@@ -36,4 +36,4 @@ Depends: inotify-hookable,
          ${shlibs:Depends}
 Description: Monitor for UKUI desktop environment
  This package is a simple system monitor written
- in QT,This package is maintained by Kylin Team.
+ in QT.This package is maintained by Kylin Team.
