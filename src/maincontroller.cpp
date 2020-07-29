@@ -1,12 +1,13 @@
 /*
- * Copyright (C) 2013 ~ 2018 National University of Defense Technology(NUDT) & Tianjin Kylin Ltd.
+ * Copyright (C) 2020 KylinSoft Co., Ltd.
  *
  * Authors:
  *  Kobe Lee    xiangli@ubuntukylin.com/kobe24_lixiang@126.com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; version 3.
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -48,7 +49,7 @@ void MainController::init()                   //init select
     if(IsNotRunning())
     {
         creatDBusService();                 //create connect
-        qDebug()<<"--------------creatDBusService";
+        qDebug()<<"Create DBus Service";
     }
     else
     {
@@ -76,12 +77,12 @@ void MainController::creatDBusService()
     // 用于建立到session bus的连接
     //to be used for creating the session bus connection
     QDBusConnection bus = QDBusConnection::sessionBus();
-    // 在session bus上注册名为"com.kylin_user_guide.hotel"的service
-    // register the service in session bus that named by "com.kylin_user_guide.hotel"
+    // 在session bus上注册名为"com.ukui_user_guide.hotel"的service
+    // register the service in session bus that named by "com.ukui_user_guide.hotel"
 
     char service_name[SERVICE_NAME_SIZE];
     memset(service_name, 0, SERVICE_NAME_SIZE);
-    snprintf(service_name, SERVICE_NAME_SIZE, "%s_%d",UKUI_SYSTEM_MONITOR_SERVICE,getuid());
+    snprintf(service_name, SERVICE_NAME_SIZE, "%s_%d", UKUI_SYSTEM_MONITOR_SERVICE, getuid());
 
     if (!bus.registerService(service_name))
     {  //注意命名规则-和_

@@ -1,12 +1,13 @@
 /*
- * Copyright (C) 2013 ~ 2018 National University of Defense Technology(NUDT) & Tianjin Kylin Ltd.
+ * Copyright (C) 2020 KylinSoft Co., Ltd.
  *
  * Authors:
  *  Kobe Lee    xiangli@ubuntukylin.com/kobe24_lixiang@126.com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; version 3.
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -30,15 +31,15 @@ int main(int argc, char *argv[])
 {
     QApplication app(argc,argv);
 
-    QApplication::setApplicationName("Kylin System Monitor");
+    QApplication::setApplicationName("UKUI System Monitor");
     QApplication::setApplicationVersion("0.0.0.0001");
 
     QString locale = QLocale::system().name();
     QTranslator translator;
     if(locale == "zh_CN" || locale == "es" || locale == "fr" || locale == "de" || locale == "ru") {//中文 西班牙语 法语 德语 俄语
-        if(!translator.load("kylin-assistant_" + locale + ".qm",
+        if(!translator.load("ukui-system-monitor_" + locale + ".qm",
                             ":/translation/"))
-            qDebug() << "Load translation file："<< "kylin-assistant_" + locale + ".qm" << " failed!";
+            qDebug() << "Load translation file："<< "ukui-system-monitor_" + locale + ".qm" << " failed!";
         else
             app.installTranslator(&translator);
     }

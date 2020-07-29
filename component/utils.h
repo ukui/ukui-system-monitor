@@ -1,12 +1,13 @@
 /*
- * Copyright (C) 2013 ~ 2015 National University of Defense Technology(NUDT) & Kylin Ltd.
+ * Copyright (C) 2020 KylinSoft Co., Ltd.
  *
  * Authors:
  *  Kobe Lee    xiangli@ubuntukylin.com/kobe24_lixiang@126.com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; version 3.
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -37,8 +38,8 @@
 
 //#define VERSION "2.4.1"
 
-const QString KYLIN_COMPANY_SETTING = "kylin/kylin-assistant";
-const QString KYLIN_SETTING_FILE_NAME_SETTING = "kylin-assistant";
+const QString UKUI_COMPANY_SETTING = "ukui/ukui-system-monitor";
+const QString UKUI_SETTING_FILE_NAME_SETTING = "ukui-system-monitor";
 
 enum CleanerModuleID {
     CacheApt = 0,

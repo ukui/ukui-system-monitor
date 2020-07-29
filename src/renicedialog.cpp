@@ -1,12 +1,13 @@
 /*
- * Copyright (C) 2013 ~ 2018 National University of Defense Technology(NUDT) & Tianjin Kylin Ltd.
+ * Copyright (C) 2020 KylinSoft Co., Ltd.
  *
  * Authors:
  *  Kobe Lee    xiangli@ubuntukylin.com/kobe24_lixiang@126.com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; version 3.
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -38,7 +39,7 @@ ReniceDialog::ReniceDialog(const QString &title, QWidget *parent)
     this->setFixedSize(464+SHADOW_LEFT_TOP_PADDING+SHADOW_LEFT_TOP_PADDING, 240+SHADOW_RIGHT_BOTTOM_PADDING+SHADOW_RIGHT_BOTTOM_PADDING);
     this->setContentsMargins(SHADOW_LEFT_TOP_PADDING,SHADOW_LEFT_TOP_PADDING,SHADOW_RIGHT_BOTTOM_PADDING,SHADOW_RIGHT_BOTTOM_PADDING);
     this->setStyleSheet("QDialog{border: 1px solid white;border-radius:1px;background-color: #ffffff;}");
-    this->setWindowIcon(QIcon(":/res/kylin-assistant.png"));
+    this->setWindowIcon(QIcon(":/res/ukui-system-monitor.png"));
     this->setAttribute(Qt::WA_DeleteOnClose);
 
     QWidget *containerWidget = new QWidget(this);

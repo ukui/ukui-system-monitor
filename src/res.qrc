@@ -4,19 +4,19 @@
         <file>img/fullscreen.png</file>
         <file>img/minimize.png</file>
         <file>img/processmanager.png</file>
-        <file>translation/kylin-assistant_bo.ts</file>
-        <file>translation/kylin-assistant_de.qm</file>
-        <file>translation/kylin-assistant_de.ts</file>
-        <file>translation/kylin-assistant_es.qm</file>
-        <file>translation/kylin-assistant_es.ts</file>
-        <file>translation/kylin-assistant_fr.qm</file>
-        <file>translation/kylin-assistant_fr.ts</file>
-        <file>translation/kylin-assistant_ru.qm</file>
-        <file>translation/kylin-assistant_ru.ts</file>
-        <file>translation/kylin-assistant_tr.qm</file>
-        <file>translation/kylin-assistant_tr.ts</file>
-        <file>translation/kylin-assistant_zh_CN.qm</file>
-        <file>translation/kylin-assistant_zh_CN.ts</file>
+        <file>translation/ukui-system-monitor_bo.ts</file>
+        <file>translation/ukui-system-monitor_de.qm</file>
+        <file>translation/ukui-system-monitor_de.ts</file>
+        <file>translation/ukui-system-monitor_es.qm</file>
+        <file>translation/ukui-system-monitor_es.ts</file>
+        <file>translation/ukui-system-monitor_fr.qm</file>
+        <file>translation/ukui-system-monitor_fr.ts</file>
+        <file>translation/ukui-system-monitor_ru.qm</file>
+        <file>translation/ukui-system-monitor_ru.ts</file>
+        <file>translation/ukui-system-monitor_tr.qm</file>
+        <file>translation/ukui-system-monitor_tr.ts</file>
+        <file>translation/ukui-system-monitor_zh_CN.qm</file>
+        <file>translation/ukui-system-monitor_zh_CN.ts</file>
         <file>img/user_proc.png</file>
         <file>img/all_proc.png</file>
         <file>img/active_proc.png</file>

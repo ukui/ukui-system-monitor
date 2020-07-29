@@ -1,6 +1,6 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2015-01-26T09:16:38
+# ukui-system-monitor
 #
 #-------------------------------------------------
 
@@ -27,21 +27,14 @@ PKGCONFIG += libgtop-2.0 \
              libsystemd \
              gsettings-qt
 
-
-
-
-inst1.files += ../ukui-system-monitor.desktop
-inst1.path = /usr/share/applications/
-
-
+desktop.files += ../ukui-system-monitor.desktop
+desktop.path = /usr/share/applications/
 
 target.source += $$TARGET
 target.path = /usr/bin
 
-
 INSTALLS += target \
-            inst1
-
+            desktop
 
 unix {
     UI_DIR = .ui
@@ -150,6 +143,7 @@ OTHER_FILES += \
 
 RESOURCES += \
     res.qrc
+
 TRANSLATIONS += \
-    translation/kylin-assistant_zh_CN.ts \
-    translation/kylin-assistant_tr.ts
+    translation/ukui-system-monitor_zh_CN.ts \
+    translation/ukui-system-monitor_tr.ts

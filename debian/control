@@ -2,9 +2,8 @@ Source: ukui-system-monitor
 Section: x11
 Priority: optional
 Maintainer: Ubuntu Developers <ubuntu-devel-discuss@list.ubuntu.net>
-Uploaders: handsome_feng <jianfengli@ubuntukylin.com>,
-           Kevin Duan <duankaiwen@ubuntukylin.com>
-Build-Depends: debhelper-compat (= 12),
+Uploaders: handsome_feng <jianfengli@ubuntukylin.com>
+Build-Depends: debhelper-compat (= 13),
                qtbase5-dev (>= 5.1),
                libqt5svg5-dev,
                qt5-qmake,
@@ -35,5 +34,6 @@ Depends: inotify-hookable,
          ${misc:Depends},
          ${shlibs:Depends}
 Description: Monitor for UKUI desktop environment
- This package is a simple system monitor written
- in QT.This package is maintained by Kylin Team.
+ UKUI system monitor allows you to graphically view and manipulate the
+ running processes, It also provides an overview of the resources (such
+ as CPU and memory) and File Systems on your system.

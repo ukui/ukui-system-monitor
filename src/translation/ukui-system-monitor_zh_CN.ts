@@ -27,7 +27,7 @@ Kylin Team &lt;ubuntukylin-members@list.launchpad.net&gt;</source>
         <translation type="vanished">      麒麟助手是由麒麟团队开发的一款功能强大的系统辅助软件。主要面向初级用户，能够帮助用户对系统进行管理。目前已具备了系统垃圾扫描与清理、系统软硬件信息查看、系统全方位定制、任务管理器等功能。</translation>
     </message>
     <message>
-        <source> for more information. Welcome everyone to join with us. kylin-assistant Homepage: </source>
+        <source> for more information. Welcome everyone to join with us. ukui-system-monitor Homepage: </source>
         <translation type="vanished"> 了解软件的最新进展并反馈问题，欢迎广大用户和爱好者一起参与。麒麟助手主页：</translation>
     </message>
     <message>
@@ -1199,7 +1199,7 @@ Kylin Team &lt;ubuntukylin-members@list.launchpad.net&gt;</source>
     </message>
     <message>
         <location filename="../monitortitlewidget.cpp" line="273"/>
-        <source>Kylin System Monitor</source>
+        <source>UKUI System Monitor</source>
         <translation>麒麟系统监视器</translation>
     </message>
     <message>
@@ -2487,7 +2487,7 @@ Are you sure to continue?</source>
     <name>SystemMonitor</name>
     <message>
         <location filename="../systemmonitor.cpp" line="68"/>
-        <source>Kylin System Monitor</source>
+        <source>UKUI System Monitor</source>
         <translation>麒麟系统监视器</translation>
     </message>
 </context>

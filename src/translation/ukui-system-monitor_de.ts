@@ -36,7 +36,7 @@ Kylin Team &lt;ubuntukylin-members@list.launchpad.net&gt;</source>
     </message>
     <message>
         <location filename="../aboutdialog.cpp" line="129"/>
-        <source> for more information. Welcome everyone to join with us. kylin-assistant Homepage: </source>
+        <source> for more information. Welcome everyone to join with us. ukui-system-monitor Homepage: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1459,7 +1459,7 @@ Kylin Team &lt;ubuntukylin-members@list.launchpad.net&gt;</source>
     <name>MonitorTitleWidget</name>
     <message>
         <location filename="../../plugins/systemmonitor/monitortitlewidget.cpp" line="242"/>
-        <source>Kylin System Monitor</source>
+        <source>UKUI System Monitor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2944,7 +2944,7 @@ Are you sure to continue?</source>
     <name>SystemMonitor</name>
     <message>
         <location filename="../../plugins/systemmonitor/systemmonitor.cpp" line="50"/>
-        <source>Kylin System Monitor</source>
+        <source>UKUI System Monitor</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

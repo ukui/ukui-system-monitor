@@ -1,12 +1,13 @@
 /*
- * Copyright (C) 2013 ~ 2018 National University of Defense Technology(NUDT) & Tianjin Kylin Ltd.
+ * Copyright (C) 2020 KylinSoft Co., Ltd.
  *
  * Authors:
  *  Kobe Lee    xiangli@ubuntukylin.com/kobe24_lixiang@126.com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; version 3.
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -75,18 +76,18 @@ SystemMonitor::SystemMonitor(QWidget *parent)
 //    this->setMouseTracking(true);
 //    installEventFilter(this);
 
-    this->setWindowTitle(tr("Kylin System Monitor"));
+    this->setWindowTitle(tr("UKUI System Monitor"));
 //    this->setWindowIcon(QIcon(":/model/res/plugin/processmanager.png"));
 //    this->setWindowIcon(QIcon(":/img/processmanager.png"));
 
-     this->setWindowIcon(QIcon::fromTheme("kylin-system-monitor"));
+     this->setWindowIcon(QIcon::fromTheme("ukui-system-monitor"));
 
 
     //this->setFixedSize(900, 600);
     this->resize(MAINWINDOWWIDTH,MAINWINDOWHEIGHT);
     setMinimumSize(640, 480);  //set the minimum size of the mainwindow
 
-    proSettings = new QSettings(KYLIN_COMPANY_SETTING, KYLIN_SETTING_FILE_NAME_SETTING);
+    proSettings = new QSettings(UKUI_COMPANY_SETTING, UKUI_SETTING_FILE_NAME_SETTING);
     proSettings->setIniCodec("UTF-8");
 
     this->initTitleWidget();
