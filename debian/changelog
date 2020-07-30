@@ -1,5 +1,5 @@
 ukui-system-monitor (1.0.0-1) unstable; urgency=medium
 
-  * Initial release.
+  * Initial release. (Closes: #966527)
 
  -- handsome_feng <jianfengli@ubuntukylin.com>  Fri, 17 Apr 2020 10:26:07 +0800
