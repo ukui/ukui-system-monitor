@@ -56,6 +56,7 @@ public:
 
     void moveCenter();
     void initThemeMode();
+    void getTransparentData();
 
 public slots:
     void recordProcessVisibleColumn(int, bool, QList<bool> columnVisible);
@@ -86,6 +87,9 @@ private:
     
     QGSettings * qtSettings;
     QString currentThemeMode;
+
+    QGSettings *opacitySettings;
+    double m_transparency;
 };
 
 #endif // SYSTEMMONITOR_H
