@@ -263,27 +263,27 @@ Kylin Team &lt;ubuntukylin-members@list.launchpad.net&gt;</source>
 <context>
     <name>CpuRateWidget</name>
     <message>
-        <location filename="../cpuratewidget.cpp" line="279"/>
+        <location filename="../cpuratewidget.cpp" line="339"/>
         <source>CPU</source>
         <translation>处理器</translation>
     </message>
     <message>
-        <location filename="../cpuratewidget.cpp" line="285"/>
+        <location filename="../cpuratewidget.cpp" line="345"/>
         <source>Occupancy rate</source>
         <translation>占用率</translation>
     </message>
     <message>
-        <location filename="../cpuratewidget.cpp" line="291"/>
+        <location filename="../cpuratewidget.cpp" line="351"/>
         <source>Idle rate</source>
         <translation>空闲率</translation>
     </message>
     <message>
-        <location filename="../cpuratewidget.cpp" line="297"/>
+        <location filename="../cpuratewidget.cpp" line="357"/>
         <source>The running time of system</source>
         <translation>系统运行时间</translation>
     </message>
     <message>
-        <location filename="../cpuratewidget.cpp" line="303"/>
+        <location filename="../cpuratewidget.cpp" line="363"/>
         <source>The idle time of system</source>
         <translation>系统空闲时间</translation>
     </message>
@@ -449,7 +449,7 @@ Kylin Team &lt;ubuntukylin-members@list.launchpad.net&gt;</source>
 <context>
     <name>FileSystemDialog</name>
     <message>
-        <location filename="../filesystemdialog.cpp" line="60"/>
+        <location filename="../filesystemdialog.cpp" line="61"/>
         <source>Refresh</source>
         <translation>刷新</translation>
     </message>
@@ -457,45 +457,45 @@ Kylin Team &lt;ubuntukylin-members@list.launchpad.net&gt;</source>
 <context>
     <name>FileSystemListWidget</name>
     <message>
-        <location filename="../filesystemlistwidget.cpp" line="56"/>
-        <location filename="../filesystemlistwidget.cpp" line="413"/>
+        <location filename="../filesystemlistwidget.cpp" line="67"/>
+        <location filename="../filesystemlistwidget.cpp" line="436"/>
         <source>Device</source>
         <translation>设备</translation>
     </message>
     <message>
-        <location filename="../filesystemlistwidget.cpp" line="56"/>
-        <location filename="../filesystemlistwidget.cpp" line="413"/>
+        <location filename="../filesystemlistwidget.cpp" line="67"/>
+        <location filename="../filesystemlistwidget.cpp" line="436"/>
         <source>Directory</source>
         <translation>路径</translation>
     </message>
     <message>
-        <location filename="../filesystemlistwidget.cpp" line="56"/>
+        <location filename="../filesystemlistwidget.cpp" line="67"/>
         <source>Type</source>
         <translation>类型</translation>
     </message>
     <message>
-        <location filename="../filesystemlistwidget.cpp" line="56"/>
+        <location filename="../filesystemlistwidget.cpp" line="67"/>
         <source>Total</source>
         <translation type="unfinished">总容量</translation>
     </message>
     <message>
-        <location filename="../filesystemlistwidget.cpp" line="56"/>
+        <location filename="../filesystemlistwidget.cpp" line="67"/>
         <source>Free</source>
         <translation>空闲</translation>
     </message>
     <message>
-        <location filename="../filesystemlistwidget.cpp" line="56"/>
+        <location filename="../filesystemlistwidget.cpp" line="67"/>
         <source>Available</source>
         <translation>可用</translation>
     </message>
     <message>
-        <location filename="../filesystemlistwidget.cpp" line="56"/>
-        <location filename="../filesystemlistwidget.cpp" line="413"/>
+        <location filename="../filesystemlistwidget.cpp" line="67"/>
+        <location filename="../filesystemlistwidget.cpp" line="436"/>
         <source>Used</source>
         <translation>已用</translation>
     </message>
     <message>
-        <location filename="../filesystemlistwidget.cpp" line="492"/>
+        <location filename="../filesystemlistwidget.cpp" line="516"/>
         <source>No File System Info</source>
         <translation>没有发现文件系统信息</translation>
     </message>
@@ -1077,30 +1077,30 @@ Kylin Team &lt;ubuntukylin-members@list.launchpad.net&gt;</source>
 <context>
     <name>MemoryCircle</name>
     <message>
-        <location filename="../memorycircle.cpp" line="140"/>
+        <location filename="../memorycircle.cpp" line="194"/>
         <source>Memory</source>
         <translation>内存</translation>
     </message>
     <message>
-        <location filename="../memorycircle.cpp" line="141"/>
+        <location filename="../memorycircle.cpp" line="195"/>
         <source>Swap</source>
         <translation>交换</translation>
     </message>
     <message>
-        <location filename="../memorycircle.cpp" line="147"/>
-        <location filename="../memorycircle.cpp" line="148"/>
+        <location filename="../memorycircle.cpp" line="203"/>
+        <location filename="../memorycircle.cpp" line="204"/>
         <source>Used(Percent)</source>
         <translation>已使用(百分比)</translation>
     </message>
     <message>
-        <location filename="../memorycircle.cpp" line="149"/>
-        <location filename="../memorycircle.cpp" line="150"/>
+        <location filename="../memorycircle.cpp" line="205"/>
+        <location filename="../memorycircle.cpp" line="206"/>
         <source>Total</source>
         <translation>总量</translation>
     </message>
     <message>
-        <location filename="../memorycircle.cpp" line="156"/>
-        <location filename="../memorycircle.cpp" line="157"/>
+        <location filename="../memorycircle.cpp" line="213"/>
+        <location filename="../memorycircle.cpp" line="214"/>
         <source>%1(%2%)</source>
         <translatorcomment>%1(%2%)</translatorcomment>
         <translation></translation>
@@ -1109,7 +1109,7 @@ Kylin Team &lt;ubuntukylin-members@list.launchpad.net&gt;</source>
 <context>
     <name>MemoryWidget</name>
     <message>
-        <location filename="../memorywidget.cpp" line="18"/>
+        <location filename="../memorywidget.cpp" line="39"/>
         <source>Memory</source>
         <translation>内存</translation>
     </message>
@@ -1183,52 +1183,52 @@ Kylin Team &lt;ubuntukylin-members@list.launchpad.net&gt;</source>
 <context>
     <name>MonitorTitleWidget</name>
     <message>
-        <location filename="../monitortitlewidget.cpp" line="71"/>
+        <location filename="../monitortitlewidget.cpp" line="60"/>
         <source>Active Processes</source>
         <translation type="unfinished">活动的进程</translation>
     </message>
     <message>
-        <location filename="../monitortitlewidget.cpp" line="72"/>
+        <location filename="../monitortitlewidget.cpp" line="61"/>
         <source>My Processes</source>
         <translation type="unfinished">我的进程</translation>
     </message>
     <message>
-        <location filename="../monitortitlewidget.cpp" line="73"/>
+        <location filename="../monitortitlewidget.cpp" line="62"/>
         <source>All Process</source>
         <translation type="unfinished">全部进程</translation>
     </message>
     <message>
-        <location filename="../monitortitlewidget.cpp" line="273"/>
+        <location filename="../monitortitlewidget.cpp" line="403"/>
         <source>UKUI System Monitor</source>
         <translation>麒麟系统监视器</translation>
     </message>
     <message>
-        <location filename="../monitortitlewidget.cpp" line="288"/>
+        <location filename="../monitortitlewidget.cpp" line="420"/>
         <source>:/img/minimize.png</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../monitortitlewidget.cpp" line="313"/>
+        <location filename="../monitortitlewidget.cpp" line="445"/>
         <source>:/img/fullscreen.png</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../monitortitlewidget.cpp" line="334"/>
+        <location filename="../monitortitlewidget.cpp" line="466"/>
         <source>:/img/close.png</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../monitortitlewidget.cpp" line="414"/>
+        <location filename="../monitortitlewidget.cpp" line="546"/>
         <source>Processes</source>
         <translation>进程</translation>
     </message>
     <message>
-        <location filename="../monitortitlewidget.cpp" line="419"/>
+        <location filename="../monitortitlewidget.cpp" line="551"/>
         <source>Resources</source>
         <translation>资源</translation>
     </message>
     <message>
-        <location filename="../monitortitlewidget.cpp" line="423"/>
+        <location filename="../monitortitlewidget.cpp" line="555"/>
         <source>File Systems</source>
         <translation>文件系统</translation>
     </message>
@@ -1237,7 +1237,7 @@ Kylin Team &lt;ubuntukylin-members@list.launchpad.net&gt;</source>
         <translation type="vanished">取消</translation>
     </message>
     <message>
-        <location filename="../monitortitlewidget.cpp" line="539"/>
+        <location filename="../monitortitlewidget.cpp" line="671"/>
         <source>Enter the relevant info of process</source>
         <translation type="unfinished">搜索</translation>
     </message>
@@ -1264,32 +1264,32 @@ Kylin Team &lt;ubuntukylin-members@list.launchpad.net&gt;</source>
 <context>
     <name>NetworkFlow</name>
     <message>
-        <location filename="../networkflow.cpp" line="274"/>
+        <location filename="../networkflow.cpp" line="324"/>
         <source>Receiving</source>
         <translation>正在接收</translation>
     </message>
     <message>
-        <location filename="../networkflow.cpp" line="276"/>
+        <location filename="../networkflow.cpp" line="326"/>
         <source>Total Received</source>
         <translation>总计已接收</translation>
     </message>
     <message>
-        <location filename="../networkflow.cpp" line="275"/>
+        <location filename="../networkflow.cpp" line="325"/>
         <source>Sending</source>
         <translation>正在发送</translation>
     </message>
     <message>
-        <location filename="../networkflow.cpp" line="111"/>
+        <location filename="../networkflow.cpp" line="122"/>
         <source>Receive</source>
         <translation>接收</translation>
     </message>
     <message>
-        <location filename="../networkflow.cpp" line="112"/>
+        <location filename="../networkflow.cpp" line="123"/>
         <source>Send</source>
         <translation>发送</translation>
     </message>
     <message>
-        <location filename="../networkflow.cpp" line="277"/>
+        <location filename="../networkflow.cpp" line="327"/>
         <source>Total Sent</source>
         <translation>总计已发送</translation>
     </message>
@@ -1297,7 +1297,7 @@ Kylin Team &lt;ubuntukylin-members@list.launchpad.net&gt;</source>
 <context>
     <name>NetworkWidget</name>
     <message>
-        <location filename="../networkwidget.cpp" line="38"/>
+        <location filename="../networkwidget.cpp" line="39"/>
         <source>Network</source>
         <translation>网络</translation>
     </message>
@@ -1372,17 +1372,17 @@ Kylin Team &lt;ubuntukylin-members@list.launchpad.net&gt;</source>
 <context>
     <name>ProcessCategory</name>
     <message>
-        <location filename="../processcategory.cpp" line="37"/>
+        <location filename="../processcategory.cpp" line="38"/>
         <source>Active Processes</source>
         <translation>活动的进程</translation>
     </message>
     <message>
-        <location filename="../processcategory.cpp" line="40"/>
+        <location filename="../processcategory.cpp" line="41"/>
         <source>My Processes</source>
         <translation>我的进程</translation>
     </message>
     <message>
-        <location filename="../processcategory.cpp" line="43"/>
+        <location filename="../processcategory.cpp" line="44"/>
         <source>All Processes</source>
         <translation>全部进程</translation>
     </message>
@@ -1390,91 +1390,91 @@ Kylin Team &lt;ubuntukylin-members@list.launchpad.net&gt;</source>
 <context>
     <name>ProcessDialog</name>
     <message>
-        <location filename="../processdialog.cpp" line="159"/>
-        <location filename="../processdialog.cpp" line="162"/>
-        <location filename="../processdialog.cpp" line="177"/>
+        <location filename="../processdialog.cpp" line="160"/>
+        <location filename="../processdialog.cpp" line="163"/>
+        <location filename="../processdialog.cpp" line="178"/>
         <source>End process</source>
         <translation>结束进程</translation>
     </message>
     <message>
-        <location filename="../processdialog.cpp" line="159"/>
+        <location filename="../processdialog.cpp" line="160"/>
         <source>Ending a process may destroy data, break the session or introduce a security risk. Only unresponsive processes should be ended.
 Are you sure to continue?</source>
         <translation>结束进程可能导致数据损坏，中断会话或带来安全风险。您应该只结束无响应的进程。
 您确定要继续该操作？</translation>
     </message>
     <message>
-        <location filename="../processdialog.cpp" line="161"/>
-        <location filename="../processdialog.cpp" line="167"/>
+        <location filename="../processdialog.cpp" line="162"/>
+        <location filename="../processdialog.cpp" line="168"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
     <message>
-        <location filename="../processdialog.cpp" line="165"/>
-        <location filename="../processdialog.cpp" line="168"/>
-        <location filename="../processdialog.cpp" line="179"/>
+        <location filename="../processdialog.cpp" line="166"/>
+        <location filename="../processdialog.cpp" line="169"/>
+        <location filename="../processdialog.cpp" line="180"/>
         <source>Kill process</source>
         <translation>杀死进程</translation>
     </message>
     <message>
-        <location filename="../processdialog.cpp" line="165"/>
+        <location filename="../processdialog.cpp" line="166"/>
         <source>Killing a process may destroy data, break the session or introduce a security risk. Only unresponsive processes should be killed.
 Are you sure to continue?</source>
         <translation>杀死进程可能导致数据损坏，中断会话或带来安全风险。您应该只杀死无响应的进程。
 您确定要继续该操作？</translation>
     </message>
     <message>
-        <location filename="../processdialog.cpp" line="173"/>
+        <location filename="../processdialog.cpp" line="174"/>
         <source>Stop process</source>
         <translation>停止进程</translation>
     </message>
     <message>
-        <location filename="../processdialog.cpp" line="175"/>
+        <location filename="../processdialog.cpp" line="176"/>
         <source>Continue process</source>
         <translation>继续进程</translation>
     </message>
     <message>
-        <location filename="../processdialog.cpp" line="193"/>
+        <location filename="../processdialog.cpp" line="194"/>
         <source>Very High</source>
         <translation>非常高</translation>
     </message>
     <message>
-        <location filename="../processdialog.cpp" line="194"/>
+        <location filename="../processdialog.cpp" line="195"/>
         <source>High</source>
         <translation>高</translation>
     </message>
     <message>
-        <location filename="../processdialog.cpp" line="195"/>
+        <location filename="../processdialog.cpp" line="196"/>
         <source>Normal</source>
         <translation>普通</translation>
     </message>
     <message>
-        <location filename="../processdialog.cpp" line="196"/>
+        <location filename="../processdialog.cpp" line="197"/>
         <source>Low</source>
         <translation>低</translation>
     </message>
     <message>
-        <location filename="../processdialog.cpp" line="197"/>
+        <location filename="../processdialog.cpp" line="198"/>
         <source>Very Low</source>
         <translation>非常低</translation>
     </message>
     <message>
-        <location filename="../processdialog.cpp" line="198"/>
+        <location filename="../processdialog.cpp" line="199"/>
         <source>Custom</source>
         <translation>自定义</translation>
     </message>
     <message>
-        <location filename="../processdialog.cpp" line="203"/>
+        <location filename="../processdialog.cpp" line="204"/>
         <source>Change Priority</source>
         <translation>改变优先级</translation>
     </message>
     <message>
-        <location filename="../processdialog.cpp" line="205"/>
+        <location filename="../processdialog.cpp" line="206"/>
         <source>Properties</source>
         <translation>属性</translation>
     </message>
     <message>
-        <location filename="../processdialog.cpp" line="338"/>
+        <location filename="../processdialog.cpp" line="340"/>
         <source>Change Priority of Process %1 (PID: %2)</source>
         <translation>更改进程“%1”(PID：%2)的优先级</translation>
     </message>
@@ -1482,28 +1482,28 @@ Are you sure to continue?</source>
 <context>
     <name>ProcessListItem</name>
     <message>
-        <location filename="../processlistitem.cpp" line="144"/>
+        <location filename="../processlistitem.cpp" line="169"/>
         <source>Stopped</source>
         <translation>已停止</translation>
     </message>
     <message>
-        <location filename="../processlistitem.cpp" line="146"/>
+        <location filename="../processlistitem.cpp" line="171"/>
         <source>Suspend</source>
         <translation>停止</translation>
     </message>
     <message>
-        <location filename="../processlistitem.cpp" line="148"/>
+        <location filename="../processlistitem.cpp" line="173"/>
         <source>Zombie</source>
         <translation>僵死</translation>
     </message>
     <message>
-        <location filename="../processlistitem.cpp" line="150"/>
+        <location filename="../processlistitem.cpp" line="175"/>
         <source>No response</source>
         <translation>无反应</translation>
     </message>
     <message>
-        <location filename="../processlistitem.cpp" line="152"/>
-        <location filename="../processlistitem.cpp" line="154"/>
+        <location filename="../processlistitem.cpp" line="177"/>
+        <location filename="../processlistitem.cpp" line="179"/>
         <source>Uninterruptible</source>
         <translation>不可中断</translation>
     </message>
@@ -1511,50 +1511,49 @@ Are you sure to continue?</source>
 <context>
     <name>ProcessListWidget</name>
     <message>
-        <location filename="../processlistwidget.cpp" line="74"/>
-        <location filename="../processlistwidget.cpp" line="833"/>
+        <location filename="../processlistwidget.cpp" line="86"/>
+        <location filename="../processlistwidget.cpp" line="876"/>
         <source>Process Name</source>
         <translation type="unfinished">进程名称</translation>
     </message>
     <message>
-        <location filename="../processlistwidget.cpp" line="74"/>
+        <location filename="../processlistwidget.cpp" line="86"/>
         <source>User</source>
         <translation type="unfinished">用户名</translation>
     </message>
     <message>
-        <location filename="../processlistwidget.cpp" line="74"/>
+        <location filename="../processlistwidget.cpp" line="86"/>
         <source>Status</source>
         <translation>状态</translation>
     </message>
     <message>
-        <location filename="../processlistwidget.cpp" line="74"/>
+        <location filename="../processlistwidget.cpp" line="86"/>
         <source>CPU</source>
         <translation type="unfinished">%CPU</translation>
     </message>
     <message>
-        <location filename="../processlistwidget.cpp" line="74"/>
+        <location filename="../processlistwidget.cpp" line="86"/>
         <source>ID</source>
         <translation>ID</translation>
     </message>
     <message>
-        <location filename="../processlistwidget.cpp" line="74"/>
-        <location filename="../processlistwidget.cpp" line="833"/>
+        <location filename="../processlistwidget.cpp" line="86"/>
+        <location filename="../processlistwidget.cpp" line="876"/>
         <source>Command Line</source>
         <translation>命令行</translation>
     </message>
     <message>
-        <location filename="../processlistwidget.cpp" line="74"/>
+        <location filename="../processlistwidget.cpp" line="86"/>
         <source>Memory</source>
         <translation>内存</translation>
     </message>
     <message>
-        <location filename="../processlistwidget.cpp" line="74"/>
-        <location filename="../processlistwidget.cpp" line="833"/>
+        <location filename="../processlistwidget.cpp" line="86"/>
         <source>Priority</source>
         <translation>优先级</translation>
     </message>
     <message>
-        <location filename="../processlistwidget.cpp" line="921"/>
+        <location filename="../processlistwidget.cpp" line="965"/>
         <source>No search result</source>
         <translation>无搜索结果</translation>
     </message>
@@ -1562,12 +1561,12 @@ Are you sure to continue?</source>
 <context>
     <name>ProcessManager</name>
     <message>
-        <location filename="../processmanager.cpp" line="49"/>
+        <location filename="../processmanager.cpp" line="50"/>
         <source>System Monitor</source>
         <translation>系统监视器</translation>
     </message>
     <message>
-        <location filename="../processmanager.cpp" line="54"/>
+        <location filename="../processmanager.cpp" line="55"/>
         <source>Help user to kill process</source>
         <translation>帮助用户管理进程</translation>
     </message>
@@ -1575,7 +1574,7 @@ Are you sure to continue?</source>
 <context>
     <name>PropertiesDialog</name>
     <message>
-        <location filename="../propertiesdialog.cpp" line="128"/>
+        <location filename="../propertiesdialog.cpp" line="129"/>
         <source>OK</source>
         <translation>确定</translation>
     </message>
@@ -1583,77 +1582,77 @@ Are you sure to continue?</source>
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../util.cpp" line="207"/>
+        <location filename="../util.cpp" line="208"/>
         <source>Running</source>
         <translation>运行中</translation>
     </message>
     <message>
-        <location filename="../util.cpp" line="211"/>
+        <location filename="../util.cpp" line="212"/>
         <source>Stopped</source>
         <translation>已停止</translation>
     </message>
     <message>
-        <location filename="../util.cpp" line="215"/>
+        <location filename="../util.cpp" line="216"/>
         <source>Zombie</source>
         <translation>僵死</translation>
     </message>
     <message>
-        <location filename="../util.cpp" line="219"/>
+        <location filename="../util.cpp" line="220"/>
         <source>Uninterruptible</source>
         <translation>不可中断</translation>
     </message>
     <message>
-        <location filename="../util.cpp" line="223"/>
+        <location filename="../util.cpp" line="224"/>
         <source>Sleeping</source>
         <translation>睡眠中</translation>
     </message>
     <message>
-        <location filename="../util.cpp" line="233"/>
+        <location filename="../util.cpp" line="234"/>
         <source>Very High</source>
         <translation>非常高</translation>
     </message>
     <message>
-        <location filename="../util.cpp" line="235"/>
+        <location filename="../util.cpp" line="236"/>
         <source>High</source>
         <translation>高</translation>
     </message>
     <message>
-        <location filename="../util.cpp" line="237"/>
+        <location filename="../util.cpp" line="238"/>
         <source>Normal</source>
         <translation>普通</translation>
     </message>
     <message>
-        <location filename="../util.cpp" line="239"/>
+        <location filename="../util.cpp" line="240"/>
         <source>Low</source>
         <translation>低</translation>
     </message>
     <message>
-        <location filename="../util.cpp" line="241"/>
+        <location filename="../util.cpp" line="242"/>
         <source>Very Low</source>
         <translation>非常低</translation>
     </message>
     <message>
-        <location filename="../util.cpp" line="247"/>
+        <location filename="../util.cpp" line="248"/>
         <source>Very High Priority</source>
         <translation>非常高优先级</translation>
     </message>
     <message>
-        <location filename="../util.cpp" line="249"/>
+        <location filename="../util.cpp" line="250"/>
         <source>High Priority</source>
         <translation>高优先级</translation>
     </message>
     <message>
-        <location filename="../util.cpp" line="251"/>
+        <location filename="../util.cpp" line="252"/>
         <source>Normal Priority</source>
         <translation>普通优先级</translation>
     </message>
     <message>
-        <location filename="../util.cpp" line="253"/>
+        <location filename="../util.cpp" line="254"/>
         <source>Low Priority</source>
         <translation>低优先级</translation>
     </message>
     <message>
-        <location filename="../util.cpp" line="255"/>
+        <location filename="../util.cpp" line="256"/>
         <source>Very Low Priority</source>
         <translation>非常低优先级</translation>
     </message>
@@ -2190,133 +2189,133 @@ Are you sure to continue?</source>
         <translation type="vanished">文件管理器</translation>
     </message>
     <message>
-        <location filename="../memorycircle.cpp" line="24"/>
-        <location filename="../networkflow.cpp" line="50"/>
+        <location filename="../memorycircle.cpp" line="44"/>
+        <location filename="../networkflow.cpp" line="51"/>
         <source>byte</source>
         <translation>字节</translation>
     </message>
     <message>
-        <location filename="../networkflow.cpp" line="52"/>
+        <location filename="../networkflow.cpp" line="53"/>
         <source>byte/s</source>
         <translation>字节/秒</translation>
     </message>
     <message>
-        <location filename="../memorycircle.cpp" line="27"/>
-        <location filename="../networkflow.cpp" line="56"/>
+        <location filename="../memorycircle.cpp" line="47"/>
+        <location filename="../networkflow.cpp" line="57"/>
         <source>bytes</source>
         <translation>字节</translation>
     </message>
     <message>
-        <location filename="../networkflow.cpp" line="58"/>
+        <location filename="../networkflow.cpp" line="59"/>
         <source>bytes/s</source>
         <translation>字节/秒</translation>
     </message>
     <message>
-        <location filename="../memorycircle.cpp" line="34"/>
-        <location filename="../networkflow.cpp" line="66"/>
+        <location filename="../memorycircle.cpp" line="54"/>
+        <location filename="../networkflow.cpp" line="67"/>
         <source>KiB</source>
         <translation>KB</translation>
     </message>
     <message>
-        <location filename="../networkflow.cpp" line="68"/>
+        <location filename="../networkflow.cpp" line="69"/>
         <source>KiB/s</source>
         <translation>KB/秒</translation>
     </message>
     <message>
-        <location filename="../memorycircle.cpp" line="37"/>
-        <location filename="../networkflow.cpp" line="72"/>
+        <location filename="../memorycircle.cpp" line="57"/>
+        <location filename="../networkflow.cpp" line="73"/>
         <source>MiB</source>
         <translation>MiB</translation>
     </message>
     <message>
-        <location filename="../networkflow.cpp" line="74"/>
+        <location filename="../networkflow.cpp" line="75"/>
         <source>MiB/s</source>
         <translation>MiB/秒</translation>
     </message>
     <message>
-        <location filename="../memorycircle.cpp" line="40"/>
-        <location filename="../networkflow.cpp" line="78"/>
+        <location filename="../memorycircle.cpp" line="60"/>
+        <location filename="../networkflow.cpp" line="79"/>
         <source>GiB</source>
         <translation>GiB</translation>
     </message>
     <message>
-        <location filename="../networkflow.cpp" line="80"/>
+        <location filename="../networkflow.cpp" line="81"/>
         <source>GiB/s</source>
         <translation>GiB/秒</translation>
     </message>
     <message>
-        <location filename="../memorycircle.cpp" line="43"/>
-        <location filename="../networkflow.cpp" line="84"/>
+        <location filename="../memorycircle.cpp" line="63"/>
+        <location filename="../networkflow.cpp" line="85"/>
         <source>TiB</source>
         <translation>TiB</translation>
     </message>
     <message>
-        <location filename="../networkflow.cpp" line="86"/>
+        <location filename="../networkflow.cpp" line="87"/>
         <source>TiB/s</source>
         <translation>TiB/秒</translation>
     </message>
     <message>
-        <location filename="../cpuratewidget.cpp" line="41"/>
+        <location filename="../cpuratewidget.cpp" line="42"/>
         <source>%1hours</source>
         <translation>%1小时</translation>
     </message>
     <message>
-        <location filename="../cpuratewidget.cpp" line="43"/>
+        <location filename="../cpuratewidget.cpp" line="44"/>
         <source>%1hour</source>
         <translation>%1小时</translation>
     </message>
     <message>
-        <location filename="../cpuratewidget.cpp" line="45"/>
+        <location filename="../cpuratewidget.cpp" line="46"/>
         <source>%1minutes</source>
         <translation>%1分</translation>
     </message>
     <message>
-        <location filename="../cpuratewidget.cpp" line="47"/>
+        <location filename="../cpuratewidget.cpp" line="48"/>
         <source>%1minute</source>
         <translation>%1分</translation>
     </message>
     <message>
-        <location filename="../cpuratewidget.cpp" line="49"/>
+        <location filename="../cpuratewidget.cpp" line="50"/>
         <source>%1seconds</source>
         <translation>%1秒</translation>
     </message>
     <message>
-        <location filename="../cpuratewidget.cpp" line="51"/>
+        <location filename="../cpuratewidget.cpp" line="52"/>
         <source>%1second</source>
         <translation>%1秒</translation>
     </message>
     <message>
-        <location filename="../cpuratewidget.cpp" line="56"/>
+        <location filename="../cpuratewidget.cpp" line="57"/>
         <source>%1day</source>
         <translation>%1天</translation>
     </message>
     <message>
-        <location filename="../cpuratewidget.cpp" line="58"/>
+        <location filename="../cpuratewidget.cpp" line="59"/>
         <source>%1days</source>
         <translation>%1天</translation>
     </message>
     <message>
-        <location filename="../propertiesdialog.cpp" line="154"/>
+        <location filename="../propertiesdialog.cpp" line="155"/>
         <source>User name:</source>
         <translation>用户名：</translation>
     </message>
     <message>
-        <location filename="../propertiesdialog.cpp" line="154"/>
+        <location filename="../propertiesdialog.cpp" line="155"/>
         <source>Process name:</source>
         <translation>进程名：</translation>
     </message>
     <message>
-        <location filename="../propertiesdialog.cpp" line="154"/>
+        <location filename="../propertiesdialog.cpp" line="155"/>
         <source>Command line:</source>
         <translation>命令行：</translation>
     </message>
     <message>
-        <location filename="../propertiesdialog.cpp" line="154"/>
+        <location filename="../propertiesdialog.cpp" line="155"/>
         <source>CPU Time:</source>
         <translation>CPU 时间：</translation>
     </message>
     <message>
-        <location filename="../propertiesdialog.cpp" line="154"/>
+        <location filename="../propertiesdialog.cpp" line="155"/>
         <source>Started Time:</source>
         <translation>开始于：</translation>
     </message>
@@ -2324,27 +2323,27 @@ Are you sure to continue?</source>
 <context>
     <name>ReniceDialog</name>
     <message>
-        <location filename="../renicedialog.cpp" line="55"/>
+        <location filename="../renicedialog.cpp" line="56"/>
         <source>Nice value:</source>
         <translation>Nice 值：</translation>
     </message>
     <message>
-        <location filename="../renicedialog.cpp" line="77"/>
+        <location filename="../renicedialog.cpp" line="78"/>
         <source>Note:</source>
         <translation>备忘：</translation>
     </message>
     <message>
-        <location filename="../renicedialog.cpp" line="81"/>
+        <location filename="../renicedialog.cpp" line="82"/>
         <source>The priority of a process is given by its nice value. A lower nice value corresponds to a higher priority.</source>
         <translation>进程的优先级由它的 nice 值指定。较低的 nice 值对应较高的优先级。</translation>
     </message>
     <message>
-        <location filename="../renicedialog.cpp" line="93"/>
+        <location filename="../renicedialog.cpp" line="94"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
     <message>
-        <location filename="../renicedialog.cpp" line="98"/>
+        <location filename="../renicedialog.cpp" line="99"/>
         <source>Change Priority</source>
         <translation>改变优先级</translation>
     </message>
@@ -2352,17 +2351,17 @@ Are you sure to continue?</source>
 <context>
     <name>ResourcesCategory</name>
     <message>
-        <location filename="../resourcescategory.cpp" line="38"/>
+        <location filename="../resourcescategory.cpp" line="39"/>
         <source>CPU</source>
         <translation>处理器</translation>
     </message>
     <message>
-        <location filename="../resourcescategory.cpp" line="40"/>
+        <location filename="../resourcescategory.cpp" line="41"/>
         <source>Memory</source>
         <translation>内存</translation>
     </message>
     <message>
-        <location filename="../resourcescategory.cpp" line="42"/>
+        <location filename="../resourcescategory.cpp" line="43"/>
         <source>Network</source>
         <translation>网络</translation>
     </message>
@@ -2486,7 +2485,7 @@ Are you sure to continue?</source>
 <context>
     <name>SystemMonitor</name>
     <message>
-        <location filename="../systemmonitor.cpp" line="68"/>
+        <location filename="../systemmonitor.cpp" line="79"/>
         <source>UKUI System Monitor</source>
         <translation>麒麟系统监视器</translation>
     </message>

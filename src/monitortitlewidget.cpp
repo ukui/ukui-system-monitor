@@ -401,7 +401,7 @@ void MonitorTitleWidget::initTitlebarMiddleContent()
     titleLabel->setFont(font);
     titleLabel->setStyleSheet("QLabel{background-color:transparent;color:palette(windowText);}");
     titleLabel->setText(tr("UKUI System Monitor"));
-    picLabel->setPixmap(QPixmap(":img/kylin-system-monitor.png"));
+    picLabel->setPixmap(QPixmap(":img/ukui-system-monitor.png"));
     m_titleMiddleLayout->addWidget(picLabel);
     m_titleMiddleLayout->addWidget(titleLabel);
     m_topLayout->addWidget(w);

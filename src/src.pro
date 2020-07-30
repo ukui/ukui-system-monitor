@@ -145,5 +145,10 @@ RESOURCES += \
     res.qrc
 
 TRANSLATIONS += \
-    translation/ukui-system-monitor_zh_CN.ts \
-    translation/ukui-system-monitor_tr.ts
+    translation/ukui-system-monitor_bo.ts \
+    translation/ukui-system-monitor_de.ts \
+    translation/ukui-system-monitor_es.ts \
+    translation/ukui-system-monitor_fr.ts \
+    translation/ukui-system-monitor_ru.ts \
+    translation/ukui-system-monitor_tr.ts \
+    translation/ukui-system-monitor_zh_CN.ts
