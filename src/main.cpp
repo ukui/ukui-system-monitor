@@ -21,6 +21,7 @@
 #include <QApplication>
 #include <QTranslator>
 #include <QObject>
+#include <QDesktopWidget>
 
 #include "framelessExtended/framelesshandle.h"
 #include "systemmonitor.h"
@@ -56,6 +57,14 @@ int main(int argc, char *argv[])
 
     auto style = new InternalStyle(nullptr);
     app.setStyle(style);
+
+    if (QApplication::desktop()->width() >= 2560)
+    {
+        #if (QT_VERSION >= QT_VERSION_CHECK(5, 6, 0))
+                QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+                QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
+        #endif
+    }
 
     MainController *ctrl = MainController::self();
 

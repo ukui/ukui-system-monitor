@@ -70,7 +70,12 @@ SystemMonitor::SystemMonitor(QWidget *parent)
         qtSettings = new QGSettings(idd);
     }
 
+    const QByteArray idtrans(THEME_QT_TRANS);
 
+    if(QGSettings::isSchemaInstalled(idtrans))
+    {
+        opacitySettings = new QGSettings(idtrans);
+    }
 
     this->setAutoFillBackground(true);
 //    this->setMouseTracking(true);
@@ -95,6 +100,7 @@ SystemMonitor::SystemMonitor(QWidget *parent)
     this->initConnections();
     initThemeMode();
     connect(m_titleWidget,SIGNAL(changeProcessItemDialog(int)),process_dialog,SLOT(onActiveWhoseProcess(int)));
+    getTransparentData();
     //边框阴影效果
 //    QGraphicsDropShadowEffect *shadow_effect = new QGraphicsDropShadowEffect(this);
 //    shadow_effect->setBlurRadius(5);
@@ -146,6 +152,28 @@ void SystemMonitor::initThemeMode()
     });
     currentThemeMode = qtSettings->get(MODE_QT_KEY).toString();
     qDebug()<<"hahahahaaha"<<currentThemeMode;
+}
+
+void SystemMonitor::getTransparentData()
+{
+    connect(opacitySettings,&QGSettings::changed, this, [=](const QString &key)
+    {
+        if(key == "transparency")
+        {
+            if (!opacitySettings)
+            {
+                m_transparency = 90.0;
+            }
+
+            QStringList keys = opacitySettings->keys();
+            if (keys.contains("transparency"))
+            {
+                m_transparency = opacitySettings->get("transparency").toDouble();
+            }
+        }
+        repaint();
+    });
+    m_transparency = opacitySettings->get("transparency").toDouble();
 }
 
 SystemMonitor::~SystemMonitor()
@@ -250,7 +278,11 @@ void SystemMonitor::paintEvent(QPaintEvent *event)
     QPainter p(this);
 
 
-    p.setOpacity(0.90);
+#if (QT_VERSION < QT_VERSION_CHECK(5,7,0))
+    p.setOpacity(0.95);
+#else
+    p.setOpacity(m_transparency/100);
+#endif
     Q_UNUSED(event);
 
     p.setRenderHint(QPainter::Antialiasing);
