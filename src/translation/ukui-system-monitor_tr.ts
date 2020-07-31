@@ -245,7 +245,7 @@
     <message>
         <location filename="../memorycircle.cpp" line="195"/>
         <source>Swap</source>
-        <translation>Swap</translation>
+        <translation>Takas</translation>
     </message>
     <message>
         <location filename="../memorycircle.cpp" line="203"/>
@@ -264,7 +264,7 @@
         <location filename="../memorycircle.cpp" line="214"/>
         <source>%1(%2%)</source>
         <translatorcomment>%1(%2%)</translatorcomment>
-        <translation></translation>
+        <translation>%1(%2%)</translation>
     </message>
 </context>
 <context>
@@ -300,17 +300,17 @@
     <message>
         <location filename="../monitortitlewidget.cpp" line="420"/>
         <source>:/img/minimize.png</source>
-        <translation></translation>
+        <translation>:/img/minimize.png</translation>
     </message>
     <message>
         <location filename="../monitortitlewidget.cpp" line="445"/>
         <source>:/img/fullscreen.png</source>
-        <translation></translation>
+        <translation>:/img/fullscreen.png</translation>
     </message>
     <message>
         <location filename="../monitortitlewidget.cpp" line="466"/>
         <source>:/img/close.png</source>
-        <translation></translation>
+        <translation>:/img/close.png</translation>
     </message>
     <message>
         <location filename="../monitortitlewidget.cpp" line="546"/>
@@ -503,7 +503,7 @@ Devam etmek istediğinizden emin misiniz?</translation>
     <message>
         <location filename="../processlistitem.cpp" line="173"/>
         <source>Zombie</source>
-        <translation></translation>
+        <translation>Zombi</translation>
     </message>
     <message>
         <location filename="../processlistitem.cpp" line="175"/>
@@ -698,18 +698,18 @@ Devam etmek istediğinizden emin misiniz?</translation>
     <message>
         <location filename="../networkflow.cpp" line="53"/>
         <source>byte/s</source>
-        <translation></translation>
+        <translation>bayt/s</translation>
     </message>
     <message>
         <location filename="../memorycircle.cpp" line="47"/>
         <location filename="../networkflow.cpp" line="57"/>
         <source>bytes</source>
-        <translation></translation>
+        <translation>bayt</translation>
     </message>
     <message>
         <location filename="../networkflow.cpp" line="59"/>
         <source>bytes/s</source>
-        <translation></translation>
+        <translation>bayt/s</translation>
     </message>
     <message>
         <location filename="../memorycircle.cpp" line="54"/>
@@ -758,67 +758,67 @@ Devam etmek istediğinizden emin misiniz?</translation>
     <message>
         <location filename="../cpuratewidget.cpp" line="42"/>
         <source>%1hours</source>
-        <translation></translation>
+        <translation>%1 saat</translation>
     </message>
     <message>
         <location filename="../cpuratewidget.cpp" line="44"/>
         <source>%1hour</source>
-        <translation></translation>
+        <translation>%1 saat</translation>
     </message>
     <message>
         <location filename="../cpuratewidget.cpp" line="46"/>
         <source>%1minutes</source>
-        <translation></translation>
+        <translation>%1 dakika</translation>
     </message>
     <message>
         <location filename="../cpuratewidget.cpp" line="48"/>
         <source>%1minute</source>
-        <translation></translation>
+        <translation>%1 dakika</translation>
     </message>
     <message>
         <location filename="../cpuratewidget.cpp" line="50"/>
         <source>%1seconds</source>
-        <translation></translation>
+        <translation>%1 saniye</translation>
     </message>
     <message>
         <location filename="../cpuratewidget.cpp" line="52"/>
         <source>%1second</source>
-        <translation></translation>
+        <translation>%1 saniye</translation>
     </message>
     <message>
         <location filename="../cpuratewidget.cpp" line="57"/>
         <source>%1day</source>
-        <translation></translation>
+        <translation>%1 gün</translation>
     </message>
     <message>
         <location filename="../cpuratewidget.cpp" line="59"/>
         <source>%1days</source>
-        <translation></translation>
+        <translation>%1 gün</translation>
     </message>
     <message>
         <location filename="../propertiesdialog.cpp" line="155"/>
         <source>User name:</source>
-        <translation></translation>
+        <translation>Kullanıcı Adı:</translation>
     </message>
     <message>
         <location filename="../propertiesdialog.cpp" line="155"/>
         <source>Process name:</source>
-        <translation></translation>
+        <translation>İşlem Adı:</translation>
     </message>
     <message>
         <location filename="../propertiesdialog.cpp" line="155"/>
         <source>Command line:</source>
-        <translation></translation>
+        <translation>Komut Satırı:</translation>
     </message>
     <message>
         <location filename="../propertiesdialog.cpp" line="155"/>
         <source>CPU Time:</source>
-        <translation></translation>
+        <translation>CPU Zamanı:</translation>
     </message>
     <message>
         <location filename="../propertiesdialog.cpp" line="155"/>
         <source>Started Time:</source>
-        <translation></translation>
+        <translation>Başlama Zamanı:</translation>
     </message>
 </context>
 <context>
