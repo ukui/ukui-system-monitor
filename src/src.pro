@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT += core dbus
+QT += core x11extras gui dbus
 
 isEqual(QT_MAJOR_VERSION, 5) {
     QT += widgets gui svg x11extras
