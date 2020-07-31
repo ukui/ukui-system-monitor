@@ -281,7 +281,7 @@ void SystemMonitor::paintEvent(QPaintEvent *event)
 #if (QT_VERSION < QT_VERSION_CHECK(5,7,0))
     p.setOpacity(0.95);
 #else
-    p.setOpacity(m_transparency/100);
+    p.setOpacity(m_transparency);
 #endif
     Q_UNUSED(event);
 

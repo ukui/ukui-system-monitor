@@ -28,8 +28,28 @@
 #include "shell/customstyle.h"
 #include "maincontroller.h"
 
+#include <X11/Xlib.h>   // should be put in the last
+
 int main(int argc, char *argv[])
 {
+    Display *disp = XOpenDisplay(NULL);
+    Screen *scrn = DefaultScreenOfDisplay(disp);
+    if (NULL == scrn) {
+        return 0;
+    }
+    int width = scrn->width;
+
+    if (width > 2560) {
+        #if (QT_VERSION >= QT_VERSION_CHECK(5, 6, 0))
+                QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+                QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
+        #endif
+    }
+    if (NULL != disp) {
+        XCloseDisplay(disp);
+    }
+
+
     QApplication app(argc,argv);
 
     QApplication::setApplicationName("UKUI System Monitor");
@@ -57,14 +77,6 @@ int main(int argc, char *argv[])
 
     auto style = new InternalStyle(nullptr);
     app.setStyle(style);
-
-    if (QApplication::desktop()->width() >= 2560)
-    {
-        #if (QT_VERSION >= QT_VERSION_CHECK(5, 6, 0))
-                QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-                QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
-        #endif
-    }
 
     MainController *ctrl = MainController::self();
 
