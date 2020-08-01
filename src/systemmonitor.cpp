@@ -162,7 +162,7 @@ void SystemMonitor::getTransparentData()
         {
             if (!opacitySettings)
             {
-                m_transparency = 90.0;
+                m_transparency = 0.9;
             }
 
             QStringList keys = opacitySettings->keys();
@@ -206,6 +206,11 @@ SystemMonitor::~SystemMonitor()
         delete proSettings;
         proSettings = NULL;
     }
+    if (opacitySettings != NULL){
+        delete opacitySettings;
+        opacitySettings = NULL;
+    }
+
 }
 
 void SystemMonitor::paintEvent(QPaintEvent *event)
@@ -365,7 +370,7 @@ void SystemMonitor::recordProcessVisibleColumn(int, bool, QList<bool> columnVisi
     }
 
     if (columnVisible[5]) {
-        m_visibleColumns << "command";
+        m_visibleColumns << "flownetpersec";
     }
 
     if (columnVisible[6]) {
@@ -393,7 +398,7 @@ void SystemMonitor::recordProcessVisibleColumn(int, bool, QList<bool> columnVisi
 
 void SystemMonitor::recordSortStatus(int index, bool isSort)
 {
-    QList<QString> columnNames = { "name", "user", "status", "cpu", "pid", "command", "memory", "priority"};
+    QList<QString> columnNames = { "name", "user", "status", "cpu", "pid", "flownetpersec", "memory", "priority"};
 
     proSettings->beginGroup("PROCESS");
     proSettings->setValue("CurrentSortColumn", columnNames[index]);
@@ -517,7 +522,7 @@ int SystemMonitor::getCurrentSortColumnIndex()
     QString currentSortColumn = proSettings->value("CurrentSortColumn").toString();
     proSettings->endGroup();
 
-    QList<QString> columnNames = {"name", "user", "status", "cpu", "pid", "command", "memory", "priority"};
+    QList<QString> columnNames = {"name", "user", "status", "cpu", "pid", "flownetpersec", "memory", "priority"};
 
     return columnNames.indexOf(currentSortColumn);
 }
@@ -534,12 +539,12 @@ bool SystemMonitor::isSortOrNot()
 QList<bool> SystemMonitor::getReadyDisplayProcessColumns()
 {
     proSettings->beginGroup("PROCESS");
-    QString displayedColumns = proSettings->value("DisplayedColumns", "name,user,status,cpu,pid,command,memory,priority").toString();
+    QString displayedColumns = proSettings->value("DisplayedColumns", "name,user,status,cpu,pid,flownetpersec,memory,priority").toString();
     proSettings->endGroup();
 
     if (displayedColumns.isEmpty()) {
         proSettings->beginGroup("PROCESS");
-        displayedColumns = "name,user,status,cpu,pid,command,memory,priority";
+        displayedColumns = "name,user,status,cpu,pid,flownetpersec,memory,priority";
         proSettings->setValue("DisplayedColumns", displayedColumns);
         proSettings->endGroup();
         proSettings->sync();
@@ -551,7 +556,7 @@ QList<bool> SystemMonitor::getReadyDisplayProcessColumns()
     m_shows << displayedColumns.contains("status");
     m_shows << displayedColumns.contains("cpu");
     m_shows << displayedColumns.contains("pid");
-    m_shows << displayedColumns.contains("command");
+    m_shows << displayedColumns.contains("flownetpersec");
     m_shows << displayedColumns.contains("memory");
     m_shows << displayedColumns.contains("priority");
 

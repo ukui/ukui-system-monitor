@@ -14,7 +14,8 @@ Build-Depends: debhelper-compat (= 13),
                libgtop2-dev,
                libsystemd-dev (>= 209) [linux-any],
                libgsettings-qt-dev,
-               libqt5x11extras5-dev
+               libqt5x11extras5-dev,
+               libpcap-dev
 Standards-Version: 4.5.0
 Rules-Requires-Root: no
 Homepage: https://www.ukui.org

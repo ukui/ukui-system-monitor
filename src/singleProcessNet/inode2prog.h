@@ -18,41 +18,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifndef __INODE2PROG_h
+#define __INODE2PROG_h
 
-#ifndef PROCESSDATA_H
-#define PROCESSDATA_H
+/* this should be called quickly after the packet
+ * arrived, since the inode may disappear from the table
+ * quickly, too :) */
 
-#include <QObject>
-#include <QString>
-#include <QMap>
-#include <QSharedPointer>
+#include "kylinsystemnethogs.h"
 
-class ProcData
-{
-public:
+struct prg_node {
+    long inode;
     pid_t pid;
-    uint cpu;
-    long m_memory;
-    long m_nice;
-    QString m_flownet;
-    QPixmap iconPixmap;
-    QString processName;
-    QString displayName;
-//    QString commandLine;
-    QString path;
-    QString user;
-    QString m_status;
-    QString m_session;
-    QString cpu_duration_time;
+    std::string name;
 };
 
+struct prg_node * findPID (unsigned long inode);
 
-typedef QSharedPointer<ProcData>  ProcDataPtr;
-typedef QList<ProcDataPtr>  ProcDataPtrList;
+void prg_cache_clear();
 
-Q_DECLARE_METATYPE(ProcData)
-Q_DECLARE_METATYPE(ProcDataPtr)
-Q_DECLARE_METATYPE(ProcDataPtrList)
+// reread the inode-to-prg_node-mapping
+void reread_mapping ();
 
-
-#endif // PROCESSDATA_H
+#endif

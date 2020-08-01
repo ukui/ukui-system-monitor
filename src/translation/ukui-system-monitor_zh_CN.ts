@@ -1539,8 +1539,8 @@ Are you sure to continue?</source>
     <message>
         <location filename="../processlistwidget.cpp" line="86"/>
         <location filename="../processlistwidget.cpp" line="876"/>
-        <source>Command Line</source>
-        <translation>命令行</translation>
+        <source>Flownet Persec</source>
+        <translation>网络</translation>
     </message>
     <message>
         <location filename="../processlistwidget.cpp" line="86"/>

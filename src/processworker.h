@@ -38,14 +38,15 @@ class ProcessWorker
     static UserMap users;
 
   public:
-    ProcessWorker(pid_t pid, gint cpus, guint64 cpu_time);
+    ProcessWorker(pid_t pid, gint cpus, guint64 cpu_time ,QString flownet_persec);
     ~ProcessWorker();
     typedef std::map<pid_t, ProcessWorker*> List;
     typedef List::iterator Iterator;
     static ProcessWorker* find(pid_t pid);
+    static List all;
     static Iterator begin() { return ProcessWorker::all.begin(); }
     static Iterator end() { return ProcessWorker::all.end(); }
-    static List all;
+
     void setProcData();
     void set_user(guint uid);
     std::string lookup_user(guint uid);
@@ -55,6 +56,7 @@ class ProcessWorker
     gulong mem;
     gulong start_time;
     guint64 cpu_time;
+    QString flownet_persec;
     guint status;
     guint pcpu;
     gint nice;

@@ -81,7 +81,5 @@ int main(int argc, char *argv[])
     MainController *ctrl = MainController::self();
 
     app.exec();
-//    delete monitor;
-    delete ctrl;
     return 0;
 }

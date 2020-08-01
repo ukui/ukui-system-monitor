@@ -68,6 +68,7 @@
 #include <stdlib.h>
 #include <sys/resource.h> //for setpriority
 
+
 using std::string;
 
 QDataStream &operator<<(QDataStream &dataStream, const ProcDataPtr &object)
@@ -139,7 +140,7 @@ ProcessDialog::ProcessDialog(QList<bool> toBeDisplayedColumns, int currentSortIn
     m_categoryLayout = new QHBoxLayout(w);       //give up adding new widget
     m_categoryLayout->setContentsMargins(0, 0, 6, 3);
     m_categoryLayout->setSpacing(10);
-    processCategory = new ProcessCategory(tabIndex);
+//    processCategory = new ProcessCategory(tabIndex);
     connect(processCategory, SIGNAL(activeWhoseProcessList(int)), this, SLOT(onActiveWhoseProcess(int)));
 //    m_categoryLayout->addWidget(processCategory, 0, Qt::AlignRight);
     m_layout->addWidget(w);
@@ -151,7 +152,7 @@ ProcessDialog::ProcessDialog(QList<bool> toBeDisplayedColumns, int currentSortIn
     sortFuncList->append(&ProcessListItem::sortByStatus);
     sortFuncList->append(&ProcessListItem::sortByCPU);
     sortFuncList->append(&ProcessListItem::sortByPid);
-    sortFuncList->append(&ProcessListItem::sortByCommand);
+    sortFuncList->append(&ProcessListItem::sortByFlowNet);
     sortFuncList->append(&ProcessListItem::sortByMemory);
     sortFuncList->append(&ProcessListItem::sortByPriority);
     m_processListWidget->setProcessSortFunctions(sortFuncList, currentSortIndex, isSort);
@@ -218,10 +219,19 @@ ProcessDialog::ProcessDialog(QList<bool> toBeDisplayedColumns, int currentSortIn
     glibtop_init();
     this->num_cpus = glibtop_get_sysinfo()->ncpu;
 
+    scanThread = new ScanThread(this);
+    scanThread->start(QThread::TimeCriticalPriority);
+
+    refreshThread = new RefreshThread(this);
+    refreshThread->start(QThread::HighPriority);
+
+    connect(refreshThread, SIGNAL(procDetected(const QString &, quint64 , quint64 , int , unsigned int , const QString&)),
+            this, SLOT(refreshLine(const QString &, quint64 , quint64 , int, unsigned int , const QString&)));
+
     this->refreshProcessList();
     timer = new QTimer(this);
     connect(timer,SIGNAL(timeout()),this,SLOT(refreshProcessList()));
-    timer->start(3000);
+    timer->start(1000);
 }
 
 ProcessDialog::~ProcessDialog()
@@ -258,6 +268,16 @@ ProcessDialog::~ProcessDialog()
     delete m_menu;
     delete actionPids;
     delete item;
+
+    if(scanThread)
+    {
+        delete scanThread;
+    }
+
+    if(refreshThread)
+    {
+        delete refreshThread;
+    }
 
     QLayoutItem *child;
     while ((child = m_categoryLayout->takeAt(0)) != 0) {
@@ -427,13 +447,18 @@ void ProcessDialog::refreshProcessList()
     int which = 0;
     int arg = 0;
 
-    if (whose_processes == "all") {
+    if (whose_processes == "all")
+    {
         which = GLIBTOP_KERN_PROC_ALL;
         arg = 0;
-    } else if (whose_processes == "active") {
+    }
+    else if (whose_processes == "active")
+    {
         which = GLIBTOP_KERN_PROC_ALL | GLIBTOP_EXCLUDE_IDLE;
         arg = 0;
-    } else if (whose_processes == "user") {
+    }
+    else if (whose_processes == "user")
+    {
         which = GLIBTOP_KERN_PROC_UID;
         arg = getuid();
     }
@@ -449,6 +474,9 @@ void ProcessDialog::refreshProcessList()
     this->cpu_total_time = MAX(cpu.total - this->cpu_total_time_last, 1);
     this->cpu_total_time_last = cpu.total;
 
+
+
+
     // FIXME: not sure if glibtop always returns a sorted list of pid
     // but it is important otherwise refresh_list won't find the parent
     std::sort(pid_list, pid_list + proclist.number);
@@ -457,10 +485,37 @@ void ProcessDialog::refreshProcessList()
     typedef std::list<ProcessWorker*> ProcList;
     ProcList addition;
     guint i;
-    for(i = 0; i < proclist.number; ++i) {
+//    int addPid;
+    for(i = 0; i < proclist.number; ++i)
+    {
         ProcessWorker *info = ProcessWorker::find(pid_list[i]);
-        if (!info) {//不存在时创建该进程的对象
-            info = new ProcessWorker(pid_list[i], this->num_cpus, this->cpu_total_time);
+
+        qDebug()<<"refreshProcessList:mapsize2"<<pidMap.size()<<info;
+        if (info)
+        {
+            qDebug()<<"refreshProcessList:mapsize3"<<pidMap.size();
+            if(pidMap.contains(pid_list[i]))
+            {
+                qDebug()<<"wocengjinghenxihuanni"<<pid_list[i];
+                this->addFlowNetPerSec = pidMap[pid_list[i]];
+                qDebug()<<"---------------------------------------wwj"<<this->addFlowNetPerSec;
+                info = new ProcessWorker(pid_list[i], this->num_cpus, this->cpu_total_time,this->addFlowNetPerSec);
+                ProcessWorker::all[info->pid] = info;
+            }
+//            else
+//            {
+//                //不存在时创建该进程的对象
+//                qDebug()<<"refreshProcessList:else"<<pidMap.size()<<pid_list[i];
+//                info = new ProcessWorker(pid_list[i], this->num_cpus, this->cpu_total_time,0);
+//                ProcessWorker::all[info->pid] = info;
+//            }
+        }
+        else
+//不存在时创建该进程的对象
+//create the process object when the pid's object doesn't exist
+        {
+            qDebug()<<"refreshProcessList:else"<<pidMap.size()<<pid_list[i];
+            info = new ProcessWorker(pid_list[i], this->num_cpus, this->cpu_total_time,"0 KB/S");
             ProcessWorker::all[info->pid] = info;
         }
         //当进程对象存在时，更新该进程对象的相关数据信息
@@ -529,6 +584,7 @@ void ProcessDialog::refreshProcessList()
         uint cpu = it->second->pcpu;
         long memory = it->second->mem;
         pid_t pid = it->second->pid;
+        QString flownetpersec = it->second->flownet_persec;
 
         /*---------------------kobe test string---------------------
         //QString to std:string
@@ -548,7 +604,7 @@ void ProcessDialog::refreshProcessList()
 
         QIcon defaultExecutableIcon = QIcon::fromTheme("application-x-executable");//gnome-mine-application-x-executable
         if (defaultExecutableIcon.isNull()) {
-            defaultExecutableIcon = QIcon("/usr/share/icons/ukui-icon-theme-default/48x48/mimetypes/application-x-executable.png");
+            defaultExecutableIcon = QIcon("/usr/share/icons/kylin-icon-theme/48x48/mimetypes/application-x-executable.png");
             if (defaultExecutableIcon.isNull())
                 defaultExecutableIcon = QIcon(":/res/autostart-default.png");
         }
@@ -575,18 +631,20 @@ void ProcessDialog::refreshProcessList()
 
         ProcData info;
 //        info.pidt = it->second->pid;
-        info.user = username;
-        info.iconPixmap = icon_pixmap;
+        info.user = username;       // 用户名
+        info.iconPixmap = icon_pixmap;  //   进程加载的图片
         info.displayName = displayName;
         info.cpu = cpu;
-        info.m_memory = memory;
+        info.m_memory = memory;         //内存
         info.pid = pid;
-        info.m_status = status;
-        info.m_nice = nice;
+        info.m_status = status;         //状态
+        info.m_nice = nice;             //优先级
         info.m_session = session;
-        info.cpu_duration_time = formatDurationForDisplay(100 * it->second->cpu_time / this->frequency);
-        info.processName = QString::fromStdString(it->second->name);
-        info.commandLine = QString::fromStdString(it->second->arguments);
+        info.m_flownet = flownetpersec;  //单个进程流量
+        info.cpu_duration_time = formatDurationForDisplay(100 * it->second->cpu_time / this->frequency);    //CPU占用你时间
+        info.processName = QString::fromStdString(it->second->name);     //进程名称
+//        info.commandLine = QString::fromStdString(it->second->arguments); //命令行
+
 
         item = new ProcessListItem(info);
         items << item;
@@ -597,6 +655,72 @@ void ProcessDialog::refreshProcessList()
 
     g_free (pid_list);
     //---------------end----------------------
+}
+
+void ProcessDialog::refreshLine(const QString &procname, quint64 rcv, quint64 sent, int pid, unsigned int uid, const QString &devname)
+{
+//    pidList<<pid;
+//    if(!speedLineBand)
+//    {
+        speedLineBand = new lineBandwith(pid,this);
+//    }
+    haveNetPid = pid;
+    qint64 tmptotalFlowNetPerSec = rcv + sent;
+    if(!flowNetPrevMap.contains(pid))
+    {
+        flowNetPrevMap[pid] = 0;//save prev data
+    }
+    qDebug()<<"ProcessDialog::refreshLine:pid<<rcv<<sent"<<pid<<rcv<<sent;
+    qDebug()<<"ProcessDialog::refreshLine:before flowNetPrevMap"<<flowNetPrevMap[pid];
+    addFlowNetPerSec = speedLineBand->new_count(tmptotalFlowNetPerSec - flowNetPrevMap[pid],pid);
+    qDebug()<<"ProcessDialog::refreshLine:deltaFlowNetPerSec"<<tmptotalFlowNetPerSec - flowNetPrevMap[pid];
+    flowNetPrevMap[pid] = tmptotalFlowNetPerSec;
+     qDebug()<<"ProcessDialog::refreshLine:after flowNetPrevMap"<<flowNetPrevMap[pid];
+    if(!pidMap.contains(pid))
+    {
+        pidMap[pid] = addFlowNetPerSec;
+    }
+    QMap<int,QString>::const_iterator it = pidMap.find(pid);
+    qDebug()<<"ProcessDialog::pidMap"<<it.value();
+    if(it.value() != addFlowNetPerSec)
+    {
+        pidMap[pid] = addFlowNetPerSec;
+    }
+
+
+//    if(it.value() != addFlowNetPerSec)
+//    {
+//        if((rcv + sent) == 0)
+//        {
+//            pidMap[pid] = "0 KB/S";
+//            qDebug()<<"00000000000000000000000000000";
+//        }
+//        else
+//        {
+//            pidMap[pid] = speedLineBand->new_count(rcv + sent);
+//        }
+//    }
+//    ProcessDialog::initPreTotalNet = rcv + sent;
+//    else
+//    {
+//         QMap<int,QString>::const_iterator it = pidMap.find(pid);
+//        qDebug()<<"rcv+sent == howmuch"<<rcv+sent;
+//        QTimer::singleShot(1000,this,[=]()
+//        {
+//            if((rcv+sent-ProcessDialog::initPreTotalNet) == 0)
+//            {
+//                pidMap[pid] = "0 KB/S";
+
+//            }
+
+//            else if(it.value() != addFlowNetPerSec && (rcv+sent-ProcessDialog::initPreTotalNet)>1900)
+//            {
+//              pidMap[pid] = speedLineBand->new_count(rcv+sent-ProcessDialog::initPreTotalNet);
+//            }
+//            ProcessDialog::convertPreTotalNet = rcv + sent;
+//            ProcessDialog::initPreTotalNet = ProcessDialog::convertPreTotalNet;
+//        });
+//    }
 }
 
 ProcessListWidget* ProcessDialog::getProcessView()

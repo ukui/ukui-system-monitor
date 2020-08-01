@@ -18,41 +18,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifndef __DEVICES_H
+#define __DEVICES_H
 
-#ifndef PROCESSDATA_H
-#define PROCESSDATA_H
+#include <cstddef> // NULL
 
-#include <QObject>
-#include <QString>
-#include <QMap>
-#include <QSharedPointer>
-
-class ProcData
-{
+class device {
 public:
-    pid_t pid;
-    uint cpu;
-    long m_memory;
-    long m_nice;
-    QString m_flownet;
-    QPixmap iconPixmap;
-    QString processName;
-    QString displayName;
-//    QString commandLine;
-    QString path;
-    QString user;
-    QString m_status;
-    QString m_session;
-    QString cpu_duration_time;
+	device (const char * m_name, device * m_next = NULL) 
+	{
+		name = m_name; next = m_next;
+	}
+	const char * name;
+	device * next;
 };
 
+/**
+ * This function can return null, if no good interface is found
+ * The function avoids loopback interface and down/not running interfaces
+ */
+device * get_default_devices();
 
-typedef QSharedPointer<ProcData>  ProcDataPtr;
-typedef QList<ProcDataPtr>  ProcDataPtrList;
-
-Q_DECLARE_METATYPE(ProcData)
-Q_DECLARE_METATYPE(ProcDataPtr)
-Q_DECLARE_METATYPE(ProcDataPtrList)
-
-
-#endif // PROCESSDATA_H
+#endif
