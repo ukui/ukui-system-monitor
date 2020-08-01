@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT += core x11extras gui dbus
+QT += core x11extras gui dbus network
 
 isEqual(QT_MAJOR_VERSION, 5) {
     QT += widgets gui svg x11extras
@@ -14,7 +14,7 @@ TARGET = ukui-system-monitor
 TEMPLATE = app
 DESTDIR = ..
 
-LIBS += -L/usr/lib/ -lX11
+LIBS += -L/usr/lib/ -lX11 -lpcap -lm
 
 CONFIG        += link_pkgconfig \
                  C++11
@@ -51,6 +51,7 @@ HEADERS += \
     processlistwidget.h \
     processlistitem.h \
     processworker.h \
+    linebandwith.h \
     util.h \
     ../component/utils.h \
     ../widgets/mydialog.h \
@@ -88,7 +89,17 @@ HEADERS += \
     framelessExtended/framelesshandle.h \
     framelessExtended/framelesshandleprivate.h \
     framelessExtended/widgethandlerealize.h \
-    maincontroller.h
+    maincontroller.h \
+    singleProcessNet/devices.h \
+    singleProcessNet/scanthread.h \
+    singleProcessNet/packet.h \
+    singleProcessNet/kylinsystemnethogs.h \
+    singleProcessNet/process.h \
+    singleProcessNet/connection.h \
+    singleProcessNet/conninode.h \
+    singleProcessNet/inode2prog.h \
+    singleProcessNet/refreshthread.h \
+    singleProcessNet/decpcap.h
 
 SOURCES += \
     main.cpp \
@@ -99,6 +110,7 @@ SOURCES += \
     processlistwidget.cpp \
     processlistitem.cpp \
     processworker.cpp \
+    linebandwith.cpp \
     util.cpp \
     ../widgets/mydialog.cpp \
     ../widgets/mytristatebutton.cpp \
@@ -133,7 +145,16 @@ SOURCES += \
     framelessExtended/cursorposcalculator.cpp \
     framelessExtended/framelesshandle.cpp \
     framelessExtended/widgethandlerealize.cpp \
-    maincontroller.cpp
+    maincontroller.cpp \
+    singleProcessNet/devices.cpp \
+    singleProcessNet/scanthread.cpp \
+    singleProcessNet/packet.cpp \
+    singleProcessNet/process.cpp \
+    singleProcessNet/connection.cpp \
+    singleProcessNet/conninode.cpp \
+    singleProcessNet/inode2prog.cpp \
+    singleProcessNet/refreshthread.cpp \
+    singleProcessNet/decpcap.c
 
 OTHER_FILES += \
     systemmonitor.json

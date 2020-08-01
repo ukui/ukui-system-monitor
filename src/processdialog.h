@@ -27,6 +27,9 @@
 #include "processlistitem.h"
 #include "processlistwidget.h"
 #include "monitortitlewidget.h"
+#include "singleProcessNet/scanthread.h"
+#include "singleProcessNet/refreshthread.h"
+#include "linebandwith.h"
 
 #include <QLabel>
 #include <QMap>
@@ -84,6 +87,9 @@ public slots:
     void onActiveWhoseProcess(int index);
     void changeProcPriority(int nice);
     void refreshProcessList();
+    //for renewe single process net information
+    void refreshLine(const QString& procname, quint64 rcv, quint64 sent, int pid, unsigned int uid, const QString& devname);
+//    void newSpeedRefresh();
 
 
 protected:
@@ -91,6 +97,7 @@ protected:
 
 private:
     QTimer *timer = nullptr;
+//    QTimer *netSpeedTimer = nullptr;
     QSettings *proSettings = nullptr;
     guint64 cpu_total_time;
     guint64 cpu_total_time_last;
@@ -122,4 +129,13 @@ private:
 
     QVBoxLayout *m_layout = nullptr;
     QHBoxLayout *m_categoryLayout = nullptr;
+
+    ScanThread *scanThread = nullptr;
+    RefreshThread *refreshThread = nullptr;
+    pid_t haveNetPid;
+    QMap<int,QString> pidMap;
+    QMap<int,int> flowNetPrevMap;
+    QMap<int,int> calMap;
+    QString addFlowNetPerSec;
+    lineBandwith *speedLineBand;
 };

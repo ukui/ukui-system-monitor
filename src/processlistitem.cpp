@@ -247,11 +247,11 @@ void ProcessListItem::drawForeground(QRect rect, QPainter *painter, int column, 
         }
     }
     else if (column == 5) {
-        int commandMaxWidth = rect.width();
+        int flownetMaxWidth = rect.width();
         QFont font = painter->font();
         QFontMetrics fm(font);
-        QString command = fm.elidedText(m_data.commandLine, Qt::ElideRight, commandMaxWidth);
-        painter->drawText(QRect(rect.x(), rect.y(), commandMaxWidth, rect.height()), Qt::AlignLeft | Qt::AlignVCenter, command);
+        QString flownet = fm.elidedText(m_data.m_flownet, Qt::ElideRight, flownetMaxWidth);
+        painter->drawText(QRect(rect.x(), rect.y(), flownetMaxWidth, rect.height()), Qt::AlignCenter | Qt::AlignVCenter, flownet);
         if (!isSeparator) {
             painter->setOpacity(0.8);
 //            QPainterPath separatorPath;
@@ -299,6 +299,25 @@ bool ProcessListItem::doSearch(const ProcessListItem *item, QString text)
     const ProcessListItem *procItem = static_cast<const ProcessListItem*>(item);
     QString content = text.toLower();
     return procItem->getProcessName().toLower().contains(content) || QString::number(procItem->getPid()).contains(content) || procItem->getDisplayName().toLower().contains(content) || procItem->getUser().toLower().contains(content);
+}
+
+bool ProcessListItem::sortByFlowNet(const ProcessListItem *item1, const ProcessListItem *item2, bool descendingSort)
+{
+    QString netFlow1 = (static_cast<const ProcessListItem*>(item1))->getFlowNet();
+    QString netFlow2 = (static_cast<const ProcessListItem*>(item2))->getFlowNet();
+    bool isSort;
+//    if (netFlow1 == netFlow2) {
+//        double cpu1 = static_cast<const ProcessListItem*>(item1)->getCPU();
+//        double cpu2 = (static_cast<const ProcessListItem*>(item2))->getCPU();
+//        isSort = cpu1 > cpu2;
+//    }
+//    else {
+//        QCollator qco(QLocale::system());
+//        int result = qco.compare(netFlow1, netFlow2);
+//        isSort = result < 0;
+//    }
+
+    return descendingSort ? isSort : !isSort;
 }
 
 bool ProcessListItem::sortByName(const ProcessListItem *item1, const ProcessListItem *item2, bool descendingSort)
@@ -384,24 +403,24 @@ bool ProcessListItem::sortByPid(const ProcessListItem *item1, const ProcessListI
     return descendingSort ? isSort : !isSort;
 }
 
-bool ProcessListItem::sortByCommand(const ProcessListItem *item1, const ProcessListItem *item2, bool descendingSort)
-{
-    QString command1 = (static_cast<const ProcessListItem*>(item1))->getCommandLine();
-    QString command2 = (static_cast<const ProcessListItem*>(item2))->getCommandLine();
-    bool isSort;
-    if (command1 == command2) {
-        double cpu1 = static_cast<const ProcessListItem*>(item1)->getCPU();
-        double cpu2 = (static_cast<const ProcessListItem*>(item2))->getCPU();
-        isSort = cpu1 > cpu2;
-    }
-    else {
-        QCollator qco(QLocale::system());
-        int result = qco.compare(command1, command2);
-        isSort = result < 0;
-    }
+//bool ProcessListItem::sortByCommand(const ProcessListItem *item1, const ProcessListItem *item2, bool descendingSort)
+//{
+//    QString command1 = (static_cast<const ProcessListItem*>(item1))->getCommandLine();
+//    QString command2 = (static_cast<const ProcessListItem*>(item2))->getCommandLine();
+//    bool isSort;
+//    if (command1 == command2) {
+//        double cpu1 = static_cast<const ProcessListItem*>(item1)->getCPU();
+//        double cpu2 = (static_cast<const ProcessListItem*>(item2))->getCPU();
+//        isSort = cpu1 > cpu2;
+//    }
+//    else {
+//        QCollator qco(QLocale::system());
+//        int result = qco.compare(command1, command2);
+//        isSort = result < 0;
+//    }
 
-    return descendingSort ? isSort : !isSort;
-}
+//    return descendingSort ? isSort : !isSort;
+//}
 
 bool ProcessListItem::sortByMemory(const ProcessListItem *item1, const ProcessListItem *item2, bool descendingSort)
 {
@@ -477,7 +496,14 @@ long ProcessListItem::getNice() const
     return m_data.m_nice;
 }
 
-QString ProcessListItem::getCommandLine() const
+QString ProcessListItem::getFlowNet() const
 {
-    return m_data.commandLine;
+    return m_data.m_flownet;
 }
+
+//QString ProcessListItem::getCommandLine() const
+//{
+//    return m_data.commandLine;
+//}
+
+

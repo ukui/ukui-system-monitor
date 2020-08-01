@@ -38,10 +38,13 @@ MainController::MainController()
     monitor->show();
     FramelessHandle * pHandle = new FramelessHandle(monitor);
     pHandle->activateOn(monitor);
+    delete pHandle;
 }
 
 MainController::~MainController()
 {
+    delete monitor;
+    delete mSelf;
 }
 
 void MainController::init()                   //init select

@@ -19,40 +19,53 @@
  */
 
 
-#ifndef PROCESSDATA_H
-#define PROCESSDATA_H
+#ifndef SCANTHREAD_H
+#define SCANTHREAD_H
 
-#include <QObject>
-#include <QString>
-#include <QMap>
-#include <QSharedPointer>
+#include <QThread>
 
-class ProcData
+
+#include <netinet/ip.h>
+#include <netinet/ip6.h>
+#include <netinet/tcp.h>
+#include <netinet/udp.h>
+
+extern "C" {
+#include "decpcap.h"
+}
+
+class ScanThread : public QThread
 {
+    Q_OBJECT
 public:
-    pid_t pid;
-    uint cpu;
-    long m_memory;
-    long m_nice;
-    QString m_flownet;
-    QPixmap iconPixmap;
-    QString processName;
-    QString displayName;
-//    QString commandLine;
-    QString path;
-    QString user;
-    QString m_status;
-    QString m_session;
-    QString cpu_duration_time;
+    explicit ScanThread(QObject *parent = 0);
+    void run();
+
+signals:
+
+public slots:
 };
 
 
-typedef QSharedPointer<ProcData>  ProcDataPtr;
-typedef QList<ProcDataPtr>  ProcDataPtrList;
+struct dpargs {
+    const char * device;
+    int sa_family;
+    in_addr ip_src;
+    in_addr ip_dst;
+    in6_addr ip6_src;
+    in6_addr ip6_dst;
+};
 
-Q_DECLARE_METATYPE(ProcData)
-Q_DECLARE_METATYPE(ProcDataPtr)
-Q_DECLARE_METATYPE(ProcDataPtrList)
 
+class handle {
+public:
+    handle (dp_handle * m_handle, const char * m_devicename = NULL,
+            handle * m_next = NULL) {
+        content = m_handle; next = m_next; devicename = m_devicename;
+    }
+    dp_handle * content;
+    const char * devicename;
+    handle * next;
+};
 
-#endif // PROCESSDATA_H
+#endif // SCANTHREAD_H

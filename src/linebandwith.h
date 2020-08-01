@@ -18,41 +18,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifndef LINEBANDWITH_H
+#define LINEBANDWITH_H
 
-#ifndef PROCESSDATA_H
-#define PROCESSDATA_H
+#include "QLineEdit"
 
-#include <QObject>
-#include <QString>
-#include <QMap>
-#include <QSharedPointer>
+#include "QDateTime"
 
-class ProcData
+class lineBandwith : public QLineEdit
 {
+    Q_OBJECT
+
 public:
-    pid_t pid;
-    uint cpu;
-    long m_memory;
-    long m_nice;
-    QString m_flownet;
-    QPixmap iconPixmap;
-    QString processName;
-    QString displayName;
-//    QString commandLine;
-    QString path;
-    QString user;
-    QString m_status;
-    QString m_session;
-    QString cpu_duration_time;
+    explicit lineBandwith(int pid,QWidget *parent = 0);
+
+    QString new_count(qint64 count ,int pid);
+
+private:
+    qint64 count_prev;
+    QDateTime time_prev;
+    QString speedPerSec;
+    QMap <int,int> countMap;
+
+signals:
+
+public slots:
+
 };
 
-
-typedef QSharedPointer<ProcData>  ProcDataPtr;
-typedef QList<ProcDataPtr>  ProcDataPtrList;
-
-Q_DECLARE_METATYPE(ProcData)
-Q_DECLARE_METATYPE(ProcDataPtr)
-Q_DECLARE_METATYPE(ProcDataPtrList)
-
-
-#endif // PROCESSDATA_H
+#endif // LINEBANDWITH_H

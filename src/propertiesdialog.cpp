@@ -152,7 +152,8 @@ PropertiesDialog::PropertiesDialog(QWidget *parent, pid_t processId) : QDialog(p
     infoGrid->setColumnStretch(1, 100);
 
     QStringList titleList;
-    titleList << QObject::tr("User name:") << QObject::tr("Process name:") << QObject::tr("Command line:") << QObject::tr("CPU Time:") << QObject::tr("Started Time:");
+//    titleList << QObject::tr("User name:") << QObject::tr("Process name:") << QObject::tr("Command line:") << QObject::tr("CPU Time:") << QObject::tr("Started Time:");
+    titleList << QObject::tr("User name:") << QObject::tr("Process name:") << QObject::tr("flownet per second:") << QObject::tr("CPU Time:") << QObject::tr("Started Time:");
     for (int i = 0; i < titleList.length(); ++i) {
         QLabel *titleLabel = new QLabel(titleList.value(i));
         titleLabel->setStyleSheet("QLabel{background-color:transparent;font-size:12px;color:#999999;}");

@@ -52,9 +52,10 @@ public:
     static bool sortByStatus(const ProcessListItem *item1, const ProcessListItem *item2, bool descendingSort);
     static bool sortByCPU(const ProcessListItem *item1, const ProcessListItem *item2, bool descendingSort);
     static bool sortByPid(const ProcessListItem *item1, const ProcessListItem *item2, bool descendingSort);
-    static bool sortByCommand(const ProcessListItem *item1, const ProcessListItem *item2, bool descendingSort);
+//    static bool sortByCommand(const ProcessListItem *item1, const ProcessListItem *item2, bool descendingSort);
     static bool sortByMemory(const ProcessListItem *item1, const ProcessListItem *item2, bool descendingSort);
     static bool sortByPriority(const ProcessListItem *item1, const ProcessListItem *item2, bool descendingSort);
+    static bool sortByFlowNet(const ProcessListItem *item1, const ProcessListItem *item2, bool descendingSort);
 
     QString getProcessName() const;
     QString getDisplayName() const;
@@ -64,7 +65,8 @@ public:
     long getMemory() const;
     QString getStatus() const;
     long getNice() const;
-    QString getCommandLine() const;
+//    QString getCommandLine() const;
+    QString getFlowNet() const;
 
     void initThemeMode();
     void initFontSize();

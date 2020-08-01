@@ -82,10 +82,9 @@ ProcessListWidget::ProcessListWidget(QList<bool> toBeDisplayedColumns, QWidget *
 
     this->m_downArrowPixmap = QPixmap(":/img/down_arrow.png");
     this->m_upArrowPixmap = QPixmap(":/img/up_arrow.png");
-
-    this->columnTitles << tr("Process Name") << tr("User") << tr("Status") << tr("CPU") << tr("ID") << tr("Command Line") << tr("Memory") << tr("Priority");
+    this->columnTitles << tr("Process Name") << tr("User") << tr("Status") << tr("CPU") << tr("ID") << tr("Flownet Persec") << tr("Memory") << tr("Priority");
     QList<int> widths;
-    widths << 140 << 90 << 80 << 70 << 80 << -1 << 80 << 80;//-1时让该行填充所有剩余空间
+    widths << 170 << 90 << 80 << 70 << 80 << -1 << 80 << 80;//-1时让该行填充所有剩余空间
 
     QFont font;
     font.setPixelSize(14);//需要和填充所有剩余空间的那个的文字字体大小一致 font.setPointSize(9)
@@ -156,6 +155,17 @@ ProcessListWidget::~ProcessListWidget()
         delete this->m_hideScrollbarTimer;
         this->m_hideScrollbarTimer = nullptr;
     }
+
+    if(fontSettings)
+    {
+        delete fontSettings;
+    }
+
+    if(qtSettings)
+    {
+        delete qtSettings;
+    }
+
     delete this->m_lastItem;
     delete this->m_listItems;
     delete this->m_searchedItems;
@@ -251,6 +261,7 @@ void ProcessListWidget::refreshItems(QList<ProcessListItem*> items)
     this->m_offSet = setOffset(this->m_offSet);
 
     repaint();
+    delete allItems;
 }
 
 void ProcessListWidget::doSearch(QString text)
@@ -873,7 +884,8 @@ void ProcessListWidget::paintEvent(QPaintEvent *)
                 }
 
 
-                if (this->columnTitles[counter] == tr("Process Name") || this->columnTitles[counter] == tr("Command Line"))
+//                if (this->columnTitles[counter] == tr("Process Name") || this->columnTitles[counter] == tr("Flownet Persec"))
+                if (this->columnTitles[counter] == tr("Process Name"))
                     painter.drawText(QRect(posX + this->m_titlePadding, 0, itemWidth, this->m_titleHeight), Qt::AlignLeft | Qt::AlignVCenter, this->columnTitles[counter]);
                 else
                     painter.drawText(QRect(posX, 0, itemWidth - this->m_titlePadding, this->m_titleHeight), Qt::AlignCenter, this->columnTitles[counter]);
