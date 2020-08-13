@@ -75,7 +75,7 @@ void RefreshThread::refresh_process_list()
         // in the last PROCESSTIMEOUT seconds.
         assert (curproc != NULL);
         assert (curproc->getVal() != NULL);
-        assert (nproc == processes->size());
+//        assert (nproc == processes->size());
 
         /* remove timed-out processes (unless it's one of the the unknown process) */
         if ((curproc->getVal()->getLastPacket() + PROCESSTIMEOUT <= curtime.tv_sec)

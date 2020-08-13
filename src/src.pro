@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT += core x11extras gui dbus network
+QT += core x11extras gui dbus network charts
 
 isEqual(QT_MAJOR_VERSION, 5) {
     QT += widgets gui svg x11extras
@@ -25,7 +25,8 @@ CONFIG +=  c++11\
            link_pkgconfig
 PKGCONFIG += libgtop-2.0 \
              libsystemd \
-             gsettings-qt
+             gsettings-qt \
+             x11
 
 desktop.files += ../ukui-system-monitor.desktop
 desktop.path = /usr/share/applications/
@@ -99,7 +100,8 @@ HEADERS += \
     singleProcessNet/conninode.h \
     singleProcessNet/inode2prog.h \
     singleProcessNet/refreshthread.h \
-    singleProcessNet/decpcap.h
+    singleProcessNet/decpcap.h \
+#    newresourcesdialog.h
 
 SOURCES += \
     main.cpp \
@@ -154,7 +156,8 @@ SOURCES += \
     singleProcessNet/conninode.cpp \
     singleProcessNet/inode2prog.cpp \
     singleProcessNet/refreshthread.cpp \
-    singleProcessNet/decpcap.c
+    singleProcessNet/decpcap.c \
+#    newresourcesdialog.cpp
 
 OTHER_FILES += \
     systemmonitor.json

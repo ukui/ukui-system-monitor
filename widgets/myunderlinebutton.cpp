@@ -45,7 +45,7 @@ MyUnderLineButton::MyUnderLineButton(QWidget *parent)
         fontSettings = new QGSettings(id);
     }
 
-    initFontSize();
+
 
     this->setFixedSize(NORMALWIDTH, NORMALHEIGHT+2);
     m_textLabel = new QLabel;
@@ -54,7 +54,7 @@ MyUnderLineButton::MyUnderLineButton(QWidget *parent)
 //    m_textLabel->setFont(ftSize);
 
     initThemeMode();
-
+    initFontSize();
 
 //    m_underlineLabel = new QLabel;
 //    m_underlineLabel->setFixedSize(52, 2);
@@ -70,9 +70,7 @@ MyUnderLineButton::MyUnderLineButton(QWidget *parent)
 
 void MyUnderLineButton::initThemeMode()
 {
-    QFont font;
-    font.setPointSize(fontSize -2);
-    m_textLabel->setFont(font);
+
     //监听主题改变
     connect(qtSettings, &QGSettings::changed, this, [=](const QString &key)
     {
@@ -123,8 +121,15 @@ void MyUnderLineButton::initFontSize()
         {
             fontSize = fontSettings->get(FONT_SIZE).toInt();
         }
+        repaint();
+        QFont font;
+        font.setPointSize(fontSize -2);
+        m_textLabel->setFont(font);
     });
     fontSize = fontSettings->get(FONT_SIZE).toInt();
+    QFont font;
+    font.setPointSize(fontSize -2);
+    m_textLabel->setFont(font);
 }
 
 MyUnderLineButton::~MyUnderLineButton()

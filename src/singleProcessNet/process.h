@@ -23,6 +23,7 @@
 #define __PROCESS_H
 
 #include <cassert>
+#include <QDebug>
 #include "kylinsystemnethogs.h"
 #include "connection.h"
 
@@ -88,6 +89,11 @@ public:
         free (name);
         if (DEBUG)
             std::cout << "PROC: Process deleted at " << this << std::endl;
+
+//        if(unknowntcp)
+//        {
+//            delete unknowntcp;
+//        }
     }
     int getLastPacket ();
 
@@ -127,6 +133,13 @@ public:
     Process * getVal () { return val; }
     ProcList * getNext () { return next; }
     ProcList * next;
+    ~ProcList()
+    {/*
+        if(processes)
+        {
+            delete processes;
+        }*/
+    }
 private:
     Process * val;
 };
@@ -134,6 +147,8 @@ private:
 Process * getProcess (Connection * connection, const char * devicename = NULL);
 
 void process_init ();
+
+void process_delete();
 
 void refreshconninode ();
 

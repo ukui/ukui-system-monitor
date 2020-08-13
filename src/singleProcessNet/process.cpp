@@ -57,9 +57,9 @@ extern std::map <std::string, unsigned long> conninode;
  * * unknown IP traffic
  * We must take care these never get removed from the list.
  */
-Process * unknowntcp; 
-Process * unknownudp; 
-Process * unknownip; 
+Process * unknowntcp;
+Process * unknownudp;
+Process * unknownip;
 ProcList * processes;
 
 /* We're migrating to having several `unknown' processes that are added as 
@@ -71,7 +71,18 @@ std::map <std::string, Process*> unknownprocs;
 void process_init () 
 {
 	unknowntcp = new Process (0, "", "unknown TCP");
-	processes = new ProcList (unknowntcp, NULL);
+    processes = new ProcList (unknowntcp, NULL);
+}
+
+void process_delete()
+{
+    if(unknowntcp)
+    {
+        delete unknowntcp;
+        qDebug()<<"if i can see you,i'll be right";
+    }
+    if(processes)
+        delete processes;
 }
 
 int Process::getLastPacket()
@@ -121,8 +132,8 @@ int ProcList::size ()
 {
 	int i=1;
 
-	if (next != NULL)
-		i += next->size();
+//    if (next != NULL)
+//        i += next->size();
 
 	return i;
 }
