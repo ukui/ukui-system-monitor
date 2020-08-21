@@ -30,6 +30,8 @@
 #include <QDebug>
 #include <QTimer>
 
+static unsigned long long getCpuTimeData(unsigned long long &workTime);
+
 typedef struct _net
 {
     guint64 last_in, last_out;

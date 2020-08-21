@@ -120,7 +120,7 @@ ScanThread::ScanThread(QObject *parent) : QThread(parent)
 
 void ScanThread::run()
 {
-    process_init();
+//    process_init();
     device * devices = NULL;
     int promisc = 0;
 
@@ -183,7 +183,15 @@ void ScanThread::run()
             {
                 packets_read = true;
             }
-            current_handle = current_handle->next;
+//            current_handle = current_handle->next;
+//            if(devices)
+//            {
+//                delete devices;
+//            }
+//            if(handles)
+//            {
+//                delete handles;
+//            }
         }
 
         // If no packets were read at all this iteration, pause to prevent 100% CPU utilisation
@@ -192,12 +200,6 @@ void ScanThread::run()
             usleep(100);
         }
     }
-    if(devices)
-    {
-        delete devices;
-    }
-    if(handles)
-    {
-        delete handles;
-    }
+    delete handles;
+    process_delete();
 }
