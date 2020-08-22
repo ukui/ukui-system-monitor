@@ -135,7 +135,13 @@ private:
     pid_t haveNetPid;
     QMap<int,QString> pidMap;
     QMap<int,int> flowNetPrevMap;
-    QMap<int,int> calMap;
+    QMap<int,int> calDiskIoMap;
     QString addFlowNetPerSec;
-    lineBandwith *speedLineBand;
+    QString addDiskIoPerSec;
+    lineBandwith *speedLineBandFlowNet;
+    lineBandwith *speedLineBandDiskIo;
+
+    guint64 disk_io_bytes_total;
+//    guint64 disk_read_bytes_current;
+//    guint64 disk_write_bytes_current;
 };

@@ -82,7 +82,7 @@ ProcessListWidget::ProcessListWidget(QList<bool> toBeDisplayedColumns, QWidget *
 
     this->m_downArrowPixmap = QPixmap(":/img/down_arrow.png");
     this->m_upArrowPixmap = QPixmap(":/img/up_arrow.png");
-    this->columnTitles << tr("Process Name") << tr("User") << tr("Status") << tr("CPU") << tr("ID") << tr("Flownet Persec") << tr("Memory") << tr("Priority");
+    this->columnTitles << tr("Process Name") << tr("User") << tr("Disk") << tr("CPU") << tr("ID") << tr("Flownet Persec") << tr("Memory") << tr("Priority");
     QList<int> widths;
     widths << 170 << 90 << 80 << 70 << 80 << -1 << 80 << 80;//-1时让该行填充所有剩余空间
 

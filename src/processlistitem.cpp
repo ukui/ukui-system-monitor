@@ -209,9 +209,9 @@ void ProcessListItem::drawForeground(QRect rect, QPainter *painter, int column, 
         }
     }
     else if (column == 2) {
-        if (!m_data.m_status.isEmpty()) {
-            painter->drawText(QRect(rect.x(), rect.y(), rect.width() - textPadding, rect.height()), Qt::AlignRight | Qt::AlignVCenter, m_data.m_status);
-        }
+//        if (!m_data.m_status.isEmpty()) {
+            painter->drawText(QRect(rect.x(), rect.y(), rect.width() - textPadding, rect.height()), Qt::AlignRight | Qt::AlignVCenter, m_data.m_diskio);
+//        }
         if (!isSeparator) {
             painter->setOpacity(0.8);
             QPainterPath separatorPath;
@@ -301,21 +301,51 @@ bool ProcessListItem::doSearch(const ProcessListItem *item, QString text)
     return procItem->getProcessName().toLower().contains(content) || QString::number(procItem->getPid()).contains(content) || procItem->getDisplayName().toLower().contains(content) || procItem->getUser().toLower().contains(content);
 }
 
+bool ProcessListItem::sortByDiskIo(const ProcessListItem *item1, const ProcessListItem *item2, bool descendingSort)
+{
+
+    QString diskIo1 = (static_cast<const ProcessListItem*>(item1))->getDiskIo();
+    QString  diskIo2 = (static_cast<const ProcessListItem*>(item2))->getDiskIo();
+    bool isSort;
+
+    if (diskIo1 == diskIo2)
+    {
+        double cpu1 = static_cast<const ProcessListItem*>(item1)->getCPU();
+        double cpu2 = (static_cast<const ProcessListItem*>(item2))->getCPU();
+        isSort = cpu1 > cpu2;
+    }
+    else
+    {
+        QCollator qco(QLocale::system());
+        int result = qco.compare(diskIo1, diskIo2);
+        isSort = result < 0;
+    }
+
+    return descendingSort ? isSort : !isSort;
+
+
+}
+
 bool ProcessListItem::sortByFlowNet(const ProcessListItem *item1, const ProcessListItem *item2, bool descendingSort)
 {
     QString netFlow1 = (static_cast<const ProcessListItem*>(item1))->getFlowNet();
     QString netFlow2 = (static_cast<const ProcessListItem*>(item2))->getFlowNet();
+
+    if (netFlow1 == netFlow2)
+    {
+        double cpu1 = static_cast<const ProcessListItem*>(item1)->getCPU();
+        double cpu2 = (static_cast<const ProcessListItem*>(item2))->getCPU();
+        isSort = cpu1 > cpu2;
+    }
+    else
+    {
+        QCollator qco(QLocale::system());
+        int result = qco.compare(netFlow1, netFlow2);
+        isSort = result < 0;
+    }
+
     bool isSort;
-//    if (netFlow1 == netFlow2) {
-//        double cpu1 = static_cast<const ProcessListItem*>(item1)->getCPU();
-//        double cpu2 = (static_cast<const ProcessListItem*>(item2))->getCPU();
-//        isSort = cpu1 > cpu2;
-//    }
-//    else {
-//        QCollator qco(QLocale::system());
-//        int result = qco.compare(netFlow1, netFlow2);
-//        isSort = result < 0;
-//    }
+
 
     return descendingSort ? isSort : !isSort;
 }
@@ -499,6 +529,11 @@ long ProcessListItem::getNice() const
 QString ProcessListItem::getFlowNet() const
 {
     return m_data.m_flownet;
+}
+
+QString ProcessListItem::getDiskIo() const
+{
+    return m_data.m_diskio;
 }
 
 //QString ProcessListItem::getCommandLine() const

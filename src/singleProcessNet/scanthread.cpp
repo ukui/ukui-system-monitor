@@ -24,7 +24,7 @@
 #include <QtDebug>
 #include "process.h"
 #include "devices.h"
-//#include "nethogs.h"
+#include "kylinsystemnethogs.h"
 
 extern Process * unknownudp;
 timeval curtime;
@@ -120,7 +120,7 @@ ScanThread::ScanThread(QObject *parent) : QThread(parent)
 
 void ScanThread::run()
 {
-//    process_init();
+    process_init();
     device * devices = NULL;
     int promisc = 0;
 
@@ -135,9 +135,7 @@ void ScanThread::run()
 
     handle * handles = NULL;
     device * current_dev = devices;
-    qDebug()<<"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"<<current_dev->name;
-    while (current_dev != NULL)
-    {
+    while (current_dev != NULL) {
         getLocal(current_dev->name);
 
         dp_handle * newhandle = dp_open_live(current_dev->name, BUFSIZ, promisc, 100, errbuf);
@@ -162,7 +160,6 @@ void ScanThread::run()
         current_dev = current_dev->next;
     }
 
-
     struct dpargs * userdata = (dpargs *) malloc (sizeof (struct dpargs));
 
     while (1) // main loop
@@ -183,23 +180,12 @@ void ScanThread::run()
             {
                 packets_read = true;
             }
-//            current_handle = current_handle->next;
-//            if(devices)
-//            {
-//                delete devices;
-//            }
-//            if(handles)
-//            {
-//                delete handles;
-//            }
+            current_handle = current_handle->next;
         }
 
         // If no packets were read at all this iteration, pause to prevent 100% CPU utilisation
-        if (!packets_read)
-        {
+        if (!packets_read) {
             usleep(100);
         }
     }
-    delete handles;
-    process_delete();
 }

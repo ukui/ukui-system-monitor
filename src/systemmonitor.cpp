@@ -81,7 +81,7 @@ SystemMonitor::SystemMonitor(QWidget *parent)
 //    this->setMouseTracking(true);
 //    installEventFilter(this);
 
-    this->setWindowTitle(tr("UKUI System Monitor"));
+    this->setWindowTitle(tr("Kylin System Monitor"));
 //    this->setWindowIcon(QIcon(":/model/res/plugin/processmanager.png"));
 //    this->setWindowIcon(QIcon(":/img/processmanager.png"));
 
@@ -357,8 +357,12 @@ void SystemMonitor::recordProcessVisibleColumn(int, bool, QList<bool> columnVisi
         m_visibleColumns << "user";
     }
 
+//    if (columnVisible[2]) {
+//        m_visibleColumns << "status";
+//    }
+
     if (columnVisible[2]) {
-        m_visibleColumns << "status";
+        m_visibleColumns << "disk";
     }
 
     if (columnVisible[3]) {
@@ -398,7 +402,7 @@ void SystemMonitor::recordProcessVisibleColumn(int, bool, QList<bool> columnVisi
 
 void SystemMonitor::recordSortStatus(int index, bool isSort)
 {
-    QList<QString> columnNames = { "name", "user", "status", "cpu", "pid", "flownetpersec", "memory", "priority"};
+    QList<QString> columnNames = { "name", "user", "disk", "cpu", "pid", "flownetpersec", "memory", "priority"};
 
     proSettings->beginGroup("PROCESS");
     proSettings->setValue("CurrentSortColumn", columnNames[index]);
@@ -522,7 +526,7 @@ int SystemMonitor::getCurrentSortColumnIndex()
     QString currentSortColumn = proSettings->value("CurrentSortColumn").toString();
     proSettings->endGroup();
 
-    QList<QString> columnNames = {"name", "user", "status", "cpu", "pid", "flownetpersec", "memory", "priority"};
+    QList<QString> columnNames = {"name", "user", "disk", "cpu", "pid", "flownetpersec", "memory", "priority"};
 
     return columnNames.indexOf(currentSortColumn);
 }
@@ -539,12 +543,12 @@ bool SystemMonitor::isSortOrNot()
 QList<bool> SystemMonitor::getReadyDisplayProcessColumns()
 {
     proSettings->beginGroup("PROCESS");
-    QString displayedColumns = proSettings->value("DisplayedColumns", "name,user,status,cpu,pid,flownetpersec,memory,priority").toString();
+    QString displayedColumns = proSettings->value("DisplayedColumns", "name,user,disk,cpu,pid,flownetpersec,memory,priority").toString();
     proSettings->endGroup();
 
     if (displayedColumns.isEmpty()) {
         proSettings->beginGroup("PROCESS");
-        displayedColumns = "name,user,status,cpu,pid,flownetpersec,memory,priority";
+        displayedColumns = "name,user,disk,cpu,pid,flownetpersec,memory,priority";
         proSettings->setValue("DisplayedColumns", displayedColumns);
         proSettings->endGroup();
         proSettings->sync();
@@ -553,7 +557,7 @@ QList<bool> SystemMonitor::getReadyDisplayProcessColumns()
     QList<bool> m_shows;
     m_shows << displayedColumns.contains("name");
     m_shows << displayedColumns.contains("user");
-    m_shows << displayedColumns.contains("status");
+    m_shows << displayedColumns.contains("disk");
     m_shows << displayedColumns.contains("cpu");
     m_shows << displayedColumns.contains("pid");
     m_shows << displayedColumns.contains("flownetpersec");

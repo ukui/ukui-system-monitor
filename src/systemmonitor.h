@@ -24,6 +24,7 @@
 #include "monitortitlewidget.h"
 #include "processdialog.h"
 #include "resourcesdialog.h"
+//#include "newresourcesdialog.h"
 #include "filesystemdialog.h"
 #include "shell/customstyle.h"
 #include "../shell/macro.h"

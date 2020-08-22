@@ -62,9 +62,9 @@ MyUnderLineButton::MyUnderLineButton(QWidget *parent)
 //    m_underlineLabel->hide();
 
     m_layout = new QVBoxLayout(this);
-    m_layout->setContentsMargins(0,5,0,10);
+    m_layout->setContentsMargins(0,0,0,0);
 
-    m_layout->addWidget(m_textLabel, 0, Qt::AlignTop | Qt::AlignHCenter);
+    m_layout->addWidget(m_textLabel, 0, Qt::AlignVCenter| Qt::AlignCenter);
     //m_layout->addWidget(m_underlineLabel, 0, Qt::AlignBottom | Qt::AlignHCenter);
 }
 
