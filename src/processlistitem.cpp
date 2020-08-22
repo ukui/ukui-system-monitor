@@ -331,6 +331,8 @@ bool ProcessListItem::sortByFlowNet(const ProcessListItem *item1, const ProcessL
     QString netFlow1 = (static_cast<const ProcessListItem*>(item1))->getFlowNet();
     QString netFlow2 = (static_cast<const ProcessListItem*>(item2))->getFlowNet();
 
+
+    bool isSort;
     if (netFlow1 == netFlow2)
     {
         double cpu1 = static_cast<const ProcessListItem*>(item1)->getCPU();
@@ -344,7 +346,7 @@ bool ProcessListItem::sortByFlowNet(const ProcessListItem *item1, const ProcessL
         isSort = result < 0;
     }
 
-    bool isSort;
+
 
 
     return descendingSort ? isSort : !isSort;
