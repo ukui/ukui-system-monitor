@@ -57,9 +57,9 @@ extern std::map <std::string, unsigned long> conninode;
  * * unknown IP traffic
  * We must take care these never get removed from the list.
  */
-Process * unknowntcp;
-Process * unknownudp;
-Process * unknownip;
+Process * unknowntcp; 
+Process * unknownudp; 
+Process * unknownip; 
 ProcList * processes;
 
 /* We're migrating to having several `unknown' processes that are added as 
@@ -71,18 +71,7 @@ std::map <std::string, Process*> unknownprocs;
 void process_init () 
 {
 	unknowntcp = new Process (0, "", "unknown TCP");
-    processes = new ProcList (unknowntcp, NULL);
-}
-
-void process_delete()
-{
-    if(unknowntcp)
-    {
-        delete unknowntcp;
-        qDebug()<<"if i can see you,i'll be right";
-    }
-    if(processes)
-        delete processes;
+	processes = new ProcList (unknowntcp, NULL);
 }
 
 int Process::getLastPacket()
@@ -100,7 +89,7 @@ int Process::getLastPacket()
 	return lastpacket;
 }
 
-Process * findProcess (struct prg_node * node)
+Process * findProcess (struct prg_node * node)  //final
 {
 	ProcList * current = processes;
 	while (current != NULL)
@@ -118,7 +107,7 @@ Process * findProcess (struct prg_node * node)
 /* finds process based on inode, if any */
 /* should be done quickly after arrival of the packet, 
  * otherwise findPID will be outdated */
-Process * findProcess (unsigned long inode)
+Process * findProcess (unsigned long inode)    // init
 {
 	struct prg_node * node = findPID(inode);
 
@@ -132,8 +121,8 @@ int ProcList::size ()
 {
 	int i=1;
 
-//    if (next != NULL)
-//        i += next->size();
+	if (next != NULL)
+		i += next->size();
 
 	return i;
 }

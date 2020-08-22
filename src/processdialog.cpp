@@ -47,6 +47,7 @@
 #include <set>
 #include <list>
 #include <glibtop.h>
+#include <glibtop/procio.h>
 #include <glibtop/proclist.h>
 #include <glib.h>
 #include <glib/gi18n.h>
@@ -149,12 +150,14 @@ ProcessDialog::ProcessDialog(QList<bool> toBeDisplayedColumns, int currentSortIn
     QList<SortFunction> *sortFuncList = new QList<SortFunction>();
     sortFuncList->append(&ProcessListItem::sortByName);
     sortFuncList->append(&ProcessListItem::sortByUser);
-    sortFuncList->append(&ProcessListItem::sortByStatus);
+    sortFuncList->append(&ProcessListItem::sortByDiskIo);
     sortFuncList->append(&ProcessListItem::sortByCPU);
     sortFuncList->append(&ProcessListItem::sortByPid);
     sortFuncList->append(&ProcessListItem::sortByFlowNet);
     sortFuncList->append(&ProcessListItem::sortByMemory);
     sortFuncList->append(&ProcessListItem::sortByPriority);
+
+
     m_processListWidget->setProcessSortFunctions(sortFuncList, currentSortIndex, isSort);
     m_processListWidget->setSearchFunction(&ProcessListItem::doSearch);
 
@@ -278,6 +281,15 @@ ProcessDialog::~ProcessDialog()
     {
         delete refreshThread;
     }
+
+//    if(speedLineBandDiskIo)
+//    {
+//        delete speedLineBandDiskIo;
+//    }
+//    if(speedLineBandFlowNet)
+//    {
+//        delete speedLineBandFlowNet;
+//    }
 
     QLayoutItem *child;
     while ((child = m_categoryLayout->takeAt(0)) != 0) {
@@ -469,6 +481,7 @@ void ProcessDialog::refreshProcessList()
     ** should probably have a total_time_last gint in the ProcInfo structure */
     glibtop_get_cpu(&cpu);
 
+
     this->frequency = cpu.frequency;
 
     this->cpu_total_time = MAX(cpu.total - this->cpu_total_time_last, 1);
@@ -522,7 +535,9 @@ void ProcessDialog::refreshProcessList()
         glibtop_proc_state procstate;
         glibtop_proc_uid procuid;
         glibtop_proc_time proctime;
+        glibtop_proc_io procio;
 
+        glibtop_get_proc_io(&procio,info->pid);
         glibtop_get_proc_state (&procstate, info->pid);
         info->status = procstate.state;
 
@@ -549,6 +564,22 @@ void ProcessDialog::refreshProcessList()
 
         ProcessWorker::cpu_times[info->pid] = info->cpu_time = proctime.rtime;
         info->nice = procuid.nice;
+        if(!calDiskIoMap.contains(info->pid))
+        {
+            calDiskIoMap[info->pid] = 0;
+        }
+
+        speedLineBandDiskIo = new lineBandwith(info->pid,this);
+
+        disk_io_bytes_total = procio.disk_wbytes+procio.disk_rbytes;
+
+        addDiskIoPerSec = speedLineBandDiskIo->new_count(disk_io_bytes_total-calDiskIoMap[info->pid],info->pid);
+
+        info->diskio_persec = addDiskIoPerSec;
+
+        calDiskIoMap[info->pid] = disk_io_bytes_total;
+
+        delete speedLineBandDiskIo;
     }
 
     // Remove dead processes from the process list and from the
@@ -585,6 +616,7 @@ void ProcessDialog::refreshProcessList()
         long memory = it->second->mem;
         pid_t pid = it->second->pid;
         QString flownetpersec = it->second->flownet_persec;
+        QString diskiopersec = it->second->diskio_persec;
 
         /*---------------------kobe test string---------------------
         //QString to std:string
@@ -643,6 +675,7 @@ void ProcessDialog::refreshProcessList()
         info.m_flownet = flownetpersec;  //单个进程流量
         info.cpu_duration_time = formatDurationForDisplay(100 * it->second->cpu_time / this->frequency);    //CPU占用你时间
         info.processName = QString::fromStdString(it->second->name);     //进程名称
+        info.m_diskio = diskiopersec;    //单个进程磁盘io速率
 //        info.commandLine = QString::fromStdString(it->second->arguments); //命令行
 
 
@@ -662,7 +695,7 @@ void ProcessDialog::refreshLine(const QString &procname, quint64 rcv, quint64 se
 //    pidList<<pid;
 //    if(!speedLineBand)
 //    {
-        speedLineBand = new lineBandwith(pid,this);
+        speedLineBandFlowNet = new lineBandwith(pid,this);
 //    }
     haveNetPid = pid;
     qint64 tmptotalFlowNetPerSec = rcv + sent;
@@ -672,7 +705,7 @@ void ProcessDialog::refreshLine(const QString &procname, quint64 rcv, quint64 se
     }
     qDebug()<<"ProcessDialog::refreshLine:pid<<rcv<<sent"<<pid<<rcv<<sent;
     qDebug()<<"ProcessDialog::refreshLine:before flowNetPrevMap"<<flowNetPrevMap[pid];
-    addFlowNetPerSec = speedLineBand->new_count(tmptotalFlowNetPerSec - flowNetPrevMap[pid],pid);
+    addFlowNetPerSec = speedLineBandFlowNet->new_count(tmptotalFlowNetPerSec - flowNetPrevMap[pid],pid);
     qDebug()<<"ProcessDialog::refreshLine:deltaFlowNetPerSec"<<tmptotalFlowNetPerSec - flowNetPrevMap[pid];
     flowNetPrevMap[pid] = tmptotalFlowNetPerSec;
      qDebug()<<"ProcessDialog::refreshLine:after flowNetPrevMap"<<flowNetPrevMap[pid];
@@ -686,6 +719,7 @@ void ProcessDialog::refreshLine(const QString &procname, quint64 rcv, quint64 se
     {
         pidMap[pid] = addFlowNetPerSec;
     }
+    delete  speedLineBandFlowNet; 
 
 
 //    if(it.value() != addFlowNetPerSec)

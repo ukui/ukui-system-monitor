@@ -35,6 +35,7 @@ public:
     long m_memory;
     long m_nice;
     QString m_flownet;
+    QString m_diskio;
     QPixmap iconPixmap;
     QString processName;
     QString displayName;

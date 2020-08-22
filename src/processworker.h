@@ -57,6 +57,7 @@ class ProcessWorker
     gulong start_time;
     guint64 cpu_time;
     QString flownet_persec;
+    QString diskio_persec;
     guint status;
     guint pcpu;
     gint nice;

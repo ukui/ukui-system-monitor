@@ -56,6 +56,7 @@ public:
     static bool sortByMemory(const ProcessListItem *item1, const ProcessListItem *item2, bool descendingSort);
     static bool sortByPriority(const ProcessListItem *item1, const ProcessListItem *item2, bool descendingSort);
     static bool sortByFlowNet(const ProcessListItem *item1, const ProcessListItem *item2, bool descendingSort);
+    static bool sortByDiskIo(const ProcessListItem *item1, const ProcessListItem *item2, bool descendingSort);
 
     QString getProcessName() const;
     QString getDisplayName() const;
@@ -67,6 +68,7 @@ public:
     long getNice() const;
 //    QString getCommandLine() const;
     QString getFlowNet() const;
+    QString getDiskIo() const;
 
     void initThemeMode();
     void initFontSize();

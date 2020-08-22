@@ -33,6 +33,7 @@
 #include <glibtop/procuid.h>
 #include <glibtop/procargs.h>
 #include <glibtop/prockernel.h>
+#include <glibtop/procio.h>
 #include <pwd.h>
 #include <glibtop/mem.h>
 #include <time.h>
@@ -303,12 +304,14 @@ void ProcessWorker::setProcData()
     //init
     ProcessWorker * const info = this;
 
+//    glibtop_proc_io procio;
     glibtop_proc_state procstate;
     glibtop_proc_time proctime;
     glibtop_proc_args procargs;
     gchar** args;
 
     glibtop_get_proc_state(&procstate, pid);
+//    glibtop_get_proc_io(&procio,pid);
     glibtop_get_proc_time(&proctime, pid);
     args = glibtop_get_proc_argv(&procargs, pid, 0);
 

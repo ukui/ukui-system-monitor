@@ -276,7 +276,6 @@ void NetworkFlow::paintEvent(QPaintEvent *)
 
     if(currentThemeMode == "ukui-dark" || currentThemeMode == "ukui-black")
     {
-        qDebug()<<"9517538246";
         m_bgColor = (QColor("#ffffff"));
     }
     
@@ -288,7 +287,7 @@ void NetworkFlow::paintEvent(QPaintEvent *)
 
     //draw download smoothcurve
     painter.setOpacity(1);
-    painter.translate((rect().width() - m_pointsCount * m_pointSpace - 2) / 2 + 6, 80);//将坐标第原点移动到该点
+    painter.translate((rect().width() - m_pointsCount * m_pointSpace - 2) / 2 + 6, 80);//将坐标的原点移动到该点
     painter.scale(1, -1);//将横坐标扩大1倍,将纵坐标缩小1倍
     painter.setPen(QPen(this->m_downloadColor, 1));
     painter.setBrush(QBrush());//painter.setBrush(QBrush(QColor("#f4f2f4")));

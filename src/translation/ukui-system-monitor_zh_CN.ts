@@ -1512,7 +1512,6 @@ Are you sure to continue?</source>
     <name>ProcessListWidget</name>
     <message>
         <location filename="../processlistwidget.cpp" line="86"/>
-        <location filename="../processlistwidget.cpp" line="876"/>
         <source>Process Name</source>
         <translation type="unfinished">进程名称</translation>
     </message>
@@ -1546,6 +1545,11 @@ Are you sure to continue?</source>
         <location filename="../processlistwidget.cpp" line="86"/>
         <source>Memory</source>
         <translation>内存</translation>
+    </message>
+    <message>
+        <location filename="../processlistwidget.cpp" line="86"/>
+        <source>Disk</source>
+        <translation>磁盘</translation>
     </message>
     <message>
         <location filename="../processlistwidget.cpp" line="86"/>
