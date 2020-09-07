@@ -232,6 +232,10 @@ MySearchEdit::~MySearchEdit()
     delete m_searchBtn;
     delete m_placeHolder;
 //    delete m_clearBtn;
+    if(fontSettings)
+    {
+        delete fontSettings;
+    }
 }
 
 const QString MySearchEdit::searchedText() const

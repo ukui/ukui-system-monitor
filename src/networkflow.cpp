@@ -288,7 +288,7 @@ void NetworkFlow::paintEvent(QPaintEvent *)
     //draw download smoothcurve
     painter.setOpacity(1);
     painter.translate((rect().width() - m_pointsCount * m_pointSpace - 2) / 2 + 6, 80);//将坐标的原点移动到该点
-    painter.scale(1, -1);//将横坐标扩大1倍,将纵坐标缩小1倍
+    painter.scale(1, -1);//将横坐标扩大1倍,将纵坐等比向上反转
     painter.setPen(QPen(this->m_downloadColor, 1));
     painter.setBrush(QBrush());//painter.setBrush(QBrush(QColor("#f4f2f4")));
     painter.drawPath(m_downloadPath);//绘制前面创建的path:m_downloadPath

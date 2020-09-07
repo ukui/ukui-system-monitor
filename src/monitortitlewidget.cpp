@@ -269,6 +269,10 @@ MonitorTitleWidget::~MonitorTitleWidget()
         delete child;
     }
     delete m_layout;
+    if(fontSettings)
+    {
+        delete fontSettings;
+    }
 }
 
 bool MonitorTitleWidget::eventFilter(QObject *obj, QEvent *event)    //set the esc and tab pressbutton effect
@@ -400,7 +404,7 @@ void MonitorTitleWidget::initTitlebarMiddleContent()
     font.setPointSize(fontSize-2);
     titleLabel->setFont(font);
     titleLabel->setStyleSheet("QLabel{background-color:transparent;color:palette(windowText);}");
-    titleLabel->setText(tr("UKUI System Monitor"));
+    titleLabel->setText(tr("Kylin System Monitor"));
     picLabel->setPixmap(QPixmap(":img/ukui-system-monitor.png"));
     m_titleMiddleLayout->addWidget(picLabel);
     m_titleMiddleLayout->addWidget(titleLabel);

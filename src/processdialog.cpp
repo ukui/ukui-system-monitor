@@ -234,7 +234,7 @@ ProcessDialog::ProcessDialog(QList<bool> toBeDisplayedColumns, int currentSortIn
     this->refreshProcessList();
     timer = new QTimer(this);
     connect(timer,SIGNAL(timeout()),this,SLOT(refreshProcessList()));
-    timer->start(1000);
+    timer->start(3000);
 }
 
 ProcessDialog::~ProcessDialog()

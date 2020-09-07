@@ -104,6 +104,10 @@ FileSystemListWidget::~FileSystemListWidget()
     delete this->m_lastItem;
     delete this->m_listItems;
     delete this->m_selectedItems;
+    if(fontSettings)
+    {
+        delete fontSettings;
+    }
 }
 
 void FileSystemListWidget::clearItems()
