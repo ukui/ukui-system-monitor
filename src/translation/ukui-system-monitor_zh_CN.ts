@@ -1199,8 +1199,8 @@ Kylin Team &lt;ubuntukylin-members@list.launchpad.net&gt;</source>
     </message>
     <message>
         <location filename="../monitortitlewidget.cpp" line="403"/>
-        <source>UKUI System Monitor</source>
-        <translation>麒麟系统监视器</translation>
+        <source>Kylin System Monitor</source>
+        <translation>系统监视器</translation>
     </message>
     <message>
         <location filename="../monitortitlewidget.cpp" line="420"/>
@@ -2491,7 +2491,7 @@ Are you sure to continue?</source>
     <message>
         <location filename="../systemmonitor.cpp" line="79"/>
         <source>UKUI System Monitor</source>
-        <translation>麒麟系统监视器</translation>
+        <translation>系统监视器</translation>
     </message>
 </context>
 <context>

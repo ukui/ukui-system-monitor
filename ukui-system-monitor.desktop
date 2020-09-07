@@ -1,11 +1,11 @@
 [Desktop Entry]
 Name=Kylin System Monitor
-Name[zh_CN]=麒麟系统监视器
+Name[zh_CN]=系统监视器
 Name[tr_TR]=Kylin Sistem İzleyici
 GenericName=Kylin System Monitor
-GenericName[zh_CN]=麒麟系统监视器
+GenericName[zh_CN]=系统监视器
 Comment=Kylin System Monitor
-Comment[zh_CN]=麒麟系统监视器
+Comment[zh_CN]=系统监视器
 Comment[tr_TR]=Kylin Sistem İzleyici
 Keywords=guide; 
 Exec=/usr/bin/ukui-system-monitor

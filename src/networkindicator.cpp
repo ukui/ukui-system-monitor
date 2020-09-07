@@ -60,9 +60,6 @@ NetworkIndicator::NetworkIndicator(QWidget *parent)
     }
 
     m_pointsCount = int((this->width() -2) / m_pointSpace);
-//    qDebug()<<this->width()<<"wwwwjwjwjwwjwjwjwwjwjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj";
-//    qDebug()<<"m_pointSpace"<<m_pointSpace<<"wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwj";
-//    qDebug()<<"m_pointsCount"<<m_pointsCount<<"jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj";
     m_downloadSpeedList = new QList<long>();
     for (int i = 0; i < m_pointsCount; i++) {
         m_downloadSpeedList->append(0);

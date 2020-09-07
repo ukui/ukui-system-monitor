@@ -136,6 +136,10 @@ MyUnderLineButton::~MyUnderLineButton()
 {
     delete m_textLabel;
     //delete m_underlineLabel;
+    if(fontSettings)
+    {
+        delete fontSettings;
+    }
 }
 
 void MyUnderLineButton::enterEvent(QEvent *event)
