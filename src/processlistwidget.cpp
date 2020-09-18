@@ -52,7 +52,8 @@ ProcessListWidget::ProcessListWidget(QList<bool> toBeDisplayedColumns, QWidget *
   ,m_mouseAtScrollArea(false)
   ,m_mouseDragScrollbar(false)
 {
-
+    installEventFilter(this);
+//theme settings
     const QByteArray idd(THEME_QT_SCHEMA);
 
     if(QGSettings::isSchemaInstalled(idd))
@@ -68,7 +69,7 @@ ProcessListWidget::ProcessListWidget(QList<bool> toBeDisplayedColumns, QWidget *
     }
 
     initFontSize();
-
+//other settings
     this->m_searchFunc = NULL;
     this->m_searchText = "";
     this->m_lastItem = NULL;
@@ -508,9 +509,9 @@ void ProcessListWidget::leaveEvent(QEvent * event)
 
 void ProcessListWidget::hideScrollbar()
 {
-    this->m_mouseAtScrollArea = false;
+    this->m_mouseAtScrollArea = true;
     this->m_origOffset = this->m_offSet;
-
+qDebug()<<"hideScrollbar";
     repaint();
 }
 
@@ -865,6 +866,16 @@ void ProcessListWidget::paintEvent(QPaintEvent *)
                             painter.drawPixmap(QPoint(rect().x() + posX + 60, rect().y() + 20), m_upArrowPixmap);
                         }
                     }
+//                    opacity = 0;
+//                    if (this->m_mouseDragScrollbar) {
+//                        opacity = 0.8;
+//                    }
+//                    else {
+//                        if (this->m_mouseAtScrollArea)
+//                            opacity = 0.7;
+//                        else
+//                            opacity = 0.5;
+//                    }
                 }
 
                 //标题文字
@@ -993,24 +1004,48 @@ void ProcessListWidget::paintEvent(QPaintEvent *)
     }
 }
 
-void ProcessListWidget::paintScrollbar(QPainter *painter)
+bool ProcessListWidget::eventFilter(QObject *obj, QEvent *event)
 {
-    if (this->getItemsTotalHeight() > getTheScrollAreaHeight()) {
-        qreal opacitry = 0;
+    if(event->type() == QEvent::Enter)
+    {
+        opacity = 0;
         if (this->m_mouseDragScrollbar) {
-            opacitry = 0.8;
+            opacity = 0.8;
         }
         else {
             if (this->m_mouseAtScrollArea)
-                opacitry = 0.7;
+                opacity = 0.7;
             else
-                opacitry = 0.5;
+                opacity = 0.5;
         }
+        repaint();
+    }
+
+    if(event->type() == QEvent::Leave)
+    {
+        opacity =0.2;
+    }
+    return false;
+}
+
+void ProcessListWidget::paintScrollbar(QPainter *painter)
+{
+    if (this->getItemsTotalHeight() > getTheScrollAreaHeight()) {
+//        qreal opacitry = 0;
+//        if (this->m_mouseDragScrollbar) {
+//            opacitry = 0.8;
+//        }
+//        else {
+//            if (this->m_mouseAtScrollArea)
+//                opacitry = 0.7;
+//            else
+//                opacitry = 0.5;
+//        }
 
         int barWidth = (this->m_mouseAtScrollArea || this->m_mouseDragScrollbar) ? this->m_scrollbarWidth : 6;
         int barY = getScrollbarY();
         int barHeight = getScrollbarHeight();
-        painter->setOpacity(opacitry);
+        painter->setOpacity(opacity);
         QPainterPath path;
         path.addRoundedRect(
             QRectF(rect().x() + rect().width() - barWidth - 4, barY + 2, barWidth, barHeight - 2 * 2), 2, 2);//2 is radius

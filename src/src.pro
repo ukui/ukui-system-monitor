@@ -28,6 +28,9 @@ PKGCONFIG += libgtop-2.0 \
              gsettings-qt \
              x11
 
+ICON.files = img/ukui-system-monitor.png
+ICON.path = /usr/share/icons/hicolor/
+
 desktop.files += ../ukui-system-monitor.desktop
 desktop.path = /usr/share/applications/
 
@@ -35,7 +38,8 @@ target.source += $$TARGET
 target.path = /usr/bin
 
 INSTALLS += target \
-            desktop
+            desktop \
+            ICON
 
 unix {
     UI_DIR = .ui

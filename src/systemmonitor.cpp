@@ -33,6 +33,7 @@
 #include <QGraphicsDropShadowEffect>
 #include <QPainterPath>
 #include <X11/Xlib.h>
+#include <QDBusArgument>
 
 extern void qt_blurImage(QImage &blurImage, qreal radius, bool quality, int transposed);
 
@@ -125,29 +126,6 @@ void SystemMonitor::initThemeMode()
             currentThemeMode = qtSettings->get(MODE_QT_KEY).toString();
             qDebug()<<"监听主题改变-------------------->"<<currentThemeMode<<endl;
             qApp->setStyle(new InternalStyle(currentThemeMode));
-            //repaint();
-//            m_sysMonitorStack->setObjectName("SystemMonitorStack");
-//            qDebug()<<"wwwwwwwwwwwwwwwwwwwwwwwwwww";
-//            if(currentThemeMode == "ukui-white")
-//            {
-//                qDebug()<<"jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj";
-//                m_sysMonitorStack->setStyleSheet("QFrame#SystemMonitorStack{"
-//                                    "background:rgba(255,255,255,0.90);"
-//                                    "border-bottom-left-radius:5px;"
-//                                    "border-bottom-right-radius:5px;"
-//                                    "border:none;"
-//                                    "}");
-//            }
-
-//            if(currentThemeMode == "ukui-black")
-//            {
-//                m_sysMonitorStack->setStyleSheet("QFrame#SystemMonitorStack{"
-//                                    "background:rgba(0,0,0,0.90);"
-//                                    "border-bottom-left-radius:5px;"
-//                                    "border-bottom-right-radius:5px;"
-//                                    "border:none;"
-//                                    "}");
-//            }
         }
     });
     currentThemeMode = qtSettings->get(MODE_QT_KEY).toString();
@@ -215,70 +193,6 @@ SystemMonitor::~SystemMonitor()
 
 void SystemMonitor::paintEvent(QPaintEvent *event)
 {
-//    //paint background
-//    QPainter painter(this);
-//    QPainterPath path;
-//    path.addRect(QRectF(rect()));
-//    painter.setOpacity(1);
-//    painter.fillPath(path, QColor("#131314"));
-//    //paint rect
-//    //QPainterPath path;
-//    QStyleOption opt;
-//    opt.init(this);
-//    QPainter p(this);
-//    p.setBrush(QBrush(QColor(0x19,0x19,0x20,0xFF)));
-//    //p.setPen(Qt::NoPen);
-//    QPainterPath path;
-//    //opt.rect.adjust(0,0,0,0);
-////    path.addRoundRect(opt.rect.topLeft(),6);
-
-//    path.addPath(path);
-//    path.addRoundedRect(opt.rect,6,6);
-//    p.setRenderHint(QPainter::Antialiasing);  // 反锯齿;
-////       p.drawRoundedRect(opt.rect,6,6);
-//    style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
-////       p.setPen(QPen(QColor("#e9eef0"), 0));//边框颜色
-////       p.setBrush(QColor("#0d87ca"));//背景色
-////       QRectF r(1, 1, width() - 2, height() - 2);//左边 上边 右边 下边
-//    p.drawPath(path);
-///////////// //////////////////////////////old setting
-//    QStyleOption opt;
-//    opt.init(this);
-//    QPainter p(this);
-
-////    p.setBrush(QBrush(QColor("#131314")));
-//    p.setBrush(opt.palette.color(QPalette::Base));
-//    //p.setOpacity(0.7);
-//    //p.setPen(Qt::NoPen);
-
-//    p.setRenderHint(QPainter::Antialiasing);  // 反锯齿;
-//    p.drawRoundedRect(opt.rect,6,6);
-//    style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
-//////////////////////////////////////////old setting
-//    QPainter painter(this);
-//    painter.setRenderHint(QPainter::Antialiasing); // 抗锯齿
-
-//    //painter.setClipping(true);
-//    QPainterPath canDrawingPathArea; // 能画上的区域
-//    canDrawingPathArea.addRoundedRect(rect(), 50, 50);
-//    canDrawingPathArea.setFillRule(Qt::WindingFill); // 多块区域组合填充模式
-
-////    canDrawingPathArea.addRect(0, height() - 6, 6, 6); // 填充左下角
-////    canDrawingPathArea.addRect(width() - 6, height() - 6, 6, 6);// 填充右下角
-
-//    //painter.setClipPath(canDrawingPathArea);
-////    QStyleOption opt;
-////    opt.init(this);
-////    painter.setBrush(opt.palette.color(QPalette::Base));
-//    QColor color(Qt::darkRed);
-//      color.setAlpha(200);
-////      painter.setPen(Qt::NoPen);
-//      painter.setPen(Qt::MaskInColor);
-//      painter.setBrush(Qt::blue);
-////    painter.setPen(Qt::NoPen);
-
-//    painter.drawRect(rect());
-
 
     QPainter p(this);
 
@@ -349,7 +263,6 @@ void SystemMonitor::resizeEvent(QResizeEvent *e)
 
 void SystemMonitor::recordProcessVisibleColumn(int, bool, QList<bool> columnVisible)
 {
-    qDebug()<<"hahaahahahaahahaahah";
     QList<QString> m_visibleColumns;
     m_visibleColumns << "name";
 
@@ -665,3 +578,40 @@ void SystemMonitor::mouseMoveEvent(QMouseEvent *event)
 }
 
 
+void SystemMonitor::keyPressEvent(QKeyEvent *event)
+{
+    if(event->key() == Qt::Key_F1)
+    {
+        if(!daemonIsNotRunning())
+        {
+            showGuide("ukui-system-monitor");
+        }
+    }
+}
+
+int SystemMonitor::daemonIsNotRunning()
+{
+    QString service_name = "com.kylinUserGuide.hotel_" + QString::number(getuid());
+    QDBusConnection conn = QDBusConnection::sessionBus();
+    if (!conn.isConnected())
+        return 0;
+
+    QDBusReply<QString> reply = conn.interface()->call("GetNameOwner", service_name);
+    return reply.value() == "";
+}
+
+void SystemMonitor::showGuide(QString appName)
+{
+
+    qDebug() << Q_FUNC_INFO << appName;
+
+    QString service_name = "com.kylinUserGuide.hotel_" + QString::number(getuid());
+
+    QDBusInterface *interface = new QDBusInterface(service_name,
+                                                       KYLIN_USER_GUIDE_PATH,
+                                                       KYLIN_USER_GUIDE_INTERFACE,
+                                                       QDBusConnection::sessionBus(),
+                                                       this);
+
+    QDBusMessage msg = interface->call(QStringLiteral("showGuide"),"ukui-system-monitor");
+}

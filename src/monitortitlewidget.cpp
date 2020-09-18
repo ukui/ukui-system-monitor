@@ -491,9 +491,6 @@ void MonitorTitleWidget::initTitlebarRightContent()
 
 void MonitorTitleWidget::onMinBtnClicked()
 {
-//    if (parentWidget() && parentWidget()->parentWidget()) {
-//        parentWidget()->parentWidget()->showMinimized();
-//    }
     window()->showMinimized();
 }
 
@@ -501,7 +498,6 @@ void MonitorTitleWidget::onMaxBtnClicked()
 {
     if (window()->isMaximized()) {
         window()->showNormal();
-//        maxBtn->setObjectName("MaxButton");
     }
     else {
         window()->showMaximized();
@@ -628,7 +624,7 @@ void MonitorTitleWidget::initToolbarLeftContent()
 //    button_h_BoxLayout->addWidget(m_filesystemButton);
 //    buttonWidget->setLayout(button_h_BoxLayout);
 
-    m_toolLeftLayout->addStretch();
+//    m_toolLeftLayout->addStretch();
     m_toolLeftLayout->addSpacing(14);
     m_toolLeftLayout->setSpacing(0);
     m_toolLeftLayout->addWidget(processButton);

@@ -100,6 +100,7 @@ protected:
     void paintEvent(QPaintEvent *);
     void wheelEvent(QWheelEvent *event);
     void paintScrollbar(QPainter *painter);
+    bool eventFilter(QObject *obj, QEvent *event);
 
 private:
     QTimer *m_hideScrollbarTimer = nullptr;
@@ -137,6 +138,8 @@ private:
     QGSettings *qtSettings;
     QGSettings *fontSettings;
     QString currentThemeMode;
+
+    qreal opacity;
 };
 
 #endif // PROCESSLISTWIDGET_H

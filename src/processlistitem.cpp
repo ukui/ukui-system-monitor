@@ -345,10 +345,6 @@ bool ProcessListItem::sortByFlowNet(const ProcessListItem *item1, const ProcessL
         int result = qco.compare(netFlow1, netFlow2);
         isSort = result < 0;
     }
-
-
-
-
     return descendingSort ? isSort : !isSort;
 }
 
@@ -367,6 +363,13 @@ bool ProcessListItem::sortByName(const ProcessListItem *item1, const ProcessList
         QCollator qco(QLocale::system());
         int result = qco.compare(name1, name2);
         isSort = result < 0;
+//        char *nameString1;
+//        char *nameString2;
+//        QByteArray s1 = name1.toLatin1();
+//        QByteArray s2 = name2.toLatin1();
+//        nameString1 = s1.data();
+//        nameString2 = s2.data();
+//        int result = strcmp(nameString1,nameString2);
     }
 
     return descendingSort ? isSort : !isSort;

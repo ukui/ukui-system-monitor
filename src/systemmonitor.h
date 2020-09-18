@@ -36,6 +36,7 @@
 #include <qgsettings.h>
 
 #include <QtX11Extras/QX11Info>
+#include <QtDBus/QtDBus>
 
 class SystemMonitor : public QFrame
 {
@@ -72,8 +73,10 @@ protected:
     void mouseMoveEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
     void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
     void mouseReleaseEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
-
-
+    void keyPressEvent(QKeyEvent *event);
+private:
+    int daemonIsNotRunning();
+    void showGuide(QString appName);
 private:
     QStackedWidget  *m_sysMonitorStack = nullptr;
     MonitorTitleWidget  *m_titleWidget = nullptr;

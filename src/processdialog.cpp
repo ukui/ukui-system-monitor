@@ -100,7 +100,7 @@ ProcessDialog::ProcessDialog(QList<bool> toBeDisplayedColumns, int currentSortIn
     setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     setAttribute(Qt::WA_NoMousePropagation);
 
-    qRegisterMetaType<ProcDataPtr>();
+    qRegisterMetaType<ProcDataPtr>();    //注册信号槽，实现线程间通信
     qRegisterMetaTypeStreamOperators<ProcDataPtr>();
     qRegisterMetaType<ProcDataPtrList>();
     qRegisterMetaType<QList<ProcData>>();
@@ -234,7 +234,7 @@ ProcessDialog::ProcessDialog(QList<bool> toBeDisplayedColumns, int currentSortIn
     this->refreshProcessList();
     timer = new QTimer(this);
     connect(timer,SIGNAL(timeout()),this,SLOT(refreshProcessList()));
-    timer->start(3000);
+    timer->start(1500);
 }
 
 ProcessDialog::~ProcessDialog()
