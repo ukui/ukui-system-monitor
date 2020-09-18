@@ -72,20 +72,16 @@ inline int getCoreCounts()
     QFile file("/proc/cpuinfo");
     if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         QString content = file.readLine().trimmed();
-        while (!content.isEmpty() && content.contains(QChar(':'))) {
-            const QStringList tokens = content.split(QChar(':'));
-            if (tokens.size() == 2) {
-                if (tokens[0] == "processor")
+        while (!file.atEnd()) {
+                if (content.contains("processor"))
                     cpuCounts ++;
+                qDebug()<<"cpuCounts"<<cpuCounts;
+                content = file.readLine().trimmed();
             }
-            content = file.readLine().trimmed();
         }
-        file.close();
-    }
-
+    file.close();
     if (cpuCounts == 0)
         cpuCounts = 4;
-
     return cpuCounts;
 }
 
@@ -131,10 +127,10 @@ inline QString getIdelRate(unsigned long &runSeconds, unsigned long &idleSeconds
             QString idleStr = tokens.at(1);//系统空闲的时间(以秒为单位)
             if (idleStr.contains(QChar('.'))) {
                 QString senconds = idleStr.split(QChar('.')).at(0);
-                idleSeconds = senconds.toLong();
+                idleSeconds = senconds.toLong()/cpuNumber;
             }
             else
-                idleSeconds = idleStr.toLong();
+                idleSeconds = idleStr.toLong()/cpuNumber;
             rate = QString::number((idleSeconds * 1.0) /(runSeconds *1.0 * cpuNumber) * 100/cpuNumber, 'f', 0) + "%";
             break;
         }

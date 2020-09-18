@@ -207,9 +207,9 @@ void CpuBallWidget::paintEvent(QPaintEvent *)
 //    wavePainter.initFrom(this);//用控件的设置初始化画笔，刷子和字体
     wavePainter.setCompositionMode(QPainter::CompositionMode_Source);//输出源像素，避免整个矩形背景区域出现花屏现象
     if (currentPercent > 88) {
-        m_shadowEffect->setColor(QColor(255, 0, 0, 127));//红色
+        m_shadowEffect->setColor(QColor(255, 0, 0));//红色
     } else if (currentPercent > 55) {
-        m_shadowEffect->setColor(QColor(255, 193, 37, 127));//黄
+        m_shadowEffect->setColor(QColor(255, 193, 37));//黄
     } else {
 //        m_shadowEffect->setColor(QColor(232, 232, 232, 127));//灰 the last parameters stands for the degree of the background
 //        m_shadowEffect->setColor(QColor(204,0,255,50));
