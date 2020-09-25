@@ -45,7 +45,7 @@ QString ProcessManager::getGuid()
     return "UBUNTU-KYLIN-PROCESS";
 }
 
- QString ProcessManager::getName()
+QString ProcessManager::getName()
 {
     return tr("System Monitor");
 }

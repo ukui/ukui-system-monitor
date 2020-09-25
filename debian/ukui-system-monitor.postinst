@@ -1,1 +1,9 @@
+#!/bin/sh
+
 setcap "cap_net_admin,cap_net_raw+ep" /usr/bin/ukui-system-monitor
+
+set -e
+
+glib-compile-schemas /usr/share/glib-2.0/schemas/
+
+#DEBHELPER#

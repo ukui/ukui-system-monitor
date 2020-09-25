@@ -160,7 +160,7 @@ void ProcessListItem::drawBackground(QRect rect, QPainter *painter, int index, b
 
 void ProcessListItem::drawForeground(QRect rect, QPainter *painter, int column, int, bool isSelect, bool isSeparator)
 {
-    setFontSize(*painter, fontSize);
+    setFontSize(*painter, fontSize+2);
     painter->setOpacity(0.85);
     //painter->setPen(QPen(QColor(QPalette::Base)));
     if (column == 0) {

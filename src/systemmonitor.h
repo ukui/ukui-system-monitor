@@ -65,6 +65,8 @@ public slots:
     void recordSortStatus(int index, bool isSort);
     void recordFileSysVisibleColumn(int, bool, QList<bool> columnVisible);
     void onChangePage(int index);
+    void onMaximizeWindow();
+    void onMinimizeWindow();
 
 protected:
     void resizeEvent(QResizeEvent *e) override;

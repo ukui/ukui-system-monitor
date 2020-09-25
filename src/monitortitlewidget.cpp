@@ -22,6 +22,7 @@
 #include "../widgets/mytristatebutton.h"
 #include "../widgets/myunderlinebutton.h"
 #include "../widgets/mysearchedit.h"
+#include "../shell/macro.h"
 #include "util.h"
 
 #include <QApplication>
@@ -35,10 +36,14 @@
 #include <QObject>
 #include <QStandardItemModel>
 
+#define MENU_SCHEMA "org.ukui.system-monitor.menu"
+#define WHICH_MENU "which-menu"
+
 MonitorTitleWidget::MonitorTitleWidget(QSettings *settings, QWidget *parent)
     :QFrame(parent)
     ,proSettings(settings)
 {
+    whichBox = new QList<int>();
     const QByteArray idd(THEME_QT_SCHEMA);
 
     if(QGSettings::isSchemaInstalled(idd))
@@ -53,6 +58,12 @@ MonitorTitleWidget::MonitorTitleWidget(QSettings *settings, QWidget *parent)
         fontSettings = new QGSettings(id);
     }
 
+    const QByteArray ifid(MENU_SCHEMA);
+    if(QGSettings::isSchemaInstalled(ifid))
+    {
+        ifsettings = new QGSettings(ifid);
+    }
+    
     initFontSize();
 
     m_changeBox = new QComboBox();
@@ -61,6 +72,7 @@ MonitorTitleWidget::MonitorTitleWidget(QSettings *settings, QWidget *parent)
     m_changeBox->addItem(tr("My Processes"));
     m_changeBox->addItem(tr("All Process"));
     m_changeBox->setFocusPolicy(Qt::NoFocus);
+    qDebug()<<m_changeBox->itemText(0)<<"m_changeBox->itemText";
     //m_changeBox->setCurrentIndex(0);
 //    QStandardItemModel *pItemModel = qobject_cast<QStandardItemModel*>(m_changeBox->model());
 //    pItemModel->item(0)->setForeground(QColor(255, 0, 0));
@@ -116,6 +128,7 @@ MonitorTitleWidget::MonitorTitleWidget(QSettings *settings, QWidget *parent)
 
 
     initWidgets();
+    this->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
 
 }
 
@@ -423,6 +436,7 @@ void MonitorTitleWidget::initTitlebarRightContent()
 //    MyTristateButton *minBtn = new MyTristateButton;
     QIcon iconMin(tr(":/img/minimize.png"));
     QPushButton *minBtn = new QPushButton(this);
+    minBtn->setToolTip(tr("minimize"));
     //minBtn->setStyleSheet("QPushButton{background-color:transparent;}");
     minBtn->setIcon(iconMin);
     minBtn->setIconSize(QSize(25,25));
@@ -438,17 +452,19 @@ void MonitorTitleWidget::initTitlebarRightContent()
 //    });
 //    /*MyTristateButton **/maxBtn = new MyTristateButton;
 
-    QPushButton *maxBtn = new QPushButton();
+    maxTitleBtn = new QPushButton();
+    maxTitleBtn->setToolTip(tr("maximize/restore"));
 //    maxBtn->setStyleSheet("QPushButton{background-color:#ffffff;}");
 //    maxBtn->setObjectName("MaxButton");
 
-    maxBtn->setIconSize(QSize(25,25));
-    maxBtn->setProperty("useIconHighlightEffect", true);
-    maxBtn->setProperty("iconHighlightEffectMode", 1);
-    maxBtn->setFlat(true);
+    maxTitleBtn->setIconSize(QSize(25,25));
+    maxTitleBtn->setProperty("useIconHighlightEffect", true);
+    maxTitleBtn->setProperty("iconHighlightEffectMode", 1);
+    maxTitleBtn->setFlat(true);
     QIcon iconMax(tr(":/img/fullscreen.png"));
-    maxBtn->setIcon(iconMax);
-    connect(maxBtn, SIGNAL(clicked()), this, SLOT(onMaxBtnClicked()));
+    maxTitleBtn->setIcon(iconMax);
+//    maxTitleBtn->setIcon(QIcon::fromTheme("window-maximize-symbolic"));
+    connect(maxTitleBtn, SIGNAL(clicked()), this, SLOT(onMaxBtnClicked()));
 //    connect(maxBtn, &MyTristateButton::clicked, sthis, [=] {
 //        if (window()->isMaximized()) {
 //            window()->showNormal();
@@ -469,6 +485,7 @@ void MonitorTitleWidget::initTitlebarRightContent()
 //    MyTristateButton *closeBtn = new MyTristateButton;
     QIcon iconClose(tr(":/img/close.png"));
     QPushButton *closeBtn = new QPushButton(this);
+    closeBtn->setToolTip(tr("close"));
     //closeBtn->setStyleSheet("QPushButton{background-color:transparent;}");
     closeBtn->setIcon(iconClose);
     closeBtn->setIconSize(QSize(25,25));
@@ -477,7 +494,9 @@ void MonitorTitleWidget::initTitlebarRightContent()
     closeBtn->setProperty("iconHighlightEffectMode", 1);
     closeBtn->setFlat(true);
     connect(closeBtn, SIGNAL(clicked()), this, SLOT(onCloseBtnClicked()));
-    connect(m_changeBox,SIGNAL(currentIndexChanged(QString)),this,SLOT(switchChangeItemProcessSignal()));
+    whichNum = ifsettings->get(WHICH_MENU).toInt();
+    m_changeBox->setCurrentIndex(whichNum);
+    connect(m_changeBox,SIGNAL(currentIndexChanged(int)),this,SLOT(switchChangeItemProcessSignal(int)));
 //    connect(closeBtn, &MyTristateButton::clicked, this, [=] {
 //        window()->close();
 //    });
@@ -485,24 +504,36 @@ void MonitorTitleWidget::initTitlebarRightContent()
 //    connect(this, SIGNAL(updateMaxBtn()), this, SLOT(onUpdateMaxBtnStatusChanged()));
 
     m_titleRightLayout->addWidget(minBtn);
-    m_titleRightLayout->addWidget(maxBtn);
+    m_titleRightLayout->addWidget(maxTitleBtn);
     m_titleRightLayout->addWidget(closeBtn);
 }
 
 void MonitorTitleWidget::onMinBtnClicked()
 {
-    window()->showMinimized();
+//    window()->showMinimized();
+    emit minimizeWindow();
 }
 
 void MonitorTitleWidget::onMaxBtnClicked()
 {
-    if (window()->isMaximized()) {
-        window()->showNormal();
+//    if (window()->isMaximized()) {
+//        window()->showNormal();
+//    }
+//    else {
+//        window()->showMaximized();
+////        maxBtn->setObjectName("UnMaxButton");
+//    }
+    i = i+1;
+    if(i%2 == 1)
+    {
+        maxTitleBtn->setIcon(QIcon::fromTheme("window-restore-symbolic"));
     }
-    else {
-        window()->showMaximized();
-//        maxBtn->setObjectName("UnMaxButton");
+    else
+    {
+        QIcon iconMax(tr(":/img/fullscreen.png"));
+        maxTitleBtn->setIcon(iconMax);
     }
+    emit maximizeWindow();
 }
 
 void MonitorTitleWidget::onCloseBtnClicked()
@@ -510,19 +541,13 @@ void MonitorTitleWidget::onCloseBtnClicked()
     window()->close();
 }
 
-void MonitorTitleWidget::switchChangeItemProcessSignal()
+void MonitorTitleWidget::switchChangeItemProcessSignal(int a)
 {
-    qDebug()<<"i love you baby;";
-    //emit changeProcessItemDialog(a);
-    {
-        if (m_changeBox->currentIndex() == 0){
-            emit changeProcessItemDialog(0);
-        }else if (m_changeBox->currentIndex() == 1){
-            emit changeProcessItemDialog(1);
-        }else if (m_changeBox->currentIndex() == 2){
-            emit changeProcessItemDialog(2);
-        }
-    }
+
+    qDebug()<<"whichNum----"<<whichNum;
+    emit changeProcessItemDialog(a);
+    whichNum = ifsettings->get(WHICH_MENU).toInt();
+    ifsettings->set(WHICH_MENU,a);
 }
 
 void MonitorTitleWidget::onUpdateMaxBtnStatusChanged()
@@ -537,11 +562,16 @@ void MonitorTitleWidget::onUpdateMaxBtnStatusChanged()
 void MonitorTitleWidget::initToolbarLeftContent()
 {
     QWidget *w = new QWidget;
-    //w->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+
+//    w->setMinimumWidth(600);
+//    w->setMaximumWidth(1000);
+    w->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     m_toolLeftLayout = new QHBoxLayout(w);
     m_toolLeftLayout->setContentsMargins(0, 0, 0, 0);
-    m_toolLeftLayout->setSpacing(20);
-
+//    m_toolLeftLayout->setMaximumSize(1000,100);
+//    m_toolLeftLayout->setSpacing(20);
+//    m_toolLeftLayout->setSizeConstraint(QLayout::SetDefaultConstraint);
+//    m_toolLeftLayout->SetMinimumSize()
     MyUnderLineButton *processButton = new MyUnderLineButton();
     processButton->setName(tr("Processes"));
     processButton->setChecked(true);
@@ -634,9 +664,23 @@ void MonitorTitleWidget::initToolbarLeftContent()
     m_toolLeftLayout->addWidget(disksButton);
 
 
-    m_toolLeftLayout->addSpacing(32);
+    QWidget *spaceLabel = new QWidget();
+    spaceLabel->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
+//    spaceLabel->setStyleSheet("QLabel{background:#000000}");
+
+    spaceLabel->setMinimumWidth(32);
+    spaceLabel->setMaximumWidth(200);
+//    spaceLabel->resize(200,10);
+
+//    QSizePolicy sizePolicy;
+//    sizePolicy.setHorizontalPolicy(QSizePolicy::Expanding);
+//    spaceLabel->setSizePolicy(sizePolicy);
+//    spaceLabel->setSizePolicy(QSizePolicy::Preferred,QSizePolicy::Fixed);
+
+
+    m_toolLeftLayout->addWidget(spaceLabel);
     m_toolLeftLayout->addWidget(m_changeBox);
-    //m_toolLeftLayout->addWidget(buttonWidget);
+//    m_toolLeftLayout->addWidget(buttonWidget);
     m_toolLeftLayout->addStretch();
 
 //    m_bottomLayout->addWidget(w);
@@ -646,9 +690,12 @@ void MonitorTitleWidget::initToolbarLeftContent()
 void MonitorTitleWidget::initToolbarRightContent()
 {
     QWidget *w = new QWidget;
+//    w->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     m_toolRightLayout = new QHBoxLayout(w);
+    m_toolRightLayout->setSizeConstraint(QLayout::SetFixedSize);
     m_toolRightLayout->setContentsMargins(0, 3, 6, 0);
     m_toolRightLayout->setSpacing(5);
+
 
 //    m_cancelSearchBtn = new QPushButton;
 //    m_cancelSearchBtn->setStyleSheet("QPushButton{background-color:transparent;text-align:center;font-family: 方正黑体_GBK;font-size:11px;color:#ffffff;}QPushButton:hover{color:#000000;}");
@@ -694,7 +741,7 @@ void MonitorTitleWidget::initWidgets()
     initTitlebarMiddleContent();
     initTitlebarRightContent();
     initToolbarLeftContent();
-    initToolbarRightContent();   
+    initToolbarRightContent();
 }
 
 void MonitorTitleWidget::resizeEvent(QResizeEvent *event)
