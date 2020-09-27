@@ -18,8 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef NETWORKINDICATOR_H
-#define NETWORKINDICATOR_H
+#ifndef NETCATOGORYSHOW_H
+#define NETCATOGORYSHOW_H
 
 #include <QObject>
 #include <QWidget>
@@ -27,54 +27,42 @@
 #include <qgsettings.h>
 #include <QApplication>
 #include <QPainterPath>
-#include <QLabel>
 
 #include "../shell/macro.h"
 #include "shell/customstyle.h"
 
-class NetCatogoryShow;
-
-class NetworkIndicator : public QWidget
+class NetCatogoryShow : public QWidget
 {
     Q_OBJECT
 
-    enum NetworkState {Normal, Hover, Press, Checked};
-
 public:
-    NetworkIndicator(QWidget * parent=0);
-    ~NetworkIndicator();
+    NetCatogoryShow(QWidget * parent=0);
+    ~NetCatogoryShow();
 
-    void setChecked(bool flag);
-    bool isChecked();
-    void setTitle(const QString &title);
 //    void updateNetworkPainterPath(QPainterPath downloadPath, QPainterPath uploadPath);
 
-    NetworkState getNetworkState() const;
+//    NetworkState getNetworkState() const;
     void initThemeMode();
 
 public slots:
     void onUpdateNetworkStatus(long recvTotalBytes, long sentTotalBytes, long recvRateKbs, long sentRateKbs);
-    void setNetWorkText(long revcTotalBtytes, long sentTotalBytes, long revcRateKbs, long sentRateKbs);
 
 signals:
     void clicked();
-    void updateNetWorkData(long,long,long,long);
 
 protected:
-    void enterEvent(QEvent *event) Q_DECL_OVERRIDE;
-    void leaveEvent(QEvent *event) Q_DECL_OVERRIDE;
-    void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
-    void mouseReleaseEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
-    void mouseMoveEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
+//    void enterEvent(QEvent *event) Q_DECL_OVERRIDE;
+//    void leaveEvent(QEvent *event) Q_DECL_OVERRIDE;
+//    void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
+//    void mouseReleaseEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
+//    void mouseMoveEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
     void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
 
 private:
     void updateBgColor();
-    void setNetworkState(NetworkState state);
-    void initWidgets();
+//    void setNetworkState(NetworkState state);
 
 private:
-    NetworkState m_state;
     bool m_isChecked;
     QString m_title;
     int m_rectTopPadding;
@@ -82,7 +70,6 @@ private:
     int m_rectTotalWidth;
     QColor m_outsideBorderColor;
     QColor m_bgColor;
-
 
     QList<long> *m_downloadSpeedList;
     QList<long> *m_uploadSpeedList;
@@ -102,12 +89,6 @@ private:
     QGSettings * qtSettings;
     QString currentThemeMode;
 
-    QLabel *m_netTitle;
-    QLabel *m_sentByte;
-    QLabel *m_recvByte;
-
-    NetCatogoryShow *m_netCatogoryShow = nullptr;
-
 };
 
-#endif // NETWORKINDICATOR_H
+#endif // NETCATOGORYSHOW_H

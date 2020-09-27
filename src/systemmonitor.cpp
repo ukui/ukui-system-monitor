@@ -19,6 +19,7 @@
  */
 
 #include "systemmonitor.h"
+#include "../shell/macro.h"
 
 #include "util.h"
 #include <QFileSystemWatcher>
@@ -409,6 +410,23 @@ void SystemMonitor::initTitleWidget()
     m_titleWidget = new MonitorTitleWidget(proSettings, this);
     m_titleWidget->resize(width() - 2, MONITOR_TITLE_WIDGET_HEIGHT);
     m_titleWidget->move(1, 1);
+    connect(m_titleWidget,SIGNAL(maximizeWindow()),this,SLOT(onMaximizeWindow()));
+    connect(m_titleWidget,SIGNAL(minimizeWindow()),this,SLOT(onMinimizeWindow()));
+}
+
+void SystemMonitor::onMaximizeWindow()
+{
+    if (this->isMaximized()) {
+        this->showNormal();
+    }
+    else {
+        this->showMaximized();
+    }
+}
+
+void SystemMonitor::onMinimizeWindow()
+{
+    this->showMinimized();
 }
 
 void SystemMonitor::initConnections()

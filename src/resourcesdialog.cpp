@@ -23,6 +23,7 @@
 #include "memorywidget.h"
 #include "networkwidget.h"
 #include "resourcescategory.h"
+#include "netcatogoryshow.h"
 
 #include <glibtop/netload.h>
 #include <glibtop/netlist.h>

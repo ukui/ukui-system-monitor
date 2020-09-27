@@ -3,7 +3,7 @@ Section: x11
 Priority: optional
 Maintainer: Ubuntu Developers <ubuntu-devel-discuss@list.ubuntu.net>
 Uploaders: handsome_feng <jianfengli@ubuntukylin.com>
-Build-Depends: debhelper-compat (= 13),
+Build-Depends: debhelper-compat (= 12),
                qtbase5-dev (>= 5.1),
                libqt5svg5-dev,
                qt5-qmake,

@@ -20,6 +20,8 @@
 
 #include "networkindicator.h"
 #include "smoothcurvegenerator.h"
+#include "netcatogoryshow.h"
+#include "util.h"
 
 #include <QMouseEvent>
 #include <QEvent>
@@ -27,6 +29,68 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QDebug>
+
+#include <QPushButton>
+
+inline QString formatNetworkBrandWidth(guint64 size, bool isTotal)
+{
+    enum {
+        K_INDEX,
+        M_INDEX,
+        G_INDEX,
+        T_INDEX
+    };
+
+    QList<guint64> factorList;
+    factorList.append(G_GUINT64_CONSTANT(1) << 10);//KiB
+    factorList.append(G_GUINT64_CONSTANT(1) << 20);//MiB
+    factorList.append(G_GUINT64_CONSTANT(1) << 30);//GiB
+    factorList.append(G_GUINT64_CONSTANT(1) << 40);//TiB
+
+    if (size < factorList.at(K_INDEX)) {
+        if ((guint) size > 1) {
+                return QString("%1 %2").arg((guint) size).arg(QObject::tr("bits/s"));
+        }
+        else {
+                return QString("%1 %2").arg((guint) size).arg(QObject::tr("bits/s"));
+        }
+    } else {
+        guint64 factor;
+        QString format;
+        if (size < factorList.at(M_INDEX)) {
+            factor = factorList.at(K_INDEX);
+            if (isTotal)
+                format = QObject::tr("KiB");
+            else
+                format = QObject::tr("KiB/s");
+        }else if (size < factorList.at(G_INDEX)) {
+            factor = factorList.at(M_INDEX);
+            if (isTotal)
+                format = QObject::tr("MiB");
+            else
+                format = QObject::tr("MiB/s");
+        } else if (size < factorList.at(T_INDEX)) {
+            factor = factorList.at(G_INDEX);
+            if (isTotal)
+                format = QObject::tr("GiB");
+            else
+                format = QObject::tr("GiB/s");
+        } else {
+            factor = factorList.at(T_INDEX);
+            if (isTotal)
+                format = QObject::tr("TiB");
+            else
+                format = QObject::tr("TiB/s");
+        }
+        std::string formatted_result(make_string(g_strdup_printf("%.1f", size / (double)factor)));
+        return QString::fromStdString(formatted_result) + format;
+    }
+}
+
+inline QString formatNetworkRate(guint64 rate)
+{
+    return formatNetworkBrandWidth(rate, false);
+}
 
 NetworkIndicator::NetworkIndicator(QWidget *parent)
     : QWidget(parent)
@@ -72,7 +136,19 @@ NetworkIndicator::NetworkIndicator(QWidget *parent)
 
     m_gridY = new QList<int>();
 
+    m_netCatogoryShow = new NetCatogoryShow;
+    connect(this,SIGNAL(updateNetWorkData(long,long,long,long)),m_netCatogoryShow,SLOT(onUpdateNetworkStatus(long,long,long,long)));
+    connect(this,SIGNAL(updateNetWorkData(long,long,long,long)),this,SLOT(setNetWorkText(long,long,long,long)));
     setNetworkState(Normal);
+    m_netTitle = new QLabel(tr("net"));
+    m_sentByte = new QLabel();
+    m_recvByte = new QLabel();
+    QFont font;
+    font.setPointSize(9);
+    m_sentByte->setFont(font);
+    m_recvByte->setFont(font);
+
+    initWidgets();
 }
 
 NetworkIndicator::~NetworkIndicator()
@@ -80,6 +156,39 @@ NetworkIndicator::~NetworkIndicator()
     delete m_downloadSpeedList;
     delete m_uploadSpeedList;
     delete m_gridY;
+}
+
+void NetworkIndicator::setNetWorkText(long revcTotalBtytes, long sentTotalBytes, long revcRateKbs, long sentRateKbs)
+{
+    const QString downloadRate = formatNetworkRate(revcRateKbs);
+    const QString uploadRate = formatNetworkRate(sentRateKbs);
+    QString showReceiveValue = downloadRate;
+    QString sRecv = tr("recv:") + showReceiveValue;
+    QString showSendValue = uploadRate;
+    QString sSend = tr("send:") +showSendValue;
+    m_recvByte->setText(sRecv);
+    m_sentByte->setText(sSend);
+}
+
+void NetworkIndicator::initWidgets()
+{
+    QHBoxLayout *lineImg_H_BoxLayout = new QHBoxLayout();
+    lineImg_H_BoxLayout->setSpacing(0);
+    lineImg_H_BoxLayout->addSpacing(4);
+    lineImg_H_BoxLayout->addWidget(m_netCatogoryShow);
+    QVBoxLayout *content_V_BoxLayout = new QVBoxLayout();
+    content_V_BoxLayout->addWidget(m_netTitle);
+    content_V_BoxLayout->addWidget(m_recvByte);
+    content_V_BoxLayout->addWidget(m_sentByte);
+    lineImg_H_BoxLayout->addSpacing(2);
+    lineImg_H_BoxLayout->addLayout(content_V_BoxLayout);
+    lineImg_H_BoxLayout->addStretch();
+
+    QVBoxLayout *main_V_BoxLayout = new QVBoxLayout;
+    main_V_BoxLayout->addLayout(lineImg_H_BoxLayout);
+    main_V_BoxLayout->setContentsMargins(0,0,0,0);
+    this->setLayout(main_V_BoxLayout);
+
 }
 
 void NetworkIndicator::initThemeMode()
@@ -252,59 +361,60 @@ NetworkIndicator::NetworkState NetworkIndicator::getNetworkState() const
 
 void NetworkIndicator::onUpdateNetworkStatus(long recvTotalBytes, long sentTotalBytes, long recvRateBytes, long sentRateBytes)
 {
-    m_recvTotalBytes = recvTotalBytes;
-    m_sentTotalBytes = sentTotalBytes;
-    m_recvRateBytes = recvRateBytes;
-    m_sentRateBytes = sentRateBytes;
+//    m_recvTotalBytes = recvTotalBytes;
+//    m_sentTotalBytes = sentTotalBytes;
+//    m_recvRateBytes = recvRateBytes;
+//    m_sentRateBytes = sentRateBytes;
 
-    //download
-    QList<QPointF> downloadPoints;
-    m_downloadSpeedList->append(m_recvRateBytes);
-    if (m_downloadSpeedList->size() > m_pointsCount) {
-        m_downloadSpeedList->pop_front();
-    }
-    //计算出下载速度中最大的值
-    long downloadMaxHeight = 0;
-    for (int i = 0; i < m_downloadSpeedList->size(); i++) {
-        if (m_downloadSpeedList->at(i) > downloadMaxHeight) {
-            downloadMaxHeight = m_downloadSpeedList->at(i);
-        }
-    }
-    for (int i = 0; i < m_downloadSpeedList->size(); i++) {
-        if (downloadMaxHeight < m_netMaxHeight) {
-            downloadPoints.append(QPointF(i * m_pointSpace, m_downloadSpeedList->at(i)));
-        }
-        else {
-            downloadPoints.append(QPointF(i * m_pointSpace, m_downloadSpeedList->at(i) * m_netMaxHeight / downloadMaxHeight));
-        }
-    }
-    m_downloadPath = SmoothCurveGenerator::generateSmoothCurve(downloadPoints);
+//    //download
+//    QList<QPointF> downloadPoints;
+//    m_downloadSpeedList->append(m_recvRateBytes);
+//    if (m_downloadSpeedList->size() > m_pointsCount) {
+//        m_downloadSpeedList->pop_front();
+//    }
+//    //计算出下载速度中最大的值
+//    long downloadMaxHeight = 0;
+//    for (int i = 0; i < m_downloadSpeedList->size(); i++) {
+//        if (m_downloadSpeedList->at(i) > downloadMaxHeight) {
+//            downloadMaxHeight = m_downloadSpeedList->at(i);
+//        }
+//    }
+//    for (int i = 0; i < m_downloadSpeedList->size(); i++) {
+//        if (downloadMaxHeight < m_netMaxHeight) {
+//            downloadPoints.append(QPointF(i * m_pointSpace, m_downloadSpeedList->at(i)));
+//        }
+//        else {
+//            downloadPoints.append(QPointF(i * m_pointSpace, m_downloadSpeedList->at(i) * m_netMaxHeight / downloadMaxHeight));
+//        }
+//    }
+//    m_downloadPath = SmoothCurveGenerator::generateSmoothCurve(downloadPoints);
 
-    //upload
-    QList<QPointF> uploadPoints;
-    m_uploadSpeedList->append(m_sentRateBytes);
-    if (m_uploadSpeedList->size() > m_pointsCount) {
-        m_uploadSpeedList->pop_front();
-    }
-    //计算出上传速度中最大的值
-    long uploadMaxHeight = 0;
-    for (int i = 0; i < m_uploadSpeedList->size(); i++) {
-        if (m_uploadSpeedList->at(i) > uploadMaxHeight) {
-            uploadMaxHeight = m_uploadSpeedList->at(i);
-        }
-    }
+//    //upload
+//    QList<QPointF> uploadPoints;
+//    m_uploadSpeedList->append(m_sentRateBytes);
+//    if (m_uploadSpeedList->size() > m_pointsCount) {
+//        m_uploadSpeedList->pop_front();
+//    }
+//    //计算出上传速度中最大的值
+//    long uploadMaxHeight = 0;
+//    for (int i = 0; i < m_uploadSpeedList->size(); i++) {
+//        if (m_uploadSpeedList->at(i) > uploadMaxHeight) {
+//            uploadMaxHeight = m_uploadSpeedList->at(i);
+//        }
+//    }
 
-    for (int i = 0; i < m_uploadSpeedList->size(); i++) {
-        if (uploadMaxHeight < m_netMaxHeight) {
-            uploadPoints.append(QPointF(i * m_pointSpace, m_uploadSpeedList->at(i)));
-        }
-        else {
-            uploadPoints.append(QPointF(i * m_pointSpace, m_uploadSpeedList->at(i) * m_netMaxHeight / uploadMaxHeight));
-        }
-    }
-    m_uploadPath = SmoothCurveGenerator::generateSmoothCurve(uploadPoints);
+//    for (int i = 0; i < m_uploadSpeedList->size(); i++) {
+//        if (uploadMaxHeight < m_netMaxHeight) {
+//            uploadPoints.append(QPointF(i * m_pointSpace, m_uploadSpeedList->at(i)));
+//        }
+//        else {
+//            uploadPoints.append(QPointF(i * m_pointSpace, m_uploadSpeedList->at(i) * m_netMaxHeight / uploadMaxHeight));
+//        }
+//    }
+//    m_uploadPath = SmoothCurveGenerator::generateSmoothCurve(uploadPoints);
 
-    repaint();
+//    repaint();
+    emit updateNetWorkData(recvTotalBytes, sentTotalBytes, recvRateBytes, sentRateBytes);
 }
 
 void NetworkIndicator::paintEvent(QPaintEvent *event)
@@ -325,17 +435,17 @@ void NetworkIndicator::paintEvent(QPaintEvent *event)
     path.addRoundedRect(QRectF(1, 1, width()-2, height()-2),4,4);
     painter.fillPath(path, this->m_bgColor);
 
-    painter.translate((rect().width() - m_pointsCount * m_pointSpace) / 2 + 2, 40);//将坐标第原点移动到该点
-    painter.scale(1, -1);//将横坐标扩大1倍,将纵坐标缩小1倍
-    //使用QPainterPath画贝塞尔曲线
-    painter.setPen(QPen(QColor("#009944"), 1));
-    painter.setBrush(QBrush());
-    painter.drawPath(m_downloadPath);//绘制前面创建的path:m_downloadPath
-    painter.translate(0, -8);//将点（0，-8）设为原点
-    painter.setPen(QPen(QColor("#e60012"), 1));
-    painter.setBrush(QBrush());
-    painter.drawPath(m_uploadPath);
+//    painter.translate((rect().width() - m_pointsCount * m_pointSpace) / 2 + 2, 40);//将坐标第原点移动到该点
+//    painter.scale(1, -1);//将横坐标扩大1倍,将纵坐标缩小1倍
+//    //使用QPainterPath画贝塞尔曲线
+//    painter.setPen(QPen(QColor("#009944"), 1));
+//    painter.setBrush(QBrush());
+//    painter.drawPath(m_downloadPath);//绘制前面创建的path:m_downloadPath
+//    painter.translate(0, -8);//将点（0，-8）设为原点
+//    painter.setPen(QPen(QColor("#e60012"), 1));
+//    painter.setBrush(QBrush());
+//    painter.drawPath(m_uploadPath);
 
-    QWidget::paintEvent(event);
+//    QWidget::paintEvent(event);
 }
 

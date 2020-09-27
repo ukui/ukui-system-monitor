@@ -882,7 +882,7 @@ void ProcessListWidget::paintEvent(QPaintEvent *)
                 painter.setOpacity(0.57);
                 QFont font = painter.font();
 //                font.setPointSize(10);
-                font.setPixelSize(fontSize);
+                font.setPixelSize(fontSize+1);
                 painter.setFont(font);
                 if(currentThemeMode == "ukui-light" || currentThemeMode == "ukui-default" || currentThemeMode == "ukui-white")
                 {

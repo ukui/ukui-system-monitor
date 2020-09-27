@@ -63,7 +63,7 @@ public slots:
     void onMaxBtnClicked();
     void onCloseBtnClicked();
     void onUpdateMaxBtnStatusChanged();
-    void switchChangeItemProcessSignal();
+    void switchChangeItemProcessSignal(int a);
 
 signals:
     void updateMaxBtn();
@@ -71,6 +71,8 @@ signals:
     void searchSignal(QString searchContent);
     void canelSearchEditFocus();
     void changeProcessItemDialog(int index);
+    void maximizeWindow();
+    void minimizeWindow();
 
 protected:
     void mouseDoubleClickEvent(QMouseEvent *event) override;
@@ -99,6 +101,7 @@ private:
     QPushButton *m_processButton = nullptr;
     QPushButton *m_resourceButton = nullptr;
     QPushButton *m_filesystemButton = nullptr;
+    QPushButton *maxTitleBtn = nullptr;
     QComboBox *m_changeBox;
     QLabel *titleLabel;
 
@@ -106,7 +109,12 @@ private:
 
     QGSettings *qtSettings;
     QGSettings *fontSettings;
+    QGSettings * ifsettings;
     QString currentThemeMode;
+
+    QList<int> *whichBox;
+    int whichNum;
+    int i=0;
 };
 
 #endif // MONITORTITLEWIDGET_H

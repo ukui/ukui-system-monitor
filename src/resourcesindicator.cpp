@@ -357,6 +357,7 @@ void ResourcesIndicator::paintEvent(QPaintEvent *event)
     QRect occupyRect(this->m_posX, this->m_rectTopPadding + this->m_rectTotalHeight - convertPercent, this->m_rectTotalWidth, convertPercent);
 //    painter.drawRoundedRect(occupyRect);
     painter.drawRect(this->m_posX, this->m_rectTopPadding + this->m_rectTotalHeight - convertPercent, this->m_rectTotalWidth, convertPercent);
+    qDebug()<<"this->->->->"<<this->m_posX<<this->m_rectTopPadding + this->m_rectTotalHeight - convertPercent<<this->m_rectTotalWidth<<convertPercent;
 
     //draw title
     painter.setOpacity(0.91);
@@ -370,7 +371,7 @@ void ResourcesIndicator::paintEvent(QPaintEvent *event)
     painter.setPen(palette().color(QPalette::WindowText));      //set the color of the typeface
     painter.drawText(QRect(68, 1, 118, 28), Qt::AlignLeft | Qt::AlignVCenter, this->m_title);
 
-    //draw content
+    //draw content ,draw cpu and swap contents here
     font.setPixelSize(12);
     painter.setFont(font);
     QFontMetrics fm(font);

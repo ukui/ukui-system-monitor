@@ -37,8 +37,12 @@ desktop.path = /usr/share/applications/
 target.source += $$TARGET
 target.path = /usr/bin
 
+schemes.files += ../data/*.xml
+schemes.path = /usr/share/glib-2.0/schemas/
+
 INSTALLS += target \
             desktop \
+            schemes \
             ICON
 
 unix {
@@ -77,6 +81,7 @@ HEADERS += \
     ../widgets/mysearchedit.h \
     networkwidget.h \
     networkflow.h \
+    netcatogoryshow.h \
     cpuratewidget.h \
     cpuballwidget.h \
     smoothcurvegenerator.h \
@@ -135,6 +140,7 @@ SOURCES += \
     ../widgets/mysearchedit.cpp \
     networkwidget.cpp \
     networkflow.cpp \
+    netcatogoryshow.cpp \
     cpuratewidget.cpp \
     cpuballwidget.cpp \
     smoothcurvegenerator.cpp \
