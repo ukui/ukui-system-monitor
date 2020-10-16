@@ -10,6 +10,8 @@ isEqual(QT_MAJOR_VERSION, 5) {
     QT += widgets gui svg x11extras
 }
 
+include(QtSingleApplication/qtsingleapplication.pri)
+
 TARGET = ukui-system-monitor
 TEMPLATE = app
 DESTDIR = ..
@@ -39,6 +41,11 @@ target.path = /usr/bin
 
 schemes.files += ../data/*.xml
 schemes.path = /usr/share/glib-2.0/schemas/
+
+#include(src/QtSingleApplication/qtsingleapplication.pri)
+#include(qtsingleapplication/qtsingleapplication.pri)
+#INCLUDEPATH += qtsingleapplication
+#DEPENDPATH += qtsingleapplication
 
 INSTALLS += target \
             desktop \
@@ -109,7 +116,7 @@ HEADERS += \
     singleProcessNet/conninode.h \
     singleProcessNet/inode2prog.h \
     singleProcessNet/refreshthread.h \
-    singleProcessNet/decpcap.h \
+    singleProcessNet/decpcap.h
 #    newresourcesdialog.h
 
 SOURCES += \
@@ -166,7 +173,7 @@ SOURCES += \
     singleProcessNet/conninode.cpp \
     singleProcessNet/inode2prog.cpp \
     singleProcessNet/refreshthread.cpp \
-    singleProcessNet/decpcap.c \
+    singleProcessNet/decpcap.c
 #    newresourcesdialog.cpp
 
 OTHER_FILES += \

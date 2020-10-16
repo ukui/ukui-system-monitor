@@ -75,7 +75,7 @@ protected:
 private:
     QLabel *m_messageLabel = nullptr;
     QLabel *m_titleLabel = nullptr;
-    MyTristateButton *closeButton = nullptr;
+    QPushButton *closeButton = nullptr;
 //    QVBoxLayout *contentLayout = nullptr;
     QHBoxLayout *m_buttonLayout = nullptr;
     QHBoxLayout *m_topLayout = nullptr;

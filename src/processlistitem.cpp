@@ -276,6 +276,11 @@ void ProcessListItem::drawForeground(QRect rect, QPainter *painter, int column, 
             painter->drawText(QRect(rect.x(), rect.y(), rect.width() - textPadding, rect.height()), Qt::AlignRight | Qt::AlignVCenter, Memory);
             g_free(memory);
         }
+        else
+        {
+            QString Memory = "0 MiB";
+            painter->drawText(QRect(rect.x(), rect.y(), rect.width() - textPadding, rect.height()), Qt::AlignRight | Qt::AlignVCenter, Memory);
+        }
         if (!isSeparator) {
             painter->setOpacity(0.8);
             QPainterPath separatorPath;
@@ -304,21 +309,21 @@ bool ProcessListItem::doSearch(const ProcessListItem *item, QString text)
 bool ProcessListItem::sortByDiskIo(const ProcessListItem *item1, const ProcessListItem *item2, bool descendingSort)
 {
 
-    QString diskIo1 = (static_cast<const ProcessListItem*>(item1))->getDiskIo();
-    QString  diskIo2 = (static_cast<const ProcessListItem*>(item2))->getDiskIo();
+//    QString diskIo1 = (static_cast<const ProcessListItem*>(item1))->getDiskIo();
+//    QString  diskIo2 = (static_cast<const ProcessListItem*>(item2))->getDiskIo();
+
+    int numDiskIo1 = (static_cast<const ProcessListItem*>(item1))->getNumDiskIo();
+    int numDiskIo2 = (static_cast<const ProcessListItem*>(item2))->getNumDiskIo();
+
     bool isSort;
 
-    if (diskIo1 == diskIo2)
-    {
-        double cpu1 = static_cast<const ProcessListItem*>(item1)->getCPU();
-        double cpu2 = (static_cast<const ProcessListItem*>(item2))->getCPU();
-        isSort = cpu1 > cpu2;
+    if (numDiskIo1 == numDiskIo2) {
+        long memory1 = static_cast<const ProcessListItem*>(item1)->getMemory();
+        long memory2 = (static_cast<const ProcessListItem*>(item2))->getMemory();
+        isSort = memory1 > memory2;
     }
-    else
-    {
-        QCollator qco(QLocale::system());
-        int result = qco.compare(diskIo1, diskIo2);
-        isSort = result < 0;
+    else {
+        isSort = numDiskIo1 > numDiskIo2;
     }
 
     return descendingSort ? isSort : !isSort;
@@ -328,23 +333,20 @@ bool ProcessListItem::sortByDiskIo(const ProcessListItem *item1, const ProcessLi
 
 bool ProcessListItem::sortByFlowNet(const ProcessListItem *item1, const ProcessListItem *item2, bool descendingSort)
 {
-    QString netFlow1 = (static_cast<const ProcessListItem*>(item1))->getFlowNet();
-    QString netFlow2 = (static_cast<const ProcessListItem*>(item2))->getFlowNet();
-
+    int numFlowNet1 = (static_cast<const ProcessListItem*>(item1))->getNumFlowNet();
+    int numFlowNet2 = (static_cast<const ProcessListItem*>(item2))->getNumFlowNet();
 
     bool isSort;
-    if (netFlow1 == netFlow2)
-    {
-        double cpu1 = static_cast<const ProcessListItem*>(item1)->getCPU();
-        double cpu2 = (static_cast<const ProcessListItem*>(item2))->getCPU();
-        isSort = cpu1 > cpu2;
+
+    if (numFlowNet1  == numFlowNet2) {
+        long memory1 = static_cast<const ProcessListItem*>(item1)->getMemory();
+        long memory2 = (static_cast<const ProcessListItem*>(item2))->getMemory();
+        isSort = memory1 > memory2;
     }
-    else
-    {
-        QCollator qco(QLocale::system());
-        int result = qco.compare(netFlow1, netFlow2);
-        isSort = result < 0;
+    else {
+        isSort = numFlowNet1 > numFlowNet2;
     }
+
     return descendingSort ? isSort : !isSort;
 }
 
@@ -539,6 +541,16 @@ QString ProcessListItem::getFlowNet() const
 QString ProcessListItem::getDiskIo() const
 {
     return m_data.m_diskio;
+}
+
+int ProcessListItem::getNumFlowNet() const
+{
+    return m_data.m_numFlowNet;
+}
+
+int ProcessListItem::getNumDiskIo() const
+{
+    return m_data.m_numDiskIo;
 }
 
 //QString ProcessListItem::getCommandLine() const

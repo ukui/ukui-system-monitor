@@ -248,7 +248,7 @@ void FileSystemListItem::drawForeground(QRect rect, QPainter *painter, int colum
         }
         QPainterPath bgPath;
         bgPath.addRect(QRectF(rect.x() + textMaxWidth + leftPadding, rect.y() + topPadding, progressWidth, progressHeight));
-        painter->fillPath(bgPath, QColor("#778899"));
+        painter->fillPath(bgPath, QColor("#C4BDBD"));
 //        painter->fillPath(bgPath,QColor("palette(Base)"));
         QPainterPath fillPath;
         fillPath.addRect(QRectF(rect.x() + textMaxWidth + leftPadding, rect.y() + topPadding, m_data->usedPercentage(), progressHeight));

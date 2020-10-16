@@ -138,6 +138,7 @@ private:
     QMap<int,int> calDiskIoMap;
     QString addFlowNetPerSec;
     QString addDiskIoPerSec;
+    int numAddFlowNetPerSec;
     lineBandwith *speedLineBandFlowNet;
     lineBandwith *speedLineBandDiskIo;
 

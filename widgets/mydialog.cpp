@@ -36,7 +36,7 @@ MyDialog::MyDialog(const QString &title, const QString &message, QWidget *parent
     QDialog(parent)
    , mousePressed(false)
 {
-    this->setWindowFlags(this->windowFlags() | Qt::FramelessWindowHint/*  | Qt::WindowCloseButtonHint*/);
+    this->setWindowFlags(this->windowFlags() | Qt::FramelessWindowHint  | Qt::WindowCloseButtonHint);
 //    this->setWindowFlags(Qt::Window | Qt::FramelessWindowHint | Qt::WindowMinimizeButtonHint);//Attention: Qt::WindowCloseButtonHint make showMinimized() valid
 
     this->setAttribute(Qt::WA_TranslucentBackground);
@@ -50,7 +50,7 @@ MyDialog::MyDialog(const QString &title, const QString &message, QWidget *parent
     m_titleLabel = new QLabel;
     m_titleLabel->setStyleSheet("QLabel{padding-top:3px;padding-bottom:3px;font-size:18px;color:#000000;}");
     m_titleLabel->hide();
-    m_titleLabel->setAttribute(Qt::WA_TransparentForMouseEvents);
+//    m_titleLabel->setAttribute(Qt::WA_TransparentForMouseEvents);
 
     m_messageLabel = new QLabel;
     m_messageLabel->setStyleSheet("QLabel{padding-top:3px;padding-bottom:3px;font-size:12px;color:#000000;}");
@@ -66,9 +66,15 @@ MyDialog::MyDialog(const QString &title, const QString &message, QWidget *parent
 
     m_topLayout->addLayout(textLayout);
 
-    closeButton = new MyTristateButton(this);
+    closeButton = new QPushButton();
     closeButton->setObjectName("CloseButton");
-    connect(closeButton, SIGNAL(clicked()), this, SLOT(close()));
+//    connect(closeButton, SIGNAL(clicked()), this, SLOT(close()));
+    connect(closeButton,&QPushButton::clicked,this,[=](){
+       this->deleteLater();
+       this->close();
+    });
+    closeButton->setIcon(QIcon::fromTheme("window-close-symbolic"));
+    closeButton->setStyleSheet("QPushButton{background:transparent;}");
 //    connect(closeButton, &MyTristateButton::clicked, this, [=] {
 //        this->close();
 //    });
@@ -290,8 +296,9 @@ void MyDialog::paintEvent(QPaintEvent *event)
     QPainter painter(this);
 
     //绘制圆角矩形
-    painter.setPen(QPen(QColor("#0d87ca"), 0));//边框颜色
-    painter.setBrush(QColor("#e9eef0"));//背景色   #0d87ca
+    painter.setPen(QPen(QColor("#808080"), 0));//边框颜色
+//    painter.setBrush(QColor("#e9eef0"));//背景色   #0d87ca
+    painter.setBrush(this->palette().base());
     painter.setRenderHint(QPainter::Antialiasing, true);
     painter.setOpacity(1);
     QRectF r(0 / 2.0, 0 / 2.0, width() - 0, height() - 0);//左边 上边 右边 下边
