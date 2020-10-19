@@ -22,6 +22,7 @@
 #include <QTranslator>
 #include <QObject>
 #include <QDesktopWidget>
+#include <QtSingleApplication>
 
 #include "framelessExtended/framelesshandle.h"
 #include "systemmonitor.h"
@@ -50,36 +51,48 @@ int main(int argc, char *argv[])
     }
 
 
-    QApplication app(argc,argv);
-
-    QApplication::setApplicationName("Kylin System Monitor");
-    QApplication::setApplicationVersion("0.0.0.0001");
-
-    QString locale = QLocale::system().name();
-    QTranslator translator;
-    if(locale == "zh_CN" || locale == "es" || locale == "fr" || locale == "de" || locale == "ru") {//中文 西班牙语 法语 德语 俄语
-        if(!translator.load("ukui-system-monitor_" + locale + ".qm",
-                            ":/translation/"))
-            qDebug() << "Load translation file："<< "ukui-system-monitor_" + locale + ".qm" << " failed!";
-        else
-            app.installTranslator(&translator);
+    QtSingleApplication app(argc,argv);
+    if(app.isRunning())
+    {
+        app.sendMessage(QApplication::arguments().length() > 1 ? QApplication::arguments().at(1) : app.applicationFilePath());
+        qDebug() << QObject::tr("ukui-system-monitor is already running!");
+        return EXIT_SUCCESS;
     }
+    else
+    {
+        QApplication::setApplicationName("Kylin System Monitor");
+        QApplication::setApplicationVersion("0.0.0.0001");
 
+        QString locale = QLocale::system().name();
+        QTranslator translator;
+        if(locale == "zh_CN" || locale == "es" || locale == "fr" || locale == "de" || locale == "ru") {//中文 西班牙语 法语 德语 俄语
+            if(!translator.load("ukui-system-monitor_" + locale + ".qm",
+                                ":/translation/"))
+                qDebug() << "Load translation file："<< "ukui-system-monitor_" + locale + ".qm" << " failed!";
+            else
+                app.installTranslator(&translator);
+        }
 
+        SystemMonitor *monitor=new SystemMonitor();
+        monitor->setAttribute(Qt::WA_TranslucentBackground);
+        monitor->setProperty("useSystemStyleBlur",true);
 
+        monitor->setAttribute(Qt::WA_DeleteOnClose);
 
-//    SystemMonitor *monitor=new SystemMonitor();
-//    monitor->setAttribute(Qt::WA_DeleteOnClose);
-//    monitor->show();
+        app.setActivationWindow(monitor);
+        QObject::connect(&app, SIGNAL(messageReceived(const QString&)),monitor, SLOT(sltMessageReceived(const QString&)));
 
-//    FramelessHandle * pHandle = new FramelessHandle(monitor);
-//    pHandle->activateOn(monitor);
+        monitor->show();
 
-    auto style = new InternalStyle(nullptr);
-    app.setStyle(style);
+        FramelessHandle * pHandle = new FramelessHandle(monitor);
+        pHandle->activateOn(monitor);
 
-    MainController *ctrl = MainController::self();
+//        auto style = new InternalStyle(nullptr);
+//        app.setStyle(style);
 
-    app.exec();
-    return 0;
+    //    MainController *ctrl = MainController::self();
+
+        app.exec();
+        return 0;
+    }
 }

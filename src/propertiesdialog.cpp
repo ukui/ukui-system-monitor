@@ -77,14 +77,22 @@ PropertiesDialog::PropertiesDialog(QWidget *parent, pid_t processId) : QDialog(p
     startTimeLayout->setContentsMargins(0, 0, 0, 0);*/
 
     m_logoLabel = new QLabel();
-    m_logoLabel->setStyleSheet("QLabel{background:#CC00FF;border:none;}");
+//    m_logoLabel->setStyleSheet("QLabel{background:#CC00FF;border:none;}");
     m_logoLabel->setFixedSize(44, 58);
     m_logoLabel->setContentsMargins(0, 0, 0, 0);
     m_logoLabel->setPixmap(QPixmap(":/res/sub_logo.png"));
 
-    closeButton = new MyTristateButton();
+    closeButton = new QPushButton(this);
+//    closeButton->setAutoDefault(true);
+//    closeButton->setFocusPolicy(Qt::NoFocus);
+//    closeButton->setEnabled(false);
     closeButton->setObjectName("CloseButton");
-    connect(closeButton, SIGNAL(clicked()), this, SLOT(close()));
+    closeButton->setIcon(QIcon::fromTheme("window-close-symbolic"));
+    closeButton->setFlat(true);
+    connect(closeButton, &QPushButton::clicked, this, [=]() {
+       this->deleteLater();
+       this->close();
+    });
 //    connect(closeButton, &MyTristateButton::clicked, this, [=] {
 //        this->close();
 //    });
@@ -465,8 +473,9 @@ void PropertiesDialog::paintEvent(QPaintEvent *event)
     QPainter painter(this);
 
     //绘制圆角矩形
-    painter.setPen(QPen(QColor("#0d87ca"), 0));//边框颜色 #3f96e4
-    painter.setBrush(QColor("#e9eef0"));//背景色
+    painter.setPen(QPen(QColor("#808080"), 0));//边框颜色 #3f96e4
+//    painter.setPen(Qt::NoPen);
+    painter.setBrush(this->palette().base());//背景色
     painter.setRenderHint(QPainter::Antialiasing, true);
     painter.setOpacity(1);
     QRectF r(0 / 2.0, 0 / 2.0, width() - 0, height() - 0);//左边 上边 右边 下边

@@ -37,6 +37,7 @@
 
 #include <QtX11Extras/QX11Info>
 #include <QtDBus/QtDBus>
+//#include <qwindowdefs.h>
 
 class SystemMonitor : public QFrame
 {
@@ -61,12 +62,14 @@ public:
     void getTransparentData();
 
 public slots:
+
     void recordProcessVisibleColumn(int, bool, QList<bool> columnVisible);
     void recordSortStatus(int index, bool isSort);
     void recordFileSysVisibleColumn(int, bool, QList<bool> columnVisible);
     void onChangePage(int index);
     void onMaximizeWindow();
     void onMinimizeWindow();
+    void sltMessageReceived(const QString &msg);
 
 protected:
     void resizeEvent(QResizeEvent *e) override;
@@ -80,6 +83,7 @@ private:
     int daemonIsNotRunning();
     void showGuide(QString appName);
 private:
+//    WId mWindow;
     QStackedWidget  *m_sysMonitorStack = nullptr;
     MonitorTitleWidget  *m_titleWidget = nullptr;
 //    ToolBar *m_toolBar = nullptr;

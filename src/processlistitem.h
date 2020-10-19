@@ -69,6 +69,8 @@ public:
 //    QString getCommandLine() const;
     QString getFlowNet() const;
     QString getDiskIo() const;
+    int getNumFlowNet() const;
+    int getNumDiskIo() const;
 
     void initThemeMode();
     void initFontSize();

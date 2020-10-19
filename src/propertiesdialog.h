@@ -60,7 +60,7 @@ protected:
 //    void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
 
 private:
-    MyTristateButton *closeButton = nullptr;
+    QPushButton *closeButton = nullptr;
     QLabel *m_logoLabel = nullptr;
     /*QHBoxLayout *cmdlineLayout;
     QHBoxLayout *userLayout;

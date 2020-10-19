@@ -35,8 +35,20 @@
 #include <QPainterPath>
 #include <X11/Xlib.h>
 #include <QDBusArgument>
+//#include <KWindowSystem/NETWM>
 
 extern void qt_blurImage(QImage &blurImage, qreal radius, bool quality, int transposed);
+
+void  SystemMonitor::sltMessageReceived(const QString &msg)
+{
+    Qt::WindowFlags flags = windowFlags();
+    flags |= Qt::WindowStaysOnTopHint;
+    setWindowFlags(flags);
+    show();
+    flags &= ~Qt::WindowStaysOnTopHint;
+    setWindowFlags(flags);
+    showNormal();
+}
 
 SystemMonitor::SystemMonitor(QWidget *parent)
     : QFrame(parent)

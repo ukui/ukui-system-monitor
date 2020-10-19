@@ -160,19 +160,6 @@ ProcessDialog::ProcessDialog(QList<bool> toBeDisplayedColumns, int currentSortIn
 
     m_processListWidget->setProcessSortFunctions(sortFuncList, currentSortIndex, isSort);
     m_processListWidget->setSearchFunction(&ProcessListItem::doSearch);
-
-    endProcessDialog = new MyDialog(QString(tr("End process")), QString(tr("Ending a process may destroy data, break the session or introduce a security risk. Only unresponsive processes should be ended.\nAre you sure to continue?")));
-    endProcessDialog->setWindowFlags(endProcessDialog->windowFlags() | Qt::WindowStaysOnTopHint);
-    endProcessDialog->addButton(QString(tr("Cancel")), false);
-    endProcessDialog->addButton(QString(tr("End process")), true);
-    connect(endProcessDialog, &MyDialog::buttonClicked, this, &ProcessDialog::endDialogButtonClicked);
-
-    killProcessDialog = new MyDialog(QString(tr("Kill process")), QString(tr("Killing a process may destroy data, break the session or introduce a security risk. Only unresponsive processes should be killed.\nAre you sure to continue?")));
-    killProcessDialog->setWindowFlags(killProcessDialog->windowFlags() | Qt::WindowStaysOnTopHint);
-    killProcessDialog->addButton(QString(tr("Cancel")), false);
-    killProcessDialog->addButton(QString(tr("Kill process")), true);
-    connect(killProcessDialog, &MyDialog::buttonClicked, this, &ProcessDialog::killDialogButtonClicked);
-
     m_menu = new QMenu();
     m_menu->setObjectName("MonitorMenu");
     m_stopAction = new QAction(tr("Stop process"), this);
@@ -514,14 +501,16 @@ void ProcessDialog::refreshProcessList()
                 qDebug()<<"---------------------------------------wwj"<<this->addFlowNetPerSec;
                 info = new ProcessWorker(pid_list[i], this->num_cpus, this->cpu_total_time,this->addFlowNetPerSec);
                 ProcessWorker::all[info->pid] = info;
+                info->mNumFlownet = numAddFlowNetPerSec;
             }
-//            else
-//            {
-//                //不存在时创建该进程的对象
-//                qDebug()<<"refreshProcessList:else"<<pidMap.size()<<pid_list[i];
-//                info = new ProcessWorker(pid_list[i], this->num_cpus, this->cpu_total_time,0);
-//                ProcessWorker::all[info->pid] = info;
-//            }
+            else
+            {
+                //不存在时创建该进程的对象
+                qDebug()<<"refreshProcessList:else"<<pidMap.size()<<pid_list[i];
+                info = new ProcessWorker(pid_list[i], this->num_cpus, this->cpu_total_time,"0 KB/S");
+                ProcessWorker::all[info->pid] = info;
+                info->mNumFlownet = 0;
+            }
         }
         else
 //不存在时创建该进程的对象
@@ -530,12 +519,15 @@ void ProcessDialog::refreshProcessList()
             qDebug()<<"refreshProcessList:else"<<pidMap.size()<<pid_list[i];
             info = new ProcessWorker(pid_list[i], this->num_cpus, this->cpu_total_time,"0 KB/S");
             ProcessWorker::all[info->pid] = info;
+            info->mNumFlownet = 0;
         }
         //当进程对象存在时，更新该进程对象的相关数据信息
         glibtop_proc_state procstate;
         glibtop_proc_uid procuid;
         glibtop_proc_time proctime;
         glibtop_proc_io procio;
+
+//        info->mNumFlownet = numAddFlowNetPerSec;
 
         glibtop_get_proc_io(&procio,info->pid);
         glibtop_get_proc_state (&procstate, info->pid);
@@ -547,6 +539,10 @@ void ProcessDialog::refreshProcessList()
         glibtop_proc_mem procmem;
         glibtop_get_proc_mem(&procmem, info->pid);
         info->mem = procmem.resident - procmem.share;
+//        if(info->mem == 0)
+//        {
+
+//        }
 
         glibtop_get_proc_state(&procstate, info->pid);
         info->status = procstate.state;
@@ -576,6 +572,8 @@ void ProcessDialog::refreshProcessList()
         addDiskIoPerSec = speedLineBandDiskIo->new_count(disk_io_bytes_total-calDiskIoMap[info->pid],info->pid);
 
         info->diskio_persec = addDiskIoPerSec;
+
+        info->mNumDiskIo = disk_io_bytes_total-calDiskIoMap[info->pid];
 
         calDiskIoMap[info->pid] = disk_io_bytes_total;
 
@@ -617,6 +615,8 @@ void ProcessDialog::refreshProcessList()
         pid_t pid = it->second->pid;
         QString flownetpersec = it->second->flownet_persec;
         QString diskiopersec = it->second->diskio_persec;
+        int numFlowNetPersec = it->second->mNumFlownet;
+        int numDiskioPersec = it->second->mNumDiskIo;
 
         /*---------------------kobe test string---------------------
         //QString to std:string
@@ -676,6 +676,8 @@ void ProcessDialog::refreshProcessList()
         info.cpu_duration_time = formatDurationForDisplay(100 * it->second->cpu_time / this->frequency);    //CPU占用你时间
         info.processName = QString::fromStdString(it->second->name);     //进程名称
         info.m_diskio = diskiopersec;    //单个进程磁盘io速率
+        info.m_numFlowNet = numFlowNetPersec;   //网络流量整数值
+        info.m_numDiskIo = numDiskioPersec;      //磁盘读写整数值
 //        info.commandLine = QString::fromStdString(it->second->arguments); //命令行
 
 
@@ -705,6 +707,8 @@ void ProcessDialog::refreshLine(const QString &procname, quint64 rcv, quint64 se
     }
     qDebug()<<"ProcessDialog::refreshLine:pid<<rcv<<sent"<<pid<<rcv<<sent;
     qDebug()<<"ProcessDialog::refreshLine:before flowNetPrevMap"<<flowNetPrevMap[pid];
+    numAddFlowNetPerSec = tmptotalFlowNetPerSec - flowNetPrevMap[pid];
+    qDebug()<<"numAddFlowNetPerSec"<<numAddFlowNetPerSec;
     addFlowNetPerSec = speedLineBandFlowNet->new_count(tmptotalFlowNetPerSec - flowNetPrevMap[pid],pid);
     qDebug()<<"ProcessDialog::refreshLine:deltaFlowNetPerSec"<<tmptotalFlowNetPerSec - flowNetPrevMap[pid];
     flowNetPrevMap[pid] = tmptotalFlowNetPerSec;
@@ -720,41 +724,6 @@ void ProcessDialog::refreshLine(const QString &procname, quint64 rcv, quint64 se
         pidMap[pid] = addFlowNetPerSec;
     }
     delete  speedLineBandFlowNet; 
-
-
-//    if(it.value() != addFlowNetPerSec)
-//    {
-//        if((rcv + sent) == 0)
-//        {
-//            pidMap[pid] = "0 KB/S";
-//            qDebug()<<"00000000000000000000000000000";
-//        }
-//        else
-//        {
-//            pidMap[pid] = speedLineBand->new_count(rcv + sent);
-//        }
-//    }
-//    ProcessDialog::initPreTotalNet = rcv + sent;
-//    else
-//    {
-//         QMap<int,QString>::const_iterator it = pidMap.find(pid);
-//        qDebug()<<"rcv+sent == howmuch"<<rcv+sent;
-//        QTimer::singleShot(1000,this,[=]()
-//        {
-//            if((rcv+sent-ProcessDialog::initPreTotalNet) == 0)
-//            {
-//                pidMap[pid] = "0 KB/S";
-
-//            }
-
-//            else if(it.value() != addFlowNetPerSec && (rcv+sent-ProcessDialog::initPreTotalNet)>1900)
-//            {
-//              pidMap[pid] = speedLineBand->new_count(rcv+sent-ProcessDialog::initPreTotalNet);
-//            }
-//            ProcessDialog::convertPreTotalNet = rcv + sent;
-//            ProcessDialog::initPreTotalNet = ProcessDialog::convertPreTotalNet;
-//        });
-//    }
 }
 
 ProcessListWidget* ProcessDialog::getProcessView()
@@ -960,11 +929,25 @@ void ProcessDialog::showPropertiesDialog()
 
 void ProcessDialog::showKillProcessDialog()
 {
+//    killProcessDialog->exec();
+//    killProcessDialog->show();
+    killProcessDialog = new MyDialog(QString(tr("Kill process")), QString(tr("Killing a process may destroy data, break the session or introduce a security risk. Only unresponsive processes should be killed.\nAre you sure to continue?")));
+    killProcessDialog->setWindowFlags(killProcessDialog->windowFlags() | Qt::WindowStaysOnTopHint);
+    killProcessDialog->addButton(QString(tr("Cancel")), false);
+    killProcessDialog->addButton(QString(tr("Kill process")), true);
+    connect(killProcessDialog, &MyDialog::buttonClicked, this, &ProcessDialog::killDialogButtonClicked);
     killProcessDialog->exec();
-}
+}   
 
 void ProcessDialog::showEndProcessDialog()
 {
+//    endProcessDialog->exec();
+//    endProcessDialog->show();
+    endProcessDialog = new MyDialog(QString(tr("End process")), QString(tr("Ending a process may destroy data, break the session or introduce a security risk. Only unresponsive processes should be ended.\nAre you sure to continue?")));
+//    endProcessDialog->setWindowFlags(endProcessDialog->windowFlags() | Qt::WindowStaysOnTopHint);
+    endProcessDialog->addButton(QString(tr("Cancel")), false);
+    endProcessDialog->addButton(QString(tr("End process")), true);
+    connect(endProcessDialog, &MyDialog::buttonClicked, this, &ProcessDialog::endDialogButtonClicked);
     endProcessDialog->exec();
 }
 

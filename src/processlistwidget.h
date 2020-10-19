@@ -101,6 +101,7 @@ protected:
     void wheelEvent(QWheelEvent *event);
     void paintScrollbar(QPainter *painter);
     bool eventFilter(QObject *obj, QEvent *event);
+    void resizeEvent(QResizeEvent *event);
 
 private:
     QTimer *m_hideScrollbarTimer = nullptr;
@@ -115,6 +116,7 @@ private:
     QList<bool> *m_isSortList;
     QList<int> m_columnWidths;
     QList<bool> m_columnVisibles;
+    QList<int> widths;
     QString m_searchText;
 
     bool m_isSort;

@@ -523,17 +523,37 @@ void MonitorTitleWidget::onMaxBtnClicked()
 //        window()->showMaximized();
 ////        maxBtn->setObjectName("UnMaxButton");
 //    }
-    i = i+1;
-    if(i%2 == 1)
+//    if(window()->isMaximized())
+//    {
+////        maxTitleBtn->setIcon(QIcon::fromTheme("window-restore-symbolic"));
+//        QIcon iconMax(tr(":/img/fullscreen.png"));
+//        maxTitleBtn->setIcon(iconMax);
+//    }
+//    else
+//    {
+//        maxTitleBtn->setIcon(QIcon::fromTheme("window-restore-symbolic"));
+////        QIcon iconMax(tr(":/img/fullscreen.png"));
+////        maxTitleBtn->setIcon(iconMax);
+//    }
+    emit maximizeWindow();
+}
+
+void MonitorTitleWidget::resizeEvent(QResizeEvent *event)
+{
+    qDebug()<<this->geometry().x()<<"-----------------------"<<this->geometry().y();
+
+    if(window()->isMaximized())
     {
         maxTitleBtn->setIcon(QIcon::fromTheme("window-restore-symbolic"));
+//        QIcon iconMax(tr(":/img/fullscreen.png"));
+//        maxTitleBtn->setIcon(iconMax);
     }
     else
     {
+//        maxTitleBtn->setIcon(QIcon::fromTheme("window-restore-symbolic"));
         QIcon iconMax(tr(":/img/fullscreen.png"));
         maxTitleBtn->setIcon(iconMax);
     }
-    emit maximizeWindow();
 }
 
 void MonitorTitleWidget::onCloseBtnClicked()
@@ -655,46 +675,42 @@ void MonitorTitleWidget::initToolbarLeftContent()
 //    buttonWidget->setLayout(button_h_BoxLayout);
 
 //    m_toolLeftLayout->addStretch();
-    m_toolLeftLayout->addSpacing(14);
-    m_toolLeftLayout->setSpacing(0);
-    m_toolLeftLayout->addWidget(processButton);
-    m_toolLeftLayout->addSpacing(5);
-    m_toolLeftLayout->addWidget(resourcesButton);
-    m_toolLeftLayout->addSpacing(5);
-    m_toolLeftLayout->addWidget(disksButton);
+//    m_toolLeftLayout->addSpacing(14);
+//    m_toolLeftLayout->setSpacing(0);
+//    m_toolLeftLayout->addWidget(processButton);
+//    m_toolLeftLayout->addSpacing(5);
+//    m_toolLeftLayout->addWidget(resourcesButton);
+//    m_toolLeftLayout->addSpacing(5);
+//    m_toolLeftLayout->addWidget(disksButton);
 
 
-    QWidget *spaceLabel = new QWidget();
-    spaceLabel->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
-//    spaceLabel->setStyleSheet("QLabel{background:#000000}");
-
-    spaceLabel->setMinimumWidth(32);
-    spaceLabel->setMaximumWidth(200);
-//    spaceLabel->resize(200,10);
-
-//    QSizePolicy sizePolicy;
-//    sizePolicy.setHorizontalPolicy(QSizePolicy::Expanding);
-//    spaceLabel->setSizePolicy(sizePolicy);
-//    spaceLabel->setSizePolicy(QSizePolicy::Preferred,QSizePolicy::Fixed);
-
-
-    m_toolLeftLayout->addWidget(spaceLabel);
-    m_toolLeftLayout->addWidget(m_changeBox);
-//    m_toolLeftLayout->addWidget(buttonWidget);
-    m_toolLeftLayout->addStretch();
+//    m_toolLeftLayout->addWidget(spaceLabel);
+//    m_toolLeftLayout->addWidget(m_changeBox);
+////    m_toolLeftLayout->addWidget(buttonWidget);
+//    m_toolLeftLayout->addStretch();
 
 //    m_bottomLayout->addWidget(w);
-    m_bottomLayout->addWidget(w, 1, Qt::AlignLeft);
+    emptyWidget = new QWidget();
+
+    processButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    resourcesButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    disksButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    emptyWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+
+    m_bottomLayout->addWidget(processButton);
+    m_bottomLayout->addWidget(resourcesButton);
+    m_bottomLayout->addWidget(disksButton);
+    m_bottomLayout->addWidget(emptyWidget, 3);
 }
 
 void MonitorTitleWidget::initToolbarRightContent()
 {
-    QWidget *w = new QWidget;
-//    w->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    m_toolRightLayout = new QHBoxLayout(w);
-    m_toolRightLayout->setSizeConstraint(QLayout::SetFixedSize);
-    m_toolRightLayout->setContentsMargins(0, 3, 6, 0);
-    m_toolRightLayout->setSpacing(5);
+//    QWidget *w = new QWidget;
+////    w->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+//    m_toolRightLayout = new QHBoxLayout(w);
+//    m_toolRightLayout->setSizeConstraint(QLayout::SetFixedSize);
+//    m_toolRightLayout->setContentsMargins(0, 3, 6, 0);
+//    m_toolRightLayout->setSpacing(5);
 
 
 //    m_cancelSearchBtn = new QPushButton;
@@ -705,9 +721,14 @@ void MonitorTitleWidget::initToolbarRightContent()
 //    m_cancelSearchBtn->setVisible(false);
 //    connect(m_cancelSearchBtn, SIGNAL(clicked(bool)), SLOT(onCancelSearchBtnClicked(bool)));
     connect(m_searchEdit, &MySearchEdit::textChanged, this, &MonitorTitleWidget::handleSearchTextChanged, Qt::QueuedConnection);
-    m_toolRightLayout->addWidget(m_searchEdit);
+//    m_toolRightLayout->addWidget(m_searchEdit);
     //m_toolRightLayout->addWidget(m_cancelSearchBtn);
-    m_bottomLayout->addWidget(w, 1, Qt::AlignRight);
+
+    emptyWidget2 = new QWidget();
+    emptyWidget2->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+    m_bottomLayout->addWidget(m_changeBox);
+    m_bottomLayout->addWidget(emptyWidget2, 1);
+    m_bottomLayout->addWidget(m_searchEdit);
 }
 
 void MonitorTitleWidget::initWidgets()
@@ -731,8 +752,8 @@ void MonitorTitleWidget::initWidgets()
 
     QWidget *bottomWidget = new QWidget;
     m_bottomLayout = new QHBoxLayout(bottomWidget);
-    m_bottomLayout->setContentsMargins(0, 0, 0, 0);
-    m_bottomLayout->setSpacing(0);
+    m_bottomLayout->setContentsMargins(10, 0, 10, 0);
+//    m_bottomLayout->setSpacing(20);
     m_layout->addWidget(bottomWidget);
 
     this->setLayout(m_layout);
@@ -744,10 +765,10 @@ void MonitorTitleWidget::initWidgets()
     initToolbarRightContent();
 }
 
-void MonitorTitleWidget::resizeEvent(QResizeEvent *event)
-{
-    qDebug()<<this->geometry().x()<<"-----------------------"<<this->geometry().y();
-}
+//void MonitorTitleWidget::resizeEvent(QResizeEvent *event)
+//{
+//    qDebug()<<this->geometry().x()<<"-----------------------"<<this->geometry().y();
+//}
 
 void MonitorTitleWidget::paintEvent(QPaintEvent *event)
 {

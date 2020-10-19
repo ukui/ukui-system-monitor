@@ -115,6 +115,18 @@ ProcessListWidget::ProcessListWidget(QList<bool> toBeDisplayedColumns, QWidget *
 
 }
 
+void ProcessListWidget::resizeEvent(QResizeEvent *event)
+{
+//    if(window()->isMaximized())
+//    {
+//        widths<<300;
+//    }
+//    else
+//    {
+//        widths << 170 << 90 << 80 << 70 << 80 << -1 << 80 << 80;//-1时让该行填充所有剩余空间
+//    }
+}
+
 void ProcessListWidget::initThemeMode()
 {
     //监听主题改变
@@ -838,18 +850,45 @@ void ProcessListWidget::paintEvent(QPaintEvent *)
                 //标题文字左上方的排序箭头图标
                 if (this->m_currentSortIndex == counter)
                 {
-                    if(counter == 0 || counter == 5)
+                    if(counter == 0)
                     {
                         qDebug()<<"m_currentSortIndex------"<<m_currentSortIndex;
                         painter.setOpacity(1);
                         if (this->m_isSort)
                         {
                             qDebug()<<"m_isSort----------"<<m_isSort;
-                            painter.drawPixmap(QPoint(rect().x() + posX + 100, rect().y() + 20), m_downArrowPixmap);
+                            painter.drawPixmap(QPoint(rect().x() + posX + 120, rect().y() + 20), m_downArrowPixmap);
                         }
                         else
                         {
-                            painter.drawPixmap(QPoint(rect().x() + posX + 100, rect().y() + 20), m_upArrowPixmap);
+                            painter.drawPixmap(QPoint(rect().x() + posX + 120, rect().y() + 20), m_upArrowPixmap);
+                        }
+                    }
+                    else if(counter == 5)
+                    {
+                        painter.setOpacity(1);
+                        if (this->m_isSort)
+                        {
+                            qDebug()<<"m_isSort----------"<<m_isSort;
+                            if(window()->isMaximized())
+                            {
+                                painter.drawPixmap(QPoint(rect().x() + posX + 580, rect().y() + 20), m_downArrowPixmap);
+                            }
+                            else
+                            {
+                                painter.drawPixmap(QPoint(rect().x() + posX + 80, rect().y() + 20), m_downArrowPixmap);
+                            }
+                        }
+                        else
+                        {
+                            if(window()->isMaximized())
+                            {
+                                painter.drawPixmap(QPoint(rect().x() + posX + 580, rect().y() + 20), m_upArrowPixmap);
+                            }
+                            else
+                            {
+                               painter.drawPixmap(QPoint(rect().x() + posX + 80, rect().y() + 20), m_upArrowPixmap);
+                            }
                         }
                     }
                     else

@@ -104,6 +104,8 @@ private:
     QPushButton *maxTitleBtn = nullptr;
     QComboBox *m_changeBox;
     QLabel *titleLabel;
+    QWidget *emptyWidget = nullptr;
+    QWidget *emptyWidget2 = nullptr;
 
     int fontSize;
 
