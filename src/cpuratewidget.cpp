@@ -255,11 +255,11 @@ void CpuRateWidget::initThemeMode()
 
         if (key == "styleName")
         {
-            auto style = qtSettings->get(key).toString();
-            qApp->setStyle(new InternalStyle(style));
+//            auto style = qtSettings->get(key).toString();
+//            qApp->setStyle(new InternalStyle(style));
             currentThemeMode = qtSettings->get(MODE_QT_KEY).toString();
             qDebug()<<"监听主题改变-------------------->"<<currentThemeMode<<endl;
-            qApp->setStyle(new InternalStyle(currentThemeMode));
+//            qApp->setStyle(new InternalStyle(currentThemeMode));
             //repaint();
             if(currentThemeMode == "ukui-light" || currentThemeMode == "ukui-default" || currentThemeMode =="ukui-white")
             {

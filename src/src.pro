@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT += core x11extras gui dbus network
+QT += core x11extras gui dbus network KWindowSystem
 
 isEqual(QT_MAJOR_VERSION, 5) {
     QT += widgets gui svg x11extras
@@ -59,7 +59,6 @@ unix {
 }
 
 HEADERS += \
-    shell/customstyle.h \
     ../shell/macro.h \
     systemmonitor.h \
     processmanager.h \
@@ -106,7 +105,6 @@ HEADERS += \
     framelessExtended/framelesshandle.h \
     framelessExtended/framelesshandleprivate.h \
     framelessExtended/widgethandlerealize.h \
-    maincontroller.h \
     singleProcessNet/devices.h \
     singleProcessNet/scanthread.h \
     singleProcessNet/packet.h \
@@ -121,7 +119,6 @@ HEADERS += \
 
 SOURCES += \
     main.cpp \
-    shell/customstyle.cpp \
     systemmonitor.cpp \
     processmanager.cpp \
     processdialog.cpp \
@@ -164,7 +161,6 @@ SOURCES += \
     framelessExtended/cursorposcalculator.cpp \
     framelessExtended/framelesshandle.cpp \
     framelessExtended/widgethandlerealize.cpp \
-    maincontroller.cpp \
     singleProcessNet/devices.cpp \
     singleProcessNet/scanthread.cpp \
     singleProcessNet/packet.cpp \

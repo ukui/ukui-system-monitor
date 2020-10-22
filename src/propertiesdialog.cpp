@@ -89,6 +89,7 @@ PropertiesDialog::PropertiesDialog(QWidget *parent, pid_t processId) : QDialog(p
     closeButton->setObjectName("CloseButton");
     closeButton->setIcon(QIcon::fromTheme("window-close-symbolic"));
     closeButton->setFlat(true);
+//    connect(closeButton, SIGNAL(clicked()), this, SLOT(close()));
     connect(closeButton, &QPushButton::clicked, this, [=]() {
        this->deleteLater();
        this->close();
