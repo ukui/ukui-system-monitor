@@ -27,7 +27,7 @@
 #include "framelessExtended/framelesshandle.h"
 #include "systemmonitor.h"
 #include "shell/customstyle.h"
-#include "maincontroller.h"
+//#include "maincontroller.h"
 
 #include <X11/Xlib.h>   // should be put in the last
 
@@ -74,8 +74,8 @@ int main(int argc, char *argv[])
         }
 
         SystemMonitor *monitor=new SystemMonitor();
-        monitor->setAttribute(Qt::WA_TranslucentBackground);
-        monitor->setProperty("useSystemStyleBlur",true);
+//        monitor->setAttribute(Qt::WA_TranslucentBackground);
+//        monitor->setProperty("useSystemStyleBlur",true);
 
         monitor->setAttribute(Qt::WA_DeleteOnClose);
 
@@ -83,15 +83,9 @@ int main(int argc, char *argv[])
         QObject::connect(&app, SIGNAL(messageReceived(const QString&)),monitor, SLOT(sltMessageReceived(const QString&)));
 
         monitor->show();
-
-        FramelessHandle * pHandle = new FramelessHandle(monitor);
-        pHandle->activateOn(monitor);
-
-//        auto style = new InternalStyle(nullptr);
-//        app.setStyle(style);
-
-    //    MainController *ctrl = MainController::self();
-
+//        qDebug()<<qAppName()<<"app name";
+//        FramelessHandle * pHandle = new FramelessHandle(monitor);
+//        pHandle->activateOn(monitor);
         app.exec();
         return 0;
     }

@@ -81,7 +81,7 @@ MySearchEdit::MySearchEdit(QWidget *parent)
 
 
     m_edit->setAttribute(Qt::WA_Hover, true);
-    m_edit->setStyle(new InternalStyle("ukui-default"));
+//    m_edit->setStyle(new InternalStyle("ukui-default"));
     m_edit->setTextMargins(8,0,0,0);
 
     connect(m_edit, &QLineEdit::textChanged, this, &MySearchEdit::textChageSlots);
@@ -388,11 +388,11 @@ void MySearchEdit::initThemeMode()
     connect(qtSettings, &QGSettings::changed, this, [=](const QString &key){
 
         if (key == "styleName") {
-            auto style = qtSettings->get(key).toString();
-            qApp->setStyle(new InternalStyle(style));
+//            auto style = qtSettings->get(key).toString();
+//            qApp->setStyle(new InternalStyle(style));
             currentThemeMode = qtSettings->get(MODE_QT_KEY).toString();
 //            qDebug()<<"监听主题改变-------------------->"<<currentThemeMode<<endl;
-            qApp->setStyle(new InternalStyle(currentThemeMode));
+//            qApp->setStyle(new InternalStyle(currentThemeMode));
             m_pClearTextButton->setIcon(drawSymbolicColoredPixmap(QPixmap::fromImage(QIcon::fromTheme(":/img/button-close-default-add-background-three.svg").pixmap(24,24).toImage())));
 
             if(currentThemeMode == "ukui-light" || currentThemeMode == "ukui-default" || currentThemeMode == "ukui-white")
@@ -415,8 +415,8 @@ void MySearchEdit::initThemeMode()
     });
     //获取当前主题
     currentThemeMode = qtSettings->get(MODE_QT_KEY).toString();
-    qDebug()<<"监听主题改变-------------------->"<<currentThemeMode<<endl;
-    qApp->setStyle(new InternalStyle(currentThemeMode));
+//    qDebug()<<"监听主题改变-------------------->"<<currentThemeMode<<endl;
+//    qApp->setStyle(new InternalStyle(currentThemeMode));
     m_pClearTextButton->setIcon(drawSymbolicColoredPixmap(QPixmap::fromImage(QIcon::fromTheme(":/img/button-close-default-add-background-three.svg").pixmap(24,24).toImage())));
     if(currentThemeMode == "ukui-light" || currentThemeMode == "ukui-default" || currentThemeMode == "ukui-white")
     {

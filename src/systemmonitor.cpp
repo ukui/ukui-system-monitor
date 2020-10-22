@@ -36,6 +36,7 @@
 #include <X11/Xlib.h>
 #include <QDBusArgument>
 //#include <KWindowSystem/NETWM>
+#include <KWindowEffects>
 
 extern void qt_blurImage(QImage &blurImage, qreal radius, bool quality, int transposed);
 
@@ -134,11 +135,11 @@ void SystemMonitor::initThemeMode()
 
         if (key == "styleName")
         {
-            auto style = qtSettings->get(key).toString();
-            qApp->setStyle(new InternalStyle(style));
+//            auto style = qtSettings->get(key).toString();
+//            qApp->setStyle(new InternalStyle(style));
             currentThemeMode = qtSettings->get(MODE_QT_KEY).toString();
             qDebug()<<"监听主题改变-------------------->"<<currentThemeMode<<endl;
-            qApp->setStyle(new InternalStyle(currentThemeMode));
+//            qApp->setStyle(new InternalStyle(currentThemeMode));
         }
     });
     currentThemeMode = qtSettings->get(MODE_QT_KEY).toString();
@@ -256,7 +257,7 @@ void SystemMonitor::paintEvent(QPaintEvent *event)
     QStyleOption opt;
     opt.init(this);
     style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
-
+    KWindowEffects::enableBlurBehind(this->winId(), true, QRegion(rectPath.toFillPolygon().toPolygon()));
 }
 
 void SystemMonitor::resizeEvent(QResizeEvent *e)
@@ -614,7 +615,7 @@ void SystemMonitor::keyPressEvent(QKeyEvent *event)
     {
         if(!daemonIsNotRunning())
         {
-            showGuide("ukui-system-monitor");
+            showGuide(qAppName());
         }
     }
 }
@@ -627,6 +628,7 @@ int SystemMonitor::daemonIsNotRunning()
         return 0;
 
     QDBusReply<QString> reply = conn.interface()->call("GetNameOwner", service_name);
+    qDebug()<<"reply name"<<reply;
     return reply.value() == "";
 }
 
@@ -643,5 +645,5 @@ void SystemMonitor::showGuide(QString appName)
                                                        QDBusConnection::sessionBus(),
                                                        this);
 
-    QDBusMessage msg = interface->call(QStringLiteral("showGuide"),"ukui-system-monitor");
+    QDBusMessage msg = interface->call(QStringLiteral("showGuide"),"kylin-system-monitor");
 }

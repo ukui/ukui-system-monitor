@@ -23,7 +23,7 @@
 #define FILESYSTEMLISTWIDGET_H
 
 #include "filesystemlistitem.h"
-#include "shell/customstyle.h"
+//#include "shell/customstyle.h"
 #include "../shell/macro.h"
 
 #include <QList>
