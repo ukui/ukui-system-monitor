@@ -503,14 +503,6 @@ void ProcessDialog::refreshProcessList()
                 ProcessWorker::all[info->pid] = info;
                 info->mNumFlownet = numAddFlowNetPerSec;
             }
-            else
-            {
-                //不存在时创建该进程的对象
-                qDebug()<<"refreshProcessList:else"<<pidMap.size()<<pid_list[i];
-                info = new ProcessWorker(pid_list[i], this->num_cpus, this->cpu_total_time,"0 KB/S");
-                ProcessWorker::all[info->pid] = info;
-                info->mNumFlownet = 0;
-            }
         }
         else
 //不存在时创建该进程的对象
