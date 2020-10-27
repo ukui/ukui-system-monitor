@@ -100,6 +100,11 @@ NetCatogoryShow::~NetCatogoryShow()
     delete m_downloadSpeedList;
     delete m_uploadSpeedList;
     delete m_gridY;
+
+    if(qtSettings)
+    {
+        delete qtSettings;
+    }
 }
 
 void NetCatogoryShow::onUpdateNetworkStatus(long recvTotalBytes, long sentTotalBytes, long recvRateBytes, long sentRateBytes)

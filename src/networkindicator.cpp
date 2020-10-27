@@ -156,6 +156,11 @@ NetworkIndicator::~NetworkIndicator()
     delete m_downloadSpeedList;
     delete m_uploadSpeedList;
     delete m_gridY;
+
+    if(qtSettings)
+    {
+        delete qtSettings;
+    }
 }
 
 void NetworkIndicator::setNetWorkText(long revcTotalBtytes, long sentTotalBytes, long revcRateKbs, long sentRateKbs)

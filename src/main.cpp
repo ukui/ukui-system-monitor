@@ -51,7 +51,8 @@ int main(int argc, char *argv[])
     }
 
 
-    QtSingleApplication app(argc,argv);
+    QString id = QString("ukui-system-monitor"+QLatin1String(getenv("DISPLAY")));
+    QtSingleApplication app(id,argc,argv);
     if(app.isRunning())
     {
         app.sendMessage(QApplication::arguments().length() > 1 ? QApplication::arguments().at(1) : app.applicationFilePath());
@@ -84,8 +85,8 @@ int main(int argc, char *argv[])
 
         monitor->show();
 //        qDebug()<<qAppName()<<"app name";
-//        FramelessHandle * pHandle = new FramelessHandle(monitor);
-//        pHandle->activateOn(monitor);
+        FramelessHandle * pHandle = new FramelessHandle(monitor);
+        pHandle->activateOn(monitor);
         app.exec();
         return 0;
     }

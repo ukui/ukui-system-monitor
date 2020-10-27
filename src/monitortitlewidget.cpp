@@ -286,6 +286,10 @@ MonitorTitleWidget::~MonitorTitleWidget()
     {
         delete fontSettings;
     }
+    if(qtSettings)
+    {
+        delete qtSettings;
+    }
 }
 
 bool MonitorTitleWidget::eventFilter(QObject *obj, QEvent *event)    //set the esc and tab pressbutton effect

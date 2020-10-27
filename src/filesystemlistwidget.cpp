@@ -108,6 +108,11 @@ FileSystemListWidget::~FileSystemListWidget()
     {
         delete fontSettings;
     }
+
+    if(qtSettings)
+    {
+        delete qtSettings;
+    }
 }
 
 void FileSystemListWidget::clearItems()

@@ -92,12 +92,10 @@ void MyUnderLineButton::initThemeMode()
             if (currentThemeMode == "ukui-dark" || currentThemeMode == "ukui-black")
             {
                 m_textLabel->setStyleSheet("QLabel{background-color:transparent;color:rgba(255,255,255,0.57); text-align:center;}"); //ffffff
-
             }
-
         }
-        repaint();
-        updateStyleSheet();
+//        repaint();
+//        updateStyleSheet();
     });
     currentThemeMode = qtSettings->get(MODE_QT_KEY).toString();
     if (currentThemeMode == "ukui-light" || currentThemeMode == "ukui-default" || currentThemeMode == "ukui-white")
@@ -109,7 +107,6 @@ void MyUnderLineButton::initThemeMode()
     if (currentThemeMode == "ukui-dark" || currentThemeMode == "ukui-black")
     {
         m_textLabel->setStyleSheet("QLabel{background-color:transparent;color:rgba(255,255,255,0.57); font-size:20px;text-align:center;}"); //ffffff
-
     }
 }
 
@@ -121,7 +118,7 @@ void MyUnderLineButton::initFontSize()
         {
             fontSize = fontSettings->get(FONT_SIZE).toInt();
         }
-        repaint();
+//        repaint();
         QFont font;
         font.setPointSize(fontSize -2);
         m_textLabel->setFont(font);
@@ -139,6 +136,10 @@ MyUnderLineButton::~MyUnderLineButton()
     if(fontSettings)
     {
         delete fontSettings;
+    }
+    if(qtSettings)
+    {
+        delete qtSettings;
     }
 }
 
