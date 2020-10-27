@@ -236,6 +236,10 @@ MySearchEdit::~MySearchEdit()
     {
         delete fontSettings;
     }
+    if(qtSettings)
+    {
+        delete qtSettings;
+    }
 }
 
 const QString MySearchEdit::searchedText() const

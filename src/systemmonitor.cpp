@@ -166,6 +166,16 @@ void SystemMonitor::getTransparentData()
         repaint();
     });
     m_transparency = opacitySettings->get("transparency").toDouble();
+//    if(!opacitySettings)
+//    {
+//        m_transparency = 0.7;
+//        return;
+//    }
+//    QStringList keys = opacitySettings->keys();
+//    if(keys.contains("transparenty"))
+//    {
+//        m_transparency = opacitySettings->get("transparency").toDouble();
+//    }
 }
 
 SystemMonitor::~SystemMonitor()

@@ -170,6 +170,11 @@ NetworkFlow::~NetworkFlow()
     delete m_downloadSpeedList;
     delete m_uploadSpeedList;
     delete m_gridY;
+
+    if(qtSettings)
+    {
+        delete qtSettings;
+    }
 }
 
 //http://www.qtdebug.com/qtbook-paint-smooth-curve/

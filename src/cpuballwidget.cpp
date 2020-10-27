@@ -85,6 +85,11 @@ CpuBallWidget::~CpuBallWidget()
         delete m_waveTimer;
         m_waveTimer = nullptr;
     }
+
+    if(qtSettings)
+    {
+        delete qtSettings;
+    }
 }
 
 void CpuBallWidget::initThemeMode()

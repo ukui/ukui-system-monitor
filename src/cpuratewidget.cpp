@@ -321,6 +321,11 @@ CpuRateWidget::~CpuRateWidget()
         delete child;
     }
     delete m_layout;
+
+    if(qtSettings)
+    {
+        delete qtSettings;
+    }
 }
 
 void CpuRateWidget::initWidgets()
