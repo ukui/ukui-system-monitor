@@ -68,7 +68,9 @@ MyDialog::MyDialog(const QString &title, const QString &message, QWidget *parent
 
     closeButton = new QPushButton();
     closeButton->setObjectName("CloseButton");
-//    connect(closeButton, SIGNAL(clicked()), this, SLOT(close()));
+    closeButton->setProperty("isWindowButton", 0x2);
+    closeButton->setProperty("useIconHighlightEffect", 0x8);
+    closeButton->setFlat(true);
     connect(closeButton,&QPushButton::clicked,this,[=](){
        this->deleteLater();
        this->close();
@@ -86,7 +88,7 @@ MyDialog::MyDialog(const QString &title, const QString &message, QWidget *parent
     m_buttonLayout->setContentsMargins(20, 14, 20, 14);
 
     QVBoxLayout *mainLayout = new QVBoxLayout;
-    mainLayout->setContentsMargins(0, 0, 0, 0);
+    mainLayout->setContentsMargins(0, 8, 8, 0);
     mainLayout->setSpacing(10);
 
     mainLayout->addWidget(closeButton, 0, Qt::AlignTop | Qt::AlignRight);

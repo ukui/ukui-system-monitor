@@ -66,7 +66,7 @@ FileSystemListWidget::FileSystemListWidget(QList<bool> toBeDisplayedColumns, QWi
 
     this->columnTitles << tr("Device") << tr("Directory") << tr("Type") << tr("Total") << tr("Free") << tr("Available") << tr("Used");
     QList<int> widths;
-    widths << 150 << -1 << 80 << 80 << 80 << 80 << 180;//-1时让该行填充所有剩余空间
+    widths << 150 << -1 << 80 << 80 << 80 << 80 << 120;//-1时让该行填充所有剩余空间
 
     QFont font;
     font.setPixelSize(12);//需要和填充所有剩余空间的那个的文字字体大小一致 font.setPointSize(9)

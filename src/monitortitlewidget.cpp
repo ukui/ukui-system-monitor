@@ -153,9 +153,6 @@ void MonitorTitleWidget::initThemeMode()
                 m_changeBox->setStyleSheet("QComboBox{background:rgba(13,14,14,0.08);border-radius:6px;color:rgba(0,0,0,0.57)}"
                                            "QComboBox::drop-down{border:0px;width:30px;}"
                                            "QComboBox::down-arrow{image:url(:/img/down_arrow.png);}"
-                                           "QComboBox QAbstractItemView {margin:0px 0px 0px 0px;padding: 0px 0px;border-radius:0px;background-color:palette(windowText);outline:0px;}"
-                                           "QComboBox QAbstractItemView::item{border-radius:0px;color:rgba(0,0,0,0.57);height: 32px;background-color:palette(base);outline:0px;}"
-                                           "QComboBox QAbstractItemView::item:hover{border-radius:0px;color(palette(windowText));background-color:#3D6BE5;outline:0px;}"
                                            );
                 this->setObjectName("MonitorTitle");
                 this->setStyleSheet("QFrame#MonitorTitle{background:rgba(255,255,255,0);border-top-left-radius:6px;border-top-right-radius:6px;color: palette(windowText);}");
@@ -168,9 +165,6 @@ void MonitorTitleWidget::initThemeMode()
                 m_changeBox->setStyleSheet("QComboBox{background:rgba(255,255,255,0.08);border-radius:6px;color:rgba(255,255,255,0.57)}"
                                            "QComboBox::drop-down{border:0px;width:30px;}"
                                            "QComboBox::down-arrow{image:url(:/img/down_arrow.png);}"
-                                           "QComboBox QAbstractItemView {margin:0px 0px 0px 0px;padding: 0px 0px;border-radius:0px;background-color:palette(windowText);outline:0px;}"
-                                           "QComboBox QAbstractItemView::item{border-radius:0px;font-size:13px;color:rgba(255,255,255,0.57);height: 32px;background-color:palette(base);outline:0px;}"
-                                           "QComboBox QAbstractItemView::item:hover{border-radius:0px;font-size:13px;color(palette(windowText));background-color:#3D6BE5;outline:0px;}"
                                            );
                 this->setObjectName("MonitorTitle");
                 this->setStyleSheet("QFrame#MonitorTitle{background:rgba(13,14,14,0);border-top-left-radius:6px;border-top-right-radius:6px;color: palette(windowText);}");
@@ -186,9 +180,6 @@ void MonitorTitleWidget::initThemeMode()
         m_changeBox->setStyleSheet("QComboBox{background:rgba(13,14,14,0.08);border-radius:6px;color:rgba(0,0,0,0.57)}"
                                    "QComboBox::drop-down{border:0px;width:30px;}"
                                    "QComboBox::down-arrow{image:url(:/img/down_arrow.png);}"
-                                   "QComboBox QAbstractItemView {margin:0px 0px 0px 0px;padding: 0px 0px;border-radius:0px;background-color:palette(windowText);outline:0px;}"
-                                   "QComboBox QAbstractItemView::item{border-radius:0px;font-size:13px;color:rgba(0,0,0,0.57);height: 32px;background-color:palette(base);outline:0px;}"
-                                   "QComboBox QAbstractItemView::item:hover{border-radius:0px;font-size:13px;color(palette(windowText));background-color:#3D6BE5;outline:0px;}"
                                    );
         this->setObjectName("MonitorTitle");
         this->setStyleSheet("QFrame#MonitorTitle{background:rgba(255,255,255,0);border-top-left-radius:6px;border-top-right-radius:6px;color: palette(windowText);}");
@@ -199,9 +190,6 @@ void MonitorTitleWidget::initThemeMode()
         m_changeBox->setStyleSheet("QComboBox{background:rgba(255,255,255,0.08);border-radius:6px;color:rgba(255,255,255,0.57)}"
                                    "QComboBox::drop-down{border:0px;width:30px;}"
                                    "QComboBox::down-arrow{image:url(:/img/down_arrow.png);}"
-                                   "QComboBox QAbstractItemView {margin:0px 0px 0px 0px;padding: 0px 0px;border-radius:0px;background-color:palette(windowText);outline:0px;}"
-                                   "QComboBox QAbstractItemView::item{border-radius:0px;font-size:13px;color:rgba(255,255,255,0.57);height: 32px;background-color:palette(base);outline:0px;}"
-                                   "QComboBox QAbstractItemView::item:hover{border-radius:0px;font-size:13px;color(palette(windowText));background-color:#3D6BE5;outline:0px;}"
                                    );
         this->setObjectName("MonitorTitle");
         this->setStyleSheet("QFrame#MonitorTitle{background:rgba(13,14,14,0);border-top-left-radius:6px;border-top-right-radius:6px;color: palette(windowText);}");
@@ -413,40 +401,39 @@ void MonitorTitleWidget::initTitlebarMiddleContent()
 {
     QWidget *w = new QWidget;
     m_titleMiddleLayout = new QHBoxLayout(w);
-    m_titleMiddleLayout->setContentsMargins(0, 18, 0, 0);
+    m_titleMiddleLayout->setContentsMargins(0, 0, 0, 0);
 
     titleLabel = new QLabel;
     QLabel *picLabel = new QLabel;
     QFont font;
     font.setPointSize(fontSize-2);
     titleLabel->setFont(font);
-    titleLabel->setStyleSheet("QLabel{background-color:transparent;color:palette(windowText);}");
+//    titleLabel->setStyleSheet("QLabel{background-color:transparent;color:palette(windowText);}");
     titleLabel->setText(tr("Kylin System Monitor"));
     picLabel->setPixmap(QPixmap(":img/ukui-system-monitor.png"));
     m_titleMiddleLayout->addWidget(picLabel);
     m_titleMiddleLayout->addWidget(titleLabel);
     m_topLayout->addWidget(w);
+//    m_topLayout->setContentsMargins(0,0,0,20);
 }
 
 void MonitorTitleWidget::initTitlebarRightContent()
 {
     QWidget *w = new QWidget;
     m_titleRightLayout = new QHBoxLayout(w);
-    m_titleRightLayout->setContentsMargins(0, 0, 1, 0);
+    m_titleRightLayout->setContentsMargins(0, 8, 8, 0);
     m_titleRightLayout->setSpacing(0);
 
     m_topLayout->addWidget(w, 1, Qt::AlignRight);
 
 //    MyTristateButton *minBtn = new MyTristateButton;
-    QIcon iconMin(tr(":/img/minimize.png"));
     QPushButton *minBtn = new QPushButton(this);
     minBtn->setToolTip(tr("minimize"));
-    //minBtn->setStyleSheet("QPushButton{background-color:transparent;}");
-    minBtn->setIcon(iconMin);
-    minBtn->setIconSize(QSize(25,25));
-    //minBtn->setObjectName("MinButton");
-    minBtn->setProperty("useIconHighlightEffect", true);
-    minBtn->setProperty("iconHighlightEffectMode", 1);
+    minBtn->setIcon(QIcon::fromTheme("window-minimize-symbolic"));
+//    minBtn->setProperty("useIconHighlightEffect", true);
+//    minBtn->setProperty("iconHighlightEffectMode", 1);
+    minBtn->setProperty("isWindowButton", 0x1);
+    minBtn->setProperty("useIconHighlightEffect", 0x2);
     minBtn->setFlat(true);
     connect(minBtn, SIGNAL(clicked()), this, SLOT(onMinBtnClicked()));
 //    connect(minBtn, &MyTristateButton::clicked, this, [=] {
@@ -461,12 +448,14 @@ void MonitorTitleWidget::initTitlebarRightContent()
 //    maxBtn->setStyleSheet("QPushButton{background-color:#ffffff;}");
 //    maxBtn->setObjectName("MaxButton");
 
-    maxTitleBtn->setIconSize(QSize(25,25));
-    maxTitleBtn->setProperty("useIconHighlightEffect", true);
-    maxTitleBtn->setProperty("iconHighlightEffectMode", 1);
+//    maxTitleBtn->setIconSize(QSize(25,25));
+//    maxTitleBtn->setProperty("useIconHighlightEffect", true);
+//    maxTitleBtn->setProperty("iconHighlightEffectMode", 1);
+    maxTitleBtn->setProperty("isWindowButton", 0x1);
+    maxTitleBtn->setProperty("useIconHighlightEffect", 0x2);
     maxTitleBtn->setFlat(true);
-    QIcon iconMax(tr(":/img/fullscreen.png"));
-    maxTitleBtn->setIcon(iconMax);
+//    QIcon iconMax(tr(":/img/fullscreen.png"));
+    maxTitleBtn->setIcon(QIcon::fromTheme("window-maximize-symbolic"));
 //    maxTitleBtn->setIcon(QIcon::fromTheme("window-maximize-symbolic"));
     connect(maxTitleBtn, SIGNAL(clicked()), this, SLOT(onMaxBtnClicked()));
 //    connect(maxBtn, &MyTristateButton::clicked, sthis, [=] {
@@ -487,17 +476,18 @@ void MonitorTitleWidget::initTitlebarRightContent()
 //        }
 //    });
 //    MyTristateButton *closeBtn = new MyTristateButton;
-    QIcon iconClose(tr(":/img/close.png"));
+//    QIcon iconClose(tr(":/img/close.png"));
     QPushButton *closeBtn = new QPushButton(this);
     closeBtn->setToolTip(tr("close"));
     //closeBtn->setStyleSheet("QPushButton{background-color:transparent;}");
-    closeBtn->setIcon(iconClose);
-    closeBtn->setIconSize(QSize(25,25));
-    //closeBtn->setObjectName("CloseButton");
-    closeBtn->setProperty("useIconHighlightEffect", true);
-    closeBtn->setProperty("iconHighlightEffectMode", 1);
+//    closeBtn->setIcon(iconClose);
+//    closeBtn->setIconSize(QSize(25,25));
+    closeBtn->setIcon(QIcon::fromTheme("window-close-symbolic"));
     closeBtn->setFlat(true);
+    closeBtn->setProperty("isWindowButton", 0x2);
+    closeBtn->setProperty("useIconHighlightEffect", 0x8);
     connect(closeBtn, SIGNAL(clicked()), this, SLOT(onCloseBtnClicked()));
+    //进行GSettings设置，记忆用户选择的combox的内容
     whichNum = ifsettings->get(WHICH_MENU).toInt();
     m_changeBox->setCurrentIndex(whichNum);
     connect(m_changeBox,SIGNAL(currentIndexChanged(int)),this,SLOT(switchChangeItemProcessSignal(int)));
@@ -555,8 +545,7 @@ void MonitorTitleWidget::resizeEvent(QResizeEvent *event)
     else
     {
 //        maxTitleBtn->setIcon(QIcon::fromTheme("window-restore-symbolic"));
-        QIcon iconMax(tr(":/img/fullscreen.png"));
-        maxTitleBtn->setIcon(iconMax);
+        maxTitleBtn->setIcon(QIcon::fromTheme("window-maximize-symbolic"));
     }
 }
 

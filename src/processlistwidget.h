@@ -100,8 +100,8 @@ protected:
     void paintEvent(QPaintEvent *);
     void wheelEvent(QWheelEvent *event);
     void paintScrollbar(QPainter *painter);
-    bool eventFilter(QObject *obj, QEvent *event);
-    void resizeEvent(QResizeEvent *event);
+//    bool eventFilter(QObject *obj, QEvent *event);
+//    void resizeEvent(QResizeEvent *event);
 
 private:
     QTimer *m_hideScrollbarTimer = nullptr;
