@@ -151,7 +151,7 @@ void FileSystemListItem::drawForeground(QRect rect, QPainter *painter, int colum
         QFont font = painter->font();
         QFontMetrics fm(font);
         QString deviceName = fm.elidedText(m_data->deviceName(), Qt::ElideRight, nameMaxWidth);//Qt::ElideMiddle
-        painter->drawText(QRect(rect.x() + iconSize + padding * 2, rect.y(), nameMaxWidth, rect.height()), Qt::AlignLeft | Qt::AlignVCenter, deviceName);
+        painter->drawText(QRect(rect.x() + iconSize + padding * 2, rect.y(), nameMaxWidth, rect.height()), Qt::AlignCenter, deviceName);
         if (!isSeparator) {
             painter->setOpacity(0.8);
             QPainterPath separatorPath;
@@ -165,7 +165,7 @@ void FileSystemListItem::drawForeground(QRect rect, QPainter *painter, int colum
             QFont font = painter->font();
             QFontMetrics fm(font);
             QString mountDir = fm.elidedText(m_data->mountDir(), Qt::ElideMiddle, maxWidth);
-            painter->drawText(QRect(rect.x(), rect.y(), rect.width() - textPadding, rect.height()), Qt::AlignLeft | Qt::AlignVCenter, mountDir);
+            painter->drawText(QRect(rect.x(), rect.y(), rect.width() - textPadding, rect.height()), Qt::AlignCenter, mountDir);
         }
         if (!isSeparator) {
             painter->setOpacity(0.8);
@@ -180,7 +180,7 @@ void FileSystemListItem::drawForeground(QRect rect, QPainter *painter, int colum
             QFont font = painter->font();
             QFontMetrics fm(font);
             QString diskType = fm.elidedText(m_data->diskType(), Qt::ElideRight, maxWidth);
-            painter->drawText(QRect(rect.x(), rect.y(), rect.width() - textPadding, rect.height()), Qt::AlignRight | Qt::AlignVCenter, diskType);
+            painter->drawText(QRect(rect.x(), rect.y(), rect.width() - textPadding, rect.height()), Qt::AlignCenter, diskType);
         }
         if (!isSeparator) {
             painter->setOpacity(0.8);
@@ -195,7 +195,7 @@ void FileSystemListItem::drawForeground(QRect rect, QPainter *painter, int colum
             QFont font = painter->font();
             QFontMetrics fm(font);
             QString tCapacity = fm.elidedText(m_data->totalCapacity(), Qt::ElideRight, maxWidth);
-            painter->drawText(QRect(rect.x(), rect.y(), rect.width() - textPadding, rect.height()), Qt::AlignRight | Qt::AlignVCenter, tCapacity);
+            painter->drawText(QRect(rect.x(), rect.y(), rect.width() - textPadding, rect.height()), Qt::AlignCenter, tCapacity);
         }
         if (!isSeparator) {
             painter->setOpacity(0.8);
@@ -210,7 +210,7 @@ void FileSystemListItem::drawForeground(QRect rect, QPainter *painter, int colum
             QFont font = painter->font();
             QFontMetrics fm(font);
             QString fCapacity = fm.elidedText(m_data->freeCapacity(), Qt::ElideRight, maxWidth);
-            painter->drawText(QRect(rect.x(), rect.y(), rect.width() - textPadding, rect.height()), Qt::AlignRight | Qt::AlignVCenter, fCapacity);
+            painter->drawText(QRect(rect.x(), rect.y(), rect.width() - textPadding, rect.height()), Qt::AlignCenter, fCapacity);
         }
         if (!isSeparator) {
             painter->setOpacity(0.8);
@@ -225,7 +225,7 @@ void FileSystemListItem::drawForeground(QRect rect, QPainter *painter, int colum
             QFont font = painter->font();
             QFontMetrics fm(font);
             QString aCapacity = fm.elidedText(m_data->availCapacity(), Qt::ElideRight, maxWidth);
-            painter->drawText(QRect(rect.x(), rect.y(), rect.width() - textPadding, rect.height()), Qt::AlignRight | Qt::AlignVCenter, aCapacity);
+            painter->drawText(QRect(rect.x(), rect.y(), rect.width() - textPadding, rect.height()), Qt::AlignCenter, aCapacity);
         }
         if (!isSeparator) {
             painter->setOpacity(0.8);
@@ -235,6 +235,7 @@ void FileSystemListItem::drawForeground(QRect rect, QPainter *painter, int colum
         }
     }
     else if (column == 6) {
+        int maxWidth = rect.width();
         int leftPadding = 10;
         int topPadding = 5;
         int progressWidth = 100;
@@ -243,22 +244,27 @@ void FileSystemListItem::drawForeground(QRect rect, QPainter *painter, int colum
         if (!m_data->usedCapactiy().isEmpty()) {
             QFont font = painter->font();
             QFontMetrics fm(font);
-            QString uCapacity = fm.elidedText(m_data->usedCapactiy(), Qt::ElideRight, textMaxWidth - textPadding);
-            painter->drawText(QRect(rect.x() + textPadding, rect.y(), textMaxWidth - textPadding, rect.height()), Qt::AlignLeft | Qt::AlignVCenter, uCapacity);
+            QString uCapacity = fm.elidedText(m_data->usedCapactiy(), Qt::ElideRight, maxWidth);
+//            painter->drawText(QRect(rect.x() + textPadding, rect.y(), textMaxWidth - textPadding, rect.height()), Qt::AlignCenter, uCapacity);
+            painter->drawText(QRect(rect.x() , rect.y(), rect.width(), rect.height()), Qt::AlignCenter, uCapacity);
         }
-        QPainterPath bgPath;
-        bgPath.addRect(QRectF(rect.x() + textMaxWidth + leftPadding, rect.y() + topPadding, progressWidth, progressHeight));
-        painter->fillPath(bgPath, QColor("#C4BDBD"));
-//        painter->fillPath(bgPath,QColor("palette(Base)"));
+//这部分代码为原来绘制未占用区域的灰色部分。//////////////
+//        QPainterPath bgPath;
+////        bgPath.addRect(QRectF(rect.x() + textMaxWidth + leftPadding, rect.y() + topPadding, progressWidth, progressHeight));
+//        bgPath.addRect(QRectF(rect.x() + textMaxWidth + leftPadding, rect.y() + topPadding, progressWidth, 2));
+//        painter->fillPath(bgPath, QColor("#C4BDBD"));
+////        painter->fillPath(bgPath,QColor("palette(Base)"));
+/////////////////////////////////////////////////
         QPainterPath fillPath;
-        fillPath.addRect(QRectF(rect.x() + textMaxWidth + leftPadding, rect.y() + topPadding, m_data->usedPercentage(), progressHeight));
+//        fillPath.addRect(QRectF(rect.x() + textMaxWidth + leftPadding, rect.y() + topPadding, m_data->usedPercentage(), progressHeight));
+        fillPath.addRect(QRectF(rect.x() + rect.width() - m_data->usedPercentage(), rect.y() + rect.height() -2, m_data->usedPercentage(), 2));
         painter->setOpacity(0.5);
         if (m_data->usedPercentage() < 75)
             painter->fillPath(fillPath, QColor("#0288d1"));
         else
             painter->fillPath(fillPath, QColor("#f8b551"));
-        painter->setOpacity(1);
-        painter->drawText(QRect(rect.x() + textMaxWidth + leftPadding, rect.y() + topPadding, progressWidth, progressHeight), Qt::AlignHCenter | Qt::AlignVCenter, QString::number(m_data->usedPercentage()).append("%"));
+//        painter->setOpacity(1);
+//        painter->drawText(QRect(rect.x() + textMaxWidth + leftPadding, rect.y() + topPadding, progressWidth, progressHeight), Qt::AlignCenter, nullptr);
 
         /*
         QStyleOptionProgressBar progressBarStyle;//progressBarStyle.initFrom(this);

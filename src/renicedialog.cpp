@@ -36,9 +36,9 @@ ReniceDialog::ReniceDialog(const QString &title, QWidget *parent)
 {
     this->setWindowFlags(Qt::FramelessWindowHint);
     this->setFixedSize(464, 240);
-    this->setFixedSize(464+SHADOW_LEFT_TOP_PADDING+SHADOW_LEFT_TOP_PADDING, 240+SHADOW_RIGHT_BOTTOM_PADDING+SHADOW_RIGHT_BOTTOM_PADDING);
-    this->setContentsMargins(SHADOW_LEFT_TOP_PADDING,SHADOW_LEFT_TOP_PADDING,SHADOW_RIGHT_BOTTOM_PADDING,SHADOW_RIGHT_BOTTOM_PADDING);
-    this->setStyleSheet("QDialog{border: 1px solid white;border-radius:1px;background-color: #ffffff;}");
+    this->setFixedSize(464+SHADOW_LEFT_TOP_PADDING+SHADOW_LEFT_TOP_PADDING, 300+SHADOW_RIGHT_BOTTOM_PADDING+SHADOW_RIGHT_BOTTOM_PADDING);
+//    this->setContentsMargins(SHADOW_LEFT_TOP_PADDING,SHADOW_LEFT_TOP_PADDING,SHADOW_RIGHT_BOTTOM_PADDING,SHADOW_RIGHT_BOTTOM_PADDING);
+//    this->setStyleSheet("QDialog{border: 1px solid white;border-radius:1px;background-color: #ffffff;}");
     this->setWindowIcon(QIcon(":/res/ukui-system-monitor.png"));
     this->setAttribute(Qt::WA_DeleteOnClose);
 
@@ -48,8 +48,24 @@ ReniceDialog::ReniceDialog(const QString &title, QWidget *parent)
     m_mainLayout->setContentsMargins(0,0,0,0);
     m_mainLayout->setSpacing(20);
     m_mainLayout->setMargin(0);
-    m_titleBar = new MyTitleBar(title, false, this);
-    m_titleBar->setFixedSize(this->width(), TITLE_BAR_HEIGHT);
+//    m_titleBar = new MyTitleBar(title, false, this);
+    QLabel *titleLabel = new QLabel;
+    titleLabel->setText(title);
+    QPushButton *closeButton = new QPushButton(this);
+    closeButton->setFlat(true);
+    closeButton->setIcon(QIcon::fromTheme("window-close-symbolic"));
+    closeButton->setProperty("isWindowButton", 0x2);
+    closeButton->setProperty("useIconHighlightEffect", 0x8);
+
+    QHBoxLayout *title_H_BoxLayout = new QHBoxLayout();
+    QHBoxLayout *closeBtn_H_BoxLayout = new QHBoxLayout();
+    title_H_BoxLayout->setContentsMargins(0,0,0,0);
+    title_H_BoxLayout->setSpacing(0);
+    title_H_BoxLayout->addSpacing(15);
+    title_H_BoxLayout->addWidget(titleLabel);
+    closeBtn_H_BoxLayout->addWidget(closeButton,1,Qt::AlignRight);
+    closeBtn_H_BoxLayout->setContentsMargins(0,8,17,0);
+//    m_titleBar->setFixedSize(this->width(), TITLE_BAR_HEIGHT);
 
     m_titleLabel = new QLabel();
     m_titleLabel->setFixedWidth(80);
@@ -69,12 +85,12 @@ ReniceDialog::ReniceDialog(const QString &title, QWidget *parent)
     h_layout->addWidget(m_valueLabel);
 
     m_valueStrLabel = new QLabel;
-    m_valueStrLabel->setStyleSheet("QLabel{background-color:transparent;color:#000000;font-size:13px;font-weight:bold;}");
+//    m_valueStrLabel->setStyleSheet("QLabel{background-color:transparent;color:#000000;font-size:13px;font-weight:bold;}");
     m_valueStrLabel->setAlignment(Qt::AlignCenter);
     m_valueStrLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 
     m_tipTitle = new QLabel;
-    m_tipTitle->setStyleSheet("QLabel{background-color:transparent;color:#000000;font-size:12px;font-weight:bold;}");
+//    m_tipTitle->setStyleSheet("QLabel{background-color:transparent;color:#000000;font-size:12px;font-weight:bold;}");
     m_tipTitle->setText(tr("Note:"));
     m_tipLabel = new QLabel;
     m_tipLabel->setWordWrap(true);//QLabel自动换行
@@ -116,7 +132,8 @@ ReniceDialog::ReniceDialog(const QString &title, QWidget *parent)
     v_layout->addLayout(tip_layout);
     v_layout->addLayout(btn_layout);
 
-    m_mainLayout->addWidget(m_titleBar);
+    m_mainLayout->addLayout(closeBtn_H_BoxLayout);
+    m_mainLayout->addLayout(title_H_BoxLayout);
     m_mainLayout->addLayout(v_layout);
 
     connect(m_slider, &QSlider::valueChanged, [=] (int value) {
@@ -125,8 +142,8 @@ ReniceDialog::ReniceDialog(const QString &title, QWidget *parent)
         m_valueStrLabel->setText(levelStr);
     });
 
-    connect(m_titleBar, SIGNAL(minSignal()), this, SLOT(hide()));
-    connect(m_titleBar, SIGNAL(closeSignal()), this, SLOT(onClose()));
+//    connect(m_titleBar, SIGNAL(minSignal()), this, SLOT(hide()));
+//    connect(m_titleBar, SIGNAL(closeSignal()), this, SLOT(onClose()));
     connect(m_cancelbtn, SIGNAL(clicked(bool)), this, SLOT(onClose()));
 
     connect(m_changeBtn, &QPushButton::clicked, [=] (bool b) {
@@ -134,11 +151,11 @@ ReniceDialog::ReniceDialog(const QString &title, QWidget *parent)
     });
 
     //边框阴影效果
-    QGraphicsDropShadowEffect *shadow_effect = new QGraphicsDropShadowEffect(this);
-    shadow_effect->setBlurRadius(5);
-    shadow_effect->setColor(QColor(0, 0, 0, 127));
-    shadow_effect->setOffset(2, 4);
-    this->setGraphicsEffect(shadow_effect);
+//    QGraphicsDropShadowEffect *shadow_effect = new QGraphicsDropShadowEffect(this);
+//    shadow_effect->setBlurRadius(5);
+//    shadow_effect->setColor(QColor(0, 0, 0, 127));
+//    shadow_effect->setOffset(2, 4);
+//    this->setGraphicsEffect(shadow_effect);
 
 //    this->moveCenter();
 
@@ -148,7 +165,7 @@ ReniceDialog::ReniceDialog(const QString &title, QWidget *parent)
 
 ReniceDialog::~ReniceDialog()
 {
-    delete m_titleBar;
+//    delete m_titleBar;
     delete m_valueStrLabel;
 
     QLayoutItem *child;
@@ -232,4 +249,27 @@ void ReniceDialog::mouseMoveEvent(QMouseEvent *event)
     }
 
     QDialog::mouseMoveEvent(event);
+}
+
+void ReniceDialog::paintEvent(QPaintEvent *event)
+{
+    QPainter painter(this);
+
+    //绘制圆角矩形
+    painter.setPen(QPen(QColor("#808080"), 0));//边框颜色
+//    painter.setBrush(QColor("#e9eef0"));//背景色   #0d87ca
+    painter.setBrush(this->palette().base());
+    painter.setRenderHint(QPainter::Antialiasing, true);
+    painter.setOpacity(1);
+    QRectF r(0 / 2.0, 0 / 2.0, width() - 0, height() - 0);//左边 上边 右边 下边
+    painter.drawRoundedRect(r, 4, 4);
+
+
+    //绘制背景色
+//    QPainterPath path;
+//    path.addRect(QRectF(rect()));
+//    painter.setOpacity(1);
+//    painter.fillPath(path, QColor("#ffffff"));
+
+    QDialog::paintEvent(event);
 }

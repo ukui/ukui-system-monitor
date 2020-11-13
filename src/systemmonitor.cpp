@@ -63,20 +63,6 @@ SystemMonitor::SystemMonitor(QWidget *parent)
     this->setWindowFlags(Qt::FramelessWindowHint);   //set for no windowhint
     this->setAttribute(Qt::WA_TranslucentBackground);//背景透明
     this->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
-//    QPainterPath path;
-//    auto rect = this->rect();
-//    rect.adjust(0,0,-0,-0);
-//    path.addRoundedRect(rect, 6, 6);
-//    setProperty("blurRegion", QRegion(path.toFillPolygon().toPolygon()));
-//    this->setStyleSheet("QWidget{border:none;border-radius:6px;}");
-
-//    this->setObjectName("ParentObjectOnly");
-//    this->setStyleSheet("QFrame#ParentObjectOnly{""background:rgba(19,19,20,0.7);"
-//                "border:1px solid rgba(255, 255, 255, 0.05);"
-//                "border-radius:6px;"
-//                "}");
-
-//    this->setWindowFlags(Qt::Window | Qt::FramelessWindowHint | Qt::WindowMinimizeButtonHint);//Attention: Qt::WindowCloseButtonHint make showMinimized() valid
 
     const QByteArray idd(THEME_QT_SCHEMA);
 
@@ -100,7 +86,7 @@ SystemMonitor::SystemMonitor(QWidget *parent)
 //    this->setWindowIcon(QIcon(":/model/res/plugin/processmanager.png"));
 //    this->setWindowIcon(QIcon(":/img/processmanager.png"));
 
-     this->setWindowIcon(QIcon::fromTheme("ukui-system-monitor"));
+     this->setWindowIcon(QIcon::fromTheme("ukui-system-monitor")); //正确显示任务栏图标
 
 
     //this->setFixedSize(900, 600);
@@ -114,16 +100,8 @@ SystemMonitor::SystemMonitor(QWidget *parent)
     this->initPanelStack();
     this->initConnections();
     initThemeMode();
-    connect(m_titleWidget,SIGNAL(changeProcessItemDialog(int)),process_dialog,SLOT(onActiveWhoseProcess(int)));
+    connect(m_titleWidget,SIGNAL(changeProcessItemDialog(int)),process_dialog,SLOT(onActiveWhoseProcess(int)));  //配置文件中为whoseprocess赋值
     getTransparentData();
-    //边框阴影效果
-//    QGraphicsDropShadowEffect *shadow_effect = new QGraphicsDropShadowEffect(this);
-//    shadow_effect->setBlurRadius(5);
-//    shadow_effect->setColor(QColor(0, 0, 0, 127));
-//    shadow_effect->setOffset(2, 4);
-//    this->setGraphicsEffect(shadow_effect);
-
-
     this->moveCenter();
 }
 
@@ -166,16 +144,6 @@ void SystemMonitor::getTransparentData()
         repaint();
     });
     m_transparency = opacitySettings->get("transparency").toDouble();
-//    if(!opacitySettings)
-//    {
-//        m_transparency = 0.7;
-//        return;
-//    }
-//    QStringList keys = opacitySettings->keys();
-//    if(keys.contains("transparenty"))
-//    {
-//        m_transparency = opacitySettings->get("transparency").toDouble();
-//    }
 }
 
 SystemMonitor::~SystemMonitor()
@@ -261,23 +229,17 @@ void SystemMonitor::paintEvent(QPaintEvent *event)
     // 绘制一个背景
     p.save();
     p.fillPath(rectPath,palette().color(QPalette::Base));
-//    p.fillPath(rectPath,QColor(0,0,0));
     p.restore();
 
     QStyleOption opt;
     opt.init(this);
     style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
-    KWindowEffects::enableBlurBehind(this->winId(), true, QRegion(rectPath.toFillPolygon().toPolygon()));
 }
 
 void SystemMonitor::resizeEvent(QResizeEvent *e)
 {
     if (m_titleWidget) {
         m_titleWidget->resize(width() - 2, MONITOR_TITLE_WIDGET_HEIGHT);
-//        if (e->oldSize()  != e->size()) {
-//            emit m_titleWidget->updateMaxBtn();
-//            m_titleWidget->onUpdateMaxBtnStatusChanged();
-//        }
     }
     if (m_sysMonitorStack) {
         m_sysMonitorStack->resize(width() - 2, this->height() - MONITOR_TITLE_WIDGET_HEIGHT - 2);
