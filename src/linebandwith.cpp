@@ -39,7 +39,7 @@ QString lineBandwith::new_count(qint64 count ,int pid)
 //    quint64 bandwith = count-count_prev;
     qint64 bandwith = count - countMap[pid];
     qDebug()<<"count---yayaya" <<count<<"-"<<countMap[pid]<<count-countMap[pid];
-    qDebug()<<"bandwith:::"<<bandwith;
+    qDebug()<<"bandwidth:::"<<bandwith;
     qDebug()<<"count_prev1:::"<<count_prev;
     QDateTime now = QDateTime::currentDateTime();
     quint64 ms_lapse = time_prev.msecsTo(now);

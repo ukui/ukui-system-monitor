@@ -116,7 +116,11 @@ ProcessDialog::ProcessDialog(QList<bool> toBeDisplayedColumns, int currentSortIn
     connect(m_processListWidget, SIGNAL(changeSortStatus(int,bool)), this, SIGNAL(changeSortStatus(int,bool)));
     connect(m_processListWidget, &ProcessListWidget::rightMouseClickedItems, this, &ProcessDialog::popupMenu, Qt::QueuedConnection);
     m_layout->addWidget(m_processListWidget);
+<<<<<<< HEAD
 //记录要显示进程的内容类别
+=======
+
+>>>>>>> upstream/master
     whose_processes = "user";
     proSettings->beginGroup("PROCESS");
     whose_processes = proSettings->value("WhoseProcesses", whose_processes).toString();

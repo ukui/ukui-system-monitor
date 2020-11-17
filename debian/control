@@ -25,15 +25,7 @@ Vcs-Git: https://github.com/ukui/ukui-system-monitor.git
 
 Package: ukui-system-monitor
 Architecture: any
-Depends: inotify-hookable,
-         bsdutils (>= 1:2.27.1),
-         hdparm,
-         lm-sensors,
-         ethtool,
-         lshw,
-         cpufrequtils,
-         pciutils,
-         libcap2-bin,
+Depends: libcap2-bin,
          ${misc:Depends},
          ${shlibs:Depends}
 Description: Monitor for UKUI desktop environment
