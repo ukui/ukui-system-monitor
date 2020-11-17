@@ -82,6 +82,7 @@ protected:
 private:
     int daemonIsNotRunning();
     void showGuide(QString appName);
+    void getOsRelease();
 private:
 //    WId mWindow;
     QStackedWidget  *m_sysMonitorStack = nullptr;
@@ -100,6 +101,7 @@ private:
 
     QGSettings *opacitySettings;
     double m_transparency;
+    QString version;
 };
 
 #endif // SYSTEMMONITOR_H

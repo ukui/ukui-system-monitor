@@ -78,6 +78,8 @@ SystemMonitor::SystemMonitor(QWidget *parent)
         opacitySettings = new QGSettings(idtrans);
     }
 
+    getOsRelease();
+
     this->setAutoFillBackground(true);
 //    this->setMouseTracking(true);
 //    installEventFilter(this);
@@ -103,6 +105,7 @@ SystemMonitor::SystemMonitor(QWidget *parent)
     connect(m_titleWidget,SIGNAL(changeProcessItemDialog(int)),process_dialog,SLOT(onActiveWhoseProcess(int)));  //配置文件中为whoseprocess赋值
     getTransparentData();
     this->moveCenter();
+    qDebug()<<"--+--"<<version;
 }
 
 void SystemMonitor::initThemeMode()
@@ -527,6 +530,20 @@ void SystemMonitor::moveCenter()
                primaryGeometry.y() + (primaryGeometry.height() - this->height())/2);
 }
 
+void SystemMonitor::getOsRelease()
+{
+    QFile file("/etc/lsb-release");
+    if (!file.open(QIODevice::ReadOnly)) qDebug() << "Read file Failed.";
+    while (!file.atEnd()) {
+        QByteArray line = file.readLine();
+        QString str(line);
+        if (str.contains("DISTRIB_ID")){
+            version=str.remove("DISTRIB_ID=");
+            version=str.remove("\n");
+        }
+    }
+}
+
 void SystemMonitor::closeEvent(QCloseEvent *event)
 {
     event->accept();
@@ -583,11 +600,14 @@ void SystemMonitor::mouseMoveEvent(QMouseEvent *event)
 
 void SystemMonitor::keyPressEvent(QKeyEvent *event)
 {
-    if(event->key() == Qt::Key_F1)
+    if(version != "Ubuntu")
     {
-        if(!daemonIsNotRunning())
+        if(event->key() == Qt::Key_F1)
         {
-            showGuide(qAppName());
+            if(!daemonIsNotRunning())
+            {
+                showGuide(qAppName());
+            }
         }
     }
 }

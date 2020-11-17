@@ -98,12 +98,12 @@ PropertiesDialog::PropertiesDialog(QWidget *parent, pid_t processId) : QDialog(p
 //    });
 
     m_iconLabel = new QLabel();
-    m_iconLabel->setStyleSheet("QLabel{background:transparent;border:none;}");
+//    m_iconLabel->setStyleSheet("QLabel{background:transparent;border:none;}");
     m_iconLabel->setFixedSize(48, 48);
     m_iconLabel->setContentsMargins(0, 0, 0, 0);
 
     m_titleLabel = new QLabel();
-    m_titleLabel->setStyleSheet("QLabel{background-color:transparent;font-size:18px;color:#000000;}");
+//    m_titleLabel->setStyleSheet("QLabel{background-color:transparent;font-size:18px;color:#000000;}");
     m_titleLabel->setFixedWidth(230);
     m_titleLabel->setWordWrap(true);
 
@@ -115,12 +115,12 @@ PropertiesDialog::PropertiesDialog(QWidget *parent, pid_t processId) : QDialog(p
     m_topRightLayout->setContentsMargins(0,8,8,0);
 
     QLabel *topSplit = new QLabel();
-    topSplit->setStyleSheet("QLabel{background: qlineargradient(x1:0, y1:0, x2:0, y2:1,stop:0 #f1f1f1, stop:1 #e0e0e0);}");
+//    topSplit->setStyleSheet("QLabel{background: qlineargradient(x1:0, y1:0, x2:0, y2:1,stop:0 #f1f1f1, stop:1 #e0e0e0);}");
 //    topSplit->setStyleSheet("QLabel{background: qlineargradient(x1:0, y1:0, x2:1, y2:0,stop:0 #f1f1f1, stop:1 #e0e0e0);}");
     topSplit->setFixedSize(320, 1);
 
     QLabel *bottomSplit = new QLabel();
-    bottomSplit->setStyleSheet("QLabel{background: qlineargradient(x1:0, y1:0, x2:0, y2:1,stop:0 #f1f1f1, stop:1 #e0e0e0);}");
+//    bottomSplit->setStyleSheet("QLabel{background: qlineargradient(x1:0, y1:0, x2:0, y2:1,stop:0 #f1f1f1, stop:1 #e0e0e0);}");
 //    bottomSplit->setStyleSheet("QLabel{background: qlineargradient(x1:0, y1:0, x2:1, y2:0,stop:0 #f1f1f1, stop:1 #e0e0e0);}");
     bottomSplit->setFixedSize(320, 1);
 
@@ -165,11 +165,11 @@ PropertiesDialog::PropertiesDialog(QWidget *parent, pid_t processId) : QDialog(p
     titleList << QObject::tr("User name:") << QObject::tr("Process name:") << QObject::tr("flownet per second:") << QObject::tr("CPU Time:") << QObject::tr("Started Time:");
     for (int i = 0; i < titleList.length(); ++i) {
         QLabel *titleLabel = new QLabel(titleList.value(i));
-        titleLabel->setStyleSheet("QLabel{background-color:transparent;font-size:12px;color:#999999;}");
+//        titleLabel->setStyleSheet("QLabel{background-color:transparent;font-size:12px;color:#999999;}");
         titleLabel->setMinimumHeight(20);
 
         QLabel *infoLabel = new QLabel();
-        infoLabel->setStyleSheet("QLabel{background-color:transparent;font-size:12px;color:#000000;}");
+//        infoLabel->setStyleSheet("QLabel{background-color:transparent;font-size:12px;color:#000000;}");
         infoLabel->setWordWrap(true);
         infoLabel->setMinimumHeight(28);
         infoLabel->setMinimumWidth(220);
@@ -395,7 +395,7 @@ void PropertiesDialog::paintEvent(QPaintEvent *event)
     QPainter painter(this);
 
     //绘制圆角矩形
-    painter.setPen(QPen(QColor("#808080"), 0));//边框颜色 #3f96e4
+    painter.setPen(QPen(QColor("#808080"), 0)   );//边框颜色 #3f96e4
 //    painter.setPen(Qt::NoPen);
     painter.setBrush(this->palette().base());//背景色
     painter.setRenderHint(QPainter::Antialiasing, true);

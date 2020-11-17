@@ -48,12 +48,12 @@ MyDialog::MyDialog(const QString &title, const QString &message, QWidget *parent
     m_topLayout->setSpacing(20);
 
     m_titleLabel = new QLabel;
-    m_titleLabel->setStyleSheet("QLabel{padding-top:3px;padding-bottom:3px;font-size:18px;color:#000000;}");
+//    m_titleLabel->setStyleSheet("QLabel{padding-top:3px;padding-bottom:3px;font-size:18px;color:#000000;}");
     m_titleLabel->hide();
 //    m_titleLabel->setAttribute(Qt::WA_TransparentForMouseEvents);
 
     m_messageLabel = new QLabel;
-    m_messageLabel->setStyleSheet("QLabel{padding-top:3px;padding-bottom:3px;font-size:12px;color:#000000;}");
+//    m_messageLabel->setStyleSheet("QLabel{padding-top:3px;padding-bottom:3px;font-size:12px;color:#000000;}");
     m_messageLabel->hide();
     m_messageLabel->setAttribute(Qt::WA_TransparentForMouseEvents);
 
@@ -66,8 +66,7 @@ MyDialog::MyDialog(const QString &title, const QString &message, QWidget *parent
 
     m_topLayout->addLayout(textLayout);
 
-    closeButton = new QPushButton();
-    closeButton->setObjectName("CloseButton");
+    closeButton = new QPushButton(this);
     closeButton->setProperty("isWindowButton", 0x2);
     closeButton->setProperty("useIconHighlightEffect", 0x8);
     closeButton->setFlat(true);
@@ -76,10 +75,6 @@ MyDialog::MyDialog(const QString &title, const QString &message, QWidget *parent
        this->close();
     });
     closeButton->setIcon(QIcon::fromTheme("window-close-symbolic"));
-    closeButton->setStyleSheet("QPushButton{background:transparent;}");
-//    connect(closeButton, &MyTristateButton::clicked, this, [=] {
-//        this->close();
-//    });
     closeButton->setAttribute(Qt::WA_NoMousePropagation);
 
     m_buttonLayout = new QHBoxLayout;
@@ -178,7 +173,7 @@ int MyDialog::addButton(const QString &text, bool isDefault)
     int index = buttonCount();
     QAbstractButton *button = new QPushButton(text);
     button->setFocusPolicy(Qt::NoFocus);
-    button->setStyleSheet("QPushButton{font-size:12px;background-color:transparent;border:1px solid #bebebe;color:#000000;}QPushButton:hover{background-color:#ffffff;border:1px solid #3f96e4;color:#000000;}QPushButton:pressed{background-color:#ffffff;border:1px solid #3f96e4;color:#000000;}");
+//    button->setStyleSheet("QPushButton{font-size:12px;background-color:transparent;border:1px solid #bebebe;color:#000000;}QPushButton:hover{background-color:#ffffff;border:1px solid #3f96e4;color:#000000;}QPushButton:pressed{background-color:#ffffff;border:1px solid #3f96e4;color:#000000;}");
     button->setAttribute(Qt::WA_NoMousePropagation);
     button->setFixedSize(91, 25);
 

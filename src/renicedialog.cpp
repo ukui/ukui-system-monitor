@@ -145,7 +145,7 @@ ReniceDialog::ReniceDialog(const QString &title, QWidget *parent)
 //    connect(m_titleBar, SIGNAL(minSignal()), this, SLOT(hide()));
 //    connect(m_titleBar, SIGNAL(closeSignal()), this, SLOT(onClose()));
     connect(m_cancelbtn, SIGNAL(clicked(bool)), this, SLOT(onClose()));
-
+    connect(closeButton,SIGNAL(clicked(bool)),this,SLOT(onClose()));
     connect(m_changeBtn, &QPushButton::clicked, [=] (bool b) {
         emit this->resetReniceValue(m_slider->value());
     });
