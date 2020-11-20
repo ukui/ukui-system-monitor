@@ -107,7 +107,7 @@ private:
     QWidget *emptyWidget = nullptr;
     QWidget *emptyWidget2 = nullptr;
 
-    int fontSize;
+    float fontSize;
 
     QGSettings *qtSettings;
     QGSettings *fontSettings;

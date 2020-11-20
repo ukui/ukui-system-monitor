@@ -457,37 +457,28 @@ void ProcessDialog::refreshProcessList()
     ** should probably have a total_time_last gint in the ProcInfo structure */
     glibtop_get_cpu(&cpu);
 
-
     this->frequency = cpu.frequency;
 
     this->cpu_total_time = MAX(cpu.total - this->cpu_total_time_last, 1);
     this->cpu_total_time_last = cpu.total;
 
-
-
-
     // FIXME: not sure if glibtop always returns a sorted list of pid
     // but it is important otherwise refresh_list won't find the parent
     std::sort(pid_list, pid_list + proclist.number);
 
-    //---------------start----------------------
     typedef std::list<ProcessWorker*> ProcList;
     ProcList addition;
     guint i;
-//    int addPid;
     for(i = 0; i < proclist.number; ++i)
     {
         ProcessWorker *info = ProcessWorker::find(pid_list[i]);
 
-        qDebug()<<"refreshProcessList:mapsize2"<<pidMap.size()<<info;
+        qDebug()<<"Map size: "<< pidMap.size() << info;
         if (info)
         {
-            qDebug()<<"refreshProcessList:mapsize3"<<pidMap.size();
             if(pidMap.contains(pid_list[i]))
             {
-                qDebug()<<"wocengjinghenxihuanni"<<pid_list[i];
                 this->addFlowNetPerSec = pidMap[pid_list[i]];
-                qDebug()<<"---------------------------------------wwj"<<this->addFlowNetPerSec;
                 info = new ProcessWorker(pid_list[i], this->num_cpus, this->cpu_total_time,this->addFlowNetPerSec);
                 ProcessWorker::all[info->pid] = info;
                 info->mNumFlownet = numAddFlowNetPerSec;
@@ -497,8 +488,7 @@ void ProcessDialog::refreshProcessList()
         //create the process object when the pid's object doesn't exist
         else
         {
-            qDebug()<<"refreshProcessList:else"<<pidMap.size()<<pid_list[i];
-            info = new ProcessWorker(pid_list[i], this->num_cpus, this->cpu_total_time,"0 KB/S");
+            info = new ProcessWorker(pid_list[i], this->num_cpus, this->cpu_total_time, "0 KB/S");
             ProcessWorker::all[info->pid] = info;
             info->mNumFlownet = 0;
         }
@@ -520,10 +510,6 @@ void ProcessDialog::refreshProcessList()
         glibtop_proc_mem procmem;
         glibtop_get_proc_mem(&procmem, info->pid);
         info->mem = procmem.resident - procmem.share;
-//        if(info->mem == 0)
-//        {
-
-//        }
 
         glibtop_get_proc_state(&procstate, info->pid);
         info->status = procstate.state;
@@ -661,16 +647,13 @@ void ProcessDialog::refreshProcessList()
         info.m_numDiskIo = numDiskioPersec;      //磁盘读写整数值
 //        info.commandLine = QString::fromStdString(it->second->arguments); //命令行
 
-
         item = new ProcessListItem(info);
         items << item;
     }
 
-
     this->updateStatus(items);
 
     g_free (pid_list);
-    //---------------end----------------------
 }
 
 void ProcessDialog::refreshLine(const QString &procname, quint64 rcv, quint64 sent, int pid, unsigned int uid, const QString &devname)

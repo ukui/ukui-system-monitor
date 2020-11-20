@@ -30,6 +30,7 @@ MyUnderLineButton::MyUnderLineButton(QWidget *parent)
     : QWidget(parent)
     ,m_state(Normal)
     ,m_isChecked(false)
+    ,fontSettings(nullptr)
 {
     const QByteArray idd(THEME_QT_SCHEMA);
 
@@ -112,18 +113,22 @@ void MyUnderLineButton::initThemeMode()
 
 void MyUnderLineButton::initFontSize()
 {
-    connect(fontSettings,&QGSettings::changed,[=](QString key)
+    if (!fontSettings) {
+        fontSize = DEFAULT_FONT_SIZE;
+        return;
+    }
+    connect(fontSettings, &QGSettings::changed, [=](QString key)
     {
         if("systemFont" == key || "systemFontSize" == key)
         {
-            fontSize = fontSettings->get(FONT_SIZE).toInt();
+            fontSize = fontSettings->get(FONT_SIZE).toString().toFloat();
         }
 //        repaint();
         QFont font;
         font.setPointSize(fontSize -2);
         m_textLabel->setFont(font);
     });
-    fontSize = fontSettings->get(FONT_SIZE).toInt();
+    fontSize = fontSettings->get(FONT_SIZE).toString().toFloat();
     QFont font;
     font.setPointSize(fontSize -2);
     m_textLabel->setFont(font);

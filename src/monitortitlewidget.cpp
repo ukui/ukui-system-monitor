@@ -42,6 +42,7 @@
 MonitorTitleWidget::MonitorTitleWidget(QSettings *settings, QWidget *parent)
     :QFrame(parent)
     ,proSettings(settings)
+    ,fontSettings(nullptr)
 {
     whichBox = new QList<int>();
     const QByteArray idd(THEME_QT_SCHEMA);
@@ -211,11 +212,15 @@ void MonitorTitleWidget::initThemeMode()
 
 void MonitorTitleWidget::initFontSize()
 {
+    if (!fontSettings) {
+        fontSize = DEFAULT_FONT_SIZE;
+        return;
+    }
     connect(fontSettings,&QGSettings::changed,[=](QString key)
     {
         if("systemFont" == key || "systemFontSize" == key)
         {
-            fontSize = fontSettings->get(FONT_SIZE).toInt();
+            fontSize = fontSettings->get(FONT_SIZE).toString().toFloat();
         }
         QFont font;
         font.setPointSize(fontSize-2);
@@ -225,7 +230,7 @@ void MonitorTitleWidget::initFontSize()
         changeBoxFont.setPointSize(fontSize-2);
         m_changeBox->setFont(changeBoxFont);
     });
-    fontSize = fontSettings->get(FONT_SIZE).toInt();
+    fontSize = fontSettings->get(FONT_SIZE).toString().toFloat();
 }
 
 MonitorTitleWidget::~MonitorTitleWidget()

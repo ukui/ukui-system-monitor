@@ -27,6 +27,8 @@
 static int number = 0;
 
 ProcessListItem::ProcessListItem(ProcData info)
+    :qtSettings(nullptr)
+    ,fontSettings(nullptr)
 {
 
     const QByteArray idd(THEME_QT_SCHEMA);
@@ -53,28 +55,27 @@ ProcessListItem::ProcessListItem(ProcData info)
 ProcessListItem::~ProcessListItem()
 {
     if (qtSettings) {
-        delete qtSettings;
+        qtSettings->deleteLater();
     }
-    if(fontSettings)
-    {
-        delete fontSettings;
+
+    if (fontSettings) {
+        fontSettings->deleteLater();
     }
 }
 
 void ProcessListItem::initThemeMode()
 {
+    if (!qtSettings) {
+        return;
+    }
     //监听主题改变
     connect(qtSettings, &QGSettings::changed, this, [=](const QString &key)
     {
-
         if (key == "styleName")
         {
-//            auto style = qtSettings->get(key).toString();
-//            qApp->setStyle(new InternalStyle(style));
             currentThemeMode = qtSettings->get(MODE_QT_KEY).toString();
-            qDebug()<<"监听主题改变-------------------->"<<currentThemeMode<<endl;
-//            qApp->setStyle(new InternalStyle(currentThemeMode));
-            //repaint();
+            qDebug() << "Current theme mode: "<< currentThemeMode << endl;
+//            repaint();
         }
     });
     currentThemeMode = qtSettings->get(MODE_QT_KEY).toString();
@@ -82,14 +83,19 @@ void ProcessListItem::initThemeMode()
 
 void ProcessListItem::initFontSize()
 {
-    connect(fontSettings,&QGSettings::changed,this,[=](QString key)
+    if (!fontSettings) {
+        fontSize = DEFAULT_FONT_SIZE;
+        return;
+    }
+
+    connect(fontSettings, &QGSettings::changed, this, [=](QString key)
     {
         if("systemFont" == key || "systemFontSize" == key)
         {
-            fontSize = fontSettings->get(FONT_SIZE).toInt();
+            fontSize = fontSettings->get(FONT_SIZE).toString().toFloat();
         }
     });
-    fontSize = fontSettings->get(FONT_SIZE).toInt();
+    fontSize = fontSettings->get(FONT_SIZE).toString().toFloat();
 }
 
 bool ProcessListItem::isSameItem(ProcessListItem *item)
@@ -102,18 +108,6 @@ void ProcessListItem::drawCellBackground(QRect rect, QPainter *painter, int leve
     QPainterPath path;
     path.addRect(QRectF(rect.x(), rect.y(), rect.width(), rect.height()));
     painter->setOpacity(0.5);//0.1
-    if (level == 0) {
-        //painter->fillPath(path, QColor("#131414"));
-        //painter->setOpacity(0.08);
-    }
-    else if (level == 1) {
-//        painter->fillPath(path, QColor("#131414"));
-//        painter->setOpacity(0.08);
-    }
-    else {
-//        painter->fillPath(path, QColor("#131414"));
-//        painter->setOpacity(0.08);
-    }
 }
 
 void ProcessListItem::drawBackground(QRect rect, QPainter *painter, int index, bool isSelect ,QString currentThemeMode)
@@ -122,23 +116,10 @@ void ProcessListItem::drawBackground(QRect rect, QPainter *painter, int index, b
     path.addRect(QRectF(rect));
 
     if (isSelect) {
-////        painter->setOpacity(0.08);
-//        if(currentThemeMode == "ukui-white")
-//        {
-//            painter->setOpacity(0.08);
-//            painter->fillPath(path, QColor("#000000"));
-//        }
-
-//        if(currentThemeMode == "ukui-black")
-//        {
-//            painter->setOpacity(0.08);
-//            painter->fillPath(path, QColor("#ffffff"));
-//        }
         painter->setOpacity(0.08);
         painter->fillPath(path,QColor("palette(windowText)"));
 
-    }
-    else {
+    } else {
         painter->setOpacity(0.08);
         if(currentThemeMode == "ukui-light" || currentThemeMode == "ukui-default" || currentThemeMode == "ukui-white")
         {
@@ -149,18 +130,12 @@ void ProcessListItem::drawBackground(QRect rect, QPainter *painter, int index, b
         {
             painter->fillPath(path,QColor("#131414"));
         }
-
-//        if (index % 2 == 0) {
-//            painter->fillPath(path, QColor("#ffffff"));
-//        } else {
-//            painter->fillPath(path, QColor("#e9eef0"));
-//        }
     }
 }
 
 void ProcessListItem::drawForeground(QRect rect, QPainter *painter, int column, int, bool isSelect, bool isSeparator)
 {
-    setFontSize(*painter, fontSize+2);
+    setFontSize(*painter, fontSize + 2);
     painter->setOpacity(0.85);
     //painter->setPen(QPen(QColor(QPalette::Base)));
     if (column == 0) {
@@ -191,8 +166,7 @@ void ProcessListItem::drawForeground(QRect rect, QPainter *painter, int column, 
             separatorPath.addRect(QRectF(rect.x() + rect.width() - 1, rect.y(), 1, rect.height()));
             painter->fillPath(separatorPath, QColor("#e0e0e0"));
         }
-    }
-    else if (column == 1) {
+    } else if (column == 1) {
         if (!m_data.user.isEmpty()) {
             QString name = m_data.user;
             int userMaxWidth = rect.width()  - padding * PADDING ;

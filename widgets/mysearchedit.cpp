@@ -31,6 +31,7 @@ MySearchEdit::MySearchEdit(QWidget *parent)
     : QFrame(parent)
     ,m_showCurve(QEasingCurve::OutCubic)    
     ,m_hideCurve(QEasingCurve::InCubic)
+    ,fontSettings(nullptr)
 {
     const QByteArray idd(THEME_QT_SCHEMA);
 
@@ -441,11 +442,15 @@ void MySearchEdit::initThemeMode()
 
 void MySearchEdit::initFontSize()
 {
+    if (!fontSettings) {
+        fontSize = DEFAULT_FONT_SIZE;
+        return;
+    }
     connect(fontSettings,&QGSettings::changed,[=](QString key)
     {
         if("systemFont" == key || "systemFontSize" == key)
         {
-            fontSize = fontSettings->get(FONT_SIZE).toInt();
+            fontSize = fontSettings->get(FONT_SIZE).toString().toFloat();
         }
         QFont font;
         font.setPointSize(fontSize - 2);
@@ -454,5 +459,5 @@ void MySearchEdit::initFontSize()
         searchLineFont.setPointSize(fontSize);
         m_edit->setFont(searchLineFont);
     });
-    fontSize = fontSettings->get(FONT_SIZE).toInt();
+    fontSize = fontSettings->get(FONT_SIZE).toString().toFloat();
 }

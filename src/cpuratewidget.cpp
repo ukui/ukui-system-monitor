@@ -75,7 +75,7 @@ inline int getCoreCounts()
         while (!file.atEnd()) {
                 if (content.contains("processor"))
                     cpuCounts ++;
-                qDebug()<<"cpuCounts"<<cpuCounts;
+                qDebug() << "cpuCounts" << cpuCounts;
                 content = file.readLine().trimmed();
             }
         }
@@ -105,10 +105,6 @@ inline QString getIdelRate(unsigned long &runSeconds, unsigned long &idleSeconds
 //        QString line(buf);
 //        strSlist = line.trimmed();
 //        a = line.toInt();
-
-
-//    qDebug()<<"aaaaaaaaaaaaaaaa"<<a;
-
 
     QString rate;
     QFile file("/proc/uptime");

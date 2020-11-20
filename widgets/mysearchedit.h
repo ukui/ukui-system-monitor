@@ -85,7 +85,7 @@ private:
     QPushButton *m_pClearTextButton =nullptr;
     QPixmap drawSymbolicColoredPixmap(const QPixmap &source);
 
-    int fontSize;
+    float fontSize;
 
     QGSettings *qtSettings;
     QGSettings *fontSettings;

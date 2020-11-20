@@ -81,7 +81,7 @@ private:
     int padding;
     int textPadding;
 
-    int fontSize;
+    float fontSize;
 
     QGSettings *qtSettings;
     QGSettings *fontSettings;

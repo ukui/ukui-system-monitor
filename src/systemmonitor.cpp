@@ -54,6 +54,8 @@ void  SystemMonitor::sltMessageReceived(const QString &msg)
 SystemMonitor::SystemMonitor(QWidget *parent)
     : QFrame(parent)
     , mousePressed(false)
+    , opacitySettings(nullptr)
+    , qtSettings(nullptr)
 {
 //    this->setStyleSheet("QFrame{border: 1px solid #121212;border-radius:1px;background-color:#1f1f1f;}");
 //    this->setAttribute(Qt::WA_DeleteOnClose);
@@ -143,14 +145,20 @@ void SystemMonitor::initThemeMode()
         }
     });
     currentThemeMode = qtSettings->get(MODE_QT_KEY).toString();
-    qDebug()<<"hahahahaaha"<<currentThemeMode;
+    qDebug() << "Current theme mode: " << currentThemeMode;
 }
 
 void SystemMonitor::getTransparentData()
 {
-    connect(opacitySettings,&QGSettings::changed, this, [=](const QString &key)
+    if (!opacitySettings)
     {
-        if(key == "transparency")
+        m_transparency = 0.9;
+        return;
+    }
+
+    connect(opacitySettings, &QGSettings::changed, this, [=](const QString &key)
+    {
+        if (key == "transparency")
         {
             if (!opacitySettings)
             {
@@ -165,17 +173,12 @@ void SystemMonitor::getTransparentData()
         }
         repaint();
     });
-    m_transparency = opacitySettings->get("transparency").toDouble();
-//    if(!opacitySettings)
-//    {
-//        m_transparency = 0.7;
-//        return;
-//    }
-//    QStringList keys = opacitySettings->keys();
-//    if(keys.contains("transparenty"))
-//    {
-//        m_transparency = opacitySettings->get("transparency").toDouble();
-//    }
+
+    QStringList keys = opacitySettings->keys();
+    if(keys.contains("transparenty"))
+    {
+        m_transparency = opacitySettings->get("transparency").toDouble();
+    }
 }
 
 SystemMonitor::~SystemMonitor()

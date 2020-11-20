@@ -99,7 +99,7 @@ private:
     int m_titlePadding;
     int m_titlePressColumn;
 
-    int fontSize;
+    float fontSize;
 
     QGSettings * qtSettings;
     QGSettings *fontSettings;

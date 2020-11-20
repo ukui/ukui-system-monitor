@@ -31,6 +31,7 @@
 #include <QApplication>
 
 FileSystemListItem::FileSystemListItem(FileSystemData *info)
+    :fontSettings(nullptr)
 {
     m_data = info;
     iconSize = 20;
@@ -46,7 +47,6 @@ FileSystemListItem::FileSystemListItem(FileSystemData *info)
 
     if(QGSettings::isSchemaInstalled(id))
     {
-        qDebug()<<"installl fontSettings----->"<<endl;
         fontSettings = new QGSettings(id);
     }
 
@@ -68,18 +68,17 @@ FileSystemListItem::~FileSystemListItem()
 
 void FileSystemListItem::initThemeMode()
 {
+    if (!qtSettings) {
+        return;
+    }
     //监听主题改变
     connect(qtSettings, &QGSettings::changed, this, [=](const QString &key)
     {
 
         if (key == "styleName")
         {
-//            auto style = qtSettings->get(key).toString();
-//            qApp->setStyle(new InternalStyle(style));
             currentThemeMode = qtSettings->get(MODE_QT_KEY).toString();
-            qDebug()<<"监听主题改变-------------------->"<<currentThemeMode<<endl;
-//            qApp->setStyle(new InternalStyle(currentThemeMode));
-            //repaint();
+            qDebug() <<" Current theme mode change to: "<<currentThemeMode<<endl;
         }
     });
     currentThemeMode = qtSettings->get(MODE_QT_KEY).toString();
@@ -87,24 +86,19 @@ void FileSystemListItem::initThemeMode()
 
 void FileSystemListItem::initFontSize()
 {
-    connect(fontSettings,&QGSettings::changed,this,[=](QString key)
+    if (!fontSettings) {
+        fontSize = DEFAULT_FONT_SIZE;
+        return;
+    }
+
+    connect(fontSettings, &QGSettings::changed, this, [=](QString key)
     {
         if("systemFont" == key || "systemFontSize" == key)
         {
-            qDebug()<<"i have come in 111";
-
-            fontSize = fontSettings->get(FONT_SIZE).toInt();
-//            repaint();
-//            for(auto widget:qApp->allWidgets())
-//            {
-//                widget->repaint();
-//                widget->setFont(fSize);
-//            }
-            qDebug()<<fontSize<<"wwj,wotmzhendeshifunigedajiba";
+            fontSize = fontSettings->get(FONT_SIZE).toString().toFloat();
         }
-        qDebug()<<"i have come in 222";
     });
-    fontSize = fontSettings->get(FONT_SIZE).toInt();
+    fontSize = fontSettings->get(FONT_SIZE).toString().toFloat();
 }
 
 bool FileSystemListItem::isSameItem(FileSystemListItem *item)

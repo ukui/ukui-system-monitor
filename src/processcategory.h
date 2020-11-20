@@ -29,11 +29,11 @@ class MyHoverButton;
 class ProcessCategory : public QWidget
 {
     Q_OBJECT
-    
+
 public:
     explicit ProcessCategory(int tabIndex, QWidget *parent = 0);
     ~ProcessCategory();
-    
+
 signals:
     void activeWhoseProcessList(int index);
 

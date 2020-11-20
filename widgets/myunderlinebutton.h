@@ -75,7 +75,7 @@ private:
     //QLabel *m_underlineLabel = nullptr;
     QVBoxLayout *m_layout = nullptr;
 
-    int fontSize;
+    float fontSize;
 
     QGSettings *qtSettings;
     QGSettings *fontSettings;

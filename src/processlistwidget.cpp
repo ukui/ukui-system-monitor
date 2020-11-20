@@ -51,6 +51,7 @@ ProcessListWidget::ProcessListWidget(QList<bool> toBeDisplayedColumns, QWidget *
   ,m_titlePressColumn(-1)
   ,m_mouseAtScrollArea(false)
   ,m_mouseDragScrollbar(false)
+  ,fontSettings(nullptr)
 {
     installEventFilter(this);
 //theme settings
@@ -148,14 +149,18 @@ void ProcessListWidget::initThemeMode()
 
 void ProcessListWidget::initFontSize()
 {
+    if (!fontSettings) {
+        fontSize = DEFAULT_FONT_SIZE;
+        return;
+    }
     connect(fontSettings,&QGSettings::changed,[=](QString key)
     {
         if("systemFont" == key || "systemFontSize" == key)
         {
-            fontSize = fontSettings->get(FONT_SIZE).toInt();
+            fontSize = fontSettings->get(FONT_SIZE).toString().toFloat();
         }
     });
-    fontSize = fontSettings->get(FONT_SIZE).toInt();
+    fontSize = fontSettings->get(FONT_SIZE).toString().toFloat();
 }
 
 ProcessListWidget::~ProcessListWidget()

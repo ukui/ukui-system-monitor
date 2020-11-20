@@ -43,6 +43,7 @@ FileSystemListWidget::FileSystemListWidget(QList<bool> toBeDisplayedColumns, QWi
   ,m_titlePressColumn(-1)
   ,m_mouseAtScrollArea(false)
   ,m_mouseDragScrollbar(false)
+  ,fontSettings(nullptr)
 {
     const QByteArray idd(THEME_QT_SCHEMA);
 
@@ -142,14 +143,18 @@ void FileSystemListWidget::initThemeMode()
 
 void FileSystemListWidget::initFontSize()
 {
+    if (!fontSettings) {
+        fontSize = DEFAULT_FONT_SIZE;
+        return;
+    }
     connect(fontSettings,&QGSettings::changed,[=](QString key)
     {
         if("systemFont" == key || "systemFontSize" == key)
         {
-            fontSize = fontSettings->get(FONT_SIZE).toInt();
+            fontSize = fontSettings->get(FONT_SIZE).toString().toFloat();
         }
     });
-    fontSize = fontSettings->get(FONT_SIZE).toInt();
+    fontSize = fontSettings->get(FONT_SIZE).toString().toFloat();
 }
 
 void FileSystemListWidget::addSelectedItems(QList<FileSystemListItem*> items, bool recordLastItem)

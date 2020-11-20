@@ -135,7 +135,7 @@ private:
     QPixmap m_downArrowPixmap;
     QPixmap m_upArrowPixmap;
 
-    int fontSize;
+    float fontSize;
 
     QGSettings *qtSettings;
     QGSettings *fontSettings;
