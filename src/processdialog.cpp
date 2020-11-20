@@ -473,7 +473,7 @@ void ProcessDialog::refreshProcessList()
     {
         ProcessWorker *info = ProcessWorker::find(pid_list[i]);
 
-        qDebug()<<"Map size: "<< pidMap.size() << info;
+//        qDebug()<<"Map size: "<< pidMap.size() << info;
         if (info)
         {
             if(pidMap.contains(pid_list[i]))
@@ -669,20 +669,19 @@ void ProcessDialog::refreshLine(const QString &procname, quint64 rcv, quint64 se
     {
         flowNetPrevMap[pid] = 0;//save prev data
     }
-    qDebug()<<"ProcessDialog::refreshLine:pid<<rcv<<sent"<<pid<<rcv<<sent;
-    qDebug()<<"ProcessDialog::refreshLine:before flowNetPrevMap"<<flowNetPrevMap[pid];
+
     numAddFlowNetPerSec = tmptotalFlowNetPerSec - flowNetPrevMap[pid];
-    qDebug()<<"numAddFlowNetPerSec"<<numAddFlowNetPerSec;
+//    qDebug() << "numAddFlowNetPerSec" << numAddFlowNetPerSec;
     addFlowNetPerSec = speedLineBandFlowNet->new_count(tmptotalFlowNetPerSec - flowNetPrevMap[pid],pid);
-    qDebug()<<"ProcessDialog::refreshLine:deltaFlowNetPerSec"<<tmptotalFlowNetPerSec - flowNetPrevMap[pid];
+//    qDebug() << "ProcessDialog::refreshLine:deltaFlowNetPerSec" << tmptotalFlowNetPerSec - flowNetPrevMap[pid];
     flowNetPrevMap[pid] = tmptotalFlowNetPerSec;
-     qDebug()<<"ProcessDialog::refreshLine:after flowNetPrevMap"<<flowNetPrevMap[pid];
+//     qDebug() << "ProcessDialog::refreshLine:after flowNetPrevMap" << flowNetPrevMap[pid];
     if(!pidMap.contains(pid))
     {
         pidMap[pid] = addFlowNetPerSec;
     }
     QMap<int,QString>::const_iterator it = pidMap.find(pid);
-    qDebug()<<"ProcessDialog::pidMap"<<it.value();
+//    qDebug() << "ProcessDialog::pidMap" << it.value();
     if(it.value() != addFlowNetPerSec)
     {
         pidMap[pid] = addFlowNetPerSec;
@@ -728,40 +727,24 @@ void ProcessDialog::killProcesses()
         // Resume process first, otherwise kill process too slow.
         kill(pid, SIGCONT);
 
-//        if (kill(pid, SIGKILL) != 0) {
-//            qDebug() << QString("Kill process %1 failed, permission denied.").arg(pid);
-//        }
         error = kill(pid, SIGKILL);
-        if(error != -1)  {
+        if(error != -1) {
             qDebug() << "success.....";
-        }
-        else {
+        } else {
             //need to be root
             if(errno == EPERM) {//(kill -s %d %d", sig, pid)
-                qDebug() << QString("Kill process %1 failed, permission denied.").arg(pid);
+                qWarning() << QString("Kill process %1 failed, permission denied.").arg(pid);
                 if (QFileInfo("/usr/bin/pkexec").exists()) {//sudo apt install policykit-1
                     QProcess process;
                     process.execute(QString("pkexec --disable-internal-agent %1 %2 %3").arg("kill").arg(SIGKILL).arg(pid));
-                    /*process.start(QString("pkexec --disable-internal-agent %1 %2 %3").arg("kill").arg(SIGKILL).arg(pid));
-                    process.waitForStarted(1000);
-                    process.waitForFinished(20*1000);*/
-                }
-                else if (QFileInfo("/usr/bin/gksudo").exists()) {//sudo apt install gksu
+                } else if (QFileInfo("/usr/bin/gksudo").exists()) {//sudo apt install gksu
                     QProcess process;
                     process.execute(QString("gksudo \"%1 %2 %3\"").arg("kill").arg(SIGKILL).arg(pid));
-                    /*process.start(QString("gksudo \"%1 %2 %3\"").arg("kill").arg(SIGKILL).arg(pid));
-                    process.waitForStarted(1000);
-                    process.waitForFinished(20*1000);*/
-                }
-                else if (QFileInfo("/usr/bin/gksu").exists()) {//sudo apt install gksu
+                } else if (QFileInfo("/usr/bin/gksu").exists()) {//sudo apt install gksu
                     QProcess process;
                     process.execute(QString("gksu \"%1 %2 %3\"").arg("kill").arg(SIGKILL).arg(pid));
-//                    process.start(QString("gksu \"%1 %2 %3\"").arg("kill").arg(SIGKILL).arg(pid));
-//                    process.waitForStarted(1000);
-//                    process.waitForFinished(20*1000);
-                }
-                else {
-                    //
+                } else {
+                    qWarning() << "Failed to choose a tool to kill " << pid;
                 }
             }
         }
@@ -775,9 +758,6 @@ void ProcessDialog::endProcesses()
 {
     int error;
     for (pid_t pid : *actionPids) {
-//        if (kill(pid, SIGTERM) != 0) {
-//            qDebug() << QString("Kill process %1 failed, permission denied.").arg(pid);
-//        }
         error = kill(pid, SIGTERM);
         if(error != -1)  {
             qDebug() << "success.....";
@@ -790,26 +770,14 @@ void ProcessDialog::endProcesses()
                 if (QFileInfo("/usr/bin/pkexec").exists()) {//sudo apt install policykit-1
                     QProcess process;
                     process.execute(QString("pkexec --disable-internal-agent %1 %2 %3").arg("kill").arg(SIGTERM).arg(pid));
-                    /*process.start(QString("pkexec --disable-internal-agent %1 %2 %3").arg("kill").arg(SIGTERM).arg(pid));
-                    process.waitForStarted(1000);
-                    process.waitForFinished(20*1000);*/
-                }
-                else if (QFileInfo("/usr/bin/gksudo").exists()) {//sudo apt install gksu
+                } else if (QFileInfo("/usr/bin/gksudo").exists()) {//sudo apt install gksu
                     QProcess process;
                     process.execute(QString("gksudo \"%1 %2 %3\"").arg("kill").arg(SIGTERM).arg(pid));
-                    /*process.start(QString("gksudo \"%1 %2 %3\"").arg("kill").arg(SIGTERM).arg(pid));
-                    process.waitForStarted(1000);
-                    process.waitForFinished(20*1000);*/
-                }
-                else if (QFileInfo("/usr/bin/gksu").exists()) {//sudo apt install gksu
+                } else if (QFileInfo("/usr/bin/gksu").exists()) {//sudo apt install gksu
                     QProcess process;
                     process.execute(QString("gksu \"%1 %2 %3\"").arg("kill").arg(SIGTERM).arg(pid));
-//                    process.start(QString("gksu \"%1 %2 %3\"").arg("kill").arg(SIGTERM).arg(pid));
-//                    process.waitForStarted(1000);
-//                    process.waitForFinished(20*1000);
-                }
-                else {
-                    //
+                } else {
+                    qWarning() << "Failed to choose a tool to end process " << pid;
                 }
             }
         }

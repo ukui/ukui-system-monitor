@@ -73,13 +73,6 @@ MonitorTitleWidget::MonitorTitleWidget(QSettings *settings, QWidget *parent)
     m_changeBox->addItem(tr("My Processes"));
     m_changeBox->addItem(tr("All Process"));
     m_changeBox->setFocusPolicy(Qt::NoFocus);
-    qDebug()<<m_changeBox->itemText(0)<<"m_changeBox->itemText";
-    //m_changeBox->setCurrentIndex(0);
-//    QStandardItemModel *pItemModel = qobject_cast<QStandardItemModel*>(m_changeBox->model());
-//    pItemModel->item(0)->setForeground(QColor(255, 0, 0));
-    //m_changeBox->setFont();
-
-
     m_changeBox->setView(new  QListView());
 
     QFont changeBoxFont;
@@ -119,18 +112,8 @@ MonitorTitleWidget::MonitorTitleWidget(QSettings *settings, QWidget *parent)
     m_searchTimer->setSingleShot(true);
     connect(m_searchTimer, SIGNAL(timeout()), this, SLOT(onRefreshSearchResult()));
 
-//    this->setStyleSheet("QWidget{"
-//                        "background:rgba(19,19,20,1);"
-//                        "border-top-left-radius:6px;"
-//                        "border-top-right-radius:6px;"
-//                        "}");
-
-
-
-
     initWidgets();
     this->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
-
 }
 
 void MonitorTitleWidget::initThemeMode()
@@ -138,19 +121,12 @@ void MonitorTitleWidget::initThemeMode()
     //监听主题改变
     connect(qtSettings, &QGSettings::changed, this, [=](const QString &key)
     {
-
         if (key == "styleName")
         {
-            qDebug()<<"yes this is in";
-//            auto style = qtSettings->get(key).toString();
-//            qApp->setStyle(new InternalStyle(style));
             currentThemeMode = qtSettings->get(MODE_QT_KEY).toString();
-            qDebug()<<"监听主题改变-------------------->"<<currentThemeMode<<endl;
-//            qApp->setStyle(new InternalStyle(currentThemeMode));
-            //repaint();
             if (currentThemeMode == "ukui-light" || currentThemeMode == "ukui-default" || currentThemeMode == "ukui-white")
             {
-                qDebug()<<"the theme is white";
+                qDebug() << "The theme change to white";
                 m_changeBox->setStyleSheet("QComboBox{background:rgba(13,14,14,0.08);border-radius:6px;color:rgba(0,0,0,0.57)}"
                                            "QComboBox::drop-down{border:0px;width:30px;}"
                                            "QComboBox::down-arrow{image:url(:/img/down_arrow.png);}"
@@ -165,7 +141,7 @@ void MonitorTitleWidget::initThemeMode()
 
             if (currentThemeMode == "ukui-dark" || currentThemeMode == "ukui-black")
             {
-                qDebug()<<"the theme is black";
+                qDebug() << "The theme change to black";
                 m_changeBox->setStyleSheet("QComboBox{background:rgba(255,255,255,0.08);border-radius:6px;color:rgba(255,255,255,0.57)}"
                                            "QComboBox::drop-down{border:0px;width:30px;}"
                                            "QComboBox::down-arrow{image:url(:/img/down_arrow.png);}"
@@ -175,12 +151,11 @@ void MonitorTitleWidget::initThemeMode()
                                            );
                 this->setObjectName("MonitorTitle");
                 this->setStyleSheet("QFrame#MonitorTitle{background:rgba(13,14,14,0);border-top-left-radius:6px;border-top-right-radius:6px;color: palette(windowText);}");
-                qDebug()<<"if monitorTiltWidgetEffect";
             }
 
         }
     });
-    qDebug()<<"come in Monitor opacity";
+
     currentThemeMode = qtSettings->get(MODE_QT_KEY).toString();
     if (currentThemeMode == "ukui-light" || currentThemeMode == "ukui-default" || currentThemeMode == "ukui-white")
     {
@@ -549,8 +524,6 @@ void MonitorTitleWidget::onMaxBtnClicked()
 
 void MonitorTitleWidget::resizeEvent(QResizeEvent *event)
 {
-    qDebug()<<this->geometry().x()<<"-----------------------"<<this->geometry().y();
-
     if(window()->isMaximized())
     {
         maxTitleBtn->setIcon(QIcon::fromTheme("window-restore-symbolic"));

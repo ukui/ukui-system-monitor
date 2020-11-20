@@ -31,7 +31,6 @@ MemoryWidget::MemoryWidget(QWidget *parent)
     mainLayout->setContentsMargins(0, 0, 0, 0);
 
     QWidget *w = new QWidget;
-    qDebug()<<"wodew"<<w->width()<<w->height();
     m_widgetLayout = new QVBoxLayout(w);
     m_widgetLayout->setContentsMargins(0, 0, 0, 0);
     m_widgetLayout->setSpacing(0);

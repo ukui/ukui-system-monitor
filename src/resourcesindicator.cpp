@@ -41,7 +41,6 @@ ResourcesIndicator::ResourcesIndicator(int flag, QWidget *parent)
     ,m_outsideBorderColor(Qt::transparent)
 {
     typeObject = flag;
-    qDebug()<<"typeObject---"<<typeObject;
     const QByteArray idd(THEME_QT_SCHEMA);
 
     if(QGSettings::isSchemaInstalled(idd))
@@ -67,26 +66,20 @@ ResourcesIndicator::ResourcesIndicator(int flag, QWidget *parent)
 
     if (flag == 0) {
 //        m_borderColor = palette().color(QPalette::WindowText);    //#0973b4
-//        m_borderColor = QColor("#0973b4");
         m_borderColor = QColor(0x09,0x73,0xb4,0xff);
-//        m_outsideBorderColor = QColor(0x09,0x73,0xb4,0xff);
     }
     else if (flag == 1) {
 //        m_borderColor = palette().color(QPalette::WindowText);    //QColor("#9528b4")
-//        m_borderColor = QColor("#9528b4");
         m_borderColor = QColor(0x95,0x28,0xb4,0xff);
-//        m_outsideBorderColor = QColor(0x95,0x28,0xb4,0xff);
     }
     else {
         m_borderColor = Qt::transparent;
-//        m_borderColor = QColor("#cc00ff");
     }
     setResourcesState(Normal);
 }
 
 ResourcesIndicator::~ResourcesIndicator()
 {
-
 }
 
 void ResourcesIndicator::initThemeMode()
@@ -96,11 +89,7 @@ void ResourcesIndicator::initThemeMode()
     {
         if (key == "styleName")
         {
-//            auto style = qtSettings->get(key).toString();
-//            qApp->setStyle(new InternalStyle(style));
             currentThemeMode = qtSettings->get(MODE_QT_KEY).toString();
-            qDebug()<<"监听主题改变-------------------->"<<currentThemeMode<<endl;
-//            qApp->setStyle(new InternalStyle(currentThemeMode));
             repaint();
             updateBgColor();
         }
@@ -168,11 +157,8 @@ void ResourcesIndicator::mouseMoveEvent(QMouseEvent *event)
 
 void ResourcesIndicator::updateBgColor()
 {
-    qDebug()<<"Resoruce";
     switch (m_state) {
     case Hover:
-        qDebug()<<"Hover---";
-//        if()
         this->m_outsideBorderColor = Qt::transparent;
         if(currentThemeMode == "ukui-light"  || currentThemeMode == "ukui-default" || currentThemeMode == "ukui-white")
         {
@@ -184,37 +170,26 @@ void ResourcesIndicator::updateBgColor()
         }
         break;
     case Press:
-        qDebug()<<"press---";
         this->m_outsideBorderColor = Qt::transparent;
         this->m_bgColor = QColor("#f6fcfe");
         break;
     case Checked:
-        qDebug()<<"1234567879.000";
 //        this->m_outsideBorderColor = QColor("#0973b4");
         this->m_outsideBorderColor = Qt::transparent;
-        if(currentThemeMode == "ukui-light" || currentThemeMode == "ukui-default" || currentThemeMode == "ukui-white")
-        {
+        if (currentThemeMode == "ukui-light" || currentThemeMode == "ukui-default" || currentThemeMode == "ukui-white") {
             this->m_bgColor = QColor(0x13,0x14,0x14,19); //#e9f8fd
-        }
-        else
-        {
+        } else {
             this->m_bgColor = QColor(0xff,0xff,0xff,9);
         }
 //        this->m_bgColor = palette().color(QPalette::Base);
         break;
     default:
-        qDebug()<<"123456789.";
         this->m_outsideBorderColor = Qt::transparent;
 //        this->m_bgColor = QColor("#ffffff");
 //        this->m_outsideBorderColor = palette().color(QPalette::Base);
-        if(currentThemeMode == "ukui-light" || currentThemeMode == "ukui-default" || currentThemeMode == "ukui-white")
-        {
-            qDebug()<<"ifiamcommingin";
+        if (currentThemeMode == "ukui-light" || currentThemeMode == "ukui-default" || currentThemeMode == "ukui-white") {
             this->m_bgColor = QColor(0xff,0xff,0xff,0);
-        }
-        else if(currentThemeMode == "ukui-dark" || currentThemeMode == "ukui-black")
-        {
-            qDebug()<<"iiiiiiiiiiiii";
+        } else if (currentThemeMode == "ukui-dark" || currentThemeMode == "ukui-black") {
             this->m_bgColor = QColor(0x13,0x14,0x14,0);
         }
         break;
@@ -226,11 +201,7 @@ void ResourcesIndicator::setResourcesState(ResourcesIndicator::ResourcesState st
 {
     if (m_state == state)
         return;
-    qDebug()<<"9517538246";
-    qDebug()<<"normal"<<Normal;
-    qDebug()<<"m_state"<<m_state;
     m_state = state;
-    qDebug()<<"m_state_real"<<m_state;
     updateBgColor();
 }
 
@@ -337,27 +308,14 @@ void ResourcesIndicator::paintEvent(QPaintEvent *event)
     {
         painter.setOpacity(0.46);
         painter.setBrush(QColor("#9528b4"));
-//        painter.setOpacity(0.46);
-//        pen.setColor(QColor("#9528b4"));  //#fc7416
     }
 
 //    painter.drawRect(this->m_posX, this->m_rectTopPadding, this->m_rectTotalWidth, this->height()-(this->m_rectTotalHeight - convertPercent));
-//    if(typeObject == 0)
-//    {
-//        painter.setOpacity(0.06);
-//        painter.setBrush(QColor("#0973b4"));
-//    }
-
-//    if(typeObject == 1)
-//    {
-//        painter.setOpacity(0.06);
-//        painter.setBrush(QColor("#9528b4"));
-//    }
 
     QRect occupyRect(this->m_posX, this->m_rectTopPadding + this->m_rectTotalHeight - convertPercent, this->m_rectTotalWidth, convertPercent);
 //    painter.drawRoundedRect(occupyRect);
     painter.drawRect(this->m_posX, this->m_rectTopPadding + this->m_rectTotalHeight - convertPercent, this->m_rectTotalWidth, convertPercent);
-    qDebug()<<"this->->->->"<<this->m_posX<<this->m_rectTopPadding + this->m_rectTotalHeight - convertPercent<<this->m_rectTotalWidth<<convertPercent;
+//    qDebug()<<"this->->->->"<<this->m_posX<<this->m_rectTopPadding + this->m_rectTotalHeight - convertPercent<<this->m_rectTotalWidth<<convertPercent;
 
     //draw title
     painter.setOpacity(0.91);
@@ -365,9 +323,6 @@ void ResourcesIndicator::paintEvent(QPaintEvent *event)
     QFont font = painter.font();
     font.setPixelSize(16);
     painter.setFont(font);
-//    painter.setPen(QPen(QColor("#000000")));
-//    painter.setPen(QPen(palette().color(QPalette::WindowText)));
-//    painter.setPen(QPen(QColor("#cc00ff")));
     painter.setPen(palette().color(QPalette::WindowText));      //set the color of the typeface
     painter.drawText(QRect(68, 1, 118, 28), Qt::AlignLeft | Qt::AlignVCenter, this->m_title);
 

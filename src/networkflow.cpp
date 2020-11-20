@@ -111,7 +111,6 @@ NetworkFlow::NetworkFlow(QWidget *parent) : QWidget(parent)
 
     if(QGSettings::isSchemaInstalled(idd))
     {
-        qDebug()<<";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;";
         qtSettings = new QGSettings(idd);
     }
 

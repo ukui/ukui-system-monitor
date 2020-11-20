@@ -36,14 +36,10 @@ lineBandwith::lineBandwith(int pid,QWidget *parent) :QLineEdit(parent)
 
 QString lineBandwith::new_count(qint64 count ,int pid)
 {
-//    quint64 bandwith = count-count_prev;
     qint64 bandwith = count - countMap[pid];
-    qDebug()<<"count---yayaya" <<count<<"-"<<countMap[pid]<<count-countMap[pid];
-    qDebug()<<"bandwidth:::"<<bandwith;
-    qDebug()<<"count_prev1:::"<<count_prev;
+//    qDebug() <<"bandwidth: "<< bandwith;
     QDateTime now = QDateTime::currentDateTime();
     quint64 ms_lapse = time_prev.msecsTo(now);
-//    QString s;
 
     if (ms_lapse < 1000) ms_lapse = 1000; // prevent division by 0 ;-)
     quint64 speed = bandwith * 1000 / ms_lapse;
@@ -63,11 +59,8 @@ QString lineBandwith::new_count(qint64 count ,int pid)
         speedPerSec.setNum(speed/(1024*1024*1024));
         speedPerSec.append(" GB/s");
     }
-//    setText(speedPerSec);
-    qDebug()<<"sprrdPerSec:::"<<speedPerSec;
+//    qDebug() << "sprrdPerSec: " << speedPerSec;
     time_prev.swap(now);
-//    count_prev = count;
     countMap[pid] = count;
-//    qDebug()<<"count_prev2:::"<count_prev;
     return speedPerSec;
 }

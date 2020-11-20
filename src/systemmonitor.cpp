@@ -99,10 +99,7 @@ SystemMonitor::SystemMonitor(QWidget *parent)
 //    installEventFilter(this);
 
     this->setWindowTitle(tr("Kylin System Monitor"));
-//    this->setWindowIcon(QIcon(":/model/res/plugin/processmanager.png"));
-//    this->setWindowIcon(QIcon(":/img/processmanager.png"));
-
-     this->setWindowIcon(QIcon::fromTheme("ukui-system-monitor"));
+    this->setWindowIcon(QIcon::fromTheme("ukui-system-monitor"));
 
 
     //this->setFixedSize(900, 600);
@@ -137,15 +134,10 @@ void SystemMonitor::initThemeMode()
 
         if (key == "styleName")
         {
-//            auto style = qtSettings->get(key).toString();
-//            qApp->setStyle(new InternalStyle(style));
             currentThemeMode = qtSettings->get(MODE_QT_KEY).toString();
-            qDebug()<<"监听主题改变-------------------->"<<currentThemeMode<<endl;
-//            qApp->setStyle(new InternalStyle(currentThemeMode));
         }
     });
     currentThemeMode = qtSettings->get(MODE_QT_KEY).toString();
-    qDebug() << "Current theme mode: " << currentThemeMode;
 }
 
 void SystemMonitor::getTransparentData()
@@ -160,24 +152,19 @@ void SystemMonitor::getTransparentData()
     {
         if (key == "transparency")
         {
-            if (!opacitySettings)
-            {
-                m_transparency = 0.9;
-            }
-
             QStringList keys = opacitySettings->keys();
             if (keys.contains("transparency"))
             {
-                m_transparency = opacitySettings->get("transparency").toDouble();
+                m_transparency = opacitySettings->get("transparency").toString().toDouble();
             }
         }
         repaint();
     });
 
     QStringList keys = opacitySettings->keys();
-    if(keys.contains("transparenty"))
+    if(keys.contains("transparency"))
     {
-        m_transparency = opacitySettings->get("transparency").toDouble();
+        m_transparency = opacitySettings->get("transparency").toString().toDouble();
     }
 }
 
@@ -408,7 +395,7 @@ void SystemMonitor::initPanelStack()
 
     m_sysMonitorStack->resize(width() - 2, this->height() - TITLE_WIDGET_HEIGHT);
     m_sysMonitorStack->move(1, TITLE_WIDGET_HEIGHT);
-    qDebug()<<m_sysMonitorStack->width()<<"---------------------"<<m_sysMonitorStack->height();
+//    qDebug() << "System monitor size(w x h): " << m_sysMonitorStack->width() << " x " << m_sysMonitorStack->height();
     //m_sysMonitorStack->setFixedSize(898,500);
 
 //    m_sysMonitorStack->setMouseTracking(false);

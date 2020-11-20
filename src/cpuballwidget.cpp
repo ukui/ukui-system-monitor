@@ -54,11 +54,9 @@ CpuBallWidget::CpuBallWidget(QWidget *parent) : QWidget(parent)
     m_prevPercentValue = 0.0;
     m_percentValue = 0.0;
     m_progressText = QString("%1%").arg(QString::number(m_percentValue, 'f', 1));   //把小数转化为字符串，1是小数点后几位,此为小数点后1位
-    qDebug()<<"m_progressText----------------"<<m_progressText;
 
     m_shadowEffect = new QGraphicsDropShadowEffect(this);
     m_shadowEffect->setOffset(0, 0);
-//    m_shadowEffect->setColor(QColor(232, 232, 232, 127));
     m_shadowEffect->setColor(QColor("transparent"));
     m_shadowEffect->setBlurRadius(10);
     this->setGraphicsEffect(m_shadowEffect);

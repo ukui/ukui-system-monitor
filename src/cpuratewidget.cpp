@@ -75,12 +75,13 @@ inline int getCoreCounts()
         while (!file.atEnd()) {
                 if (content.contains("processor"))
                     cpuCounts ++;
-                qDebug() << "cpuCounts" << cpuCounts;
+//                qDebug() << "cpuCounts" << cpuCounts;
                 content = file.readLine().trimmed();
             }
         }
     file.close();
     if (cpuCounts == 0)
+        qWarning() << "Failed to get the cpu counts from /proc/cpuinfo, set cpu count to 4";
         cpuCounts = 4;
     return cpuCounts;
 }
@@ -327,7 +328,6 @@ CpuRateWidget::~CpuRateWidget()
 void CpuRateWidget::initWidgets()
 {
     QWidget *w = new QWidget;
-    qDebug()<<"qqqqqqqqqqqqqqqqqqq"<<w->width()<<"qqqqqqqqqqqqqqqqqqqqq"<<w->height();
 //    w->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
     m_labelLayout = new QVBoxLayout(w);
     m_labelLayout->setContentsMargins(0, 0, 0, 0);
@@ -338,25 +338,21 @@ void CpuRateWidget::initWidgets()
     m_title->setStyleSheet("background:transparent;font-size:24px;color:palette(windowText)");   //#000000
 
     m_cpuRateTitle = new QLabel;
-//    m_cpuRateTitle->setStyleSheet("QLabel{background:transparent;font-size:12px;color:palette(windowText);}"); //#999999
     m_cpuRateTitle->setText(tr("Occupancy rate"));
     m_cpuRateText = new QLabel;
     m_cpuRateText->setStyleSheet("QLabel{background:transparent;font-size:20px;color:palette(windowTexg);}");  //#000000
 
     m_cpuIdleRateTitle = new QLabel;
-//    m_cpuIdleRateTitle->setStyleSheet("QLabel{background:transparent;font-size:12px;color:palette(windowTexg);}");
     m_cpuIdleRateTitle->setText(tr("Idle rate"));
     m_cpuIdleRateText = new QLabel;
     m_cpuIdleRateText->setStyleSheet("QLabel{background:transparent;font-size:20px;color:palette(windowTexg);}");
 
     m_cpuRunTimeTitle = new QLabel;
-//    m_cpuRunTimeTitle->setStyleSheet("QLabel{background:transparent;font-size:12px;color:palette(windowTexg);}");
     m_cpuRunTimeTitle->setText(tr("The running time of system"));
     m_cpuRunTimeText = new QLabel;
     m_cpuRunTimeText->setStyleSheet("QLabel{background:transparent;font-size:20px;color:palette(windowTexg);}");
 
     m_cpuIdleTimeTitle = new QLabel;
-//    m_cpuIdleTimeTitle->setStyleSheet("QLabel{background:transparent;font-size:12px;color:palette(windowTexg);}");
     m_cpuIdleTimeTitle->setText(tr("The idle time of system"));
     m_cpuIdleTimeText = new QLabel;
     m_cpuIdleTimeText->setStyleSheet("QLabel{background:transparent;font-size:20px;color:palette(windowTexg);}");
@@ -386,8 +382,6 @@ void CpuRateWidget::initWidgets()
     cpuIdleTimeLayout->addWidget(m_cpuIdleTimeTitle);
     cpuIdleTimeLayout->addWidget(m_cpuIdleTimeText);
 
-
-
     m_labelLayout->setContentsMargins(0, 0, 0, 0);
     m_labelLayout->setSpacing(50);
     m_labelLayout->addWidget(m_title);
@@ -408,11 +402,8 @@ void CpuRateWidget::refreshData(double cpu)
     unsigned long idletime;
     QString rate = getIdelRate(runtime, idletime);
     m_cpuIdleRateText->setText(rate);
-//    qDebug()<<"rate-----------"<<rate;
     m_cpuRunTimeText->setText(convertTimeToString(runtime));
-//    qDebug()<<"runtime----------"<<runtime;
     m_cpuIdleTimeText->setText(convertTimeToString(idletime));
-//    qDebug()<<"idletime---------"<<idletime;
 }
 
 void CpuRateWidget::onUpdateCpuPercent(double value)

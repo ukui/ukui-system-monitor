@@ -37,7 +37,6 @@ MySearchEdit::MySearchEdit(QWidget *parent)
 
     if(QGSettings::isSchemaInstalled(idd))
     {
-//        qDebug()<<"MySearchEdit--------------1------------->"<<endl;
         qtSettings = new QGSettings(idd);
     }
 
@@ -49,12 +48,7 @@ MySearchEdit::MySearchEdit(QWidget *parent)
     }
 
     this->setWindowFlags(Qt::FramelessWindowHint);
-    //this->setStyleSheet("QFrame{background-color:#00376a;border-radius:0px;}");
-//    this->setFixedSize(200,32);
-    qDebug()<<"mySearchEdit.width"<<this->width()<<"mySearchEidt.height"<<this->height();
 
-//    this->setObjectName("SearchBtn");
-//    this->setStyleSheet("QFrame#SearchBtn{background:rgba(77,88,99,0.08);border-radius:4px;}");
     m_searchBtn = new QLabel;
     m_searchBtn->setStyleSheet("QLabel{background-color:transparent;border:none;background-image:url(:/img/search.png);}");
     m_searchBtn->setFixedSize(SEARCHBUTTON, SEARCHBUTTON);
@@ -104,16 +98,11 @@ MySearchEdit::MySearchEdit(QWidget *parent)
     connect(m_pClearTextButton, &QPushButton::clicked, this, [=](){
           m_edit->setText("");
     });
-    //m_edit->setPlaceholderText("enter process info");
-
-
 
     m_placeHolder = new QLabel;  //about the font
     QFont font;
     font.setPointSize(fontSize-2);
     m_placeHolder->setFont(font);
-
-//    m_placeHolder->setStyleSheet("QLabel{background-color:transparent;color:rgba(0,0,0,0.57);margin: 2 0 0 0 px;}");
 
     initThemeMode();
 
@@ -144,8 +133,6 @@ MySearchEdit::MySearchEdit(QWidget *parent)
 //    layout->addWidget(m_clearBtn);
 //    layout->setAlignment(m_clearBtn, Qt::AlignCenter);
 
-
-
     layout->setSpacing(0);
     layout->setContentsMargins(0, 0, 0, 0);
 
@@ -157,14 +144,11 @@ MySearchEdit::MySearchEdit(QWidget *parent)
 //    connect(m_clearBtn, &MyTristateButton::clicked, this, [=] {
 //        this->clearAndFocusEdit();
 //    });
-
-//    qDebug()<<this->width()<<"----------------------------------------------"<<this->height();
 }
 
 
 QPixmap MySearchEdit::drawSymbolicColoredPixmap(const QPixmap &source)
 {
-//    qDebug()<<"wwj,wozhendeshishishishsishishsishsihsishsishsishsihs"<<currentThemeMode;
     if(currentThemeMode == "ukui-light" || currentThemeMode == "ukui-default" || currentThemeMode == "ukui-white")
     {
         QImage img = source.toImage();
@@ -183,10 +167,7 @@ QPixmap MySearchEdit::drawSymbolicColoredPixmap(const QPixmap &source)
             }
         }
         return QPixmap::fromImage(img);
-    }
-
-    else if(currentThemeMode == "ukui-dark" || currentThemeMode == "ukui-black")
-    {
+    } else if(currentThemeMode == "ukui-dark" || currentThemeMode == "ukui-black") {
         QImage img = source.toImage();
         for (int x = 0; x < img.width(); x++)
         {
@@ -195,18 +176,15 @@ QPixmap MySearchEdit::drawSymbolicColoredPixmap(const QPixmap &source)
                 auto color = img.pixelColor(x, y);
                 if (color.alpha() > 0)
                 {
-                        color.setRed(255);
-                        color.setGreen(255);
-                        color.setBlue(255);
-                        img.setPixelColor(x, y, color);
+                    color.setRed(255);
+                    color.setGreen(255);
+                    color.setBlue(255);
+                    img.setPixelColor(x, y, color);
                 }
             }
         }
         return QPixmap::fromImage(img);
-    }
-
-    else
-    {
+    } else {
         QImage img = source.toImage();
         for (int x = 0; x < img.width(); x++)
         {
@@ -215,10 +193,10 @@ QPixmap MySearchEdit::drawSymbolicColoredPixmap(const QPixmap &source)
                 auto color = img.pixelColor(x, y);
                 if (color.alpha() > 0)
                 {
-                        color.setRed(0);
-                        color.setGreen(0);
-                        color.setBlue(0);
-                        img.setPixelColor(x, y, color);
+                    color.setRed(0);
+                    color.setGreen(0);
+                    color.setBlue(0);
+                    img.setPixelColor(x, y, color);
                 }
             }
         }
@@ -402,7 +380,7 @@ void MySearchEdit::initThemeMode()
 
             if(currentThemeMode == "ukui-light" || currentThemeMode == "ukui-default" || currentThemeMode == "ukui-white")
             {
-                m_edit->setStyleSheet("QLineEdit{background:transparent;border-radius:4px;color:#00000;padding-right:12px;padding-bottom: 2px;}"); //#CC00FF transparent
+                m_edit->setStyleSheet("QLineEdit{background:transparent;border-radius:4px;color:#000000;padding-right:12px;padding-bottom: 2px;}"); //#CC00FF transparent
                 m_placeHolder->setStyleSheet("QLabel{background-color:transparent;color:rgba(0,0,0,0.57);margin: 2 0 0 0 px;}");
                 this->setObjectName("SearchBtn");
                 this->setStyleSheet("QFrame#SearchBtn{background:rgba(13,14,14,0.08);border-radius:4px;}");
@@ -425,7 +403,7 @@ void MySearchEdit::initThemeMode()
     m_pClearTextButton->setIcon(drawSymbolicColoredPixmap(QPixmap::fromImage(QIcon::fromTheme(":/img/button-close-default-add-background-three.svg").pixmap(24,24).toImage())));
     if(currentThemeMode == "ukui-light" || currentThemeMode == "ukui-default" || currentThemeMode == "ukui-white")
     {
-        m_edit->setStyleSheet("QLineEdit{background:transparent;border-radius:4px;color:#00000;padding-right:12px;padding-bottom: 2px;}"); //#CC00FF transparent
+        m_edit->setStyleSheet("QLineEdit{background:transparent;border-radius:4px;color:#000000;padding-right:12px;padding-bottom: 2px;}"); //#CC00FF transparent
         m_placeHolder->setStyleSheet("QLabel{background-color:transparent;color:rgba(0,0,0,0.57);margin: 2 0 0 0 px;}");
         this->setObjectName("SearchBtn");
         this->setStyleSheet("QFrame#SearchBtn{background:rgba(13,14,14,0.08);border-radius:4px;}");
