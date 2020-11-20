@@ -1,3 +1,17 @@
+ukui-system-monitor (1.0.1-1) unstable; urgency=medium
+
+  * New upstream release.
+  * d/control: Remove useless depends to allow migration.
+
+ -- handsome_feng <jianfengli@ubuntukylin.com>  Fri, 20 Nov 2020 17:22:06 +0800
+
+ukui-system-monitor (1.0.0-2) unstable; urgency=medium
+
+  * Team upload.
+  * No change rebuild to allow migration
+
+ -- Aron Xu <aron@debian.org>  Tue, 29 Sep 2020 14:42:29 +0800
+
 ukui-system-monitor (1.0.0-1) unstable; urgency=medium
 
   * Initial release. (Closes: #966527)
