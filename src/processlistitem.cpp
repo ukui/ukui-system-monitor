@@ -159,7 +159,7 @@ void ProcessListItem::drawForeground(QRect rect, QPainter *painter, int column, 
         QFont font = painter->font();
         QFontMetrics fm(font);
         QString procName = fm.elidedText(name, Qt::ElideRight, nameMaxWidth);
-        painter->drawText(QRect(rect.x() + iconSize + padding * 2, rect.y(), nameMaxWidth, rect.height()), Qt::AlignLeft | Qt::AlignVCenter, procName);
+        painter->drawText(QRect(rect.x() + iconSize + padding * 2, rect.y(), nameMaxWidth, rect.height()), Qt::AlignCenter, procName);
         if (!isSeparator) {
             painter->setOpacity(0.8);
             QPainterPath separatorPath;
@@ -173,7 +173,7 @@ void ProcessListItem::drawForeground(QRect rect, QPainter *painter, int column, 
             QFont font = painter->font();
             QFontMetrics fm(font);
             QString userName = fm.elidedText(name, Qt::ElideRight, userMaxWidth);
-            painter->drawText(QRect(rect.x(), rect.y(), rect.width() - textPadding, rect.height()), Qt::AlignLeft | Qt::AlignVCenter, userName);
+            painter->drawText(QRect(rect.x(), rect.y(), rect.width() - textPadding, rect.height()), Qt::AlignCenter, userName);
         }
         if (!isSeparator) {
             painter->setOpacity(0.8);
@@ -184,7 +184,7 @@ void ProcessListItem::drawForeground(QRect rect, QPainter *painter, int column, 
     }
     else if (column == 2) {
 //        if (!m_data.m_status.isEmpty()) {
-            painter->drawText(QRect(rect.x(), rect.y(), rect.width() - textPadding, rect.height()), Qt::AlignRight | Qt::AlignVCenter, m_data.m_diskio);
+            painter->drawText(QRect(rect.x(), rect.y(), rect.width() - textPadding, rect.height()), Qt::AlignCenter, m_data.m_diskio);
 //        }
         if (!isSeparator) {
             painter->setOpacity(0.8);
@@ -203,7 +203,7 @@ void ProcessListItem::drawForeground(QRect rect, QPainter *painter, int column, 
         else {
             //this->drawCellBackground(QRect(rect.x(), rect.y(), rect.width(), rect.height()), painter, 2);
         }
-        painter->drawText(QRect(rect.x(), rect.y(), rect.width() - textPadding, rect.height()), Qt::AlignRight | Qt::AlignVCenter, QString("%1%").arg(m_data.cpu));
+        painter->drawText(QRect(rect.x(), rect.y(), rect.width() - textPadding, rect.height()), Qt::AlignCenter, QString("%1%").arg(m_data.cpu));
         if (!isSeparator) {
             painter->setOpacity(0.8);
             QPainterPath separatorPath;
@@ -212,7 +212,7 @@ void ProcessListItem::drawForeground(QRect rect, QPainter *painter, int column, 
         }
     }
     else if (column == 4) {
-        painter->drawText(QRect(rect.x(), rect.y(), rect.width() - padding, rect.height()), Qt::AlignRight | Qt::AlignVCenter, QString("%1").arg(m_data.pid));
+        painter->drawText(QRect(rect.x(), rect.y(), rect.width() - padding, rect.height()), Qt::AlignCenter, QString("%1").arg(m_data.pid));
         if (!isSeparator) {
             painter->setOpacity(0.8);
 //            QPainterPath separatorPath;
@@ -225,7 +225,7 @@ void ProcessListItem::drawForeground(QRect rect, QPainter *painter, int column, 
         QFont font = painter->font();
         QFontMetrics fm(font);
         QString flownet = fm.elidedText(m_data.m_flownet, Qt::ElideRight, flownetMaxWidth);
-        painter->drawText(QRect(rect.x(), rect.y(), flownetMaxWidth, rect.height()), Qt::AlignCenter | Qt::AlignVCenter, flownet);
+        painter->drawText(QRect(rect.x(), rect.y(), flownetMaxWidth, rect.height()), Qt::AlignCenter, flownet);
         if (!isSeparator) {
             painter->setOpacity(0.8);
 //            QPainterPath separatorPath;
@@ -247,13 +247,13 @@ void ProcessListItem::drawForeground(QRect rect, QPainter *painter, int column, 
             else {
                 //this->drawCellBackground(QRect(rect.x(), rect.y(), rect.width(), rect.height()), painter, 2);
             }
-            painter->drawText(QRect(rect.x(), rect.y(), rect.width() - textPadding, rect.height()), Qt::AlignRight | Qt::AlignVCenter, Memory);
+            painter->drawText(QRect(rect.x(), rect.y(), rect.width() - textPadding, rect.height()), Qt::AlignCenter, Memory);
             g_free(memory);
         }
         else
         {
             QString Memory = "0 MiB";
-            painter->drawText(QRect(rect.x(), rect.y(), rect.width() - textPadding, rect.height()), Qt::AlignRight | Qt::AlignVCenter, Memory);
+            painter->drawText(QRect(rect.x(), rect.y(), rect.width() - textPadding, rect.height()), Qt::AlignCenter, Memory);
         }
         if (!isSeparator) {
             painter->setOpacity(0.8);
@@ -263,7 +263,7 @@ void ProcessListItem::drawForeground(QRect rect, QPainter *painter, int column, 
         }
     }
     else if (column == 7) {
-        painter->drawText(QRect(rect.x(), rect.y(), rect.width() - textPadding, rect.height()), Qt::AlignLeft | Qt::AlignVCenter, getNiceLevel(m_data.m_nice));
+        painter->drawText(QRect(rect.x(), rect.y(), rect.width() - textPadding, rect.height()), Qt::AlignCenter, getNiceLevel(m_data.m_nice));
         if (!isSeparator) {
             painter->setOpacity(0.8);
             QPainterPath separatorPath;

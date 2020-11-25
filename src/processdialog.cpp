@@ -117,21 +117,22 @@ ProcessDialog::ProcessDialog(QList<bool> toBeDisplayedColumns, int currentSortIn
     connect(m_processListWidget, &ProcessListWidget::rightMouseClickedItems, this, &ProcessDialog::popupMenu, Qt::QueuedConnection);
     m_layout->addWidget(m_processListWidget);
 
+//记录要显示进程的内容类别
     whose_processes = "user";
     proSettings->beginGroup("PROCESS");
     whose_processes = proSettings->value("WhoseProcesses", whose_processes).toString();
     proSettings->endGroup();
 
-    int tabIndex = 1;
-    if (whose_processes == "active") {
-        tabIndex = 0;
-    }
-    else if (whose_processes == "all") {
-        tabIndex = 2;
-    }
-    else {
-        tabIndex = 1;
-    }
+//    int tabIndex = 1;
+//    if (whose_processes == "active") {
+//        tabIndex = 0;
+//    }
+//    else if (whose_processes == "all") {
+//        tabIndex = 2;
+//    }
+//    else {
+//        tabIndex = 1;
+//    }
 
 
 //    QWidget *w = new QWidget;

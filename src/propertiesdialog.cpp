@@ -83,9 +83,8 @@ PropertiesDialog::PropertiesDialog(QWidget *parent, pid_t processId) : QDialog(p
     m_logoLabel->setPixmap(QPixmap(":/res/sub_logo.png"));
 
     closeButton = new QPushButton(this);
-//    closeButton->setAutoDefault(true);
-//    closeButton->setFocusPolicy(Qt::NoFocus);
-//    closeButton->setEnabled(false);
+    closeButton->setProperty("isWindowButton", 0x2);
+    closeButton->setProperty("useIconHighlightEffect", 0x8);
     closeButton->setObjectName("CloseButton");
     closeButton->setIcon(QIcon::fromTheme("window-close-symbolic"));
     closeButton->setFlat(true);
@@ -99,12 +98,12 @@ PropertiesDialog::PropertiesDialog(QWidget *parent, pid_t processId) : QDialog(p
 //    });
 
     m_iconLabel = new QLabel();
-    m_iconLabel->setStyleSheet("QLabel{background:transparent;border:none;}");
+//    m_iconLabel->setStyleSheet("QLabel{background:transparent;border:none;}");
     m_iconLabel->setFixedSize(48, 48);
     m_iconLabel->setContentsMargins(0, 0, 0, 0);
 
     m_titleLabel = new QLabel();
-    m_titleLabel->setStyleSheet("QLabel{background-color:transparent;font-size:18px;color:#000000;}");
+//    m_titleLabel->setStyleSheet("QLabel{background-color:transparent;font-size:18px;color:#000000;}");
     m_titleLabel->setFixedWidth(230);
     m_titleLabel->setWordWrap(true);
 
@@ -113,14 +112,15 @@ PropertiesDialog::PropertiesDialog(QWidget *parent, pid_t processId) : QDialog(p
 
     m_topRightLayout->addWidget(m_logoLabel, 0, Qt::AlignTop | Qt::AlignRight);
     m_topRightLayout->addWidget(closeButton, 0, Qt::AlignTop | Qt::AlignRight);
+    m_topRightLayout->setContentsMargins(0,8,8,0);
 
     QLabel *topSplit = new QLabel();
-    topSplit->setStyleSheet("QLabel{background: qlineargradient(x1:0, y1:0, x2:0, y2:1,stop:0 #f1f1f1, stop:1 #e0e0e0);}");
+//    topSplit->setStyleSheet("QLabel{background: qlineargradient(x1:0, y1:0, x2:0, y2:1,stop:0 #f1f1f1, stop:1 #e0e0e0);}");
 //    topSplit->setStyleSheet("QLabel{background: qlineargradient(x1:0, y1:0, x2:1, y2:0,stop:0 #f1f1f1, stop:1 #e0e0e0);}");
     topSplit->setFixedSize(320, 1);
 
     QLabel *bottomSplit = new QLabel();
-    bottomSplit->setStyleSheet("QLabel{background: qlineargradient(x1:0, y1:0, x2:0, y2:1,stop:0 #f1f1f1, stop:1 #e0e0e0);}");
+//    bottomSplit->setStyleSheet("QLabel{background: qlineargradient(x1:0, y1:0, x2:0, y2:1,stop:0 #f1f1f1, stop:1 #e0e0e0);}");
 //    bottomSplit->setStyleSheet("QLabel{background: qlineargradient(x1:0, y1:0, x2:1, y2:0,stop:0 #f1f1f1, stop:1 #e0e0e0);}");
     bottomSplit->setFixedSize(320, 1);
 
@@ -165,11 +165,11 @@ PropertiesDialog::PropertiesDialog(QWidget *parent, pid_t processId) : QDialog(p
     titleList << QObject::tr("User name:") << QObject::tr("Process name:") << QObject::tr("flownet per second:") << QObject::tr("CPU Time:") << QObject::tr("Started Time:");
     for (int i = 0; i < titleList.length(); ++i) {
         QLabel *titleLabel = new QLabel(titleList.value(i));
-        titleLabel->setStyleSheet("QLabel{background-color:transparent;font-size:12px;color:#999999;}");
+//        titleLabel->setStyleSheet("QLabel{background-color:transparent;font-size:12px;color:#999999;}");
         titleLabel->setMinimumHeight(20);
 
         QLabel *infoLabel = new QLabel();
-        infoLabel->setStyleSheet("QLabel{background-color:transparent;font-size:12px;color:#000000;}");
+//        infoLabel->setStyleSheet("QLabel{background-color:transparent;font-size:12px;color:#000000;}");
         infoLabel->setWordWrap(true);
         infoLabel->setMinimumHeight(28);
         infoLabel->setMinimumWidth(220);
@@ -180,85 +180,6 @@ PropertiesDialog::PropertiesDialog(QWidget *parent, pid_t processId) : QDialog(p
         infoGrid->addWidget(titleLabel);
         infoGrid->addWidget(infoLabel);
     }
-
-    /*userTitleLabel = new QLabel(QString("%1:").arg(tr("User name")));
-    userTitleLabel->setStyleSheet("QLabel { background-color : transparent; color : #666666; }");
-    userTitleLabel->setFixedWidth(100);
-    userTitleLabel->setAlignment(Qt::AlignRight);
-
-    userLabel = new QLabel();
-    userLabel->setStyleSheet("QLabel { background-color : transparent; color : #000000; }");
-
-    userLayout->addWidget(userTitleLabel);
-    userLayout->addWidget(userLabel);
-    userLayout->addSpacing(20);
-
-    nameTitleLabel = new QLabel(QString("%1:").arg(tr("Process name")));
-    nameTitleLabel->setStyleSheet("QLabel { background-color : transparent; color : #666666; }");
-    nameTitleLabel->setFixedWidth(100);
-    nameTitleLabel->setAlignment(Qt::AlignRight);
-
-    m_appNameLabel = new QLabel();
-    m_appNameLabel->setStyleSheet("QLabel { background-color : transparent; color : #000000; }");
-
-    nameLayout->addWidget(nameTitleLabel);
-    nameLayout->addWidget(m_appNameLabel);
-    nameLayout->addSpacing(20);
-
-    cmdlineTitleLabel = new QLabel(QString("%1:").arg(tr("Command line")));
-    cmdlineTitleLabel->setStyleSheet("QLabel { background-color : transparent; color : #666666; }");
-    cmdlineTitleLabel->setFixedWidth(100);
-    cmdlineTitleLabel->setAlignment(Qt::AlignRight);
-//    cmdlineTitleLabel->setWordWrap(true);
-//    cmdlineTitleLabel->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
-
-    cmdlineLabel = new QLabel();
-    cmdlineLabel->setStyleSheet("QLabel { background-color : transparent; color : #000000; }");
-    cmdlineLabel->setWordWrap(true);
-    cmdlineLabel->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Expanding);
-
-    cmdlineLayout->addWidget(cmdlineTitleLabel);
-    cmdlineLayout->addWidget(cmdlineLabel);
-    cmdlineLayout->addSpacing(20);
-
-    cpuDurationTitleLabel = new QLabel(QString("%1:").arg(tr("CPU Time")));
-    cpuDurationTitleLabel->setStyleSheet("QLabel { background-color : transparent; color : #666666; }");
-    cpuDurationTitleLabel->setFixedWidth(100);
-    cpuDurationTitleLabel->setAlignment(Qt::AlignRight);
-
-    cpuDurationLabel = new QLabel();
-    cpuDurationLabel->setStyleSheet("QLabel { background-color : transparent; color : #000000; }");
-    cpuDurationLabel->setWordWrap(true);
-
-    cpuDurationLayout->addWidget(cpuDurationTitleLabel);
-    cpuDurationLayout->addWidget(cpuDurationLabel);
-    cpuDurationLayout->addSpacing(20);
-
-    startTimeTitleLabel = new QLabel(QString("%1:").arg(tr("Started Time")));
-    startTimeTitleLabel->setStyleSheet("QLabel { background-color : transparent; color : #666666; }");
-    startTimeTitleLabel->setFixedWidth(100);
-    startTimeTitleLabel->setAlignment(Qt::AlignRight);
-
-    startTimeLabel = new QLabel();
-    startTimeLabel->setStyleSheet("QLabel { background-color : transparent; color : #000000; }");
-    startTimeLabel->setWordWrap(true);
-
-    startTimeLayout->addWidget(startTimeTitleLabel);
-    startTimeLayout->addWidget(startTimeLabel);
-    startTimeLayout->addSpacing(20);
-
-    m_layout->addWidget(closeButton, 0, Qt::AlignTop | Qt::AlignRight);
-    m_layout->addSpacing(20);
-    m_layout->addWidget(m_iconLabel, 0, Qt::AlignHCenter);
-    m_layout->addSpacing(14);
-    m_layout->addWidget(m_titleLabel, 0, Qt::AlignHCenter);
-    m_layout->addSpacing(20);
-    m_layout->addLayout(userLayout);
-    m_layout->addLayout(nameLayout);
-    m_layout->addLayout(cmdlineLayout);
-    m_layout->addLayout(cpuDurationLayout);
-    m_layout->addLayout(startTimeLayout);
-    m_layout->addSpacing(20);*/
 
     this->moveToCenter();
 
@@ -474,7 +395,7 @@ void PropertiesDialog::paintEvent(QPaintEvent *event)
     QPainter painter(this);
 
     //绘制圆角矩形
-    painter.setPen(QPen(QColor("#808080"), 0));//边框颜色 #3f96e4
+    painter.setPen(QPen(QColor("#808080"), 0)   );//边框颜色 #3f96e4
 //    painter.setPen(Qt::NoPen);
     painter.setBrush(this->palette().base());//背景色
     painter.setRenderHint(QPainter::Antialiasing, true);
