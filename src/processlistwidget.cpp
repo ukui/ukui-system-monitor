@@ -51,10 +51,8 @@ ProcessListWidget::ProcessListWidget(QList<bool> toBeDisplayedColumns, QWidget *
   ,m_titlePressColumn(-1)
   ,m_mouseAtScrollArea(false)
   ,m_mouseDragScrollbar(false)
-  ,fontSettings(nullptr)
 {
-    installEventFilter(this);
-//theme settings
+
     const QByteArray idd(THEME_QT_SCHEMA);
 
     if(QGSettings::isSchemaInstalled(idd))
@@ -70,7 +68,7 @@ ProcessListWidget::ProcessListWidget(QList<bool> toBeDisplayedColumns, QWidget *
     }
 
     initFontSize();
-//other settings
+
     this->m_searchFunc = NULL;
     this->m_searchText = "";
     this->m_lastItem = NULL;
@@ -116,18 +114,6 @@ ProcessListWidget::ProcessListWidget(QList<bool> toBeDisplayedColumns, QWidget *
 
 }
 
-void ProcessListWidget::resizeEvent(QResizeEvent *event)
-{
-//    if(window()->isMaximized())
-//    {
-//        widths<<300;
-//    }
-//    else
-//    {
-//        widths << 170 << 90 << 80 << 70 << 80 << -1 << 80 << 80;//-1时让该行填充所有剩余空间
-//    }
-}
-
 void ProcessListWidget::initThemeMode()
 {
     //监听主题改变
@@ -149,18 +135,14 @@ void ProcessListWidget::initThemeMode()
 
 void ProcessListWidget::initFontSize()
 {
-    if (!fontSettings) {
-        fontSize = DEFAULT_FONT_SIZE;
-        return;
-    }
     connect(fontSettings,&QGSettings::changed,[=](QString key)
     {
         if("systemFont" == key || "systemFontSize" == key)
         {
-            fontSize = fontSettings->get(FONT_SIZE).toString().toFloat();
+            fontSize = fontSettings->get(FONT_SIZE).toInt();
         }
     });
-    fontSize = fontSettings->get(FONT_SIZE).toString().toFloat();
+    fontSize = fontSettings->get(FONT_SIZE).toInt();
 }
 
 ProcessListWidget::~ProcessListWidget()
@@ -526,9 +508,9 @@ void ProcessListWidget::leaveEvent(QEvent * event)
 
 void ProcessListWidget::hideScrollbar()
 {
-    this->m_mouseAtScrollArea = true;
+    this->m_mouseAtScrollArea = false;
     this->m_origOffset = this->m_offSet;
-qDebug()<<"hideScrollbar";
+
     repaint();
 }
 
@@ -791,66 +773,95 @@ void ProcessListWidget::wheelEvent(QWheelEvent *event)
 
 void ProcessListWidget::paintEvent(QPaintEvent *)
 {
+//    QPainter painter(this);
+//    painter.setRenderHint(QPainter::Antialiasing, true);
+
+//    QList<int> titleItemsWidths = getTitleItemsWidths();
+
+//    //painter.setOpacity(1);
+
+//    painter.setPen(Qt::blue);
+
+//    painter.setBrush(QBrush(QColor(0xff,0xff,0xff,0xFF)));
+
+//    int penWidth = 1;
+//    QPainterPath framePath;
+//    framePath.addRoundedRect(QRect(rect().x()+5, rect().y()+5, rect().width() /*- penWidth * 2*/, rect().height()/* - penWidth * 2*/), 0, 0);//背景弧度
+//    painter.setClipPath(framePath);
+//    painter.drawRect(this->rect());
+
     QPainter painter(this);
-    painter.setRenderHint(QPainter::Antialiasing, true);
+        painter.setRenderHint(QPainter::Antialiasing, true);
 
-    QList<int> titleItemsWidths = getTitleItemsWidths();
+        QList<int> titleItemsWidths = getTitleItemsWidths();
 
-    int penWidth = 0;
-    QPainterPath framePath;
-    framePath.addRoundedRect(QRect(rect().x() + penWidth, rect().y() + penWidth, rect().width() - penWidth * 2, rect().height() - penWidth * 2), 0, 0);//背景弧度
-    painter.setClipPath(framePath);
+        int penWidth = 0;
+        QPainterPath framePath;
+        framePath.addRoundedRect(QRect(rect().x() + penWidth, rect().y() + penWidth, rect().width() - penWidth * 2, rect().height() - penWidth * 2), 0, 0);//背景弧度
+        painter.setClipPath(framePath);
 
-    // draw border
-    QPainterPath path;
-    path.addRoundedRect(rect().adjusted(2, 2, -2, -2), 0, 0);
-    painter.setClipRect(QRect(), Qt::NoClip);
-    painter.setPen(Qt::NoPen);
-    painter.setOpacity(0.05);
+        // draw border
+        QPainterPath path;
+        path.addRoundedRect(rect().adjusted(2, 2, -2, -2), 0, 0);
+        painter.setClipRect(QRect(), Qt::NoClip);
+//        QPen pen2(QColor(Qt::red));
+//        pen2.setWidth(1);
+//        painter.setPen(pen2);
+//        painter.drawPath(path);
+        painter.setPen(Qt::NoPen);
+        //painter.fillRect(this->rect(),QColor(0,0,FF,0x20));
+
+        painter.setOpacity(0.05);
+        //framePath.setFillRule(Qt::ImhNone);
 
     //标题的背景
-    if (this->m_titleHeight > 0) {
+    if (this->m_titleHeight > 0)
+    {
         QPainterPath titlePath;
         titlePath.addRect(QRectF(rect().x(), rect().y(), rect().width(), this->m_titleHeight));
+        //painter.setOpacity(1);
         painter.fillPath(titlePath, QColor("palette(windowText)"));
+        //painter.fillPath(titlePath, QColor("#CC00FF"));
     }
 
     int title_Y = 0;
     int title_Height = 0;
-    if (this->m_titleHeight > 0) {
+    if (this->m_titleHeight > 0)
+    {
         int counter = 0;
         int posX = 0;
-        for (int itemWidth:titleItemsWidths) {
-            if (itemWidth > 0) {
+        for (int itemWidth:titleItemsWidths)
+        {
+            if (itemWidth > 0)
+            {
                 //标题文字左上方的排序箭头图标
-                if (this->m_currentSortIndex == counter) {
-                    if(counter == 0) {
+                if (this->m_currentSortIndex == counter)
+                {
+                    if(counter == 0 || counter == 5)
+                    {
+                        qDebug()<<"m_currentSortIndex------"<<m_currentSortIndex;
                         painter.setOpacity(1);
-                        if (this->m_isSort) {
-                            painter.drawPixmap(QPoint(rect().x() + posX + 120, rect().y() + 20), m_downArrowPixmap);
-                        } else {
-                            painter.drawPixmap(QPoint(rect().x() + posX + 120, rect().y() + 20), m_upArrowPixmap);
+                        if (this->m_isSort)
+                        {
+                            qDebug()<<"m_isSort----------"<<m_isSort;
+                            painter.drawPixmap(QPoint(rect().x() + posX + 100, rect().y() + 20), m_downArrowPixmap);
                         }
-                    } else if(counter == 5) {
-                        painter.setOpacity(1);
-                        if (this->m_isSort) {
-                            if(window()->isMaximized()) {
-                                painter.drawPixmap(QPoint(rect().x() + posX + 580, rect().y() + 20), m_downArrowPixmap);
-                            } else {
-                                painter.drawPixmap(QPoint(rect().x() + posX + 80, rect().y() + 20), m_downArrowPixmap);
-                            }
-                        } else {
-                            if(window()->isMaximized()) {
-                                painter.drawPixmap(QPoint(rect().x() + posX + 580, rect().y() + 20), m_upArrowPixmap);
-                            } else {
-                               painter.drawPixmap(QPoint(rect().x() + posX + 80, rect().y() + 20), m_upArrowPixmap);
-                            }
+                        else
+                        {
+                            painter.drawPixmap(QPoint(rect().x() + posX + 100, rect().y() + 20), m_upArrowPixmap);
                         }
-                    } else {
+                    }
+                    else
+                    {
+                        qDebug()<<"m_currentSortIndex------"<<m_currentSortIndex;
                         painter.setOpacity(1);
-                        if (this->m_isSort) {
+                        if (this->m_isSort)
+                        {
+                            qDebug()<<"m_isSort----------"<<m_isSort;
                             painter.drawPixmap(QPoint(rect().x() + posX + 60, rect().y() + 20), m_downArrowPixmap);
-                        } else {
+                        }
+                        else
+                        {
                             painter.drawPixmap(QPoint(rect().x() + posX + 60, rect().y() + 20), m_upArrowPixmap);
                         }
                     }
@@ -859,7 +870,8 @@ void ProcessListWidget::paintEvent(QPaintEvent *)
                 //标题文字
                 painter.setOpacity(0.57);
                 QFont font = painter.font();
-                font.setPixelSize(fontSize+1);
+//                font.setPointSize(10);
+                font.setPixelSize(fontSize);
                 painter.setFont(font);
                 if(currentThemeMode == "ukui-light" || currentThemeMode == "ukui-default" || currentThemeMode == "ukui-white")
                 {
@@ -871,10 +883,18 @@ void ProcessListWidget::paintEvent(QPaintEvent *)
                     painter.setPen(QPen(QColor("#ffffff")));
                 }
 
+
+//                if (this->columnTitles[counter] == tr("Process Name") || this->columnTitles[counter] == tr("Flownet Persec"))
                 if (this->columnTitles[counter] == tr("Process Name"))
-                    painter.drawText(QRect(posX + this->m_titlePadding, 0, itemWidth, this->m_titleHeight), Qt::AlignLeft | Qt::AlignVCenter, this->columnTitles[counter]);
+                    painter.drawText(QRect(posX + this->m_titlePadding, 0, itemWidth, this->m_titleHeight), Qt::AlignCenter, this->columnTitles[counter]);
                 else
                     painter.drawText(QRect(posX, 0, itemWidth - this->m_titlePadding, this->m_titleHeight), Qt::AlignCenter, this->columnTitles[counter]);
+
+                //水平下划线
+//                painter.setOpacity(0.8);
+//                QPainterPath h_separatorPath;
+//                h_separatorPath.addRect(QRectF(posX, rect().y() + this->m_titleHeight - 1, itemWidth, 1));
+//                painter.fillPath(h_separatorPath, QColor("#e0e0e0"));
 
                 if (counter < titleItemsWidths.size())
                 {//垂直分割线
@@ -897,11 +917,11 @@ void ProcessListWidget::paintEvent(QPaintEvent *)
     painter.setOpacity(1);
     QPainterPath backgroundPath;
     backgroundPath.addRect(QRectF(rect().x(), rect().y() + this->m_titleHeight, rect().width(), rect().height() - this->m_titleHeight));
-//    painter.fillPath(backgroundPath, QColor("#ffffff"));
+//    painter.fillPath(backgroundPath, QColor("#CC00FF"));
 
     //进程信息
     QPainterPath scrollAreaPath;
-    scrollAreaPath.addRect(QRectF(rect().x(), rect().y() + this->m_titleHeight, rect().width(), getTheScrollAreaHeight()));
+    scrollAreaPath.addRect(QRectF(rect().x(), rect().y() + this->m_titleHeight, rect().width(), getTheScrollAreaHeight() - 5));
 
     int rowCounter = 0;
 
@@ -916,6 +936,7 @@ void ProcessListWidget::paintEvent(QPaintEvent *)
 
             bool isSelect = this->m_selectedItems->contains(item);
             painter.save();
+//            qDebug()<<"number is ------>"<<number++<<endl;
             item->drawBackground(QRect(0, title_Y + rowCounter * this->m_rowHeight - this->m_offSet, rect().width(), this->m_rowHeight), &painter, rowCounter, isSelect ,currentThemeMode);
             painter.restore();
 
@@ -966,50 +987,37 @@ void ProcessListWidget::paintEvent(QPaintEvent *)
     //垂直滚动条
     if (this->m_mouseAtScrollArea) {
         paintScrollbar(&painter);
-    } else if (this->m_origOffset != this->m_offSet) {
+    } else/* if (this->m_origOffset != this->m_offSet) */{
         paintScrollbar(&painter);
         readyToHideScrollbar();
     }
 }
 
-bool ProcessListWidget::eventFilter(QObject *obj, QEvent *event)
-{
-    if(event->type() == QEvent::Enter)
-    {
-        opacity = 0;
-        if (this->m_mouseDragScrollbar) {
-            opacity = 0.8;
-        }
-        else {
-            if (this->m_mouseAtScrollArea)
-                opacity = 0.7;
-            else
-                opacity = 0.5;
-        }
-        repaint();
-    }
-
-    if(event->type() == QEvent::Leave)
-    {
-        opacity =0.2;
-    }
-    return false;
-}
-
 void ProcessListWidget::paintScrollbar(QPainter *painter)
 {
     if (this->getItemsTotalHeight() > getTheScrollAreaHeight()) {
+        qreal opacitry = 0;
+        if (this->m_mouseDragScrollbar) {
+            opacitry = 0.8;
+        }
+        else {
+            if (this->m_mouseAtScrollArea)
+                opacitry = 0.7;
+            else
+                opacitry = 0.5;
+        }
+
         int barWidth = (this->m_mouseAtScrollArea || this->m_mouseDragScrollbar) ? this->m_scrollbarWidth : 6;
         int barY = getScrollbarY();
         int barHeight = getScrollbarHeight();
-        painter->setOpacity(opacity);
+        painter->setOpacity(opacitry);
         QPainterPath path;
         path.addRoundedRect(
             QRectF(rect().x() + rect().width() - barWidth - 4, barY + 2, barWidth, barHeight - 2 * 2), 2, 2);//2 is radius
-        painter->fillPath(path, QColor("#0B95D7"));
+        painter->fillPath(path, QColor("#808080"));
 
         QPen pen;
-        pen.setColor(QColor("#0B95D7"));
+        pen.setColor(QColor("#808080"));
         pen.setWidth(1);
         painter->setOpacity(0);
         painter->setPen(pen);
@@ -1113,7 +1121,7 @@ int ProcessListWidget::getScrollbarY()
 
 int ProcessListWidget::getScrollbarHeight()
 {
-    return std::max(static_cast<int>(getTheScrollAreaHeight() / (this->getItemsTotalHeight() * 1.0) * rect().height()), 30);//30 is min height
+    return std::max(static_cast<int>(getTheScrollAreaHeight() / (this->getItemsTotalHeight() * 1.0) * rect().height()), 80);//30 is min height
 }
 
 QList<ProcessListItem*> ProcessListWidget::getSearchedItems(QList<ProcessListItem*> items)

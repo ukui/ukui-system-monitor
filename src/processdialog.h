@@ -47,6 +47,7 @@
 #include <QDebug>
 #include <QHeaderView>
 #include <QSettings>
+#include <QAbstractItemModel>
 
 class ProcessManager;
 class ProcessCategory;
