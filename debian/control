@@ -1,7 +1,7 @@
 Source: ukui-system-monitor
 Section: x11
 Priority: optional
-Maintainer: Ubuntu Developers <ubuntu-devel-discuss@list.ubuntu.net>
+Maintainer: Kylin Team <team+kylin@tracker.debian.org>
 Uploaders: handsome_feng <jianfengli@ubuntukylin.com>
 Build-Depends: debhelper-compat (= 12),
                qtbase5-dev (>= 5.1),
