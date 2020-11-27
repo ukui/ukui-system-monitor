@@ -35,6 +35,7 @@ NetCatogoryShow::NetCatogoryShow(QWidget *parent)
     ,m_rectTotalHeight(38)
     ,m_rectTotalWidth(58)
     ,m_outsideBorderColor(Qt::transparent)
+    ,qtSettings(nullptr)
 {
 
     const QByteArray idd(THEME_QT_SCHEMA);
@@ -66,16 +67,17 @@ NetCatogoryShow::NetCatogoryShow(QWidget *parent)
 
 void NetCatogoryShow::initThemeMode()
 {
+    if (!qtSettings) {
+//        qWarning() << "Failed to load the gsettings: " << THEME_QT_SCHEMA;
+        return;
+    }
+
     //监听主题改变
     connect(qtSettings, &QGSettings::changed, this, [=](const QString &key)
     {
         if (key == "styleName")
         {
-//            auto style = qtSettings->get(key).toString();
-//            qApp->setStyle(new InternalStyle(style));
             currentThemeMode = qtSettings->get(MODE_QT_KEY).toString();
-//            qDebug()<<"监听主题改变-------------------->"<<currentThemeMode<<endl;
-//            qApp->setStyle(new InternalStyle(currentThemeMode));
             updateBgColor();
             repaint();
         }

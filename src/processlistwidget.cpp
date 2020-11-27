@@ -51,6 +51,8 @@ ProcessListWidget::ProcessListWidget(QList<bool> toBeDisplayedColumns, QWidget *
   ,m_titlePressColumn(-1)
   ,m_mouseAtScrollArea(false)
   ,m_mouseDragScrollbar(false)
+  ,fontSettings(nullptr)
+  ,qtSettings(nullptr)
 {
 
     const QByteArray idd(THEME_QT_SCHEMA);
@@ -116,17 +118,17 @@ ProcessListWidget::ProcessListWidget(QList<bool> toBeDisplayedColumns, QWidget *
 
 void ProcessListWidget::initThemeMode()
 {
+    if (!qtSettings) {
+//        qWarning() << "Failed to load the gsettings: " << THEME_QT_SCHEMA;
+        return;
+    }
     //监听主题改变
     connect(qtSettings, &QGSettings::changed, this, [=](const QString &key)
     {
 
         if (key == "styleName")
         {
-//            auto style = qtSettings->get(key).toString();
-//            qApp->setStyle(new InternalStyle(style));
             currentThemeMode = qtSettings->get(MODE_QT_KEY).toString();
-            qDebug()<<"监听主题改变-------------------->"<<currentThemeMode<<endl;
-//            qApp->setStyle(new InternalStyle(currentThemeMode));
             repaint();
         }
     });
@@ -135,6 +137,10 @@ void ProcessListWidget::initThemeMode()
 
 void ProcessListWidget::initFontSize()
 {
+    if (!fontSettings) {
+        fontSize = DEFAULT_FONT_SIZE;
+        return;
+    }
     connect(fontSettings,&QGSettings::changed,[=](QString key)
     {
         if("systemFont" == key || "systemFontSize" == key)
@@ -839,11 +845,9 @@ void ProcessListWidget::paintEvent(QPaintEvent *)
                 {
                     if(counter == 0 || counter == 5)
                     {
-                        qDebug()<<"m_currentSortIndex------"<<m_currentSortIndex;
                         painter.setOpacity(1);
                         if (this->m_isSort)
                         {
-                            qDebug()<<"m_isSort----------"<<m_isSort;
                             painter.drawPixmap(QPoint(rect().x() + posX + 100, rect().y() + 20), m_downArrowPixmap);
                         }
                         else
@@ -853,11 +857,9 @@ void ProcessListWidget::paintEvent(QPaintEvent *)
                     }
                     else
                     {
-                        qDebug()<<"m_currentSortIndex------"<<m_currentSortIndex;
                         painter.setOpacity(1);
                         if (this->m_isSort)
                         {
-                            qDebug()<<"m_isSort----------"<<m_isSort;
                             painter.drawPixmap(QPoint(rect().x() + posX + 60, rect().y() + 20), m_downArrowPixmap);
                         }
                         else
@@ -876,11 +878,10 @@ void ProcessListWidget::paintEvent(QPaintEvent *)
                 if(currentThemeMode == "ukui-light" || currentThemeMode == "ukui-default" || currentThemeMode == "ukui-white")
                 {
                     painter.setPen(QPen(QColor("#000000")));
-                }
-
-                if(currentThemeMode == "ukui-dark" || currentThemeMode == "ukui-black")
-                {
+                } else if (currentThemeMode == "ukui-dark" || currentThemeMode == "ukui-black") {
                     painter.setPen(QPen(QColor("#ffffff")));
+                } else {
+                    painter.setPen(QPen(QColor("#000000")));
                 }
 
 

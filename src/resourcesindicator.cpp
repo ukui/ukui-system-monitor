@@ -39,6 +39,7 @@ ResourcesIndicator::ResourcesIndicator(int flag, QWidget *parent)
     ,m_rectTotalHeight(38)
     ,m_rectTotalWidth(58)
     ,m_outsideBorderColor(Qt::transparent)
+    ,qtSettings(nullptr)
 {
     typeObject = flag;
     const QByteArray idd(THEME_QT_SCHEMA);
@@ -47,9 +48,6 @@ ResourcesIndicator::ResourcesIndicator(int flag, QWidget *parent)
     {
         qtSettings = new QGSettings(idd);
     }
-
-//    m_bgColor = palette().color(QPalette::Base);
-//    m_bgColor = QColor("#000000");
 
     this->setFixedSize(188, 56);
 
@@ -65,11 +63,9 @@ ResourcesIndicator::ResourcesIndicator(int flag, QWidget *parent)
     }
 
     if (flag == 0) {
-//        m_borderColor = palette().color(QPalette::WindowText);    //#0973b4
         m_borderColor = QColor(0x09,0x73,0xb4,0xff);
     }
     else if (flag == 1) {
-//        m_borderColor = palette().color(QPalette::WindowText);    //QColor("#9528b4")
         m_borderColor = QColor(0x95,0x28,0xb4,0xff);
     }
     else {
@@ -84,6 +80,10 @@ ResourcesIndicator::~ResourcesIndicator()
 
 void ResourcesIndicator::initThemeMode()
 {
+    if (!qtSettings) {
+//        qWarning() << "Failed to load the gsettings: " << THEME_QT_SCHEMA;
+        return;
+    }
     //监听主题改变
     connect(qtSettings, &QGSettings::changed, this, [=](const QString &key)
     {
@@ -292,16 +292,11 @@ void ResourcesIndicator::paintEvent(QPaintEvent *event)
 //    QPainterPath picPath;
 //    picPath.addRoundedRect();
 
-    qDebug()<<"this->m_rectTotalWidth"<<"----"<<"convertPercent"<<this->m_rectTotalWidth<<"----"<<convertPercent;
-
-    qDebug()<<this->width()<<"My width my height"<<this->height();
 
     if(typeObject == 0)
     {
         painter.setOpacity(0.46);
         painter.setBrush(QColor("#0973b4"));
-//        painter.setOpacity(0.46);
-//        pen.setColor(QColor("#0973b4"));  //#fc7416
     }
 
     if(typeObject == 1)

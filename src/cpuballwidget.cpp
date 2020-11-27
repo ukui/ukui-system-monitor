@@ -26,14 +26,15 @@
 #include <QPainterPath>
 #include <QImageReader>
 #include <QGraphicsDropShadowEffect>
-
 #include <QtMath>
+
 qreal gradientDistance(qreal x)
 {
     return (1 - qCos(M_PI * x)) / 2;
 }
 
 CpuBallWidget::CpuBallWidget(QWidget *parent) : QWidget(parent)
+  , qtSettings(nullptr)
 {
     const QByteArray idd(THEME_QT_SCHEMA);
 
@@ -92,16 +93,16 @@ CpuBallWidget::~CpuBallWidget()
 
 void CpuBallWidget::initThemeMode()
 {
+    if (!qtSettings) {
+//        qWarning() << "Failed to load the gsettings: " << THEME_QT_SCHEMA;
+        return;
+    }
     //监听主题改变
     connect(qtSettings, &QGSettings::changed, this, [=](const QString &key)
     {
         if (key == "styleName")
         {
-//            auto style = qtSettings->get(key).toString();
-//            qApp->setStyle(new InternalStyle(style));
             currentThemeMode = qtSettings->get(MODE_QT_KEY).toString();
-            qDebug()<<"监听主题改变-------------------->"<<currentThemeMode<<endl;
-//            qApp->setStyle(new InternalStyle(currentThemeMode));
             repaint();
         }
     });
@@ -113,34 +114,19 @@ void CpuBallWidget::loadWaveImage()
     QImageReader frontReader(m_frontImagePath);
     int w = frontReader.size().width();
     int h = frontReader.size().height();
-//    w = w * this->width() / 100;
-//    h = h * this->height() / 100;
     QImage image(w, h, QImage::Format_ARGB32_Premultiplied);//QImage::Format_ARGB32
     image.fill(Qt::transparent);  //Qt::transparent
     image.load(m_frontImagePath);
-    /*QPainter painter(&image);
-//    painter.setCompositionMode(QPainter::CompositionMode_Source);
-//    painter.fillRect(image.rect(), Qt::transparent);
-//    painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
-    painter.drawImage(QPoint(0,0), image);
-    painter.end();*/
     m_frontImage = image;
 
     QImageReader backReader(m_backimagePath);
     w = backReader.size().width();
     h = backReader.size().height();
-//    w = w * this->width() / 100;
-//    h = h * this->height() / 100;
+
     QImage backImage(w, h, QImage::Format_ARGB32_Premultiplied);//QImage::Format_ARGB32
     backImage = backImage.scaled(QSize(w, h), Qt::KeepAspectRatio, Qt::SmoothTransformation);
     backImage.fill(Qt::transparent);
     backImage.load(m_backimagePath);
-    /*QPainter backPainter(&backImage);
-//    backPainter.setCompositionMode(QPainter::CompositionMode_Source);
-//    backPainter.fillRect(image.rect(), Qt::transparent);
-//    backPainter.setCompositionMode(QPainter::CompositionMode_SourceOver);
-    backPainter.drawImage(QPoint(0,0), backImage);
-    backPainter.end();*/
     m_backImage = backImage;
 }
 
@@ -161,7 +147,6 @@ void CpuBallWidget::onRepaintWaveImage()
     } else {
         m_waveTimer->stop();
     }
-//    this->update();//this->repaint();
 }
 
 //value:0 ~ 100
@@ -214,13 +199,9 @@ void CpuBallWidget::paintEvent(QPaintEvent *)
     } else if (currentPercent > 55) {
         m_shadowEffect->setColor(QColor(255, 193, 37));//黄
     } else {
-//        m_shadowEffect->setColor(QColor(232, 232, 232, 127));//灰 the last parameters stands for the degree of the background
-//        m_shadowEffect->setColor(QColor(204,0,255,50));
         m_shadowEffect->setColor(QColor(255,255,255,255));
-//        m_shadowEffect->setColor(palette().color(QPalette::Base));
     }
     wavePainter.fillRect(waveRectImage.rect(), QColor(255, 255, 255, 50));
-//    wavePainter.fillRect(waveRectImage.rect(),palette().color("QPalette::Base)");
 
     //Step2:波浪区域
     //CompositionMode_SourceOver保证波浪出现的时候其背景为通明的
@@ -248,7 +229,6 @@ void CpuBallWidget::paintEvent(QPaintEvent *)
     QFont font = wavePainter.font();
     font.setPixelSize(40);//waveSize.height() * 20 / this->height()
     wavePainter.setFont(font);
-//    wavePainter.setPen(Qt::white);
     wavePainter.setPen(QPen(palette().color(QPalette::WindowText)));
     wavePainter.drawText(QRect(rect.x(), rect.y() + rect.height()*2/3, rect.width(), rect.height()/3), Qt::AlignHCenter, m_progressText);
     wavePainter.end();

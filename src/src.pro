@@ -18,13 +18,12 @@ DESTDIR = ..
 
 LIBS += -L/usr/lib/ -lX11 -lpcap -lm
 
-CONFIG        += link_pkgconfig \
-                 C++11
+CONFIG += link_pkgconfig \
+                 c++11 \
+                 debug
 #gio-2.0
 #LIBS +=-lgio-2.0 -lglib-2.0
 
-CONFIG +=  c++11\
-           link_pkgconfig
 PKGCONFIG += libgtop-2.0 \
              libsystemd \
              gsettings-qt \
@@ -174,9 +173,6 @@ SOURCES += \
 
 OTHER_FILES += \
     systemmonitor.json
-
-#RESOURCES += \
-#    img.qrc
 
 RESOURCES += \
     res.qrc

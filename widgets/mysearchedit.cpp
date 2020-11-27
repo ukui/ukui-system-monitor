@@ -32,6 +32,7 @@ MySearchEdit::MySearchEdit(QWidget *parent)
     ,m_showCurve(QEasingCurve::OutCubic)    
     ,m_hideCurve(QEasingCurve::InCubic)
     ,fontSettings(nullptr)
+    ,qtSettings(nullptr)
 {
     const QByteArray idd(THEME_QT_SCHEMA);
 
@@ -53,13 +54,6 @@ MySearchEdit::MySearchEdit(QWidget *parent)
     m_searchBtn->setStyleSheet("QLabel{background-color:transparent;border:none;background-image:url(:/img/search.png);}");
     m_searchBtn->setFixedSize(SEARCHBUTTON, SEARCHBUTTON);
 
-//    m_clearBtn = new MyTristateButton;
-//    QPushButton *m_clearBtn = new QPushButton();
-//    QIcon icon(tr(":/img/close.png"));
-//    m_clearBtn->setIcon(icon);
-//    m_clearBtn->setObjectName("ClearIcon");
-//    m_clearBtn->hide();
-
     m_pClearTextButton = new QPushButton;
     m_pClearTextButton->setFixedSize(19, 21);
     m_pClearTextButton->setIconSize(QSize(19, 19));
@@ -68,15 +62,9 @@ MySearchEdit::MySearchEdit(QWidget *parent)
     m_edit = new QLineEdit;
 
     QIcon ClearTextEditIcon;
-//    ClearTextEditIcon.addFile(":/img/button-close-default-add-background-three.svg");
-//    m_pClearTextButton->setIcon(ClearTextEditIcon);
-    //m_pClearTextButton->setIcon(drawSymbolicColoredPixmap(QPixmap::fromImage(QIcon::fromTheme(":/img/button-close-default-add-background-three.svg").pixmap(24,24).toImage())));
     m_pClearTextButton->setCursor(Qt::ArrowCursor);
 
-
-
     m_edit->setAttribute(Qt::WA_Hover, true);
-//    m_edit->setStyle(new InternalStyle("ukui-default"));
     m_edit->setTextMargins(8,0,0,0);
 
     connect(m_edit, &QLineEdit::textChanged, this, &MySearchEdit::textChageSlots);
@@ -108,8 +96,6 @@ MySearchEdit::MySearchEdit(QWidget *parent)
 
     m_animation = new QPropertyAnimation(m_edit, "minimumWidth");
 
-//    m_size = QSize(m_searchBtn->sizeHint().width() + m_edit->sizeHint().width() + m_clearBtn->sizeHint().width() + 6,
-//                   qMax(m_searchBtn->sizeHint().height(), m_edit->sizeHint().height()));
     m_edit->setFixedWidth(0);
     m_edit->installEventFilter(this);
 
@@ -130,20 +116,12 @@ MySearchEdit::MySearchEdit(QWidget *parent)
     layout->addWidget(m_pClearTextButton);
     layout->setAlignment(m_pClearTextButton,Qt::AlignCenter);
     layout->addStretch();
-//    layout->addWidget(m_clearBtn);
-//    layout->setAlignment(m_clearBtn, Qt::AlignCenter);
-
     layout->setSpacing(0);
     layout->setContentsMargins(0, 0, 0, 0);
 
     setFocusPolicy(Qt::StrongFocus);
 
-//    connect(m_edit, &QLineEdit::textChanged, [this] {m_clearBtn->setVisible(!m_edit->text().isEmpty());});
     connect(m_edit, &QLineEdit::textChanged, this, &MySearchEdit::textChanged, Qt::DirectConnection);
-//    connect(m_clearBtn, SIGNAL(clicked()), this, SLOT(clearAndFocusEdit()));
-//    connect(m_clearBtn, &MyTristateButton::clicked, this, [=] {
-//        this->clearAndFocusEdit();
-//    });
 }
 
 
@@ -210,7 +188,6 @@ MySearchEdit::~MySearchEdit()
     delete m_edit;
     delete m_searchBtn;
     delete m_placeHolder;
-//    delete m_clearBtn;
     if(fontSettings)
     {
         delete fontSettings;
@@ -282,7 +259,6 @@ void MySearchEdit::setEditFocus()
     m_animation->start();
     m_placeHolder->hide();
     m_edit->setFocus();
-    //this->setStyleSheet("QFrame{background-color:rgba(19,19,20,0.2);border:1px solid #CC00FF;border-radius:4px;}");
 }
 
 void MySearchEdit::setPlaceHolder(const QString &text)
@@ -332,50 +308,18 @@ void MySearchEdit::textChageSlots(const QString &text)
     }
 }
 
-//void MySearchEdit::paintEvent(QEvent *event)
-//{
-////    QStyleOption opt;
-////    opt.init(this);
-////    QPainter p(this);
-////    p.setBrush(QBrush(QColor(0x19,0x19,0x20,0xFF)));
-////    p.setPen(Qt::NoPen);
-////    QPainterPath path;
-////    opt.rect.adjust(0,0,0,0);
-////    path.addRoundedRect(opt.rect,6,6);
-////    p.setRenderHint(QPainter::Antialiasing);  // 反锯齿;
-////    style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
-////    p.drawRoundedRect(opt.rect, 6, 6);
-//    QStyleOption opt;
-//    opt.init(this);
-//    QPainter p(this);
-//    p.setBrush(QBrush(QColor(0x19,0x19,0x20,0x19)));
-//    //p.setPen(Qt::NoPen);
-//    QPainterPath path;
-//    //opt.rect.adjust(0,0,0,0);
-////    path.addRoundRect(opt.rect.topLeft(),6);
-
-//    path.addPath(path);
-//    path.addRoundedRect(opt.rect,6,6);
-//    p.setRenderHint(QPainter::Antialiasing);  // 反锯齿;
-////       p.drawRoundedRect(opt.rect,6,6);
-//    style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
-////       p.setPen(QPen(QColor("#e9eef0"), 0));//边框颜色
-////       p.setBrush(QColor("#0d87ca"));//背景色
-////       QRectF r(1, 1, width() - 2, height() - 2);//左边 上边 右边 下边
-//    p.drawPath(path);
-//}
-
 void MySearchEdit::initThemeMode()
 {
+    if (!qtSettings) {
+//        qWarning() << "Failed to load the gsettings: " << THEME_QT_SCHEMA;
+        return;
+    }
+
     //监听主题改变
     connect(qtSettings, &QGSettings::changed, this, [=](const QString &key){
 
         if (key == "styleName") {
-//            auto style = qtSettings->get(key).toString();
-//            qApp->setStyle(new InternalStyle(style));
             currentThemeMode = qtSettings->get(MODE_QT_KEY).toString();
-//            qDebug()<<"监听主题改变-------------------->"<<currentThemeMode<<endl;
-//            qApp->setStyle(new InternalStyle(currentThemeMode));
             m_pClearTextButton->setIcon(drawSymbolicColoredPixmap(QPixmap::fromImage(QIcon::fromTheme(":/img/button-close-default-add-background-three.svg").pixmap(24,24).toImage())));
 
             if(currentThemeMode == "ukui-light" || currentThemeMode == "ukui-default" || currentThemeMode == "ukui-white")
@@ -398,8 +342,6 @@ void MySearchEdit::initThemeMode()
     });
     //获取当前主题
     currentThemeMode = qtSettings->get(MODE_QT_KEY).toString();
-//    qDebug()<<"监听主题改变-------------------->"<<currentThemeMode<<endl;
-//    qApp->setStyle(new InternalStyle(currentThemeMode));
     m_pClearTextButton->setIcon(drawSymbolicColoredPixmap(QPixmap::fromImage(QIcon::fromTheme(":/img/button-close-default-add-background-three.svg").pixmap(24,24).toImage())));
     if(currentThemeMode == "ukui-light" || currentThemeMode == "ukui-default" || currentThemeMode == "ukui-white")
     {

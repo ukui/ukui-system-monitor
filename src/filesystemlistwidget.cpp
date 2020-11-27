@@ -44,6 +44,7 @@ FileSystemListWidget::FileSystemListWidget(QList<bool> toBeDisplayedColumns, QWi
   ,m_mouseAtScrollArea(false)
   ,m_mouseDragScrollbar(false)
   ,fontSettings(nullptr)
+  ,qtSettings(nullptr)
 {
     const QByteArray idd(THEME_QT_SCHEMA);
 
@@ -124,17 +125,17 @@ void FileSystemListWidget::clearItems()
 
 void FileSystemListWidget::initThemeMode()
 {
+    if (!qtSettings) {
+//        qWarning() << "Failed to load the gsettings: " << THEME_QT_SCHEMA;
+        return;
+    }
     //监听主题改变
     connect(qtSettings, &QGSettings::changed, this, [=](const QString &key)
     {
 
         if (key == "styleName")
         {
-//            auto style = qtSettings->get(key).toString();
-//            qApp->setStyle(new InternalStyle(style));
             currentThemeMode = qtSettings->get(MODE_QT_KEY).toString();
-            qDebug()<<"监听主题改变-------------------->"<<currentThemeMode<<endl;
-//            qApp->setStyle(new InternalStyle(currentThemeMode));
             repaint();
         }
     });

@@ -109,6 +109,11 @@ SystemMonitor::SystemMonitor(QWidget *parent)
 
 void SystemMonitor::initThemeMode()
 {
+    if (!qtSettings) {
+//        qWarning() << "Failed to load the gsettings: " << THEME_QT_SCHEMA;
+        return;
+    }
+
     //监听主题改变
     connect(qtSettings, &QGSettings::changed, this, [=](const QString &key)
     {

@@ -31,6 +31,7 @@ MyUnderLineButton::MyUnderLineButton(QWidget *parent)
     ,m_state(Normal)
     ,m_isChecked(false)
     ,fontSettings(nullptr)
+    ,qtSettings(nullptr)
 {
     const QByteArray idd(THEME_QT_SCHEMA);
 
@@ -50,27 +51,22 @@ MyUnderLineButton::MyUnderLineButton(QWidget *parent)
 
     this->setFixedSize(NORMALWIDTH, NORMALHEIGHT+2);
     m_textLabel = new QLabel;
-//    QFont ftSize;
-//    ftSize.setPointSize(fontSize);
-//    m_textLabel->setFont(ftSize);
 
     initThemeMode();
     initFontSize();
-
-//    m_underlineLabel = new QLabel;
-//    m_underlineLabel->setFixedSize(52, 2);
-//    m_underlineLabel->setStyleSheet("QLabel{background-color:#ffffff;}");
-//    m_underlineLabel->hide();
 
     m_layout = new QVBoxLayout(this);
     m_layout->setContentsMargins(0,0,0,0);
 
     m_layout->addWidget(m_textLabel, 0, Qt::AlignVCenter| Qt::AlignCenter);
-    //m_layout->addWidget(m_underlineLabel, 0, Qt::AlignBottom | Qt::AlignHCenter);
 }
 
 void MyUnderLineButton::initThemeMode()
 {
+    if (!qtSettings) {
+//        qWarning() << "Failed to load the gsettings: " << THEME_QT_SCHEMA;
+        return;
+    }
 
     //监听主题改变
     connect(qtSettings, &QGSettings::changed, this, [=](const QString &key)
@@ -78,12 +74,7 @@ void MyUnderLineButton::initThemeMode()
 
         if (key == "styleName")
         {
-//            auto style = qtSettings->get(key).toString();
-//            qApp->setStyle(new InternalStyle(style));
             currentThemeMode = qtSettings->get(MODE_QT_KEY).toString();
-            qDebug()<<"监听主题改变-------------------->"<<currentThemeMode<<endl;
-//            qApp->setStyle(new InternalStyle(currentThemeMode));
-            //repaint();
             if (currentThemeMode == "ukui-light" || currentThemeMode == "ukui-default" || currentThemeMode == "ukui-white")
             {
                 m_textLabel->setStyleSheet("QLabel{background-color:transparent;color:rgba(0,0,0,0.57);text-align:center;}"); //ffffff
@@ -95,8 +86,6 @@ void MyUnderLineButton::initThemeMode()
                 m_textLabel->setStyleSheet("QLabel{background-color:transparent;color:rgba(255,255,255,0.57); text-align:center;}"); //ffffff
             }
         }
-//        repaint();
-//        updateStyleSheet();
     });
     currentThemeMode = qtSettings->get(MODE_QT_KEY).toString();
     if (currentThemeMode == "ukui-light" || currentThemeMode == "ukui-default" || currentThemeMode == "ukui-white")
@@ -227,11 +216,11 @@ void MyUnderLineButton::updateStyleSheet()
     case Normal:
         if(currentThemeMode == "ukui-light" || currentThemeMode == "ukui-default" || currentThemeMode == "ukui-white")
         {
-            m_textLabel->setStyleSheet("QLabel{back-color:transparent;color:rgba(0,0,0,0.57); text-align:center;}");
+            m_textLabel->setStyleSheet("QLabel{background-color:transparent;color:rgba(0,0,0,0.57); text-align:center;}");
         }
         else
         {
-            m_textLabel->setStyleSheet("QLabel{back-color:transparent;color:rgba(255,255,255,0.57); text-align:center;}");
+            m_textLabel->setStyleSheet("QLabel{background-color:transparent;color:rgba(255,255,255,0.57); text-align:center;}");
         }
 //    case Normal:
 
@@ -244,7 +233,7 @@ void MyUnderLineButton::updateStyleSheet()
 //        //m_underlineLabel->hide();
 //        break;
     }
-//   ////////////// m_textLabel->setStyleSheet("QLabel{color:white};");
+//    m_textLabel->setStyleSheet("QLabel{color:white};");
 }
 
 void MyUnderLineButton::setState(MyUnderLineButton::ButtonState state)

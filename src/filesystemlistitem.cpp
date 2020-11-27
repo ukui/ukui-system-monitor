@@ -32,6 +32,7 @@
 
 FileSystemListItem::FileSystemListItem(FileSystemData *info)
     :fontSettings(nullptr)
+    ,qtSettings(nullptr)
 {
     m_data = info;
     iconSize = 20;
@@ -69,8 +70,10 @@ FileSystemListItem::~FileSystemListItem()
 void FileSystemListItem::initThemeMode()
 {
     if (!qtSettings) {
+//        qWarning() << "Failed to load the gsettings: " << THEME_QT_SCHEMA;
         return;
     }
+
     //监听主题改变
     connect(qtSettings, &QGSettings::changed, this, [=](const QString &key)
     {

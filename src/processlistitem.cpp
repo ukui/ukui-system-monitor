@@ -49,7 +49,7 @@ ProcessListItem::ProcessListItem(ProcData info)
     iconSize = 20;
     padding = 14;
     textPadding = 10;
-    //initThemeMode();
+    initThemeMode();
 }
 
 ProcessListItem::~ProcessListItem()
@@ -66,6 +66,7 @@ ProcessListItem::~ProcessListItem()
 void ProcessListItem::initThemeMode()
 {
     if (!qtSettings) {
+//        qWarning() << "Failed to load the gsettings: " << THEME_QT_SCHEMA;
         return;
     }
     //监听主题改变
@@ -124,11 +125,11 @@ void ProcessListItem::drawBackground(QRect rect, QPainter *painter, int index, b
         if(currentThemeMode == "ukui-light" || currentThemeMode == "ukui-default" || currentThemeMode == "ukui-white")
         {
             painter->fillPath(path, QColor("#ffffff"));
-        }
-
-        if(currentThemeMode == "ukui-dark" || currentThemeMode == "ukui-black")
+        } else if (currentThemeMode == "ukui-dark" || currentThemeMode == "ukui-black")
         {
             painter->fillPath(path,QColor("#131414"));
+        } else {
+            painter->fillPath(path, QColor("000000"));
         }
     }
 }

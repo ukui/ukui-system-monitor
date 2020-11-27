@@ -204,6 +204,7 @@ inline void readFile(const QString &fileName)
 }
 
 CpuRateWidget::CpuRateWidget(QWidget *parent) : QWidget(parent)
+  , qtSettings(nullptr)
 {
     const QByteArray idd(THEME_QT_SCHEMA);
     if(QGSettings::isSchemaInstalled(idd))
@@ -225,39 +226,22 @@ CpuRateWidget::CpuRateWidget(QWidget *parent) : QWidget(parent)
     initThemeMode();
 
     m_cpuBall->startTimer();
-
-    /*unsigned long runtime;
-    unsigned long idletime;
-    QString rate = getIdelRate(runtime, idletime);
-    qDebug() << "rate="<<rate;
-    qDebug() << convertTimeToString(runtime);
-    qDebug() << convertTimeToString(idletime);*/
-
-
-    /*sudo dmidecode -t processor
-    u32 len;
-    u8 *buf;
-    size_t size = len;
-    buf = read_file(&size, devmem);
-    len = size;
-//    dmi_table_decode(buf, len, num, ver, flags);
-//    dmi_decode(&h, ver);*/
 }
 
 void CpuRateWidget::initThemeMode()
 {
+    if (!qtSettings) {
+//        qWarning() << "Failed to load the gsettings: " << THEME_QT_SCHEMA;
+        return;
+    }
+
     //监听主题改变
     connect(qtSettings, &QGSettings::changed, this, [=](const QString &key)
     {
-
         if (key == "styleName")
         {
-//            auto style = qtSettings->get(key).toString();
-//            qApp->setStyle(new InternalStyle(style));
             currentThemeMode = qtSettings->get(MODE_QT_KEY).toString();
-            qDebug()<<"监听主题改变-------------------->"<<currentThemeMode<<endl;
-//            qApp->setStyle(new InternalStyle(currentThemeMode));
-            //repaint();
+
             if(currentThemeMode == "ukui-light" || currentThemeMode == "ukui-default" || currentThemeMode =="ukui-white")
             {
                 m_cpuRateTitle->setStyleSheet("QLabel{background:transparent;font-size:12px;color:rgba(0,0,0,0.57);}"); //#999999

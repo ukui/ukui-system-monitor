@@ -105,6 +105,7 @@ NetworkFlow::NetworkFlow(QWidget *parent) : QWidget(parent)
   ,m_outsideBorderColor(QColor("transparent"))
   ,m_downloadColor(QColor("#009944"))
   ,m_uploadColor(QColor("#e60012"))
+  ,qtSettings(nullptr)
 {    
 
     const QByteArray idd(THEME_QT_SCHEMA);
@@ -146,20 +147,20 @@ NetworkFlow::NetworkFlow(QWidget *parent) : QWidget(parent)
 
 void NetworkFlow::initThemeMode()
 {
+    if (!qtSettings) {
+//        qWarning() << "Failed to load the gsettings: " << THEME_QT_SCHEMA;
+        return;
+    }
 
     //监听主题改变
     connect(qtSettings, &QGSettings::changed, this, [=](const QString &key)
     {
         if (key == "styleName")
         {
-//            auto style = qtSettings->get(key).toString();
-//            qApp->setStyle(new InternalStyle(style));
             currentThemeMode = qtSettings->get(MODE_QT_KEY).toString();
-            qDebug()<<"监听主题改变-------------------->"<<currentThemeMode<<endl;
-//            qApp->setStyle(new InternalStyle(currentThemeMode));
+
         }
         repaint();
-//        update();
     });
     currentThemeMode = qtSettings->get(MODE_QT_KEY).toString();
 }

@@ -43,6 +43,7 @@ MonitorTitleWidget::MonitorTitleWidget(QSettings *settings, QWidget *parent)
     :QFrame(parent)
     ,proSettings(settings)
     ,fontSettings(nullptr)
+    ,qtSettings(nullptr)
 {
     whichBox = new QList<int>();
     const QByteArray idd(THEME_QT_SCHEMA);
@@ -81,32 +82,12 @@ MonitorTitleWidget::MonitorTitleWidget(QSettings *settings, QWidget *parent)
 
     initThemeMode();
 
-    this->setWindowFlags(Qt::FramelessWindowHint);//this->setWindowFlags(this->windowFlags() | Qt::FramelessWindowHint  | Qt::WindowCloseButtonHint);
-//    this->setWindowFlags(Qt::Window | Qt::FramelessWindowHint | Qt::WindowMinimizeButtonHint);//Attention: Qt::WindowCloseButtonHint make showMinimized() valid
+    this->setWindowFlags(Qt::FramelessWindowHint);
 
     installEventFilter(this);
-//    setMouseTracking(true);
     setFixedHeight(MONITOR_TITLE_WIDGET_HEIGHT);
 
     this->setAutoFillBackground(true);
-//    this->setAttribute(Qt::WA_TranslucentBackground);
-
-//    QPalette palette;
-//    palette.setColor(QPalette::Background, QColor("#0d87ca"));
-//    this->setPalette(palette);
-//    this->setStyleSheet("QFrame{background:transparent;background-color:#0d87ca;border-radius:5px;border:1px solid red;}");
-//    this->setStyleSheet("QFrame {padding: 5px 0;} QFrame:hover {background-color: rgba(255, 245, 250, 0.1);border-radius: 5px;}");
-
-//    if(currentThemeMode == "ukui-white")
-//    {
-//        this->setObjectName("MonitorTitle");
-//        this->setStyleSheet("QFrame#MonitorTitle{background:rgba(255,255,255,0.9);border-top-left-radius:6px;border-top-right-radius:6px;color: palette(windowText);}");
-//    }
-//    else
-//    {
-//        this->setObjectName("MonitorTitle");
-//        this->setStyleSheet("QFrame#MonitorTitle{background:rgba(13,14,14,0.9);border-top-left-radius:6px;border-top-right-radius:6px;color: palette(windowText);}");
-//    }
 
     m_searchTimer = new QTimer(this);
     m_searchTimer->setSingleShot(true);
@@ -118,6 +99,10 @@ MonitorTitleWidget::MonitorTitleWidget(QSettings *settings, QWidget *parent)
 
 void MonitorTitleWidget::initThemeMode()
 {
+    if (!qtSettings) {
+//        qWarning() << "Failed to load the gsettings: " << THEME_QT_SCHEMA;
+        return;
+    }
     //监听主题改变
     connect(qtSettings, &QGSettings::changed, this, [=](const QString &key)
     {
