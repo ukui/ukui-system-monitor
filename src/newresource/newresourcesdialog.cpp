@@ -260,6 +260,8 @@ NewResouresDialog::NewResouresDialog(QWidget *parent)
     swapUnitDataLabel = new QLabel;
     netrecvUnitDataLabel = new QLabel;
     netsentUnitDataLabel = new QLabel;
+    pe.setColor(QPalette::WindowText,QColor(13,14,13,130));
+
     const QByteArray id(THEME_QT_SCHEMA);
 
     if(QGSettings::isSchemaInstalled(id))
@@ -290,18 +292,17 @@ NewResouresDialog::NewResouresDialog(QWidget *parent)
 
 NewResouresDialog::~NewResouresDialog()
 {
-
+    QLayoutItem *child;
+    while ((child = main_V_BoxLayout->takeAt(0)) != 0)
+    {
+        if (child->widget())
+            child->widget()->deleteLater();
+        delete child;
+    }
 }
 
 void NewResouresDialog::setChangeNetSpeedLabel()
 {
-//    connect(networkChart,&NetWorkChart::speedToMib,this,[=](){
-//        theFifthSpeedLabel->setText(tr("10Mib"));
-//        theFourthSpeedLabel->setText(tr("7.5Mib"));
-//        theThirdSpeedLabel->setText(tr("5.0Mib"));
-//        theSecondSpeedLabel->setText(tr("2.5Mib"));
-//        theFirtSpeedLabel->setText(tr("0.0Mib"));
-//    });
     connect(networkChart,&NetWorkChart::speedToLowKib,this,[=](){
         theFifthSpeedLabel->setText(tr("20Kib"));
         theFourthSpeedLabel->setText(tr("15Kib"));
@@ -310,13 +311,6 @@ void NewResouresDialog::setChangeNetSpeedLabel()
         theFirtSpeedLabel->setText(tr("0Kib"));
     });
 
-//    connect(networkChart,&NetWorkChart::speedToMiddleKib,this,[=](){
-//        theFifthSpeedLabel->setText(tr("100Kib"));
-//        theFourthSpeedLabel->setText(tr("75Kib"));
-//        theThirdSpeedLabel->setText(tr("50Kib"));
-//        theSecondSpeedLabel->setText(tr("25Kib"));
-//        theFirtSpeedLabel->setText(tr("0Kib"));
-//    });
     connect(networkChart,&NetWorkChart::speedToHighKib,this,[=](){
         theFifthSpeedLabel->setText(tr("1000Kib"));
         theFourthSpeedLabel->setText(tr("750Kib"));
@@ -334,7 +328,6 @@ void NewResouresDialog::cpuHistoySetText(double value)
     QString s = "Cpu "+ showValue +":100%";
     cpuUnitDataLabel->setText(s);
     qDebug()<<"value"<<value;
-//    emit resetWidget();
 }
 
 void NewResouresDialog::memoryandswapSetText(const QString &infoMemory, double percentMemory,const QString &infoSwap, double percentSwap)
@@ -363,17 +356,37 @@ void NewResouresDialog::networkSetText(long recvTotalBytes, long sentTotalBytes,
 
 void NewResouresDialog::initWidget()
 {
- //set the part of CPU history
     qDebug()<<this->height()<<"this.height-------";
-    QPalette pe;
-    pe.setColor(QPalette::WindowText,QColor(13,14,13,130));
+    initCpuHistory();
+    initSwapMeomoryHistory();
+    initNetSpeedHistory();
 
-    QHBoxLayout *cputitle_H_BoxLayout = new QHBoxLayout;
+    main_V_BoxLayout = new QVBoxLayout;
+    main_V_BoxLayout->setSpacing(0);
+    main_V_BoxLayout->addLayout(cputitle_H_BoxLayout);
+    main_V_BoxLayout->addLayout(cpuUnit_H_BoxLayout);
+    main_V_BoxLayout->addLayout(cpuChart_H_BoxLayout);
+    main_V_BoxLayout->addLayout(swapmemoryTitle_H_BoxLayout);
+    main_V_BoxLayout->addLayout(swapmemoryUnit_H_BoxLayout);
+    main_V_BoxLayout->addLayout(memoryswapChart_H_BoxLayout);
+    main_V_BoxLayout->addLayout(netWorkTitle_H_BoxLayout);
+    main_V_BoxLayout->addLayout(networkUnit_H_BoxLayout);
+    main_V_BoxLayout->addLayout(networkChart_H_BoxLayout);
+    main_V_BoxLayout->addSpacing(15);
+
+    this->setLayout(main_V_BoxLayout);
+
+}
+
+void NewResouresDialog::initCpuHistory()
+{
+    //set the part of CPU history
+    cputitle_H_BoxLayout = new QHBoxLayout;
     cputitle_H_BoxLayout->setContentsMargins(13,0,0,0);
     cpuHistoryLabel = new QLabel(tr("CPU history"));
     cputitle_H_BoxLayout->addWidget(cpuHistoryLabel);
 
-    QHBoxLayout *cpuUnit_H_BoxLayout = new QHBoxLayout;
+    cpuUnit_H_BoxLayout = new QHBoxLayout;
     typeCheckCpu = new sigCheck(this,REDTYPE);
     cpuUnitDataLabel->setPalette(pe);
     QHBoxLayout *cpuSig_H_BoxLayout = new QHBoxLayout;
@@ -384,7 +397,7 @@ void NewResouresDialog::initWidget()
     cpuSig_H_BoxLayout->addWidget(cpuUnitDataLabel);
     cpuUnit_H_BoxLayout->addLayout(cpuSig_H_BoxLayout);
 
-    QHBoxLayout *cpuChart_H_BoxLayout = new QHBoxLayout;
+    cpuChart_H_BoxLayout = new QHBoxLayout;
     histoyChart = new CpuHistoryChart;
     QLabel *onehundredLabel = new QLabel();
     onehundredLabel->setText("100%");
@@ -415,128 +428,116 @@ void NewResouresDialog::initWidget()
     cpuChart_H_BoxLayout->addSpacing(10);
     cpuChart_H_BoxLayout->addWidget(histoyChart);
     cpuChart_H_BoxLayout->setSpacing(0);
+}
 
-//set the swap and memory history
-    QHBoxLayout *swapmemoryTitle_H_BoxLayout = new QHBoxLayout;
-    swapmemoryTitle_H_BoxLayout->setContentsMargins(13,0,0,0);
-    memoryAndSwapLabel = new QLabel(tr("memory and swap history"));
-    swapmemoryTitle_H_BoxLayout->addWidget(memoryAndSwapLabel);
+void NewResouresDialog::initSwapMeomoryHistory()
+{
+    //set the swap and memory history
+        swapmemoryTitle_H_BoxLayout = new QHBoxLayout;
+        swapmemoryTitle_H_BoxLayout->setContentsMargins(13,0,0,0);
+        memoryAndSwapLabel = new QLabel(tr("memory and swap history"));
+        swapmemoryTitle_H_BoxLayout->addWidget(memoryAndSwapLabel);
 
 
-    QHBoxLayout *swapmemoryUnit_H_BoxLayout = new QHBoxLayout;
-    typeCheckMemory = new sigCheck(this,PURPLETYPE);
-    typeCheckSwap = new sigCheck(this,GREENTYPE);
-    memoryUnitDataLabel->setPalette(pe);
-    swapUnitDataLabel->setPalette(pe);
-    QHBoxLayout *swapandmemory_H_BoxLayout = new QHBoxLayout;
-    swapandmemory_H_BoxLayout->setSpacing(0);
-    swapandmemory_H_BoxLayout->addStretch(1);
-    swapandmemory_H_BoxLayout->addWidget(typeCheckMemory);
-    swapandmemory_H_BoxLayout->addSpacing(8);
-    swapandmemory_H_BoxLayout->addWidget(memoryUnitDataLabel);
-    swapandmemory_H_BoxLayout->addSpacing(10);
-    swapandmemory_H_BoxLayout->addWidget(typeCheckSwap);
-    swapandmemory_H_BoxLayout->addSpacing(8);
-    swapandmemory_H_BoxLayout->addWidget(swapUnitDataLabel);
-    swapmemoryUnit_H_BoxLayout->addLayout(swapandmemory_H_BoxLayout);
+        swapmemoryUnit_H_BoxLayout = new QHBoxLayout;
+        typeCheckMemory = new sigCheck(this,PURPLETYPE);
+        typeCheckSwap = new sigCheck(this,GREENTYPE);
+        memoryUnitDataLabel->setPalette(pe);
+        swapUnitDataLabel->setPalette(pe);
+        QHBoxLayout *swapandmemory_H_BoxLayout = new QHBoxLayout;
+        swapandmemory_H_BoxLayout->setSpacing(0);
+        swapandmemory_H_BoxLayout->addStretch(1);
+        swapandmemory_H_BoxLayout->addWidget(typeCheckMemory);
+        swapandmemory_H_BoxLayout->addSpacing(8);
+        swapandmemory_H_BoxLayout->addWidget(memoryUnitDataLabel);
+        swapandmemory_H_BoxLayout->addSpacing(10);
+        swapandmemory_H_BoxLayout->addWidget(typeCheckSwap);
+        swapandmemory_H_BoxLayout->addSpacing(8);
+        swapandmemory_H_BoxLayout->addWidget(swapUnitDataLabel);
+        swapmemoryUnit_H_BoxLayout->addLayout(swapandmemory_H_BoxLayout);
 
-    QHBoxLayout *memoryswapChart_H_BoxLayout = new QHBoxLayout;
-    swapandmemoryChart = new SwapAndMemoryChart;
-    QVBoxLayout *swapmemory_V_BoxLayout = new QVBoxLayout();
-    swapmemory_V_BoxLayout->setMargin(0);
-    QLabel *tenGibLabel = new QLabel();
-    tenGibLabel->setText("10.0Gib");
-    swapmemoryWiget = new QWidget();
-    swapmemoryWiget->setFixedWidth(55);
-    swapmemory_V_BoxLayout->addWidget(tenGibLabel,1,Qt::AlignRight);
-    tenGibLabel->setPalette(pe);
-    QLabel *sevenpointFiveGibLabel = new QLabel();
-    sevenpointFiveGibLabel->setText("7.5Gib");
-    swapmemory_V_BoxLayout->addWidget(sevenpointFiveGibLabel,1,Qt::AlignRight);
-    sevenpointFiveGibLabel->setPalette(pe);
-    QLabel *fiveGibLabel = new QLabel();
-    fiveGibLabel->setText("5.0Gib");
-    swapmemory_V_BoxLayout->addWidget(fiveGibLabel,1,Qt::AlignRight);
-    fiveGibLabel->setPalette(pe);
-    QLabel *twopointfiveGibLabel = new QLabel();
-    twopointfiveGibLabel->setText("2.5Gib");
-    swapmemory_V_BoxLayout->addWidget(twopointfiveGibLabel,1,Qt::AlignRight);
-    twopointfiveGibLabel->setPalette(pe);
-    QLabel *nullGibLabel = new QLabel();
-    nullGibLabel->setText("0.0Gib");
-    swapmemory_V_BoxLayout->addWidget(nullGibLabel,1,Qt::AlignRight);
-    nullGibLabel->setPalette(pe);
-    swapmemoryWiget->setLayout(swapmemory_V_BoxLayout);
-    memoryswapChart_H_BoxLayout->addWidget(swapmemoryWiget);
-    memoryswapChart_H_BoxLayout->addSpacing(10);
-    memoryswapChart_H_BoxLayout->addWidget(swapandmemoryChart);
+        memoryswapChart_H_BoxLayout = new QHBoxLayout;
+        swapandmemoryChart = new SwapAndMemoryChart;
+        QVBoxLayout *swapmemory_V_BoxLayout = new QVBoxLayout();
+        swapmemory_V_BoxLayout->setMargin(0);
+        QLabel *tenGibLabel = new QLabel();
+        tenGibLabel->setText("10.0Gib");
+        swapmemoryWiget = new QWidget();
+        swapmemoryWiget->setFixedWidth(55);
+        swapmemory_V_BoxLayout->addWidget(tenGibLabel,1,Qt::AlignRight);
+        tenGibLabel->setPalette(pe);
+        QLabel *sevenpointFiveGibLabel = new QLabel();
+        sevenpointFiveGibLabel->setText("7.5Gib");
+        swapmemory_V_BoxLayout->addWidget(sevenpointFiveGibLabel,1,Qt::AlignRight);
+        sevenpointFiveGibLabel->setPalette(pe);
+        QLabel *fiveGibLabel = new QLabel();
+        fiveGibLabel->setText("5.0Gib");
+        swapmemory_V_BoxLayout->addWidget(fiveGibLabel,1,Qt::AlignRight);
+        fiveGibLabel->setPalette(pe);
+        QLabel *twopointfiveGibLabel = new QLabel();
+        twopointfiveGibLabel->setText("2.5Gib");
+        swapmemory_V_BoxLayout->addWidget(twopointfiveGibLabel,1,Qt::AlignRight);
+        twopointfiveGibLabel->setPalette(pe);
+        QLabel *nullGibLabel = new QLabel();
+        nullGibLabel->setText("0.0Gib");
+        swapmemory_V_BoxLayout->addWidget(nullGibLabel,1,Qt::AlignRight);
+        nullGibLabel->setPalette(pe);
+        swapmemoryWiget->setLayout(swapmemory_V_BoxLayout);
+        memoryswapChart_H_BoxLayout->addWidget(swapmemoryWiget);
+        memoryswapChart_H_BoxLayout->addSpacing(10);
+        memoryswapChart_H_BoxLayout->addWidget(swapandmemoryChart);
+}
 
-//set net history
+void NewResouresDialog::initNetSpeedHistory()
+{
+    //set net history
 
-    QHBoxLayout *netWorkTitle_H_BoxLayout = new QHBoxLayout;
-    netWorkTitle_H_BoxLayout->setContentsMargins(13,0,0,0);
-    netWorkFlowLabel = new QLabel(tr("net work history"));
-    netWorkTitle_H_BoxLayout->addWidget(netWorkFlowLabel);
+        netWorkTitle_H_BoxLayout = new QHBoxLayout;
+        netWorkTitle_H_BoxLayout->setContentsMargins(13,0,0,0);
+        netWorkFlowLabel = new QLabel(tr("net work history"));
+        netWorkTitle_H_BoxLayout->addWidget(netWorkFlowLabel);
 
-    QHBoxLayout *networkUnit_H_BoxLayout = new QHBoxLayout;
-    typeCheckNetRecv = new sigCheck(this,BLUETYPE);
-    typeCheckNetSent = new sigCheck(this,YELLOWTYPE);
-    netrecvUnitDataLabel->setPalette(pe);
-    netsentUnitDataLabel->setPalette(pe);
-    QHBoxLayout *netrecvsent_H_BoxLayout = new QHBoxLayout;
-    netrecvsent_H_BoxLayout->addStretch(1);
-    netrecvsent_H_BoxLayout->addWidget(typeCheckNetRecv);
-    netrecvsent_H_BoxLayout->addSpacing(8);
-    netrecvsent_H_BoxLayout->addWidget(netrecvUnitDataLabel);
-    netrecvsent_H_BoxLayout->addSpacing(10);
-    netrecvsent_H_BoxLayout->addWidget(typeCheckNetSent);
-    netrecvsent_H_BoxLayout->addSpacing(8);
-    netrecvsent_H_BoxLayout->addWidget(netsentUnitDataLabel);
-    networkUnit_H_BoxLayout->addLayout(netrecvsent_H_BoxLayout);
+        networkUnit_H_BoxLayout = new QHBoxLayout;
+        typeCheckNetRecv = new sigCheck(this,BLUETYPE);
+        typeCheckNetSent = new sigCheck(this,YELLOWTYPE);
+        netrecvUnitDataLabel->setPalette(pe);
+        netsentUnitDataLabel->setPalette(pe);
+        QHBoxLayout *netrecvsent_H_BoxLayout = new QHBoxLayout;
+        netrecvsent_H_BoxLayout->addStretch(1);
+        netrecvsent_H_BoxLayout->addWidget(typeCheckNetRecv);
+        netrecvsent_H_BoxLayout->addSpacing(8);
+        netrecvsent_H_BoxLayout->addWidget(netrecvUnitDataLabel);
+        netrecvsent_H_BoxLayout->addSpacing(10);
+        netrecvsent_H_BoxLayout->addWidget(typeCheckNetSent);
+        netrecvsent_H_BoxLayout->addSpacing(8);
+        netrecvsent_H_BoxLayout->addWidget(netsentUnitDataLabel);
+        networkUnit_H_BoxLayout->addLayout(netrecvsent_H_BoxLayout);
 
-    QHBoxLayout *networkChart_H_BoxLayout = new QHBoxLayout();
-    QVBoxLayout *netspeed_V_BoxLayout = new QVBoxLayout();
-    netspeed_V_BoxLayout->setMargin(0);
-    networkWidget = new QWidget();
-    networkWidget->setFixedWidth(55);
-    theFifthSpeedLabel = new QLabel();
-    theFifthSpeedLabel->setPalette(pe);
-    netspeed_V_BoxLayout->addWidget(theFifthSpeedLabel,1,Qt::AlignRight);
-    theFourthSpeedLabel = new QLabel();
-    theFourthSpeedLabel->setPalette(pe);
-    netspeed_V_BoxLayout->addWidget(theFourthSpeedLabel,1,Qt::AlignRight);
-    theThirdSpeedLabel = new QLabel();
-    theThirdSpeedLabel->setPalette(pe);
-    netspeed_V_BoxLayout->addWidget(theThirdSpeedLabel,1,Qt::AlignRight);
-    theSecondSpeedLabel = new QLabel();
-    theSecondSpeedLabel->setPalette(pe);
-    netspeed_V_BoxLayout->addWidget(theSecondSpeedLabel,1,Qt::AlignRight);
-    theFirtSpeedLabel = new QLabel();
-    theFirtSpeedLabel->setPalette(pe);
-    netspeed_V_BoxLayout->addWidget(theFirtSpeedLabel,1,Qt::AlignRight);
-//    networkChart_H_BoxLayout->addStretch(1);
-    networkWidget->setLayout(netspeed_V_BoxLayout);
-    networkChart = new NetWorkChart();
-    networkChart_H_BoxLayout->addWidget(networkWidget);
-    networkChart_H_BoxLayout->addSpacing(10);
-    networkChart_H_BoxLayout->addWidget(networkChart);
-
-    QVBoxLayout *main_V_BoxLayout = new QVBoxLayout;
-    main_V_BoxLayout->setSpacing(0);
-//    main_V_BoxLayout->setContentsMargins(0,0,0,5);
-    main_V_BoxLayout->addLayout(cputitle_H_BoxLayout);
-    main_V_BoxLayout->addLayout(cpuUnit_H_BoxLayout);
-    main_V_BoxLayout->addLayout(cpuChart_H_BoxLayout);
-    main_V_BoxLayout->addLayout(swapmemoryTitle_H_BoxLayout);
-    main_V_BoxLayout->addLayout(swapmemoryUnit_H_BoxLayout);
-    main_V_BoxLayout->addLayout(memoryswapChart_H_BoxLayout);
-    main_V_BoxLayout->addLayout(netWorkTitle_H_BoxLayout);
-    main_V_BoxLayout->addLayout(networkUnit_H_BoxLayout);
-    main_V_BoxLayout->addLayout(networkChart_H_BoxLayout);
-    main_V_BoxLayout->addSpacing(15);
-
-    this->setLayout(main_V_BoxLayout);
-
+        networkChart_H_BoxLayout = new QHBoxLayout();
+        QVBoxLayout *netspeed_V_BoxLayout = new QVBoxLayout();
+        netspeed_V_BoxLayout->setMargin(0);
+        networkWidget = new QWidget();
+        networkWidget->setFixedWidth(55);
+        theFifthSpeedLabel = new QLabel();
+        theFifthSpeedLabel->setPalette(pe);
+        netspeed_V_BoxLayout->addWidget(theFifthSpeedLabel,1,Qt::AlignRight);
+        theFourthSpeedLabel = new QLabel();
+        theFourthSpeedLabel->setPalette(pe);
+        netspeed_V_BoxLayout->addWidget(theFourthSpeedLabel,1,Qt::AlignRight);
+        theThirdSpeedLabel = new QLabel();
+        theThirdSpeedLabel->setPalette(pe);
+        netspeed_V_BoxLayout->addWidget(theThirdSpeedLabel,1,Qt::AlignRight);
+        theSecondSpeedLabel = new QLabel();
+        theSecondSpeedLabel->setPalette(pe);
+        netspeed_V_BoxLayout->addWidget(theSecondSpeedLabel,1,Qt::AlignRight);
+        theFirtSpeedLabel = new QLabel();
+        theFirtSpeedLabel->setPalette(pe);
+        netspeed_V_BoxLayout->addWidget(theFirtSpeedLabel,1,Qt::AlignRight);
+        networkWidget->setLayout(netspeed_V_BoxLayout);
+        networkChart = new NetWorkChart();
+        networkChart_H_BoxLayout->addWidget(networkWidget);
+        networkChart_H_BoxLayout->addSpacing(10);
+        networkChart_H_BoxLayout->addWidget(networkChart);
 }
 
 void NewResouresDialog::tosetFontSize()

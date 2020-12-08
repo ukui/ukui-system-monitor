@@ -20,7 +20,14 @@ NetWorkChart::NetWorkChart(QWidget *parent):QWidget(parent)
 
 NetWorkChart::~NetWorkChart()
 {
-
+    if(m_downLoadList)
+    {
+        delete m_downLoadList;
+    }
+    if(m_upLoadList)
+    {
+        delete m_upLoadList;
+    }
 }
 
 void NetWorkChart::paintEvent(QPaintEvent *event)

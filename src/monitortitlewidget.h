@@ -86,7 +86,7 @@ protected:
     void resizeEvent(QResizeEvent *event);
     void paintEvent(QPaintEvent *event);
 private:
-    QPropertyAnimation *m_animation = nullptr;
+    QPropertyAnimation *m_animation;
     QEasingCurve m_hideCurve;
     QEasingCurve m_showCurve;
     QSettings *proSettings;

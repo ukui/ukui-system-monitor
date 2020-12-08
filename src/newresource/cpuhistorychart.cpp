@@ -14,18 +14,14 @@ CpuHistoryChart::CpuHistoryChart(QWidget *parent):QWidget(parent)
     m_pointsCount = int((this->width()) /10);
     m_cpuMaxHeight = 50;
     m_CpuHistoryList = new QList<double>();
-
-//    for (int i = 0; i < m_pointsCount; i++)
-//    {
-//        m_CpuHistoryList->append(0);
-//    }
-//    xList<<0;
-//    yDrawList<<0;
 }
 
 CpuHistoryChart::~CpuHistoryChart()
 {
-
+    if(m_CpuHistoryList)
+    {
+        delete m_CpuHistoryList;
+    }
 }
 
 
@@ -35,10 +31,6 @@ void CpuHistoryChart::paintEvent(QPaintEvent *event)
     m_pointsCount = rect().width() / POINTSPACE;
     QPainter painter(this);
     painter.save();
-//    int gridX = rect().x() + PENSIZE;
-//    int gridY = rect().y() + YEXSIZE;
-//    int gridWidth = rect().width() - PENSIZE * 2;
-    //int gridHeight = 90;
 
 //background of rect
     painter.setOpacity(0.08);
@@ -46,8 +38,6 @@ void CpuHistoryChart::paintEvent(QPaintEvent *event)
     QStyleOption opt;
     opt.init(this);
     m_bgColor = (QColor("#131414"));
-
-//    framePath.addRoundedRect(QRectF(gridX, gridY, gridWidth, GRIDHEIGHT),4,4);
     framePath.addRoundedRect(rect(), 4, 4);
     painter.fillPath(framePath, this->m_bgColor);//painter.drawPath(framePath);
     painter.restore();
@@ -71,43 +61,36 @@ void CpuHistoryChart::paintEvent(QPaintEvent *event)
 //    painter.translate((rect().width() - m_pointsCount * POINTSPACE - 2) / 2 + 6, 89);//将坐标的原点移动到该点
     QPen pen(this->m_cpuHistoryColor,2);
     painter.setPen(pen);
-
-//    QLinearGradient gradient(0,0,0,0);
-//    gradient.setColorAt(0.2, QColor::fromRgbF(0, 1, 0, 1));
-//    gradient.setColorAt(0.6, QColor::fromRgbF(1, 0, 0, 1));
-//    gradient.setColorAt(1.0, QColor::fromRgbF(1, 1, 1, 1));
-//    painter.setBrush(gradient);//painter.setBrush(QBrush(QColor("#f4f2f4")));
-
     painter.setRenderHint(QPainter::Antialiasing, true);
     painter.drawPath(m_cpuHistoryPath);//绘制前面创建的path:m_downloadPath
     painter.restore();
     update();
 //    **********************************现在的折线图写法********************************/
 
-//    QPainter painter(this);
-//    painter.setOpacity(0.08);
-//    QPainterPath framePath;
-//    QStyleOption opt;
-//    opt.init(this);
-//    m_bgColor = (QColor("#131414"));
+   /* QPainter painter(this);
+    painter.setOpacity(0.08);
+    QPainterPath framePath;
+    QStyleOption opt;
+    opt.init(this);
+    m_bgColor = (QColor("#131414"));
 
-//    framePath.addRoundedRect(QRectF(this->rect().x(), this->rect().y(), this->rect().width(), this->rect().height()),4,4);
-//    painter.fillPath(framePath, this->m_bgColor);//painter.drawPath(framePath);
+    framePath.addRoundedRect(QRectF(this->rect().x(), this->rect().y(), this->rect().width(), this->rect().height()),4,4);
+    painter.fillPath(framePath, this->m_bgColor);//painter.drawPath(framePath);
 
-//    QPainter p(this);
-//    p.save();
-//    p.setRenderHint(QPainter::Antialiasing, true);  //设置折线反锯齿
-//    p.scale(1,1);
-//    QColor colorCpuHistory = QColor("#F64F61");
-//    QPen pen(colorCpuHistory,1);
-//    pen.setWidth(2);
-//    p.setPen(pen);
-//    for(int j = 2; j<i-1; j++)
-//    {
-//        point.setX(xList[j+1]);
-//        point.setY(yDrawList[j+1]);
-//        p.drawLine(QPointF(xList[j],yDrawList[j]),point);
-//    }
+    QPainter p(this);
+    p.save();
+    p.setRenderHint(QPainter::Antialiasing, true);  //设置折线反锯齿
+    p.scale(1,1);
+    QColor colorCpuHistory = QColor("#F64F61");
+    QPen pen(colorCpuHistory,1);
+    pen.setWidth(2);
+    p.setPen(pen);
+    for(int j = 2; j<i-1; j++)
+    {
+        point.setX(xList[j+1]);
+        point.setY(yDrawList[j+1]);
+        p.drawLine(QPointF(xList[j],yDrawList[j]),point);
+    } */
 }
 
 void CpuHistoryChart::refreshCpuHistoryData(double cpu)

@@ -46,6 +46,7 @@ MonitorTitleWidget::MonitorTitleWidget(QSettings *settings, QWidget *parent)
     ,fontSettings(nullptr)
     ,qtSettings(nullptr)
 {
+    m_animation = nullptr;
     this->setAttribute(Qt::WA_TranslucentBackground);
     m_queryIcon=new QLabel();
     QIcon queryIcon;
@@ -207,8 +208,6 @@ void MonitorTitleWidget::initFontSize()
 MonitorTitleWidget::~MonitorTitleWidget()
 {
     delete emptyLabel;
-//    delete m_searchEdit;
-    //delete m_cancelSearchBtn;
     delete maxBtn;
 
     if (m_searchTimer) {
@@ -265,6 +264,10 @@ MonitorTitleWidget::~MonitorTitleWidget()
     if(qtSettings)
     {
         delete qtSettings;
+    }
+    if(m_animation)
+    {
+        delete m_animation;
     }
 }
 

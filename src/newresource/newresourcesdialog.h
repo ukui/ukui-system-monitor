@@ -47,18 +47,6 @@ public:
     void tosetFontSize();
     void setChangeNetSpeedLabel();
 
-
-private:
-
-//public slots:
-//    void updateResourceStatus();
-//    void onSwitchResoucesPage(int index);
-
-//signals:
-//    void updateCpuStatus(double percent);
-//    void updateMemoryStatus();
-//    void updateNetworkStatus(long recvTotalBytes, long sentTotalBytes, long recvRateBytes, long sentRateBytes);
-
 private:
 
     //cpu
@@ -106,22 +94,40 @@ private:
     SwapAndMemoryChart *swapandmemoryChart;
     NetWorkChart *networkChart;
     Meminfo mi;
+    QPalette pe;
+
+    QHBoxLayout *cputitle_H_BoxLayout;
+    QHBoxLayout *cpuUnit_H_BoxLayout;
+    QHBoxLayout *cpuChart_H_BoxLayout;
+
+    QHBoxLayout *swapmemoryTitle_H_BoxLayout;
+    QHBoxLayout *swapmemoryUnit_H_BoxLayout;
+    QHBoxLayout *memoryswapChart_H_BoxLayout;
+
+    QHBoxLayout *netWorkTitle_H_BoxLayout;
+    QHBoxLayout *networkUnit_H_BoxLayout;
+    QHBoxLayout *networkChart_H_BoxLayout;
+
+    QVBoxLayout *main_V_BoxLayout;
 
 public:
     int fontSize;
+private:
+    void initWidget();
+    void initCpuHistory();
+    void initSwapMeomoryHistory();
+    void initNetSpeedHistory();
 public slots:
     void updateResourceStatus();
     void cpuHistoySetText(double percent);
     void memoryandswapSetText(const QString &infoMemory, double percentMemory,const QString &infoSwap, double percentSwap);
     void networkSetText(long recvTotalBytes, long sentTotalBytes, long recvRateBytes, long sentRateBytes);
     void onUpdateMemoryAndSwapStatus();
-    void initWidget();
 
 signals:
     void updateCpuStatus(double percent);
     void rebackMemoryAndSwapInfo(const QString &infoMemory, double percentMemory,const QString &infoSwap, double percentSwap);
     void rebackMemoryAndSwapData(float memory,double percentMemory,float swap,double percentSwap);
-//    void rebackSwapInfo(const QString &info, double percent);
     void updateMemoryAndSwapStatus();
     void updateNetworkStatus(long recvTotalBytes, long sentTotalBytes, long recvRateBytes, long sentRateBytes);
     void resetWidget();

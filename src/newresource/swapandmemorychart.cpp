@@ -45,6 +45,14 @@ SwapAndMemoryChart::SwapAndMemoryChart(QWidget *parent):QWidget(parent)
 
 SwapAndMemoryChart::~SwapAndMemoryChart()
 {
+    if(m_memoryDataList)
+    {
+        delete m_memoryDataList;
+    }
+    if(m_swapDataList)
+    {
+        delete m_swapDataList;
+    }
 }
 
 void SwapAndMemoryChart::onUpdateMemoryAndSwapData(float memoryData,double memoryPercent,float swapData,double swapPercent)
@@ -117,15 +125,11 @@ void SwapAndMemoryChart::refreshMemoryAndSwapData(float memoryData, double memor
         }
     }
     m_swapPath = SmoothLineGenerator::generateSmoothCurve(swapPoints);
-
-
-//    repaint();
 }
 
 void SwapAndMemoryChart::resizeEvent(QResizeEvent *event)
 {
     m_pointsCount = int(this->width() / POINTSPACE);
-//    repaint();
 }
 
 void SwapAndMemoryChart::paintEvent(QPaintEvent *event)
@@ -154,35 +158,36 @@ void SwapAndMemoryChart::paintEvent(QPaintEvent *event)
     painter.restore();
 
     //draw memory line
-//    painter.save();
-//    painter.setOpacity(1);
-//    painter.translate((rect().width() - m_pointsCount * POINTSPACE - 2) / 2 + 6, 89);//将坐标的原点移动到该点
-//    painter.scale(1, -1);//将横坐标扩大1倍,将纵坐标缩小1倍
-//    QPen pen(this->m_memoryColor,1);
-//    pen.setWidth(5);
-//    painter.setPen(pen);
-//    painter.setBrush(QBrush());//painter.setBrush(QBrush(QColor("#f4f2f4")));
-//    painter.setRenderHint(QPainter::Antialiasing, true);
-//    painter.drawPath(m_memoryPath);//绘制前面创建的path:m_downloadPath
-//    painter.restore();
+    /*************************  old draw memory line ************************
+    painter.save();
+    painter.setOpacity(1);
+    painter.translate((rect().width() - m_pointsCount * POINTSPACE - 2) / 2 + 6, 89);//将坐标的原点移动到该点
+    painter.scale(1, -1);//将横坐标扩大1倍,将纵坐标缩小1倍
+    QPen pen(this->m_memoryColor,1);
+    pen.setWidth(5);
+    painter.setPen(pen);
+    painter.setBrush(QBrush());//painter.setBrush(QBrush(QColor("#f4f2f4")));
+    painter.setRenderHint(QPainter::Antialiasing, true);
+    painter.drawPath(m_memoryPath);//绘制前面创建的path:m_downloadPath
+    painter.restore();
     ////////////////////////////old tu
-//    painter.save();
-//    painter.translate(rect().right(),rect().bottom() - 1);
-//    painter.setRenderHint(QPainter::Antialiasing, true);  //设置折线反锯齿
-//    painter.scale(-1,-1);
-//    QPen pen(m_memoryColor,1);
-//    pen.setWidth(3);
-//    painter.setPen(pen);
-//    for(int i = 0; i < m_pointsCount - 1; i++)
-//    {
-//        qDebug()<<"m_pointsCount---"<<m_pointsCount;
-//        QPoint point;
-//        point.setX((i+1) * POINTSPACE);
-//        point.setY(m_memoryDataList->at(i+1));
-//        painter.drawLine(QPointF(i*POINTSPACE,m_memoryDataList->at(i)),point);
-//    }
-//    painter.restore();
-///////////////////////////////////new tu
+    painter.save();
+    painter.translate(rect().right(),rect().bottom() - 1);
+    painter.setRenderHint(QPainter::Antialiasing, true);  //设置折线反锯齿
+    painter.scale(-1,-1);
+    QPen pen(m_memoryColor,1);
+    pen.setWidth(3);
+    painter.setPen(pen);
+    for(int i = 0; i < m_pointsCount - 1; i++)
+    {
+        qDebug()<<"m_pointsCount---"<<m_pointsCount;
+        QPoint point;
+        point.setX((i+1) * POINTSPACE);
+        point.setY(m_memoryDataList->at(i+1));
+        painter.drawLine(QPointF(i*POINTSPACE,m_memoryDataList->at(i)),point);
+    }
+    painter.restore();
+   ******************************** old draw memory line *****************/
     painter.save();
     painter.translate(rect().right(),rect().bottom());
     painter.scale(-1, -1);//将横坐标扩大1倍,将纵坐标缩小1倍
@@ -195,25 +200,25 @@ void SwapAndMemoryChart::paintEvent(QPaintEvent *event)
     painter.setRenderHint(QPainter::Antialiasing, true);
     painter.drawPath(m_memoryPath);//绘制前面创建的path:m_downloadPath
     painter.restore();
-    ////////////////////old tu
 //draw swap line
-//    painter.save();
-//    painter.translate(0,rect().bottom() - 3);
-//    painter.setRenderHint(QPainter::Antialiasing, true);  //设置折线反锯齿
-//    painter.scale(1,-1);
-//    QPen penSwap(m_swapColor,1);
-//    penSwap.setWidth(3);
-//    painter.setPen(penSwap);
-//    for(int i = 0; i < m_pointsCount - 1; i++)
-//    {
-//        qDebug()<<"m_pointsCount---"<<m_pointsCount;
-//        QPoint point;
-//        point.setX((i+1) * POINTSPACE);
-//        point.setY(m_swapDataList->at(i+1));
-//        painter.drawLine(QPointF(i*POINTSPACE,m_swapDataList->at(i)),point);
-//    }
-//    painter.restore();
-    ////////////////////new tu
+/***********   old draw swap line ***************
+    painter.save();
+    painter.translate(0,rect().bottom() - 3);
+    painter.setRenderHint(QPainter::Antialiasing, true);  //设置折线反锯齿
+    painter.scale(1,-1);
+    QPen penSwap(m_swapColor,1);
+    penSwap.setWidth(3);
+    painter.setPen(penSwap);
+    for(int i = 0; i < m_pointsCount - 1; i++)
+    {
+        qDebug()<<"m_pointsCount---"<<m_pointsCount;
+        QPoint point;
+        point.setX((i+1) * POINTSPACE);
+        point.setY(m_swapDataList->at(i+1));
+        painter.drawLine(QPointF(i*POINTSPACE,m_swapDataList->at(i)),point);
+    }
+    painter.restore();
+   ********************  old draw swap line**************/
     painter.save();
     painter.translate(rect().right(),rect().bottom());
     painter.scale(-1, -1);//将横坐标扩大1倍,将纵坐标缩小1倍

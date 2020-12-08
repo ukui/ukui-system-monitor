@@ -4,8 +4,8 @@ running processes, It also provides an overview of the resources
 (such as CPU and memory) and File Systems on your system.
 
 ## Build
-./autogen.sh
-make 
+mkdir build
+qmake .. 
 sudo make install
 
 ## Bug report
