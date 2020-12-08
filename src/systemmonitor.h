@@ -23,7 +23,7 @@
 
 #include "monitortitlewidget.h"
 #include "processdialog.h"
-#include "resourcesdialog.h"
+#include "newresource/newresourcesdialog.h"
 //#include "newresourcesdialog.h"
 #include "filesystemdialog.h"
 #include "shell/customstyle.h"
@@ -89,7 +89,7 @@ private:
     MonitorTitleWidget  *m_titleWidget = nullptr;
 //    ToolBar *m_toolBar = nullptr;
     ProcessDialog *process_dialog = nullptr;
-    ResouresDialog *resources_dialog = nullptr;
+    NewResouresDialog *resources_dialog = nullptr;
     FileSystemDialog *filesystem_dialog = nullptr;
     QSettings *proSettings;
 
@@ -98,6 +98,9 @@ private:
     
     QGSettings * qtSettings;
     QString currentThemeMode;
+
+    QGSettings *fontSettings;
+    float fontSize;
 
     QGSettings *opacitySettings;
     double m_transparency;

@@ -18,14 +18,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SMOOTHCURVEGENERATOR_H
-#define SMOOTHCURVEGENERATOR_H
+#ifndef SMOOTHLINEGENERATOR_H
+#define SMOOTHLINEGENERATOR_H
 
 #include <QList>
 #include <QPainterPath>
 #include <QPointF>
 
-class SmoothCurveGenerator {
+class SmoothLineGenerator {
 public:
     /**
      * 传入曲线上的点的 list，创建平滑曲线
@@ -63,4 +63,4 @@ private:
                                        QList<QPointF> *firstControlPoints,
                                        QList<QPointF> *secondControlPoints);
 };
-#endif // SMOOTHCURVEGENERATOR_H
+#endif // SMOOTHLINEGENERATOR_H

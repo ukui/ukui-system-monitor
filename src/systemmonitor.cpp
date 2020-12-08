@@ -65,7 +65,6 @@ SystemMonitor::SystemMonitor(QWidget *parent)
     this->setWindowFlags(Qt::FramelessWindowHint);   //set for no windowhint
     this->setAttribute(Qt::WA_TranslucentBackground);//背景透明
     this->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
-
     const QByteArray idd(THEME_QT_SCHEMA);
 
     if(QGSettings::isSchemaInstalled(idd))
@@ -87,7 +86,7 @@ SystemMonitor::SystemMonitor(QWidget *parent)
 //    installEventFilter(this);
 
     this->setWindowTitle(tr("Kylin System Monitor"));
-    this->setWindowIcon(QIcon::fromTheme("ukui-system-monitor"));
+    this->setWindowIcon(QIcon::fromTheme("ukui-system-monitor")); //control show img in panel
 
 
     //this->setFixedSize(900, 600);
@@ -242,6 +241,7 @@ void SystemMonitor::paintEvent(QPaintEvent *event)
     QStyleOption opt;
     opt.init(this);
     style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
+    KWindowEffects::enableBlurBehind(this->winId(),true,QRegion(rectPath.toFillPolygon().toPolygon()));
 }
 
 void SystemMonitor::resizeEvent(QResizeEvent *e)
@@ -253,6 +253,7 @@ void SystemMonitor::resizeEvent(QResizeEvent *e)
         m_sysMonitorStack->resize(width() - 2, this->height() - MONITOR_TITLE_WIDGET_HEIGHT - 2);
         m_sysMonitorStack->move(1, MONITOR_TITLE_WIDGET_HEIGHT + 1);
     }
+    qDebug()<<"m_titleWid.x"<<m_titleWidget->geometry();
 }
 
 void SystemMonitor::recordProcessVisibleColumn(int, bool, QList<bool> columnVisible)
@@ -365,20 +366,8 @@ void SystemMonitor::recordFileSysVisibleColumn(int, bool, QList<bool> columnVisi
 void SystemMonitor::initPanelStack()
 {
     m_sysMonitorStack = new QStackedWidget(this);
-//    m_sysMonitorStack->setAttribute(Qt::WA_TranslucentBackground);
-//    m_sysMonitorStack->setStyleSheet("QStackedWidget{"
-//                                     "background:rgba(19,19,20,1));"
-//                                     "border-bottom-left-radius:6px;"
-//                                     "border-bottom-right-radius:6px;"
-//                                     "}");       //19,19,20,1
-
-
     m_sysMonitorStack->resize(width() - 2, this->height() - TITLE_WIDGET_HEIGHT);
-    m_sysMonitorStack->move(1, TITLE_WIDGET_HEIGHT);
-//    qDebug() << "System monitor size(w x h): " << m_sysMonitorStack->width() << " x " << m_sysMonitorStack->height();
-    //m_sysMonitorStack->setFixedSize(898,500);
-
-//    m_sysMonitorStack->setMouseTracking(false);
+//    m_sysMonitorStack->move(1, TITLE_WIDGET_HEIGHT);
     m_sysMonitorStack->installEventFilter(this);
 
     process_dialog = new ProcessDialog(getReadyDisplayProcessColumns(), getCurrentSortColumnIndex(), isSortOrNot(), proSettings);
@@ -386,7 +375,7 @@ void SystemMonitor::initPanelStack()
     connect(process_dialog, &ProcessDialog::changeColumnVisible, this, &SystemMonitor::recordProcessVisibleColumn);
     connect(process_dialog, &ProcessDialog::changeSortStatus, this, &SystemMonitor::recordSortStatus);
 
-    resources_dialog = new ResouresDialog;
+    resources_dialog = new NewResouresDialog;
 
     filesystem_dialog = new FileSystemDialog(getReadyDisplayFileSysColumns(), proSettings);
     filesystem_dialog->getFileSysView()->installEventFilter(this);
@@ -433,14 +422,6 @@ void SystemMonitor::onChangePage(int index)
 {
     if (m_sysMonitorStack) {
         m_sysMonitorStack->setCurrentIndex(index);
-        if (index == 1) {
-            //start time
-            resources_dialog->startCpuTimer();
-        }
-        else {
-            //stop time
-            resources_dialog->stopCpuTimer();
-        }
     }
 }
 

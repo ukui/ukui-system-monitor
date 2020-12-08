@@ -657,6 +657,20 @@ void ProcessDialog::refreshProcessList()
     g_free (pid_list);
 }
 
+void ProcessDialog::onSearchFocusIn()
+{
+    qDebug()<<"focusin---";
+    timer->stop();
+//    disconnect(refreshThread, SIGNAL(procDetected(const QString &, quint64 , quint64 , int , unsigned int , const QString&)),
+//            this, SLOT(refreshLine(const QString &, quint64 , quint64 , int, unsigned int , const QString&)));
+}
+
+void ProcessDialog::onSearchFocusOut()
+{
+    qDebug()<<"focusout---";
+    timer->start(1500);
+}
+
 void ProcessDialog::refreshLine(const QString &procname, quint64 rcv, quint64 sent, int pid, unsigned int uid, const QString &devname)
 {
 //    pidList<<pid;
@@ -687,7 +701,7 @@ void ProcessDialog::refreshLine(const QString &procname, quint64 rcv, quint64 se
     {
         pidMap[pid] = addFlowNetPerSec;
     }
-    delete  speedLineBandFlowNet; 
+    delete  speedLineBandFlowNet;
 }
 
 ProcessListWidget* ProcessDialog::getProcessView()
@@ -697,6 +711,7 @@ ProcessListWidget* ProcessDialog::getProcessView()
 
 void ProcessDialog::endDialogButtonClicked(int index, QString)
 {
+    emit closeDialog();
     if (index == 1) {//cancel:0   ok:1
         endProcesses();
     }
@@ -704,6 +719,7 @@ void ProcessDialog::endDialogButtonClicked(int index, QString)
 
 void ProcessDialog::killDialogButtonClicked(int index, QString)
 {
+    emit closeDialog();
     if (index == 1) {//cancel:0   ok:1
         killProcesses();
     }
@@ -722,30 +738,58 @@ void ProcessDialog::onSearch(QString text)
 //杀死   SIGSTOP,SIGCONT,SIGTERM,SIGKILL
 void ProcessDialog::killProcesses()
 {
+//    int error;
+
+//    for (pid_t pid : *actionPids) {
+//        // Resume process first, otherwise kill process too slow.
+//        kill(pid, SIGCONT);
+
+//        error = kill(pid, SIGKILL);
+//        if(error != -1) {
+//            qDebug() << "success.....";
+//        } else {
+//            //need to be root
+//            if(errno == EPERM) {//(kill -s %d %d", sig, pid)
+//                qWarning() << QString("Kill process %1 failed, permission denied.").arg(pid);
+//                if (QFileInfo("/usr/bin/pkexec").exists()) {//sudo apt install policykit-1
+//                    QProcess process;
+//                    process.execute(QString("pkexec --disable-internal-agent %1 %2 %3").arg("kill").arg(SIGKILL).arg(pid));
+//                } else if (QFileInfo("/usr/bin/gksudo").exists()) {//sudo apt install gksu
+//                    QProcess process;
+//                    process.execute(QString("gksudo \"%1 %2 %3\"").arg("kill").arg(SIGKILL).arg(pid));
+//                } else if (QFileInfo("/usr/bin/gksu").exists()) {//sudo apt install gksu
+//                    QProcess process;
+//                    process.execute(QString("gksu \"%1 %2 %3\"").arg("kill").arg(SIGKILL).arg(pid));
+//                } else {
+//                    qWarning() << "Failed to choose a tool to kill " << pid;
+//                }
+//            }
+//        }
+//    }
+
+//    actionPids->clear();
     int error;
-
     for (pid_t pid : *actionPids) {
-        // Resume process first, otherwise kill process too slow.
-        kill(pid, SIGCONT);
-
-        error = kill(pid, SIGKILL);
-        if(error != -1) {
+        error = kill(pid, SIGTERM);
+        if(error != -1)  {
             qDebug() << "success.....";
-        } else {
+        }
+        else {
             //need to be root
-            if(errno == EPERM) {//(kill -s %d %d", sig, pid)
-                qWarning() << QString("Kill process %1 failed, permission denied.").arg(pid);
+            if(errno == EPERM) {
+                qDebug() << QString("End process %1 failed, permission denied.").arg(pid);
+
                 if (QFileInfo("/usr/bin/pkexec").exists()) {//sudo apt install policykit-1
                     QProcess process;
-                    process.execute(QString("pkexec --disable-internal-agent %1 %2 %3").arg("kill").arg(SIGKILL).arg(pid));
+                    process.execute(QString("pkexec --disable-internal-agent %1 %2 %3").arg("kill").arg(SIGTERM).arg(pid));
                 } else if (QFileInfo("/usr/bin/gksudo").exists()) {//sudo apt install gksu
                     QProcess process;
-                    process.execute(QString("gksudo \"%1 %2 %3\"").arg("kill").arg(SIGKILL).arg(pid));
+                    process.execute(QString("gksudo \"%1 %2 %3\"").arg("kill").arg(SIGTERM).arg(pid));
                 } else if (QFileInfo("/usr/bin/gksu").exists()) {//sudo apt install gksu
                     QProcess process;
-                    process.execute(QString("gksu \"%1 %2 %3\"").arg("kill").arg(SIGKILL).arg(pid));
+                    process.execute(QString("gksu \"%1 %2 %3\"").arg("kill").arg(SIGTERM).arg(pid));
                 } else {
-                    qWarning() << "Failed to choose a tool to kill " << pid;
+                    qWarning() << "Failed to choose a tool to end process " << pid;
                 }
             }
         }
@@ -865,11 +909,12 @@ void ProcessDialog::showKillProcessDialog()
 //    killProcessDialog->exec();
 //    killProcessDialog->show();
     killProcessDialog = new MyDialog(QString(tr("Kill process")), QString(tr("Killing a process may destroy data, break the session or introduce a security risk. Only unresponsive processes should be killed.\nAre you sure to continue?")));
-    killProcessDialog->setWindowFlags(killProcessDialog->windowFlags() | Qt::WindowStaysOnTopHint);
+//    killProcessDialog->setWindowFlags(killProcessDialog->windowFlags() | Qt::WindowStaysOnTopHint);
     killProcessDialog->addButton(QString(tr("Cancel")), false);
     killProcessDialog->addButton(QString(tr("Kill process")), true);
     connect(killProcessDialog, &MyDialog::buttonClicked, this, &ProcessDialog::killDialogButtonClicked);
-    killProcessDialog->exec();
+    killProcessDialog->show();
+    connect(this,&ProcessDialog::closeDialog,killProcessDialog,&MyDialog::onButtonClicked);
 }   
 
 void ProcessDialog::showEndProcessDialog()
@@ -881,7 +926,8 @@ void ProcessDialog::showEndProcessDialog()
     endProcessDialog->addButton(QString(tr("Cancel")), false);
     endProcessDialog->addButton(QString(tr("End process")), true);
     connect(endProcessDialog, &MyDialog::buttonClicked, this, &ProcessDialog::endDialogButtonClicked);
-    endProcessDialog->exec();
+    endProcessDialog->show();
+    connect(this,&ProcessDialog::closeDialog,endProcessDialog,&MyDialog::onButtonClicked);
 }
 
 //停止

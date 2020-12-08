@@ -34,23 +34,6 @@
 
 int main(int argc, char *argv[])
 {
-//    Display *disp = XOpenDisplay(NULL);
-//    Screen *scrn = DefaultScreenOfDisplay(disp);
-//    if (NULL == scrn) {
-//        return 0;
-//    }
-//    int width = scrn->width;
-
-//    if (width > 2560) {
-//        #if (QT_VERSION >= QT_VERSION_CHECK(5, 6, 0))
-//                QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-//                QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
-//        #endif
-//    }
-//    if (NULL != disp) {
-//        XCloseDisplay(disp);
-//    }
-
     QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
 
@@ -78,10 +61,6 @@ int main(int argc, char *argv[])
         }
 
         SystemMonitor *monitor=new SystemMonitor();
-//        monitor->setAttribute(Qt::WA_TranslucentBackground);
-//        monitor->setProperty("useSystemStyleBlur",true);
-        KWindowEffects::enableBlurBehind(monitor->winId(),true);
-
         monitor->setAttribute(Qt::WA_DeleteOnClose);
 
         app.setActivationWindow(monitor);
