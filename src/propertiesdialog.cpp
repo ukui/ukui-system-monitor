@@ -34,6 +34,7 @@
 #include <QWidget>
 #include <QFileInfo>
 #include <QIcon>
+#include <QLineEdit>
 
 const int spacing = 8;
 
@@ -93,6 +94,8 @@ PropertiesDialog::PropertiesDialog(QWidget *parent, pid_t processId) : QDialog(p
        this->deleteLater();
        this->close();
     });
+    closeButton->setProperty("isWindowButton", 0x2);
+    closeButton->setProperty("useIconHighlightEffect", 0x8);
 //    connect(closeButton, &MyTristateButton::clicked, this, [=] {
 //        this->close();
 //    });
@@ -161,8 +164,8 @@ PropertiesDialog::PropertiesDialog(QWidget *parent, pid_t processId) : QDialog(p
     infoGrid->setColumnStretch(1, 100);
 
     QStringList titleList;
-//    titleList << QObject::tr("User name:") << QObject::tr("Process name:") << QObject::tr("Command line:") << QObject::tr("CPU Time:") << QObject::tr("Started Time:");
-    titleList << QObject::tr("User name:") << QObject::tr("Process name:") << QObject::tr("flownet per second:") << QObject::tr("CPU Time:") << QObject::tr("Started Time:");
+    titleList << QObject::tr("User name:") << QObject::tr("Process name:") << QObject::tr("Command line:") << QObject::tr("CPU Time:") << QObject::tr("Started Time:");
+//    titleList << QObject::tr("User name:") << QObject::tr("Process name:") << QObject::tr("flownet per second:") << QObject::tr("CPU Time:") << QObject::tr("Started Time:");
     for (int i = 0; i < titleList.length(); ++i) {
         QLabel *titleLabel = new QLabel(titleList.value(i));
 //        titleLabel->setStyleSheet("QLabel{background-color:transparent;font-size:12px;color:#999999;}");
@@ -179,6 +182,8 @@ PropertiesDialog::PropertiesDialog(QWidget *parent, pid_t processId) : QDialog(p
         m_labelList << infoLabel;
         infoGrid->addWidget(titleLabel);
         infoGrid->addWidget(infoLabel);
+//        QLineEdit *line = new QLineEdit();
+//        infoGrid->addWidget(line);
     }
 
     this->moveToCenter();
@@ -401,7 +406,7 @@ void PropertiesDialog::paintEvent(QPaintEvent *event)
     painter.setRenderHint(QPainter::Antialiasing, true);
     painter.setOpacity(1);
     QRectF r(0 / 2.0, 0 / 2.0, width() - 0, height() - 0);//左边 上边 右边 下边
-    painter.drawRoundedRect(r, 4, 4);
+    painter.drawRoundedRect(r, 6, 6);
 
 
     //绘制背景色

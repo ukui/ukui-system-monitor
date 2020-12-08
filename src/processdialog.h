@@ -70,6 +70,7 @@ signals:
     void changeColumnVisible(int index, bool visible, QList<bool> columnVisible);
     void changeSortStatus(int index, bool isSort);
     void activeWhoseProcessList(int index);
+    void closeDialog();
 
 public slots:
     void focusProcessView();
@@ -90,6 +91,8 @@ public slots:
     void refreshProcessList();
     //for renewe single process net information
     void refreshLine(const QString& procname, quint64 rcv, quint64 sent, int pid, unsigned int uid, const QString& devname);
+    void onSearchFocusIn();
+    void onSearchFocusOut();
 //    void newSpeedRefresh();
 
 

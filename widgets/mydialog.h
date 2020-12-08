@@ -50,6 +50,7 @@ public:
 
 signals:
     void buttonClicked(int index, const QString &text);
+    void closeInDialog(int index, const QString &text);
 
 public slots:
     int addButton(const QString &text, bool isDefault = false);

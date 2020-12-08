@@ -49,7 +49,7 @@ ProcessListItem::ProcessListItem(ProcData info)
     iconSize = 20;
     padding = 14;
     textPadding = 10;
-    initThemeMode();
+    //initThemeMode();
 }
 
 ProcessListItem::~ProcessListItem()
@@ -66,7 +66,6 @@ ProcessListItem::~ProcessListItem()
 void ProcessListItem::initThemeMode()
 {
     if (!qtSettings) {
-//        qWarning() << "Failed to load the gsettings: " << THEME_QT_SCHEMA;
         return;
     }
     //监听主题改变
@@ -462,7 +461,7 @@ bool ProcessListItem::sortByPriority(const ProcessListItem *item1, const Process
         isSort = cpu1 > cpu2;
     }
     else {
-        isSort = nice1 > nice2;
+        isSort = nice1 < nice2;
     }
 
     return descendingSort ? isSort : !isSort;
