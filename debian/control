@@ -26,6 +26,7 @@ Vcs-Git: https://github.com/ukui/ukui-system-monitor.git
 Package: ukui-system-monitor
 Architecture: any
 Depends: libcap2-bin,
+         libglib2.0-bin,
          ${misc:Depends},
          ${shlibs:Depends}
 Description: Monitor for UKUI desktop environment
