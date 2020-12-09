@@ -248,4 +248,5 @@ void SwapAndMemoryChart::paintEvent(QPaintEvent *event)
     painter.setRenderHint(QPainter::Antialiasing, true);
     painter.drawPath(m_swapPath);//绘制前面创建的path:m_downloadPath
     painter.restore();
+    QWidget::paintEvent(event);
 }

@@ -71,4 +71,5 @@ void sigCheck::paintEvent(QPaintEvent *event)
     p.drawRoundedRect(opt.rect,2,2);
     setProperty("blurRegion",QRegion(path.toFillPolygon().toPolygon()));
     style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
+    QWidget::paintEvent(event);
 }
