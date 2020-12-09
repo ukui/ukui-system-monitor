@@ -24,6 +24,7 @@
 #include <QWidget>
 #include <QStyleOption>
 #include <QPainter>
+#include <QPainterPath>
 #include "../shell/macro.h"
 
 class sigCheck : public QWidget{

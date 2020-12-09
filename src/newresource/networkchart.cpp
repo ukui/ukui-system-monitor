@@ -97,6 +97,7 @@ void NetWorkChart::paintEvent(QPaintEvent *event)
     painter.setRenderHint(QPainter::Antialiasing, true);
     painter.drawPath(m_upLoadPath);//绘制前面创建的path:m_downloadPath
     painter.restore();
+    QWidget::paintEvent(event);
 }
 
 void NetWorkChart::onUpdateDownloadAndUploadData(long recvTotalBytes, long sentTotalBytes, long recvRateBytes, long sentRateBytes)

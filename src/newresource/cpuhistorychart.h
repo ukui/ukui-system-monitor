@@ -26,8 +26,6 @@
 #include <QPainterPath>
 #include <QMap>
 
-static int i =1;
-
 class CpuHistoryChart : public QWidget
 {
     Q_OBJECT
