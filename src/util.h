@@ -50,3 +50,11 @@ QString formatDurationForDisplay(unsigned centiseconds);
 QString getDeviceMountedPointPath(const QString &line);
 QString getFileContent(const QString &filePath);
 QSet<QString> getFileContentsLineByLine(const QString &filePath);
+
+const QPixmap loadSvg(const QString &fileName, const int size);
+
+//图片反白
+QPixmap drawSymbolicColoredPixmap(const QPixmap &source);
+
+//图片反黑
+QPixmap drawSymbolicBlackColoredPixmap(const QPixmap &source);

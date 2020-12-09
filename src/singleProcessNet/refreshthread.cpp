@@ -160,7 +160,7 @@ void RefreshThread::refresh_cnx_list()
 void RefreshThread::run()
 {
     while (1) {
-        sleep(1.5);
+        sleep(5);
         refreshconninode();
         refresh_process_list();
         refresh_cnx_list();

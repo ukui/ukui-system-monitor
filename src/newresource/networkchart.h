@@ -18,60 +18,47 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-#ifndef NETWORKFLOW_H
-#define NETWORKFLOW_H
+#ifndef _NETWORKCHART_H_
+#define _NETWORKCHSRT_H_
 
 #include <QWidget>
-#include <qgsettings.h>
-#include <QPainterPath>
 #include <QStyleOption>
+#include <QPainterPath>
 
-#include "shell/customstyle.h"
-#include "../shell/macro.h"
-
-class NetworkFlow : public QWidget
+class NetWorkChart : public QWidget
 {
     Q_OBJECT
-
 public:
-    NetworkFlow(QWidget *parent = 0);
-    void initThemeMode();
-    ~NetworkFlow();
-
-public slots:
-    void onUpdateNetworkStatus(long recvTotalBytes, long sentTotalBytes, long recvRateKbs, long sentRateKbs);
+    NetWorkChart(QWidget *parent = 0);
+    ~NetWorkChart();
 
 protected:
     void paintEvent(QPaintEvent *event);
 
 private:
-    QList<long> *m_downloadSpeedList;
-    QList<long> *m_uploadSpeedList;
-    QPainterPath m_downloadPath;
-    QPainterPath m_uploadPath;
-
-    int m_netMaxHeight;
-    int m_pointsCount;
-
-    long m_recvTotalBytes;
-    long m_sentTotalBytes;
-    long m_recvRateBytes;
-    long m_sentRateBytes;
-    QList<int> *m_gridY;
-    int m_pointSpace;
-
     QColor m_outsideBorderColor;
+    QColor m_downLoadColor;
+    QColor m_upLoadColor;
+
+    QPainterPath m_downLoadPath;
+    QPainterPath m_upLoadPath;
+    int m_pointsCount;
     QColor m_bgColor;
-    QColor m_downloadColor;
-    QColor m_uploadColor;
+    double m_downLoadSpeed;
+    double m_downLoadMaxHeight;
+    double m_upLoadSpeed;
+    double m_upLoadMaxHeight;
 
-    QString receiveText;
-    QString sendText;
+    QList<double> *m_downLoadList;
+    QList<double> *m_upLoadList;
 
-    QGSettings * qtSettings;
-    QString currentThemeMode;
-
+public slots:
+    void onUpdateDownloadAndUploadData(long,long,long,long);
+signals:
+//    void speedToMib();
+    void speedToLowKib();
+//    void speedToMiddleKib();
+    void speedToHighKib();
 };
 
-#endif // NETWORKFLOW_H
+#endif //_NETWORKCHSRT_H_

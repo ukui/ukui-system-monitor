@@ -79,22 +79,10 @@ HEADERS += \
     ../widgets/myactiongroupitem.h \
     ../widgets/myaction.h \
     monitortitlewidget.h \
-    resourcesdialog.h \
     filesystemdialog.h \
     filesystemworker.h \
     filesystemdata.h \
     ../widgets/mysearchedit.h \
-    networkwidget.h \
-    networkflow.h \
-    netcatogoryshow.h \
-    cpuratewidget.h \
-    cpuballwidget.h \
-    smoothcurvegenerator.h \
-    memorywidget.h \
-    memorycircle.h \
-    networkindicator.h \
-    resourcesindicator.h \
-    resourcescategory.h \
     filesystemlistwidget.h \
     filesystemlistitem.h \
     filesystemwatcher.h \
@@ -113,7 +101,13 @@ HEADERS += \
     singleProcessNet/conninode.h \
     singleProcessNet/inode2prog.h \
     singleProcessNet/refreshthread.h \
-    singleProcessNet/decpcap.h
+    singleProcessNet/decpcap.h \
+    smoothlinegenerator.h \
+    newresource/sigcheck.h \
+    newresource/newresourcesdialog.h \
+    newresource/cpuhistorychart.h \
+    newresource/swapandmemorychart.h \
+    newresource/networkchart.h
 #    newresourcesdialog.h
 
 SOURCES += \
@@ -136,22 +130,10 @@ SOURCES += \
     ../widgets/myactiongroupitem.cpp \
     ../widgets/myaction.cpp \
     monitortitlewidget.cpp \
-    resourcesdialog.cpp \
     filesystemdialog.cpp \
     filesystemworker.cpp \
     filesystemdata.cpp \
     ../widgets/mysearchedit.cpp \
-    networkwidget.cpp \
-    networkflow.cpp \
-    netcatogoryshow.cpp \
-    cpuratewidget.cpp \
-    cpuballwidget.cpp \
-    smoothcurvegenerator.cpp \
-    memorywidget.cpp \
-    memorycircle.cpp \
-    networkindicator.cpp \
-    resourcesindicator.cpp \
-    resourcescategory.cpp \
     filesystemlistwidget.cpp \
     filesystemlistitem.cpp \
     filesystemwatcher.cpp \
@@ -168,7 +150,13 @@ SOURCES += \
     singleProcessNet/conninode.cpp \
     singleProcessNet/inode2prog.cpp \
     singleProcessNet/refreshthread.cpp \
-    singleProcessNet/decpcap.c
+    singleProcessNet/decpcap.c \
+    smoothlinegenerator.cpp \
+    newresource/newresourcesdialog.cpp \
+    newresource/sigcheck.cpp \
+    newresource/cpuhistorychart.cpp \
+    newresource/swapandmemorychart.cpp \
+    newresource/networkchart.cpp
 #    newresourcesdialog.cpp
 
 OTHER_FILES += \

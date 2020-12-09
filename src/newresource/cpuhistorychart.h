@@ -18,35 +18,47 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef MEMORYWIDGET_H
-#define MEMORYWIDGET_H
+#ifndef _CPUHISTORYCHART_H_
+#define _CPUHISTORYCHART_H_
 
 #include <QWidget>
-#include <QImage>
-#include <QLabel>
-#include <QVBoxLayout>
+#include <QStyleOption>
+#include <QPainterPath>
+#include <QMap>
 
-class MemoryCircle;
+static int i =1;
 
-class MemoryWidget : public QWidget
+class CpuHistoryChart : public QWidget
 {
     Q_OBJECT
-
 public:
-    MemoryWidget(QWidget *parent = 0);
-    ~MemoryWidget();
+    CpuHistoryChart(QWidget *parent = 0);
+    ~CpuHistoryChart();
+    void refreshCpuHistoryData(double cpu);
+
+protected:
+    void paintEvent(QPaintEvent *event);
+
+private:   
+    QPointF point;
+    QColor m_outsideBorderColor;
+    QColor m_cpuHistoryColor;
+
+    QPainterPath m_cpuHistoryPath;
+    QList<double> *m_CpuHistoryList;
+    QList<qreal> xList; //x数据链
+    QList<qreal> yDrawList; //y数据链
+
+    int m_pointsCount;
+    QColor m_bgColor;
+    double m_Cpu;
+    double m_cpuMaxHeight;
+
+    int showValue;
 
 public slots:
-    void onUpdateMemoryStatus();
-
-signals:
-    void rebackMemoryInfo(const QString &info, double percent);
-
-private:
-    QLabel *m_title = nullptr;
-    MemoryCircle *m_memoryCircle = nullptr;
-    QVBoxLayout *m_widgetLayout = nullptr;
-    QHBoxLayout *mainLayout = nullptr;
+    void onUpdateCpuPercent(double value);
+//    void onUpdateCpuHistoryStatus(double value);
 };
 
-#endif // MEMORYWIDGET_H
+#endif //_CPUHISTORYCHART_H_

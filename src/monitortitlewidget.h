@@ -27,6 +27,7 @@
 #include <QComboBox>
 #include <QListView>
 #include <qgsettings.h>
+#include <QPropertyAnimation>
 
 #include "shell/customstyle.h"
 #include "../shell/macro.h"
@@ -53,6 +54,7 @@ public:
     void setSearchEditFocus();
     void initThemeMode();
     void initFontSize();
+    void getTransparentData();
 
 public slots:
     void onRefreshSearchResult();
@@ -64,6 +66,7 @@ public slots:
     void onCloseBtnClicked();
     void onUpdateMaxBtnStatusChanged();
     void switchChangeItemProcessSignal(int a);
+    void animationFinishedSlot();
 
 signals:
     void updateMaxBtn();
@@ -73,6 +76,8 @@ signals:
     void changeProcessItemDialog(int index);
     void maximizeWindow();
     void minimizeWindow();
+    void SearchFocusIN();
+    void SearchFocusOut();
 
 protected:
     void mouseDoubleClickEvent(QMouseEvent *event) override;
@@ -80,10 +85,16 @@ protected:
     bool eventFilter(QObject *, QEvent *event) override;
     void resizeEvent(QResizeEvent *event);
     void paintEvent(QPaintEvent *event);
-
 private:
+    QPropertyAnimation *m_animation;
+    QEasingCurve m_hideCurve;
+    QEasingCurve m_showCurve;
     QSettings *proSettings;
     MySearchEdit *m_searchEdit = nullptr;
+    QLineEdit *m_searchEditNew = nullptr;
+    QWidget *m_queryWid=nullptr;
+    QLabel *m_queryIcon=nullptr;
+    QLabel *m_queryText=nullptr;
     //QPushButton *m_cancelSearchBtn = nullptr;
     QString searchTextCache;
     QTimer *m_searchTimer = nullptr;
@@ -112,11 +123,16 @@ private:
     QGSettings *qtSettings;
     QGSettings *fontSettings;
     QGSettings * ifsettings;
+    QGSettings *opacitySettings;
     QString currentThemeMode;
+    double m_transparency;
 
     QList<int> *whichBox;
     int whichNum;
     int i=0;
+    QPixmap pixmap;
+    bool m_isSearching;
+    QHBoxLayout* queryWidLayout;
 };
 
 #endif // MONITORTITLEWIDGET_H

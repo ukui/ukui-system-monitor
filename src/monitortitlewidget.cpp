@@ -35,6 +35,7 @@
 #include <QStyleFactory>
 #include <QObject>
 #include <QStandardItemModel>
+#include <KWindowEffects>
 
 #define MENU_SCHEMA "org.ukui.system-monitor.menu"
 #define WHICH_MENU "which-menu"
@@ -45,6 +46,12 @@ MonitorTitleWidget::MonitorTitleWidget(QSettings *settings, QWidget *parent)
     ,fontSettings(nullptr)
     ,qtSettings(nullptr)
 {
+    m_animation = nullptr;
+    this->setAttribute(Qt::WA_TranslucentBackground);
+    m_queryIcon=new QLabel();
+    QIcon queryIcon;
+    queryIcon = QIcon::fromTheme("preferences-system-search-symbolic");
+    pixmap = queryIcon.pixmap(QSize(21, 21));
     whichBox = new QList<int>();
     const QByteArray idd(THEME_QT_SCHEMA);
 
@@ -65,44 +72,74 @@ MonitorTitleWidget::MonitorTitleWidget(QSettings *settings, QWidget *parent)
     {
         ifsettings = new QGSettings(ifid);
     }
+
+    const QByteArray idtrans(THEME_QT_TRANS);
+    if(QGSettings::isSchemaInstalled(idtrans))
+    {
+        opacitySettings = new QGSettings(idtrans);
+    }
     
     initFontSize();
 
     m_changeBox = new QComboBox();
-    m_changeBox->setFixedSize(NORMALWIDTH,NORMALHEIGHT);
+    m_changeBox->setFixedSize(NORMALWIDTH,NORMALHEIGHT+2);
     m_changeBox->addItem(tr("Active Processes"));
     m_changeBox->addItem(tr("My Processes"));
     m_changeBox->addItem(tr("All Process"));
     m_changeBox->setFocusPolicy(Qt::NoFocus);
     m_changeBox->setView(new  QListView());
-
     QFont changeBoxFont;
-    changeBoxFont.setPointSize(fontSize-2);
+    changeBoxFont.setPointSize(fontSize);
     m_changeBox->setFont(changeBoxFont);
 
     initThemeMode();
+    getTransparentData();
 
-    this->setWindowFlags(Qt::FramelessWindowHint);
+    this->setWindowFlags(Qt::FramelessWindowHint);//this->setWindowFlags(this->windowFlags() | Qt::FramelessWindowHint  | Qt::WindowCloseButtonHint);
 
     installEventFilter(this);
     setFixedHeight(MONITOR_TITLE_WIDGET_HEIGHT);
 
     this->setAutoFillBackground(true);
-
     m_searchTimer = new QTimer(this);
     m_searchTimer->setSingleShot(true);
     connect(m_searchTimer, SIGNAL(timeout()), this, SLOT(onRefreshSearchResult()));
 
     initWidgets();
     this->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
+    this->installEventFilter(this);
+}
+
+void MonitorTitleWidget::getTransparentData()
+{
+    if (!opacitySettings)
+    {
+        m_transparency = 0.95;
+        return;
+    }
+
+    connect(opacitySettings, &QGSettings::changed, this, [=](const QString &key)
+    {
+        if (key == "transparency")
+        {
+            QStringList keys = opacitySettings->keys();
+            if (keys.contains("transparency"))
+            {
+                m_transparency = opacitySettings->get("transparency").toString().toDouble();
+            }
+        }
+        repaint();
+    });
+
+    QStringList keys = opacitySettings->keys();
+    if(keys.contains("transparency"))
+    {
+        m_transparency = opacitySettings->get("transparency").toString().toDouble();
+    }
 }
 
 void MonitorTitleWidget::initThemeMode()
 {
-    if (!qtSettings) {
-//        qWarning() << "Failed to load the gsettings: " << THEME_QT_SCHEMA;
-        return;
-    }
     //监听主题改变
     connect(qtSettings, &QGSettings::changed, this, [=](const QString &key)
     {
@@ -112,24 +149,17 @@ void MonitorTitleWidget::initThemeMode()
             if (currentThemeMode == "ukui-light" || currentThemeMode == "ukui-default" || currentThemeMode == "ukui-white")
             {
                 qDebug() << "The theme change to white";
-                m_changeBox->setStyleSheet("QComboBox{background:rgba(13,14,14,0.08);border-radius:6px;color:rgba(0,0,0,0.57)}"
-                                           "QComboBox::drop-down{border:0px;width:30px;}"
-                                           "QComboBox::down-arrow{image:url(:/img/down_arrow.png);}"
-                                           );
                 this->setObjectName("MonitorTitle");
                 this->setStyleSheet("QFrame#MonitorTitle{background:rgba(255,255,255,0);border-top-left-radius:6px;border-top-right-radius:6px;color: palette(windowText);}");
+                m_queryIcon->setPixmap(drawSymbolicBlackColoredPixmap(pixmap));
 
             }
 
-            if (currentThemeMode == "ukui-dark" || currentThemeMode == "ukui-black")
+            else/*(currentThemeMode == "ukui-dark" || currentThemeMode == "ukui-black")*/
             {
-                qDebug() << "The theme change to black";
-                m_changeBox->setStyleSheet("QComboBox{background:rgba(255,255,255,0.08);border-radius:6px;color:rgba(255,255,255,0.57)}"
-                                           "QComboBox::drop-down{border:0px;width:30px;}"
-                                           "QComboBox::down-arrow{image:url(:/img/down_arrow.png);}"
-                                           );
                 this->setObjectName("MonitorTitle");
                 this->setStyleSheet("QFrame#MonitorTitle{background:rgba(13,14,14,0);border-top-left-radius:6px;border-top-right-radius:6px;color: palette(windowText);}");
+                m_queryIcon->setPixmap(drawSymbolicColoredPixmap(pixmap));
             }
 
         }
@@ -138,22 +168,16 @@ void MonitorTitleWidget::initThemeMode()
     currentThemeMode = qtSettings->get(MODE_QT_KEY).toString();
     if (currentThemeMode == "ukui-light" || currentThemeMode == "ukui-default" || currentThemeMode == "ukui-white")
     {
-        m_changeBox->setStyleSheet("QComboBox{background:rgba(13,14,14,0.08);border-radius:6px;color:rgba(0,0,0,0.57)}"
-                                   "QComboBox::drop-down{border:0px;width:30px;}"
-                                   "QComboBox::down-arrow{image:url(:/img/down_arrow.png);}"
-                                   );
         this->setObjectName("MonitorTitle");
         this->setStyleSheet("QFrame#MonitorTitle{background:rgba(255,255,255,0);border-top-left-radius:6px;border-top-right-radius:6px;color: palette(windowText);}");
+        m_queryIcon->setPixmap(drawSymbolicBlackColoredPixmap(pixmap));
     }
 
     if (currentThemeMode == "ukui-dark" || currentThemeMode == "ukui-black")
     {
-        m_changeBox->setStyleSheet("QComboBox{background:rgba(255,255,255,0.08);border-radius:6px;color:rgba(255,255,255,0.57)}"
-                                   "QComboBox::drop-down{border:0px;width:30px;}"
-                                   "QComboBox::down-arrow{image:url(:/img/down_arrow.png);}"
-                                   );
         this->setObjectName("MonitorTitle");
         this->setStyleSheet("QFrame#MonitorTitle{background:rgba(13,14,14,0);border-top-left-radius:6px;border-top-right-radius:6px;color: palette(windowText);}");
+        m_queryIcon->setPixmap(drawSymbolicColoredPixmap(pixmap));
     }
 
 }
@@ -171,11 +195,11 @@ void MonitorTitleWidget::initFontSize()
             fontSize = fontSettings->get(FONT_SIZE).toString().toFloat();
         }
         QFont font;
-        font.setPointSize(fontSize-2);
+        font.setPointSize(fontSize);
         titleLabel->setFont(font);
 
         QFont changeBoxFont;
-        changeBoxFont.setPointSize(fontSize-2);
+        changeBoxFont.setPointSize(fontSize);
         m_changeBox->setFont(changeBoxFont);
     });
     fontSize = fontSettings->get(FONT_SIZE).toString().toFloat();
@@ -184,8 +208,6 @@ void MonitorTitleWidget::initFontSize()
 MonitorTitleWidget::~MonitorTitleWidget()
 {
     delete emptyLabel;
-    delete m_searchEdit;
-    //delete m_cancelSearchBtn;
     delete maxBtn;
 
     if (m_searchTimer) {
@@ -243,6 +265,10 @@ MonitorTitleWidget::~MonitorTitleWidget()
     {
         delete qtSettings;
     }
+    if(m_animation)
+    {
+        delete m_animation;
+    }
 }
 
 bool MonitorTitleWidget::eventFilter(QObject *obj, QEvent *event)    //set the esc and tab pressbutton effect
@@ -250,18 +276,61 @@ bool MonitorTitleWidget::eventFilter(QObject *obj, QEvent *event)    //set the e
     if (event->type() == QEvent::KeyPress) {
         if (obj == this) {
             QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
-            if (keyEvent->key() == Qt::Key_Escape) {
-                m_searchEdit->clearEdit();
+            if (keyEvent->key() == Qt::Key_Escape || keyEvent->key() == Qt::Key_Tab) {
+//                m_searchEdit->clearEdit();
+                m_searchEditNew->clear();
                 emit canelSearchEditFocus();
             }
         }
-        else if (obj == m_searchEdit->getLineEdit()) {
+        else if (obj == m_searchEditNew) {
             QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
             if (keyEvent->key() == Qt::Key_Tab) {
-                m_searchEdit->clearEdit();
+//                m_searchEdit->clearEdit();
+                m_searchEditNew->clear();
                 emit canelSearchEditFocus();
             }
         }
+    }
+
+    if (obj == m_searchEditNew) {
+        if (event->type() == QEvent::FocusIn)
+        {
+            emit SearchFocusIN();
+            if(m_searchEditNew->text().isEmpty())
+            {
+                qDebug()<<"it is real";
+                m_animation->stop();
+                m_animation->setStartValue(QRectF((m_searchEditNew->width() - (m_queryIcon->width()+m_queryText->width()+10))/2,0,
+                                                 m_queryIcon->width()+m_queryText->width()+10,(m_searchEditNew->height() + 20)/2));
+                m_animation->setEndValue(QRectF(0,0,
+                                               m_queryIcon->width()+3,(m_searchEditNew->height()+20)/2));
+                m_animation->setEasingCurve(QEasingCurve::OutQuad);
+                m_animation->start();
+            }
+            m_isSearching=true;
+        }
+        else if(event->type() == QEvent::FocusOut)
+        {
+            emit SearchFocusOut();
+            m_searchEditNew->clear();
+            m_searchEditNew->clearFocus();
+            if(m_searchEditNew->text().isEmpty())
+            {
+                m_queryText->adjustSize();
+                m_animation->setStartValue(QRectF(0,0,
+                                                 m_queryIcon->width()+3,(m_searchEditNew->height()+20)/2));
+                m_animation->setEndValue(QRectF((m_searchEditNew->width() - (m_queryIcon->width()+m_queryText->width()+10))/2,0,
+                                               m_queryIcon->width()+m_queryText->width()+10,(m_searchEditNew->height()+20)/2));
+                m_animation->setEasingCurve(QEasingCurve::InQuad);
+                m_animation->start();
+            }
+            m_isSearching=false;
+        }
+    }
+    if(obj != m_searchEditNew && event->type() == QEvent::MouseButtonPress)
+    {
+        m_searchEditNew->clear();
+        m_searchEditNew->clearFocus();
     }
 
     return QFrame::eventFilter(obj, event);
@@ -269,26 +338,27 @@ bool MonitorTitleWidget::eventFilter(QObject *obj, QEvent *event)    //set the e
 
 void MonitorTitleWidget::setSearchEditFocus()
 {
-    if (m_searchEdit->searchedText() != "") {
-        m_searchEdit->getLineEdit()->setFocus();
-    } else {
-        m_searchEdit->setFocus();
-    }
+//    if (m_searchEdit->searchedText() != "") {
+//        m_searchEdit->getLineEdit()->setFocus();
+//    } else {
+//        m_searchEdit->setFocus();
+//    }
 }
 
 void MonitorTitleWidget::onRefreshSearchResult()
 {
-    if (m_searchEdit->searchedText() == searchTextCache) {
+//    if (m_searchEdit->searchedText() == searchTextCache) {
+//        emit this->searchSignal(searchTextCache);
+//    }
+    if (m_searchEditNew->text() == searchTextCache) {
         emit this->searchSignal(searchTextCache);
     }
 }
 
 void MonitorTitleWidget::handleSearchTextChanged()
 {
-    searchTextCache = m_searchEdit->searchedText();
-
-    //this->m_cancelSearchBtn->setVisible(!searchTextCache.isEmpty());
-
+//    searchTextCache = m_searchEdit->searchedText();
+    searchTextCache = m_searchEditNew->text();
     if (m_searchTimer->isActive()) {
         m_searchTimer->stop();
     }
@@ -297,9 +367,7 @@ void MonitorTitleWidget::handleSearchTextChanged()
 
 void MonitorTitleWidget::onCancelSearchBtnClicked(bool b)
 {
-    qDebug()<<"wocnm,wwj,nizhendeshiyigedashabi";
-    //this->m_cancelSearchBtn->setVisible(false);
-    m_searchEdit->clearAndFocusEdit();
+//    m_searchEdit->clearAndFocusEdit();
     emit canelSearchEditFocus();
 }
 
@@ -315,50 +383,15 @@ void MonitorTitleWidget::mouseDoubleClickEvent(QMouseEvent *e)
     QFrame::mouseDoubleClickEvent(e);
 }
 
-/*void MonitorTitleWidget::paintEvent(QPaintEvent *event)
-{
-//    QFrame::paintEvent(event);
-
-    QPainter painter(this);
-    painter.setRenderHint(QPainter::Antialiasing, true);
-
-    //draw background
-    QPainterPath path;
-    path.addRect(QRectF(0, 0, width(), height()));
-    painter.setOpacity(1);
-    painter.fillPath(path, QColor("#0d87ca"));
-
-
-    //draw line
-//    const QColor color(QColor(255, 255, 255, 127));
-//    int borderHeight = 1;
-//    QPainterPath path;
-//    path.moveTo(QPointF(x(), y() + borderHeight - 0.5));
-//    path.lineTo(QPointF(x() + width(), y() + borderHeight - 0.5));
-//    painter.setPen(QPen(color));
-//    painter.drawPath(path);
-
-    //绘制圆角矩形
-//    painter.setPen(QPen(QColor("#e9eef0"), 0));//边框颜色
-//    painter.setBrush(QColor("#0d87ca"));//背景色
-//    painter.setOpacity(1);
-//    QRectF r(1, 1, width() - 2, height() - 2);//左边 上边 右边 下边
-//    painter.drawRoundedRect(r, 5, 5);
-
-    QFrame::paintEvent(event);
-}*/
-
 void MonitorTitleWidget::initTitlebarLeftContent()
 {
     QWidget *w = new QWidget;
     m_titleLeftLayout = new QHBoxLayout(w);
     m_titleLeftLayout->setContentsMargins(6, 0, 0, 0);
     m_titleLeftLayout->setSpacing(0);
-
     emptyLabel = new QLabel;
     emptyLabel->setStyleSheet("QLabel{background-color:transparent;}");
     m_titleLeftLayout->addWidget(emptyLabel);
-
     m_topLayout->addWidget(w, 1, Qt::AlignLeft);
 }
 
@@ -373,13 +406,11 @@ void MonitorTitleWidget::initTitlebarMiddleContent()
     QFont font;
     font.setPointSize(fontSize-2);
     titleLabel->setFont(font);
-//    titleLabel->setStyleSheet("QLabel{background-color:transparent;color:palette(windowText);}");
     titleLabel->setText(tr("Kylin System Monitor"));
     picLabel->setPixmap(QPixmap(":img/ukui-system-monitor.png"));
     m_titleMiddleLayout->addWidget(picLabel);
     m_titleMiddleLayout->addWidget(titleLabel);
     m_topLayout->addWidget(w);
-//    m_topLayout->setContentsMargins(0,0,0,20);
 }
 
 void MonitorTitleWidget::initTitlebarRightContent()
@@ -390,63 +421,23 @@ void MonitorTitleWidget::initTitlebarRightContent()
     m_titleRightLayout->setSpacing(0);
 
     m_topLayout->addWidget(w, 1, Qt::AlignRight);
-
-//    MyTristateButton *minBtn = new MyTristateButton;
     QPushButton *minBtn = new QPushButton(this);
     minBtn->setToolTip(tr("minimize"));
     minBtn->setIcon(QIcon::fromTheme("window-minimize-symbolic"));
-//    minBtn->setProperty("useIconHighlightEffect", true);
-//    minBtn->setProperty("iconHighlightEffectMode", 1);
     minBtn->setProperty("isWindowButton", 0x1);
     minBtn->setProperty("useIconHighlightEffect", 0x2);
     minBtn->setFlat(true);
     connect(minBtn, SIGNAL(clicked()), this, SLOT(onMinBtnClicked()));
-//    connect(minBtn, &MyTristateButton::clicked, this, [=] {
-//        if (parentWidget() && parentWidget()->parentWidget()) {
-//            parentWidget()->parentWidget()->showMinimized();
-//        }
-//    });
-//    /*MyTristateButton **/maxBtn = new MyTristateButton;
 
     maxTitleBtn = new QPushButton();
     maxTitleBtn->setToolTip(tr("maximize/restore"));
-//    maxBtn->setStyleSheet("QPushButton{background-color:#ffffff;}");
-//    maxBtn->setObjectName("MaxButton");
-
-//    maxTitleBtn->setIconSize(QSize(25,25));
-//    maxTitleBtn->setProperty("useIconHighlightEffect", true);
-//    maxTitleBtn->setProperty("iconHighlightEffectMode", 1);
     maxTitleBtn->setProperty("isWindowButton", 0x1);
     maxTitleBtn->setProperty("useIconHighlightEffect", 0x2);
     maxTitleBtn->setFlat(true);
-//    QIcon iconMax(tr(":/img/fullscreen.png"));
     maxTitleBtn->setIcon(QIcon::fromTheme("window-maximize-symbolic"));
-//    maxTitleBtn->setIcon(QIcon::fromTheme("window-maximize-symbolic"));
     connect(maxTitleBtn, SIGNAL(clicked()), this, SLOT(onMaxBtnClicked()));
-//    connect(maxBtn, &MyTristateButton::clicked, sthis, [=] {
-//        if (window()->isMaximized()) {
-//            window()->showNormal();
-//            maxBtn->setObjectName("MaxButton");
-//        }
-//        else {
-//            window()->showMaximized();
-//            maxBtn->setObjectName("UnMaxButton");
-//        }
-//    });
-//    connect(this, &MonitorTitleWidget::updateMaxBtn, this, [=]{
-//        if (window()->isMaximized()) {
-//            maxBtn->setObjectName("UnMaxButton");
-//        } else {
-//            maxBtn->setObjectName("MaxButton");
-//        }
-//    });
-//    MyTristateButton *closeBtn = new MyTristateButton;
-//    QIcon iconClose(tr(":/img/close.png"));
     QPushButton *closeBtn = new QPushButton(this);
     closeBtn->setToolTip(tr("close"));
-    //closeBtn->setStyleSheet("QPushButton{background-color:transparent;}");
-//    closeBtn->setIcon(iconClose);
-//    closeBtn->setIconSize(QSize(25,25));
     closeBtn->setIcon(QIcon::fromTheme("window-close-symbolic"));
     closeBtn->setFlat(true);
     closeBtn->setProperty("isWindowButton", 0x2);
@@ -456,12 +447,6 @@ void MonitorTitleWidget::initTitlebarRightContent()
     whichNum = ifsettings->get(WHICH_MENU).toInt();
     m_changeBox->setCurrentIndex(whichNum);
     connect(m_changeBox,SIGNAL(currentIndexChanged(int)),this,SLOT(switchChangeItemProcessSignal(int)));
-//    connect(closeBtn, &MyTristateButton::clicked, this, [=] {
-//        window()->close();
-//    });
-
-//    connect(this, SIGNAL(updateMaxBtn()), this, SLOT(onUpdateMaxBtnStatusChanged()));
-
     m_titleRightLayout->addWidget(minBtn);
     m_titleRightLayout->addWidget(maxTitleBtn);
     m_titleRightLayout->addWidget(closeBtn);
@@ -469,31 +454,11 @@ void MonitorTitleWidget::initTitlebarRightContent()
 
 void MonitorTitleWidget::onMinBtnClicked()
 {
-//    window()->showMinimized();
     emit minimizeWindow();
 }
 
 void MonitorTitleWidget::onMaxBtnClicked()
 {
-//    if (window()->isMaximized()) {
-//        window()->showNormal();
-//    }
-//    else {
-//        window()->showMaximized();
-////        maxBtn->setObjectName("UnMaxButton");
-//    }
-//    if(window()->isMaximized())
-//    {
-////        maxTitleBtn->setIcon(QIcon::fromTheme("window-restore-symbolic"));
-//        QIcon iconMax(tr(":/img/fullscreen.png"));
-//        maxTitleBtn->setIcon(iconMax);
-//    }
-//    else
-//    {
-//        maxTitleBtn->setIcon(QIcon::fromTheme("window-restore-symbolic"));
-////        QIcon iconMax(tr(":/img/fullscreen.png"));
-////        maxTitleBtn->setIcon(iconMax);
-//    }
     emit maximizeWindow();
 }
 
@@ -502,12 +467,9 @@ void MonitorTitleWidget::resizeEvent(QResizeEvent *event)
     if(window()->isMaximized())
     {
         maxTitleBtn->setIcon(QIcon::fromTheme("window-restore-symbolic"));
-//        QIcon iconMax(tr(":/img/fullscreen.png"));
-//        maxTitleBtn->setIcon(iconMax);
     }
     else
     {
-//        maxTitleBtn->setIcon(QIcon::fromTheme("window-restore-symbolic"));
         maxTitleBtn->setIcon(QIcon::fromTheme("window-maximize-symbolic"));
     }
 }
@@ -528,124 +490,71 @@ void MonitorTitleWidget::switchChangeItemProcessSignal(int a)
 
 void MonitorTitleWidget::onUpdateMaxBtnStatusChanged()
 {
-//    if (window()->isMaximized()) {
-//        maxBtn->setObjectName("UnMaxButton");
-//    } else {
-//        maxBtn->setObjectName("MaxButton");
-//    }
 }
 
 void MonitorTitleWidget::initToolbarLeftContent()
 {
     QWidget *w = new QWidget;
-
-//    w->setMinimumWidth(600);
-//    w->setMaximumWidth(1000);
     w->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     m_toolLeftLayout = new QHBoxLayout(w);
     m_toolLeftLayout->setContentsMargins(0, 0, 0, 0);
-//    m_toolLeftLayout->setMaximumSize(1000,100);
-//    m_toolLeftLayout->setSpacing(20);
-//    m_toolLeftLayout->setSizeConstraint(QLayout::SetDefaultConstraint);
-//    m_toolLeftLayout->SetMinimumSize()
-    MyUnderLineButton *processButton = new MyUnderLineButton();
-    processButton->setName(tr("Processes"));
+    QPushButton *processButton = new QPushButton();
+    processButton->setText(tr("Processes"));
     processButton->setChecked(true);
-//    m_changeBox->setVisible(true);
+    processButton->setFixedSize(NORMALWIDTH,NORMALHEIGHT+2);
 
-    MyUnderLineButton *resourcesButton = new MyUnderLineButton();
-    resourcesButton->setName(tr("Resources"));
+    QPushButton *resourcesButton = new QPushButton();
+    resourcesButton->setText(tr("Resources"));
     resourcesButton->setChecked(false);
+    resourcesButton->setFixedSize(NORMALWIDTH,NORMALHEIGHT+2);
 
-    MyUnderLineButton *disksButton = new MyUnderLineButton();
-    disksButton->setName(tr("File Systems"));
+    QPushButton *disksButton = new QPushButton();
+    disksButton->setText(tr("File Systems"));
     disksButton->setChecked(false);
+    disksButton->setFixedSize(NORMALWIDTH,NORMALHEIGHT+2);
 
-    connect(processButton, &MyUnderLineButton::clicked, this, [=] {
+    connect(processButton, &QPushButton::clicked, this, [=] {
         emit this->changePage(0);
         processButton->setChecked(true);
         resourcesButton->setChecked(false);
         disksButton->setChecked(false);
-        if (!m_searchEdit->isVisible())
-            m_searchEdit->setVisible(true);
-        if(!m_changeBox->isVisible())
+//        if (!m_searchEdit->isVisible())
+//            m_searchEdit->setVisible(true);
+        if (!m_changeBox->isVisible())
             m_changeBox->setVisible(true);
+        if (!m_searchEditNew->isVisible())
+            m_searchEditNew->setVisible(true);
     });
-    connect(resourcesButton, &MyUnderLineButton::clicked, this, [=] {
+    connect(resourcesButton, &QPushButton::clicked, this, [=] {
         emit this->changePage(1);
         processButton->setChecked(false);
         resourcesButton->setChecked(true);
         disksButton->setChecked(false);
-        if (m_searchEdit->isVisible())
-            m_searchEdit->setVisible(false);
+//        if (m_searchEdit->isVisible())
+//            m_searchEdit->setVisible(false);
         if (m_changeBox->isVisible())
             m_changeBox->setVisible(false);
-        m_searchEdit->clearEdit();
+        if (m_searchEditNew->isVisible())
+            m_searchEditNew->setVisible(false);
+//        m_searchEdit->clearEdit();
+        m_searchEditNew->clear();
         emit canelSearchEditFocus();
     });
-    connect(disksButton, &MyUnderLineButton::clicked, this, [=] {
+    connect(disksButton, &QPushButton::clicked, this, [=] {
         emit this->changePage(2);
         processButton->setChecked(false);
         resourcesButton->setChecked(false);
         disksButton->setChecked(true);
-        if (m_searchEdit->isVisible())
-            m_searchEdit->setVisible(false);
+//        if (m_searchEdit->isVisible())
+//            m_searchEdit->setVisible(false);
         if (m_changeBox->isVisible())
             m_changeBox->setVisible(false);
-        m_searchEdit->clearEdit();
+        if (m_searchEditNew->isVisible())
+            m_searchEditNew->setVisible(false);
+//        m_searchEdit->clearEdit();
+        m_searchEditNew->clear();
         emit canelSearchEditFocus();
     });
-
-//    buttonWidget = new QWidget();
-//    //buttonWidget->resize(303,32);
-//    QHBoxLayout *button_h_BoxLayout = new QHBoxLayout();
-//    button_h_BoxLayout->setContentsMargins(0,0,0,0);
-//    m_processButton = new QPushButton(tr("Processes"));
-//    m_processButton->setFixedSize(100,32);
-//    m_processButton->setStyleSheet("QPushButton{"
-//                        "background:rgba(61,107,229 ,1);"
-//                        "border-radius:4px 0px 4px 4px;"
-//                        "color:#ffffff;"
-//                        "}");
-//    m_resourceButton = new QPushButton(tr("Resources"));
-//    m_resourceButton->setFixedSize(100,32);
-//    m_resourceButton->setStyleSheet("QPushButton{"
-//                        "background:rgba(25,107,229 ,1);"
-//                        "border-radius:4px 0px 4px 4px;"
-//                        "color:#ffffff;"
-//                        "}");
-//    m_filesystemButton = new QPushButton(tr("File Systems"));
-//    m_filesystemButton->setFixedSize(100,32);
-//    m_filesystemButton->setStyleSheet("QPushButton{"
-//                        "background:rgba(255,255,255,0.08);"
-//                        "border-radius:4px 0px 0px 4px;"
-//                        "color:#ffffff;"
-//                        "}");
-//    button_h_BoxLayout->addSpacing(14);
-//    button_h_BoxLayout->setSpacing(0);
-//    button_h_BoxLayout->addWidget(m_processButton);
-//    button_h_BoxLayout->addSpacing(1);
-//    button_h_BoxLayout->addWidget(m_resourceButton);
-//    button_h_BoxLayout->addSpacing(1);
-//    button_h_BoxLayout->addWidget(m_filesystemButton);
-//    buttonWidget->setLayout(button_h_BoxLayout);
-
-//    m_toolLeftLayout->addStretch();
-//    m_toolLeftLayout->addSpacing(14);
-//    m_toolLeftLayout->setSpacing(0);
-//    m_toolLeftLayout->addWidget(processButton);
-//    m_toolLeftLayout->addSpacing(5);
-//    m_toolLeftLayout->addWidget(resourcesButton);
-//    m_toolLeftLayout->addSpacing(5);
-//    m_toolLeftLayout->addWidget(disksButton);
-
-
-//    m_toolLeftLayout->addWidget(spaceLabel);
-//    m_toolLeftLayout->addWidget(m_changeBox);
-////    m_toolLeftLayout->addWidget(buttonWidget);
-//    m_toolLeftLayout->addStretch();
-
-//    m_bottomLayout->addWidget(w);
     emptyWidget = new QWidget();
 
     processButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
@@ -661,40 +570,45 @@ void MonitorTitleWidget::initToolbarLeftContent()
 
 void MonitorTitleWidget::initToolbarRightContent()
 {
-//    QWidget *w = new QWidget;
-////    w->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-//    m_toolRightLayout = new QHBoxLayout(w);
-//    m_toolRightLayout->setSizeConstraint(QLayout::SetFixedSize);
-//    m_toolRightLayout->setContentsMargins(0, 3, 6, 0);
-//    m_toolRightLayout->setSpacing(5);
-
-
-//    m_cancelSearchBtn = new QPushButton;
-//    m_cancelSearchBtn->setStyleSheet("QPushButton{background-color:transparent;text-align:center;font-family: 方正黑体_GBK;font-size:11px;color:#ffffff;}QPushButton:hover{color:#000000;}");
-//    m_cancelSearchBtn->setText(tr("Cancel"));
-//    m_cancelSearchBtn->setFocusPolicy(Qt::NoFocus);
-//    m_cancelSearchBtn->setFixedSize(46, 25);
-//    m_cancelSearchBtn->setVisible(false);
-//    connect(m_cancelSearchBtn, SIGNAL(clicked(bool)), SLOT(onCancelSearchBtnClicked(bool)));
-    connect(m_searchEdit, &MySearchEdit::textChanged, this, &MonitorTitleWidget::handleSearchTextChanged, Qt::QueuedConnection);
-//    m_toolRightLayout->addWidget(m_searchEdit);
-    //m_toolRightLayout->addWidget(m_cancelSearchBtn);
+//    connect(m_searchEdit, &MySearchEdit::textChanged, this, &MonitorTitleWidget::handleSearchTextChanged, Qt::QueuedConnection);
+    connect(m_searchEditNew,&QLineEdit::textChanged,this,&MonitorTitleWidget::handleSearchTextChanged,Qt::QueuedConnection);
 
     emptyWidget2 = new QWidget();
     emptyWidget2->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     m_bottomLayout->addWidget(m_changeBox);
     m_bottomLayout->addWidget(emptyWidget2, 1);
-    m_bottomLayout->addWidget(m_searchEdit);
+    m_bottomLayout->addWidget(m_searchEditNew);
 }
 
 void MonitorTitleWidget::initWidgets()
 {
-    m_searchEdit = new MySearchEdit(this);
-    //m_searchEdit->setVisible(true);
-    //m_searchEdit->raise();
-    m_searchEdit->setPlaceHolder(tr("Enter the relevant info of process"));
-    m_searchEdit->setFixedSize(SPECIALWIDTH, NORMALHEIGHT);
-    //m_searchEdit->getLineEdit()->installEventFilter(this);
+//新的搜索框设置
+    m_searchEditNew = new QLineEdit();
+    m_searchEditNew->setFixedSize(SPECIALWIDTH, NORMALHEIGHT +2);
+    m_searchEditNew->installEventFilter(this);
+    m_searchEditNew->setContextMenuPolicy(Qt::NoContextMenu);
+    m_queryText=new QLabel();
+    m_queryText->setText(tr("Enter the relevant info of process"));
+    m_queryWid=new QWidget(m_searchEditNew);
+    m_queryWid->setFocusPolicy(Qt::NoFocus);
+
+    QHBoxLayout* queryWidLayout = new QHBoxLayout;
+    queryWidLayout->setContentsMargins(4,4,0,0);
+    queryWidLayout->setAlignment(Qt::AlignJustify);
+    queryWidLayout->setSpacing(0);
+    m_queryWid->setLayout(queryWidLayout);
+
+    queryWidLayout->addWidget(m_queryIcon);
+    queryWidLayout->addWidget(m_queryText);
+
+    m_queryWid->setGeometry(QRect((m_searchEditNew->width() - (m_queryIcon->width()+m_queryText->width()+10))/2,0,
+                                        m_queryIcon->width()+m_queryText->width()-10,(m_searchEditNew->height() + 20)/2));   //设置显示label的区域
+
+    m_animation= new QPropertyAnimation(m_queryWid, "geometry");
+    m_animation->setDuration(50);
+
+    connect(m_animation,&QPropertyAnimation::finished,this,&MonitorTitleWidget::animationFinishedSlot);
+//////////////////
 
     m_layout = new QVBoxLayout(this);
     m_layout->setContentsMargins(0, 0, 0, 0);
@@ -702,15 +616,14 @@ void MonitorTitleWidget::initWidgets()
 
     QWidget *topWidget = new QWidget;
     m_topLayout = new QHBoxLayout(topWidget);
-    m_topLayout->setContentsMargins(0, 0, 0, 0);
     m_topLayout->setSpacing(0);
     m_layout->addWidget(topWidget, 0, Qt::AlignTop);
 
     QWidget *bottomWidget = new QWidget;
     m_bottomLayout = new QHBoxLayout(bottomWidget);
-    m_bottomLayout->setContentsMargins(10, 0, 10, 0);
-//    m_bottomLayout->setSpacing(20);
+//    m_bottomLayout->setContentsMargins(10, 0, 10, 0);
     m_layout->addWidget(bottomWidget);
+//    m_layout->setContentsMargins(0,0,0,0);
 
     this->setLayout(m_layout);
 
@@ -721,92 +634,39 @@ void MonitorTitleWidget::initWidgets()
     initToolbarRightContent();
 }
 
-//void MonitorTitleWidget::resizeEvent(QResizeEvent *event)
-//{
-//    qDebug()<<this->geometry().x()<<"-----------------------"<<this->geometry().y();
-//}
+void MonitorTitleWidget::animationFinishedSlot()
+{
+    if(m_isSearching)
+    {
+        m_queryWid->layout()->removeWidget(m_queryText);
+        m_queryText->setParent(nullptr);
+        m_searchEditNew->setTextMargins(30,1,0,1);
+    }
+    else
+    {
+        m_queryWid->layout()->addWidget(m_queryText);
+    }
+}
 
 void MonitorTitleWidget::paintEvent(QPaintEvent *event)
 {
-////    //paint background
-////    QPainter painter(this);
-////    QPainterPath path;
-////    path.addRect(QRectF(rect()));
-////    painter.setOpacity(1);
-////    painter.fillPath(path, QColor("#131314"));
-////    //paint rect
-////    //QPainterPath path;
-//    QStyleOption opt;
-//    opt.init(this);
-//    QPainter p(this);
-//    p.setBrush(QBrush(QColor(0x19,0x19,0x20,0xFF)));  //QColor(0x19,0x19,0x20,0xFF
-//    //p.setPen(Qt::NoPen);
 //    QPainterPath path;
-//    //opt.rect.adjust(0,0,0,0);
-////    path.addRoundRect(opt.rect.topLeft(),6);
+//    auto rect = this->rect();
+//    rect.adjust(1, 1, -1, -1);
+//    path.addRoundedRect(rect, 6, 6);
+//    setProperty("blurRegion", QRegion(path.toFillPolygon().toPolygon()));
 
-//    path.addPath(path);
-//    path.addRoundedRect(opt.rect,0,0);
-//    p.setRenderHint(QPainter::Antialiasing);  // 反锯齿;
-////       p.drawRoundedRect(opt.rect,6,6);
-//    style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
-////       p.setPen(QPen(QColor("#e9eef0"), 0));//边框颜色
-////       p.setBrush(QColor("#0d87ca"));//背景色
-////       QRectF r(1, 1, width() - 2, height() - 2);//左边 上边 右边 下边
-//    p.drawPath(path);
-///////////////////////////////////////////////////old setting
 //    QStyleOption opt;
 //    opt.init(this);
 //    QPainter p(this);
-
-////    p.setBrush(QBrush(QColor("#131314")));
+//    QRect rectReal = this->rect();
+//    p.setRenderHint(QPainter::Antialiasing);  // 反锯齿;
 //    p.setBrush(opt.palette.color(QPalette::Base));
-//    //p.setOpacity(0.7);
+//    p.setOpacity(m_transparency);
+//    qDebug()<<"real transparency"<<m_transparency;
 //    p.setPen(Qt::NoPen);
+//    p.drawRoundedRect(rectReal, 6, 6);
+//    QWidget::paintEvent(event);
 
-//    p.setRenderHint(QPainter::Antialiasing);  // 反锯齿;
-//    p.setClipping(true);
-//    QPainterPath canDrawPathArea;
-//    canDrawPathArea.addRoundedRect(rect(),6,6);
-//    canDrawPathArea.setFillRule(Qt::WindingFill);   //multilateral areas containing modules
-//    //p.drawRoundedRect(opt.rect,0,0);
-//    canDrawPathArea.addRect(0,height()-6,6,6);      //fill left-top
-//    canDrawPathArea.addRect(width()-6,height()-6,6,6);
-//    p.drawRect(rect());
-
-//    style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);///////////old setting
-//    QPainter painter(this);
-//    painter.setRenderHint(QPainter::Antialiasing);  // 反锯齿;
-//    painter.setBrush(QColor(Qt::darkRed));
-//    painter.setPen(Qt::blue);
-
-//    QPainterPath path;
-//    path.setFillRule(Qt::OddEvenFill);
-//    path.addRect(0,0,this->width(),this->height());
-
-//    const qreal radius = 10;
-//    QRectF rect = QRect(0, 0, this->width(), this->height());
-
-//    qDebug() << rect.bottomRight() << rect.bottomRight() + QPointF(0, radius);
-//    path.moveTo(rect.bottomRight());
-//    path.lineTo(rect.topRight() + QPointF(0, radius));
-//    path.arcTo(QRectF(QPointF(rect.topRight() - QPointF(radius * 2, 0)), QSize(radius * 2, radius *2)), 0, 90);
-//    path.lineTo(rect.topLeft() + QPointF(radius, 0));
-//    path.arcTo(QRectF(QPointF(rect.topLeft()), QSize(radius * 2, radius * 2)), 90, 90);
-//    path.lineTo(rect.bottomLeft());
-////    path.arcTo(QRectF(QPointF(rect.bottomLeft() - QPointF(0, radius * 2)), QSize(radius * 2, radius * 2)), 180, 90);
-////    path.lineTo(rect.bottomLeft() + QPointF(radius, 0));
-////    path.arcTo(QRectF(QPointF(rect.bottomRight() - QPointF(radius * 2, radius * 2)), QSize(radius * 2, radius * 2)), 270, 90);
-//    path.moveTo(rect.bottomRight());
-
-//    painter.save();
-//    painter.setCompositionMode(QPainter::CompositionMode_Clear);
-//    painter.drawPath(path);
-//    painter.restore();
-
-//    QStyleOption opt;
-//    opt.init(this);
-//    style()->drawPrimitive(QStyle::PE_Widget, &opt, &painter, this);
-
-
+//    KWindowEffects::enableBlurBehind(this->winId(), true, QRegion(path.toFillPolygon().toPolygon()));
 }

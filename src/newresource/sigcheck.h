@@ -18,36 +18,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef NETWORKWIDGET_H
-#define NETWORKWIDGET_H
+#ifndef _SIGCHECK_H_
+#define _SIGCHECK_H_
 
 #include <QWidget>
-#include <QRadioButton>
-#include <QImage>
-#include <QLabel>
-#include <QVBoxLayout>
+#include <QStyleOption>
+#include <QPainter>
+#include "../shell/macro.h"
 
-class NetworkFlow;
-
-class NetworkWidget : public QWidget
-{
-    Q_OBJECT
-
+class sigCheck : public QWidget{
 public:
-    NetworkWidget(QWidget *parent = 0);
-    ~NetworkWidget();
-
-public slots:
-    void onUpdateNetworkStatus(long recvTotalBytes, long sentTotalBytes, long recvRateKbs, long sentRateKbs);
-    void setRadioButtonRowStatus();
-
-private:
-    QLabel *m_title = nullptr;
-    NetworkFlow *m_networkFlow = nullptr;
-    QVBoxLayout *m_widgetLayout = nullptr;
-    QHBoxLayout *mainLayout = nullptr;
-//    QRadioButton *math1_radio;
-//    QRadioButton *math2_radio;
+    sigCheck(QWidget * parent=0,int whichSig = 0);
+    ~sigCheck();
+protected:
+    void paintEvent(QPaintEvent *event) override;
+private :
+    int  sig;
 };
 
-#endif // NETWORKWIDGET_H
+#endif //_SIGCHECK_H_
