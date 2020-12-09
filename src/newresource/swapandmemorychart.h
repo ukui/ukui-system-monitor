@@ -28,7 +28,6 @@
 #include <glibtop/mem.h>
 #include <glibtop/swap.h>
 #include <QPainterPath>
-
 #include "smoothlinegenerator.h"
 
 class SwapAndMemoryChart : public QWidget

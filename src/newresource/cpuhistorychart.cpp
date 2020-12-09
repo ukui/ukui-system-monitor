@@ -86,6 +86,7 @@ void CpuHistoryChart::paintEvent(QPaintEvent *event)
     painter.restore();
     update();
     QWidget::paintEvent(event);
+
 //    **********************************现在的折线图写法********************************/
 
    /* QPainter painter(this);
