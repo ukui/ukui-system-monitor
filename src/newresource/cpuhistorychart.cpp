@@ -30,7 +30,6 @@ CpuHistoryChart::CpuHistoryChart(QWidget *parent):QWidget(parent)
 {
     this->setMinimumSize(680,90);
     this->setSizePolicy(QSizePolicy::MinimumExpanding,QSizePolicy::Expanding);
-    qDebug()<<"cpu.chart.size"<<this->width();
     m_pointsCount = int((this->width()) /10);
     m_cpuMaxHeight = 50;
     m_CpuHistoryList = new QList<double>();
@@ -135,7 +134,7 @@ void CpuHistoryChart::refreshCpuHistoryData(double cpu)
     }
     for (int i = 0; i < m_CpuHistoryList->size(); i++)
     {
-        qDebug()<<"m_CpuHistoryList.size"<<m_CpuHistoryList->size();
+//        qDebug()<<"m_CpuHistoryList.size"<<m_CpuHistoryList->size();
         if (cpuHistoryMaxHeight < m_cpuMaxHeight)
         {
             cpuHistoryPoints.append(QPointF((m_CpuHistoryList->size() - i -2) * POINTSPACE, m_CpuHistoryList->at(i)));
@@ -149,10 +148,7 @@ void CpuHistoryChart::refreshCpuHistoryData(double cpu)
 //    update();
 
 //    int x = int(m_pointsCount *i * 0.1 + 0.5);
-//    qDebug()<<"xxx"<<x;
 //    showValue = int(cpu) + 0.5;
-
-//    qDebug()<<"showvalue---"<<showValue;
 //    xList<< x;
 //    yDrawList << showValue;
 //    update();
@@ -161,6 +157,5 @@ void CpuHistoryChart::refreshCpuHistoryData(double cpu)
 
 void CpuHistoryChart::onUpdateCpuPercent(double value)
 {
-    qDebug()<<"----onUpdateCpuPercent----";
     this->refreshCpuHistoryData(value);                  //about the cpurateForm showing
 }

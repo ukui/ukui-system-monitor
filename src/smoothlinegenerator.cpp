@@ -89,7 +89,6 @@ void SmoothLineGenerator::calculateFirstControlPoints(double *&result, const dou
 void SmoothLineGenerator::calculateControlPoints(const QList<QPointF> &knots, QList<QPointF> *firstControlPoints, QList<QPointF> *secondControlPoints)
 {
     int n = knots.size() - 1;
-    qDebug()<<n<<"nnn";
 
     for (int i = 0; i < n; ++i) {
         firstControlPoints->append(QPointF());

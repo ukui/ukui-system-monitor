@@ -83,9 +83,9 @@ void SwapAndMemoryChart::onUpdateMemoryAndSwapData(float memoryData,double memor
 void SwapAndMemoryChart::refreshMemoryAndSwapData(float memoryData, double memoryPercent, float swapData, double swapPercent)
 {
     m_memoryData = formatMemory(memoryData) * 9 *(rect().height() / 90);
-    qDebug()<<"m_memoryData"<<m_memoryData;
+//    qDebug()<<"m_memoryData"<<m_memoryData;
     m_swapData = formatMemory(swapData) * 9;
-    qDebug()<<"m_swapData"<<m_swapData;
+//    qDebug()<<"m_swapData"<<m_swapData;
 
 
     QList<QPointF> memoryPoints;
@@ -105,7 +105,7 @@ void SwapAndMemoryChart::refreshMemoryAndSwapData(float memoryData, double memor
     }
     for (int i = 0; i < m_memoryDataList->size(); i++)
     {
-        qDebug()<<"m_CpuHistoryList.size"<<m_memoryDataList->size();
+//        qDebug() << "m_CpuHistoryList.size" << m_memoryDataList->size();
         if (memoryMaxHeight < m_memoryMaxHeight)
         {
             memoryPoints.append(QPointF((m_memoryDataList->size() - i -2) * POINTSPACE, m_memoryDataList->at(i)));
@@ -134,7 +134,7 @@ void SwapAndMemoryChart::refreshMemoryAndSwapData(float memoryData, double memor
     }
     for (int i = 0; i < m_swapDataList->size(); i++)
     {
-        qDebug()<<"m_CpuHistoryList.size"<<m_swapDataList->size();
+//        qDebug() << "m_CpuHistoryList.size" << m_swapDataList->size();
         if (swapMaxHeight < m_swapMaxHeight)
         {
             swapPoints.append(QPointF((m_swapDataList->size() - i -2) * POINTSPACE, m_swapDataList->at(i)));

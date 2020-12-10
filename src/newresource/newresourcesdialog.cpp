@@ -347,7 +347,7 @@ void NewResouresDialog::cpuHistoySetText(double value)
     showValue = QString::number(value,10,0);
     QString s = "Cpu "+ showValue +":100%";
     cpuUnitDataLabel->setText(s);
-    qDebug()<<"value"<<value;
+//    qDebug() << "cpu value: " << value;
 }
 
 void NewResouresDialog::memoryandswapSetText(const QString &infoMemory, double percentMemory,const QString &infoSwap, double percentSwap)

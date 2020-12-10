@@ -102,8 +102,8 @@ void NetWorkChart::paintEvent(QPaintEvent *event)
 
 void NetWorkChart::onUpdateDownloadAndUploadData(long recvTotalBytes, long sentTotalBytes, long recvRateBytes, long sentRateBytes)
 {
-    qDebug()<<"recvRateBytes"<<recvRateBytes;
-    qDebug()<<"sentRateBytes"<<sentRateBytes;
+//    qDebug()<<"recvRateBytes"<<recvRateBytes;
+//    qDebug()<<"sentRateBytes"<<sentRateBytes;
 //    if(recvRateBytes + sentRateBytes >= 1024 * 1024)
 //    {
 //        emit this->speedToMib();

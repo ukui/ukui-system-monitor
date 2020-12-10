@@ -218,15 +218,12 @@ static void get_process_name (ProcessWorker *info, const gchar *cmd, const GStrv
         // and also /usr/bin/interpreter /usr/.../very_long_name
         // which may have use prctl to alter 'cmd' name
         for (int i = 0; i != 2 && args[i]; ++i) {
-//老方法获取应用名字
             char* basename;
             basename = g_path_get_basename(args[i]);
 
             if (g_str_has_prefix(basename, cmd)) {
                 info->name = basename;
                 return;
-////新方法获取应用名字
-
             }
 
             g_free(basename);
@@ -234,7 +231,7 @@ static void get_process_name (ProcessWorker *info, const gchar *cmd, const GStrv
     }
 
     info->name = g_strdup(cmd);
-    qDebug()<<"name"<<info->name;
+//    qDebug()<<"process name: "<<info->name;
 }
 
 static void get_process_systemd_info(ProcessWorker *info)

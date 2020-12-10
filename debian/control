@@ -17,7 +17,7 @@ Build-Depends: debhelper-compat (= 12),
                libgsettings-qt-dev,
                libqt5x11extras5-dev,
                libpcap-dev
-Standards-Version: 4.5.0
+Standards-Version: 4.5.1
 Rules-Requires-Root: no
 Homepage: https://www.ukui.org
 Vcs-Browser: https://github.com/ukui/ukui-system-monitor
