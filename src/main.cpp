@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
     }
     else
     {
-        QApplication::setApplicationName("Kylin System Monitor");
+        QApplication::setApplicationName("UKui System Monitor");
         QApplication::setApplicationVersion("0.0.0.0001");
 
         QString locale = QLocale::system().name();
