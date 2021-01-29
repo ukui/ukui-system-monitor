@@ -23,11 +23,11 @@
 #include <QObject>
 #include <QDesktopWidget>
 #include <QtSingleApplication>
-#include <KWindowEffects>
 
 #include "framelessExtended/framelesshandle.h"
 #include "systemmonitor.h"
 #include "shell/customstyle.h"
+#include "../shell/xatom-helper.h"
 //#include "maincontroller.h"
 
 #include <X11/Xlib.h>   // should be put in the last
@@ -57,20 +57,30 @@ int main(int argc, char *argv[])
                                 ":/translation/"))
                 qDebug() << "Load translation file："<< "ukui-system-monitor_" + locale + ".qm" << " failed!";
             else
+            {
                 app.installTranslator(&translator);
+                qDebug()<<"load success";
+            }
         }
 
-        SystemMonitor *monitor=new SystemMonitor();
-        monitor->setAttribute(Qt::WA_DeleteOnClose);
+        SystemMonitor monitor;
+        monitor.setAttribute(Qt::WA_DeleteOnClose);
 
-        app.setActivationWindow(monitor);
-        QObject::connect(&app, SIGNAL(messageReceived(const QString&)),monitor, SLOT(sltMessageReceived(const QString&)));
+        app.setActivationWindow(&monitor);
 
-        monitor->show();
-//        qDebug()<<qAppName()<<"app name";
-        FramelessHandle * pHandle = new FramelessHandle(monitor);
-        pHandle->activateOn(monitor);
+        MotifWmHints hints;
+        hints.flags = MWM_HINTS_FUNCTIONS|MWM_HINTS_DECORATIONS;
+        hints.functions = MWM_FUNC_ALL;
+        hints.decorations = MWM_DECOR_BORDER;
+        XAtomHelper::getInstance()->setWindowMotifHint(monitor.winId(), hints);
+
+        QObject::connect(&app, SIGNAL(messageReceived(const QString&)),&monitor, SLOT(sltMessageReceived(const QString&)));
+
+        monitor.show();
+//         qDebug()<<qAppName()<<"app name";
+//        FramelessHandle * pHandle = new FramelessHandle(monitor);
+//        pHandle->activateOn(monitor);
         app.exec();
-        return 0;
+        return app.exec();
     }
 }

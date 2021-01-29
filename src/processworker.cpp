@@ -225,7 +225,6 @@ static void get_process_name (ProcessWorker *info, const gchar *cmd, const GStrv
                 info->name = basename;
                 return;
             }
-
             g_free(basename);
         }
     }
@@ -326,7 +325,7 @@ void ProcessWorker::setProcData()
     info->arguments = g_strescape(tooltip.c_str(), "\\\"");
     g_strfreev(args);
 
-    guint64 cpu_time = proctime.rtime;
+    guint64 cpu_time = proctime.utime + proctime.stime + proctime.cutime + proctime.cstime;
     std::map<pid_t, guint64>::iterator it(ProcessWorker::cpu_times.find(pid));
     if (it != ProcessWorker::cpu_times.end())
     {

@@ -28,6 +28,8 @@
 #include <QTimer>
 #include <glibtop/mem.h>
 #include <glibtop/swap.h>
+#include <QGSettings>
+#include <QScrollArea>
 
 #include "../shell/macro.h"
 #include "sigcheck.h"
@@ -63,8 +65,10 @@ public:
     void startCpuTimer();
     void stopCpuTimer();
 
+    void initThemeMode();
     void initFontSize();
     void tosetFontSize();
+    void getsetFontSize(int fSize,QLabel *label);
     void setChangeNetSpeedLabel();
 
 private:
@@ -92,6 +96,18 @@ private:
     QLabel *swapUnitDataLabel = nullptr;
     QLabel *netrecvUnitDataLabel = nullptr;
     QLabel *netsentUnitDataLabel = nullptr;
+
+    QLabel *onehundredLabel;
+    QLabel *threequarterLabel;
+    QLabel *halfLabel;
+    QLabel *onequarterLabel;
+    QLabel *nullLabel;
+
+    QLabel *tenGibLabel;
+    QLabel *sevenpointFiveGibLabel;
+    QLabel *fiveGibLabel;
+    QLabel *twopointfiveGibLabel;
+    QLabel *nullGibLabel;
 
     QLabel *theFirtSpeedLabel = nullptr;
     QLabel *theSecondSpeedLabel = nullptr;
@@ -129,6 +145,11 @@ private:
     QHBoxLayout *networkChart_H_BoxLayout;
 
     QVBoxLayout *main_V_BoxLayout;
+
+    QGSettings *qtSettings;
+    QString currentThemeMode;
+
+    QScrollArea *m_scrollArea;
 
 public:
     int fontSize;

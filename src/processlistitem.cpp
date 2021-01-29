@@ -135,10 +135,11 @@ void ProcessListItem::drawBackground(QRect rect, QPainter *painter, int index, b
 
 void ProcessListItem::drawForeground(QRect rect, QPainter *painter, int column, int, bool isSelect, bool isSeparator)
 {
-    setFontSize(*painter, fontSize + 2);
+    setFontSize(*painter, fontSize + 3);
     painter->setOpacity(0.85);
     //painter->setPen(QPen(QColor(QPalette::Base)));
     if (column == 0) {
+        painter->setRenderHint(QPainter::SmoothPixmapTransform);
         painter->drawPixmap(QRect(rect.x() + padding, rect.y() + (rect.height() - iconSize) / 2, iconSize, iconSize), m_data.iconPixmap);
         QString name = m_data.processName;
         if (m_data.m_status == tr("Stopped")) {//已停止
@@ -203,7 +204,9 @@ void ProcessListItem::drawForeground(QRect rect, QPainter *painter, int column, 
         else {
             //this->drawCellBackground(QRect(rect.x(), rect.y(), rect.width(), rect.height()), painter, 2);
         }
-        painter->drawText(QRect(rect.x(), rect.y(), rect.width() - textPadding, rect.height()), Qt::AlignCenter, QString("%1%").arg(m_data.cpu));
+//        QString str = QString("%1").arg(m_data.cpu); //old way to show the single process cpu history data
+        QString str = QString::number(m_data.cpu,'f',1);
+        painter->drawText(QRect(rect.x(), rect.y(), rect.width() - textPadding, rect.height()), Qt::AlignCenter, str);
         if (!isSeparator) {
             painter->setOpacity(0.8);
             QPainterPath separatorPath;
@@ -339,13 +342,6 @@ bool ProcessListItem::sortByName(const ProcessListItem *item1, const ProcessList
         QCollator qco(QLocale::system());
         int result = qco.compare(name1, name2);
         isSort = result < 0;
-//        char *nameString1;
-//        char *nameString2;
-//        QByteArray s1 = name1.toLatin1();
-//        QByteArray s2 = name2.toLatin1();
-//        nameString1 = s1.data();
-//        nameString2 = s2.data();
-//        int result = strcmp(nameString1,nameString2);
     }
 
     return descendingSort ? isSort : !isSort;
@@ -413,25 +409,6 @@ bool ProcessListItem::sortByPid(const ProcessListItem *item1, const ProcessListI
 
     return descendingSort ? isSort : !isSort;
 }
-
-//bool ProcessListItem::sortByCommand(const ProcessListItem *item1, const ProcessListItem *item2, bool descendingSort)
-//{
-//    QString command1 = (static_cast<const ProcessListItem*>(item1))->getCommandLine();
-//    QString command2 = (static_cast<const ProcessListItem*>(item2))->getCommandLine();
-//    bool isSort;
-//    if (command1 == command2) {
-//        double cpu1 = static_cast<const ProcessListItem*>(item1)->getCPU();
-//        double cpu2 = (static_cast<const ProcessListItem*>(item2))->getCPU();
-//        isSort = cpu1 > cpu2;
-//    }
-//    else {
-//        QCollator qco(QLocale::system());
-//        int result = qco.compare(command1, command2);
-//        isSort = result < 0;
-//    }
-
-//    return descendingSort ? isSort : !isSort;
-//}
 
 bool ProcessListItem::sortByMemory(const ProcessListItem *item1, const ProcessListItem *item2, bool descendingSort)
 {

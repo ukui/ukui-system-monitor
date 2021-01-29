@@ -29,7 +29,6 @@
 #include <fstream>
 #include <sstream>
 #include <QSvgRenderer>
-
 const QPixmap loadSvg(const QString &fileName, const int size)
 {
     QPixmap pixmap(size, size);
@@ -112,6 +111,32 @@ static inline unsigned divide(unsigned *q, unsigned *r, unsigned d)
     return *q != 0;
 }
 
+QString getElidedText(QFont font, QString str, int MaxWidth)
+{
+    if (str.isEmpty())
+    {
+        return "";
+    }
+
+    QFontMetrics fontWidth(font);
+
+    //计算字符串宽度
+    //calculat the width of the string
+    int width = fontWidth.width(str);
+
+    //当字符串宽度大于最大宽度时进行转换
+    //Convert when string width is greater than maximum width
+    if (width >= MaxWidth)
+    {
+        //右部显示省略号
+        //show by ellipsis in right
+        str = fontWidth.elidedText(str, Qt::ElideRight, MaxWidth);
+    }
+    //返回处理后的字符串
+    //return the string that is been handled
+    return str;
+}
+
 QString formatDurationForDisplay(unsigned centiseconds)
 {
     unsigned weeks = 0, days = 0, hours = 0, minutes = 0, seconds = 0;
@@ -166,6 +191,27 @@ QString formatDurationForDisplay(unsigned centiseconds)
 
 std::string getDesktopFileAccordProcName(QString procName, QString cmdline)
 {
+    QDirIterator dir("/etc/xdg/autostart", QDirIterator::Subdirectories);
+    std::string desktopFile;
+    QString procname = procName.toLower();
+    procname.replace("_", "-");
+    QString processFilename = procname + ".desktop";
+
+    while(dir.hasNext()) {
+        if (dir.fileInfo().suffix() == "desktop") {
+            if (dir.fileName().toLower().contains(processFilename)) {
+                desktopFile = dir.filePath().toStdString();
+//                std::cout<<"---desktopFile---"<<desktopFile<<std::endl;
+                break;
+            }
+        }
+        dir.next();
+    }
+    return desktopFile;
+}
+
+std::string getDesktopFileAccordProcNameApp(QString procName, QString cmdline)
+{
     QDirIterator dir("/usr/share/applications", QDirIterator::Subdirectories);
     std::string desktopFile;
     QString procname = procName.toLower();
@@ -181,7 +227,6 @@ std::string getDesktopFileAccordProcName(QString procName, QString cmdline)
         }
         dir.next();
     }
-
     return desktopFile;
 }
 
@@ -223,6 +268,7 @@ QPixmap getAppIconFromDesktopFile(std::string desktopFile, int iconSize)
     qreal devicePixelRatio = qApp->devicePixelRatio();
 
     QPixmap pixmap = icon.pixmap(iconSize * devicePixelRatio, iconSize * devicePixelRatio);
+    icon.setIsMask(false);
     pixmap.setDevicePixelRatio(devicePixelRatio);
 
     return pixmap;

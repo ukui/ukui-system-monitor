@@ -140,8 +140,6 @@ void NetWorkChart::onUpdateDownloadAndUploadData(long recvTotalBytes, long sentT
         {
             m_downLoadSpeed = (recvRateBytes/1000) * this->height()/1000;
             m_upLoadSpeed = (sentRateBytes/1024) * this->height()/1000;
-            qDebug()<<"if i m_downLoadSpeed"<<m_downLoadSpeed;
-            qDebug()<<"if i m_upLoadSpeed"<<m_upLoadSpeed;
         }
     }
 
@@ -202,4 +200,9 @@ void NetWorkChart::onUpdateDownloadAndUploadData(long recvTotalBytes, long sentT
         }
     }
     m_upLoadPath = SmoothLineGenerator::generateSmoothCurve(upLoadPoints);
+}
+
+void NetWorkChart::resizeEvent(QResizeEvent *event)
+{
+    m_pointsCount = int(this->width() / POINTSPACE);
 }

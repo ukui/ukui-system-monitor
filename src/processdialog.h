@@ -30,6 +30,7 @@
 #include "singleProcessNet/scanthread.h"
 #include "singleProcessNet/refreshthread.h"
 #include "linebandwith.h"
+#include "renicedialog.h"
 
 #include <QLabel>
 #include <QMap>
@@ -71,6 +72,8 @@ signals:
     void changeSortStatus(int index, bool isSort);
     void activeWhoseProcessList(int index);
     void closeDialog();
+    void changeProcessNetRefresh();
+    void recoverProcessNetRefresh();
 
 public slots:
     void focusProcessView();
@@ -83,6 +86,7 @@ public slots:
     void showPropertiesDialog();
     void showEndProcessDialog();
     void showKillProcessDialog();
+//    void showReniceProcessDialog();
     void endDialogButtonClicked(int index, QString buttonText);
     void killDialogButtonClicked(int index, QString buttonText);
     void updateStatus(QList<ProcessListItem*> items);
@@ -100,11 +104,15 @@ protected:
 //    void paintEvent(QPaintEvent *event);
 
 private:
+    ReniceDialog *w;
     QTimer *timer = nullptr;
-//    QTimer *netSpeedTimer = nullptr;
     QSettings *proSettings = nullptr;
     guint64 cpu_total_time;
     guint64 cpu_total_time_last;
+    guint64 process_total_time;
+    guint64 process_total_time_last;
+    QList <int> prevCpuTime;
+    QList <int> prevProcessTime;
     MyDialog *killProcessDialog = nullptr;
     MyDialog *endProcessDialog = nullptr;
     ProcessListWidget *m_processListWidget = nullptr;
@@ -138,15 +146,15 @@ private:
     RefreshThread *refreshThread = nullptr;
     pid_t haveNetPid;
     QMap<int,QString> pidMap;
-    QMap<int,int> flowNetPrevMap;
-    QMap<int,int> calDiskIoMap;
+    QMap<long long int,long long int> flowNetPrevMap;
+    QMap<long long int,long long int> calDiskIoMap;
     QString addFlowNetPerSec;
     QString addDiskIoPerSec;
-    int numAddFlowNetPerSec;
+    long long int numAddFlowNetPerSec;
     lineBandwith *speedLineBandFlowNet;
     lineBandwith *speedLineBandDiskIo;
 
-    guint64 disk_io_bytes_total;
+    long long int disk_io_bytes_total;
 //    guint64 disk_read_bytes_current;
 //    guint64 disk_write_bytes_current;
 };

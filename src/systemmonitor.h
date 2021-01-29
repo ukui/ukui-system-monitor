@@ -58,7 +58,6 @@ public:
     QList<bool> getReadyDisplayFileSysColumns();
 
     void moveCenter();
-    void initThemeMode();
     void getTransparentData();
 
 public slots:
@@ -96,9 +95,6 @@ private:
     QPoint dragPosition;
     bool mousePressed;
     
-    QGSettings * qtSettings;
-    QString currentThemeMode;
-
     QGSettings *fontSettings;
     float fontSize;
 

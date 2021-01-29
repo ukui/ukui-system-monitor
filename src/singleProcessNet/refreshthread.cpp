@@ -166,4 +166,31 @@ void RefreshThread::run()
         refresh_cnx_list();
         emit refresh_finished();
     }
+    /*qDebug()<<"run is coming in";
+    refreshconninode();
+    refresh_process_list();
+    refresh_cnx_list();
+    emit refresh_finished();
+    timer = new QTimer();
+    connect(timer,SIGNAL(timeout()),this,SLOT(refreshNetSpeed()),Qt::QueuedConnection);
+    timer->start(1500);
+    exec();*/
+}
+
+void RefreshThread::refreshNetSpeed()
+{
+    refreshconninode();
+    refresh_process_list();
+    refresh_cnx_list();
+    emit refresh_finished();
+}
+
+void RefreshThread::onSearchFocusIn()
+{
+    timer->stop();
+}
+
+void RefreshThread::onSearchFocusOut()
+{
+    run();
 }

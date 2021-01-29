@@ -83,10 +83,7 @@ void SwapAndMemoryChart::onUpdateMemoryAndSwapData(float memoryData,double memor
 void SwapAndMemoryChart::refreshMemoryAndSwapData(float memoryData, double memoryPercent, float swapData, double swapPercent)
 {
     m_memoryData = formatMemory(memoryData) * 9 *(rect().height() / 90);
-//    qDebug()<<"m_memoryData"<<m_memoryData;
-    m_swapData = formatMemory(swapData) * 9;
-//    qDebug()<<"m_swapData"<<m_swapData;
-
+    m_swapData = formatMemory(swapData) * 9 *(rect().height() / 90);
 
     QList<QPointF> memoryPoints;
     m_memoryDataList->append(m_memoryData);
@@ -134,7 +131,6 @@ void SwapAndMemoryChart::refreshMemoryAndSwapData(float memoryData, double memor
     }
     for (int i = 0; i < m_swapDataList->size(); i++)
     {
-//        qDebug() << "m_CpuHistoryList.size" << m_swapDataList->size();
         if (swapMaxHeight < m_swapMaxHeight)
         {
             swapPoints.append(QPointF((m_swapDataList->size() - i -2) * POINTSPACE, m_swapDataList->at(i)));
@@ -214,7 +210,7 @@ void SwapAndMemoryChart::paintEvent(QPaintEvent *event)
 
 //    painter.translate((rect().width() - m_pointsCount * POINTSPACE - 2) / 2 + 6, 89);//将坐标的原点移动到该点
 
-    QPen pen(this->m_memoryColor,5);
+    QPen pen(this->m_memoryColor,2);
     painter.setPen(pen);
     painter.setBrush(QBrush());//painter.setBrush(QBrush(QColor("#f4f2f4")));
     painter.setRenderHint(QPainter::Antialiasing, true);
@@ -242,7 +238,7 @@ void SwapAndMemoryChart::paintEvent(QPaintEvent *event)
     painter.save();
     painter.translate(rect().right(),rect().bottom());
     painter.scale(-1, -1);//将横坐标扩大1倍,将纵坐标缩小1倍
-    QPen penSwap(this->m_swapColor,5);
+    QPen penSwap(this->m_swapColor,2);
     painter.setPen(penSwap);
     painter.setBrush(QBrush());//painter.setBrush(QBrush(QColor("#f4f2f4")));
     painter.setRenderHint(QPainter::Antialiasing, true);

@@ -31,13 +31,13 @@ class ProcData
 {
 public:
     pid_t pid;
-    uint cpu;
+    double cpu;
     long m_memory;
     long m_nice;
     QString m_flownet;
     QString m_diskio;
-    int m_numFlowNet;
-    int m_numDiskIo;
+    long long int m_numFlowNet;
+    long long int m_numDiskIo;
     QPixmap iconPixmap;
     QString processName;
     QString displayName;

@@ -83,7 +83,7 @@ void CpuHistoryChart::paintEvent(QPaintEvent *event)
     painter.setRenderHint(QPainter::Antialiasing, true);
     painter.drawPath(m_cpuHistoryPath);//绘制前面创建的path:m_downloadPath
     painter.restore();
-    update();
+//    update();
     QWidget::paintEvent(event);
 
 //    **********************************现在的折线图写法********************************/
@@ -158,4 +158,9 @@ void CpuHistoryChart::refreshCpuHistoryData(double cpu)
 void CpuHistoryChart::onUpdateCpuPercent(double value)
 {
     this->refreshCpuHistoryData(value);                  //about the cpurateForm showing
+}
+
+void CpuHistoryChart::resizeEvent(QResizeEvent *event)
+{
+
 }

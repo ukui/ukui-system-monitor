@@ -1196,8 +1196,67 @@ Kylin Team &lt;ubuntukylin-members@list.launchpad.net&gt;</source>
         <translation type="vanished">取消</translation>
     </message>
     <message>
-        <source>Enter the relevant info of process</source>
+        <source>Search</source>
         <translation type="unfinished">搜索</translation>
+    </message>
+    <message>
+        <source>menu</source>
+        <translation type="unfinished">菜单</translation>
+    </message>
+    <message>
+        <source>theme</source>
+        <translation type="unfinished">主题</translation>
+    </message>
+    <message>
+        <source>help</source>
+        <translation type="unfinished">帮助</translation>
+    </message>
+    <message>
+        <source>about</source>
+        <translation type="unfinished">关于</translation>
+    </message>
+    <message>
+        <source>quit</source>
+        <translation type="unfinished">退出</translation>
+    </message>
+    <message>
+        <source>following theme</source>
+        <translation type="unfinished">跟随主题</translation>
+    </message>
+    <message>
+        <source>dark theme</source>
+        <translation type="unfinished">深色主题</translation>
+    </message>
+    <message>
+        <source>light theme</source>
+        <translation type="unfinished">浅色主题</translation>
+    </message>
+</context>
+<context>
+    <name>newaboutdialog</name>
+    <message>
+        <source>Kylin System Monitor</source>
+        <translation type="unfinished">系统监视器</translation>
+    </message>
+    <message>
+        <source>close</source>
+        <translation type="unfinished">关闭</translation>
+    </message>
+    <message>
+        <source>kylin system monitor</source>
+        <translation type="unfinished">系统监视器</translation>
+    </message>
+    <message>
+        <source>version: </source>
+        <translation type="unfinished">版本号: </translation>
+    </message>
+    <message>
+        <source>System monitor is a desktop application that face desktop users of Kylin operating system,It meets the needs of users to monitor the system process, system resources and file system</source>
+        <translation type="unfinished">系统监视器是一款面向麒麟操作系统用户的应用，它满足用户对系统监视器，进程资源和文件系统监控的需求</translation>
+    </message>
+    <message>
+        <source>Service and support team: support@kylinos.cn</source>
+        <translation type="unfinished">服务与支持团队: support@kylinos.cn</translation>
     </message>
 </context>
 <context>
@@ -1271,98 +1330,6 @@ Kylin Team &lt;ubuntukylin-members@list.launchpad.net&gt;</source>
 <context>
     <name>NewResouresDialog</name>
     <message>
-        <source>10Mib</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>7.5Mib</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>5.0Mib</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>2.5Mib</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>0.0Mib</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>1000Byte</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>750Byte</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>500Byte</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>250Byte</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>0Byte</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>20Kib</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>15Kib</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>10Kib</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>5Kib</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>0Kib</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>100Kib</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>75Kib</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>50Kib</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>25Kib</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>1000Kib</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>750Kib</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>500Kib</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>250Kib</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>memory:</source>
         <translation type="unfinished">内存:</translation>
     </message>
@@ -1389,6 +1356,42 @@ Kylin Team &lt;ubuntukylin-members@list.launchpad.net&gt;</source>
     <message>
         <source>net work history</source>
         <translation type="unfinished">网络历史</translation>
+    </message>
+    <message>
+        <source>20Kib</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>15Kib</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>10Kib</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>5Kib</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>0Kib</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>1000Kib</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>750Kib</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>500Kib</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>250Kib</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2335,6 +2338,10 @@ Are you sure to continue?</source>
         <translation>开始于：</translation>
     </message>
     <message>
+        <source>command line:</source>
+        <translation type="obsolete">命令行</translation>
+    </message>
+    <message>
         <source>ukui-system-monitor is already running!</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2350,10 +2357,6 @@ Are you sure to continue?</source>
         <source>bits/s</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>command line:</source>
-        <translation type="obsolete">命令行</translation>
-    </message>
 </context>
 <context>
     <name>ReniceDialog</name>
@@ -2363,7 +2366,7 @@ Are you sure to continue?</source>
     </message>
     <message>
         <source>Note:</source>
-        <translation>备忘：</translation>
+        <translation>备注：</translation>
     </message>
     <message>
         <source>The priority of a process is given by its nice value. A lower nice value corresponds to a higher priority.</source>

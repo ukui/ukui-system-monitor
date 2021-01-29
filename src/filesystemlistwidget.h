@@ -78,6 +78,7 @@ protected:
     void wheelEvent(QWheelEvent *event);
     void paintScrollbar(QPainter *painter);
     void mouseDoubleClickEvent(QMouseEvent *event) override;
+    void resizeEvent(QResizeEvent *event);
 
 private:
     QTimer *m_hideScrollbarTimer = nullptr;
@@ -104,6 +105,8 @@ private:
     QGSettings * qtSettings;
     QGSettings *fontSettings;
     QString currentThemeMode;
+
+    QList<int> m_widthsTitle;
 };
 
 #endif // PROCESSLISTWIDGET_H

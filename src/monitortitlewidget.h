@@ -28,9 +28,12 @@
 #include <QListView>
 #include <qgsettings.h>
 #include <QPropertyAnimation>
+#include <QToolButton>
+#include <QtDBus/QtDBus>
 
 #include "shell/customstyle.h"
 #include "../shell/macro.h"
+#include "newaboutdialog.h"
 
 class QVBoxLayout;
 class QHBoxLayout;
@@ -67,7 +70,9 @@ public slots:
     void onUpdateMaxBtnStatusChanged();
     void switchChangeItemProcessSignal(int a);
     void animationFinishedSlot();
-
+private:
+    int daemonIsNotRunning();
+    void showGuide(QString appName);
 signals:
     void updateMaxBtn();
     void changePage(int index);
@@ -76,8 +81,8 @@ signals:
     void changeProcessItemDialog(int index);
     void maximizeWindow();
     void minimizeWindow();
-    void SearchFocusIN();
     void SearchFocusOut();
+    void SearchFocusIn();
 
 protected:
     void mouseDoubleClickEvent(QMouseEvent *event) override;
@@ -112,7 +117,7 @@ private:
     QPushButton *m_processButton = nullptr;
     QPushButton *m_resourceButton = nullptr;
     QPushButton *m_filesystemButton = nullptr;
-    QPushButton *maxTitleBtn = nullptr;
+    QToolButton *maxTitleBtn = nullptr;
     QComboBox *m_changeBox;
     QLabel *titleLabel;
     QWidget *emptyWidget = nullptr;
@@ -133,6 +138,8 @@ private:
     QPixmap pixmap;
     bool m_isSearching;
     QHBoxLayout* queryWidLayout;
+    QList<QAction *>actions;
+//    aboutdialog *showaboutdialog;
 };
 
 #endif // MONITORTITLEWIDGET_H
