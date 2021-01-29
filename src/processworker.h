@@ -58,10 +58,10 @@ class ProcessWorker
     guint64 cpu_time;
     QString flownet_persec;
     QString diskio_persec;
-    int mNumFlownet;
-    int mNumDiskIo;
+    long long int mNumFlownet;
+    long long int mNumDiskIo;
     guint status;
-    guint pcpu;
+    double pcpu;
     gint nice;
     gchar *tooltip;
     gchar *name;

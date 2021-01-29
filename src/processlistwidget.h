@@ -101,7 +101,7 @@ protected:
     void wheelEvent(QWheelEvent *event);
     void paintScrollbar(QPainter *painter);
 //    bool eventFilter(QObject *obj, QEvent *event);
-//    void resizeEvent(QResizeEvent *event);
+    void resizeEvent(QResizeEvent *event);
 
 private:
     QTimer *m_hideScrollbarTimer = nullptr;
@@ -142,6 +142,7 @@ private:
     QString currentThemeMode;
 
     qreal opacity;
+    QList<int> m_widthsTitle;
 };
 
 #endif // PROCESSLISTWIDGET_H

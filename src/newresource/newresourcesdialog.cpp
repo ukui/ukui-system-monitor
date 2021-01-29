@@ -119,7 +119,7 @@ void NewResouresDialog::onUpdateMemoryAndSwapStatus()
     glibtop_get_swap(&swap);
 
     float swappercent = (swap.total ? (float)swap.used / (float)swap.total : 0.0f);
-    float mempercent  = (float)mem.user  / (float)mem.total;
+    float mempercent  = (mem.total ? (float)mem.user  / (float)mem.total : 0.0f);
 
     mi.percent = mempercent * 100;
     mi.swappercent = swappercent * 100;
@@ -275,12 +275,11 @@ inline QString formatNetworkRate(guint64 rate)
 NewResouresDialog::NewResouresDialog(QWidget *parent)
       :QWidget(parent)
 {
-    cpuUnitDataLabel = new QLabel;
-    memoryUnitDataLabel = new QLabel;
-    swapUnitDataLabel = new QLabel;
-    netrecvUnitDataLabel = new QLabel;
-    netsentUnitDataLabel = new QLabel;
-    pe.setColor(QPalette::WindowText,QColor(13,14,13,130));
+    const QByteArray idd(THEME_QT_SCHEMA);
+    if(QGSettings::isSchemaInstalled(idd))
+    {
+        qtSettings = new QGSettings(idd);
+    }
 
     const QByteArray id(THEME_QT_SCHEMA);
 
@@ -288,6 +287,16 @@ NewResouresDialog::NewResouresDialog(QWidget *parent)
     {
         fontSettings = new QGSettings(id);
     }
+
+//    m_scrollArea = new QScrollArea();
+//    m_scrollArea->setWidget(this);
+//    m_scrollArea->setBackgroundRole(QPalette::Base);
+    cpuUnitDataLabel = new QLabel;
+    memoryUnitDataLabel = new QLabel;
+    swapUnitDataLabel = new QLabel;
+    netrecvUnitDataLabel = new QLabel;
+    netsentUnitDataLabel = new QLabel;
+    initThemeMode();
 
     initFontSize();
     initWidget();
@@ -310,6 +319,13 @@ NewResouresDialog::NewResouresDialog(QWidget *parent)
     updateStatusTimer->start(500);
 }
 
+void NewResouresDialog::getsetFontSize(int fSize,QLabel *label)
+{
+    QFont font;
+    font.setPixelSize(fSize);
+    label->setFont(font);
+}
+
 NewResouresDialog::~NewResouresDialog()
 {
     QLayoutItem *child;
@@ -324,28 +340,27 @@ NewResouresDialog::~NewResouresDialog()
 void NewResouresDialog::setChangeNetSpeedLabel()
 {
     connect(networkChart,&NetWorkChart::speedToLowKib,this,[=](){
-        theFifthSpeedLabel->setText(tr("20Kib"));
-        theFourthSpeedLabel->setText(tr("15Kib"));
-        theThirdSpeedLabel->setText(tr("10Kib"));
-        theSecondSpeedLabel->setText(tr("5Kib"));
-        theFirtSpeedLabel->setText(tr("0Kib"));
+        theFifthSpeedLabel->setText(tr("20KiB"));
+        theFourthSpeedLabel->setText(tr("15KiB"));
+        theThirdSpeedLabel->setText(tr("10KiB"));
+        theSecondSpeedLabel->setText(tr("5KiB"));
+        theFirtSpeedLabel->setText(tr("0KiB"));
     });
 
     connect(networkChart,&NetWorkChart::speedToHighKib,this,[=](){
-        theFifthSpeedLabel->setText(tr("1000Kib"));
-        theFourthSpeedLabel->setText(tr("750Kib"));
-        theThirdSpeedLabel->setText(tr("500Kib"));
-        theSecondSpeedLabel->setText(tr("250Kib"));
-        theFirtSpeedLabel->setText(tr("0Kib"));
+        theFifthSpeedLabel->setText(tr("1000KiB"));
+        theFourthSpeedLabel->setText(tr("750KiB"));
+        theThirdSpeedLabel->setText(tr("500KiB"));
+        theSecondSpeedLabel->setText(tr("250KiB"));
+        theFirtSpeedLabel->setText(tr("0KiB"));
     });
-
 }
 
 void NewResouresDialog::cpuHistoySetText(double value)
 {
     QString showValue;
     showValue = QString::number(value,10,0);
-    QString s = "Cpu "+ showValue +":100%";
+    QString s = "Cpu: "+ showValue +"%";
     cpuUnitDataLabel->setText(s);
 //    qDebug() << "cpu value: " << value;
 }
@@ -419,16 +434,21 @@ void NewResouresDialog::initCpuHistory()
 
     cpuChart_H_BoxLayout = new QHBoxLayout;
     histoyChart = new CpuHistoryChart;
-    QLabel *onehundredLabel = new QLabel();
+    onehundredLabel = new QLabel();
     onehundredLabel->setText("100%");
-    QLabel *threequarterLabel = new QLabel();
+//    getsetFontSize(11,onehundredLabel);
+    threequarterLabel = new QLabel();
     threequarterLabel->setText("75%");
-    QLabel *halfLabel = new QLabel();
+//    getsetFontSize(11,threequarterLabel);
+    halfLabel = new QLabel();
     halfLabel->setText("50%");
-    QLabel *onequarterLabel = new QLabel();
+//    getsetFontSize(11,halfLabel);
+    onequarterLabel = new QLabel();
     onequarterLabel->setText("25%");
-    QLabel *nullLabel = new QLabel();
+//    getsetFontSize(11,onequarterLabel);
+    nullLabel = new QLabel();
     nullLabel->setText("0%");
+//    getsetFontSize(11,nullLabel);
     onehundredLabel->setPalette(pe);
     threequarterLabel->setPalette(pe);
     halfLabel->setPalette(pe);
@@ -436,6 +456,9 @@ void NewResouresDialog::initCpuHistory()
     nullLabel->setPalette(pe);
     cpuWidget = new QWidget();
     cpuWidget->setFixedWidth(55);
+    cpuWidget->setMinimumHeight(100);
+    cpuWidget->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Expanding);
+//    cpuWidget->setFixedWidth(55);
     QVBoxLayout *cpupercent_V_BoxLayout = new QVBoxLayout();
     cpupercent_V_BoxLayout->setMargin(0);
     cpupercent_V_BoxLayout->addWidget(onehundredLabel,1,Qt::AlignRight);
@@ -480,26 +503,34 @@ void NewResouresDialog::initSwapMeomoryHistory()
         swapandmemoryChart = new SwapAndMemoryChart;
         QVBoxLayout *swapmemory_V_BoxLayout = new QVBoxLayout();
         swapmemory_V_BoxLayout->setMargin(0);
-        QLabel *tenGibLabel = new QLabel();
-        tenGibLabel->setText("10.0Gib");
+        tenGibLabel = new QLabel();
+        tenGibLabel->setText("10.0GiB");
+//        getsetFontSize(11,tenGibLabel);
         swapmemoryWiget = new QWidget();
         swapmemoryWiget->setFixedWidth(55);
+        swapmemoryWiget->setMinimumHeight(100);
+        swapmemoryWiget->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Expanding);
+//        swapmemoryWiget->setFixedWidth(55);
         swapmemory_V_BoxLayout->addWidget(tenGibLabel,1,Qt::AlignRight);
         tenGibLabel->setPalette(pe);
-        QLabel *sevenpointFiveGibLabel = new QLabel();
-        sevenpointFiveGibLabel->setText("7.5Gib");
+        sevenpointFiveGibLabel = new QLabel();
+        sevenpointFiveGibLabel->setText("7.5GiB");
+//        getsetFontSize(11,sevenpointFiveGibLabel);
         swapmemory_V_BoxLayout->addWidget(sevenpointFiveGibLabel,1,Qt::AlignRight);
         sevenpointFiveGibLabel->setPalette(pe);
-        QLabel *fiveGibLabel = new QLabel();
-        fiveGibLabel->setText("5.0Gib");
+        fiveGibLabel = new QLabel();
+        fiveGibLabel->setText("5.0GiB");
+//        getsetFontSize(11,fiveGibLabel);
         swapmemory_V_BoxLayout->addWidget(fiveGibLabel,1,Qt::AlignRight);
         fiveGibLabel->setPalette(pe);
-        QLabel *twopointfiveGibLabel = new QLabel();
-        twopointfiveGibLabel->setText("2.5Gib");
+        twopointfiveGibLabel = new QLabel();
+        twopointfiveGibLabel->setText("2.5GiB");
+//        getsetFontSize(11,twopointfiveGibLabel);
         swapmemory_V_BoxLayout->addWidget(twopointfiveGibLabel,1,Qt::AlignRight);
         twopointfiveGibLabel->setPalette(pe);
-        QLabel *nullGibLabel = new QLabel();
-        nullGibLabel->setText("0.0Gib");
+        nullGibLabel = new QLabel();
+        nullGibLabel->setText("0.0GiB");
+//        getsetFontSize(11,nullGibLabel);
         swapmemory_V_BoxLayout->addWidget(nullGibLabel,1,Qt::AlignRight);
         nullGibLabel->setPalette(pe);
         swapmemoryWiget->setLayout(swapmemory_V_BoxLayout);
@@ -538,20 +569,28 @@ void NewResouresDialog::initNetSpeedHistory()
         netspeed_V_BoxLayout->setMargin(0);
         networkWidget = new QWidget();
         networkWidget->setFixedWidth(55);
+        networkWidget->setMinimumHeight(100);
+        networkWidget->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Expanding);
+//        networkWidget->setFixedWidth(55);
         theFifthSpeedLabel = new QLabel();
         theFifthSpeedLabel->setPalette(pe);
+//        getsetFontSize(11,theFifthSpeedLabel);
         netspeed_V_BoxLayout->addWidget(theFifthSpeedLabel,1,Qt::AlignRight);
         theFourthSpeedLabel = new QLabel();
         theFourthSpeedLabel->setPalette(pe);
+//        getsetFontSize(11,theFourthSpeedLabel);
         netspeed_V_BoxLayout->addWidget(theFourthSpeedLabel,1,Qt::AlignRight);
         theThirdSpeedLabel = new QLabel();
         theThirdSpeedLabel->setPalette(pe);
+//        getsetFontSize(11,theThirdSpeedLabel);
         netspeed_V_BoxLayout->addWidget(theThirdSpeedLabel,1,Qt::AlignRight);
         theSecondSpeedLabel = new QLabel();
         theSecondSpeedLabel->setPalette(pe);
+//        getsetFontSize(11,theSecondSpeedLabel);
         netspeed_V_BoxLayout->addWidget(theSecondSpeedLabel,1,Qt::AlignRight);
         theFirtSpeedLabel = new QLabel();
         theFirtSpeedLabel->setPalette(pe);
+//        getsetFontSize(11,theFifthSpeedLabel);
         netspeed_V_BoxLayout->addWidget(theFirtSpeedLabel,1,Qt::AlignRight);
         networkWidget->setLayout(netspeed_V_BoxLayout);
         networkChart = new NetWorkChart();
@@ -574,6 +613,65 @@ void NewResouresDialog::tosetFontSize()
     memoryUnitDataLabel->setFont(fontContext);
     netrecvUnitDataLabel->setFont(fontContext);
     netsentUnitDataLabel->setFont(fontContext);
+}
+
+void NewResouresDialog::initThemeMode()
+{
+    if (!qtSettings) {
+//        qWarning() << "Failed to load the gsettings: " << THEME_QT_SCHEMA;
+        return;
+    }
+    //监听主题改变
+    connect(qtSettings, &QGSettings::changed, this, [=](const QString &key)
+    {
+
+        if (key == "styleName")
+        {
+            currentThemeMode = qtSettings->get("styleName").toString();
+            qDebug()<<currentThemeMode<<"theme mode";
+            if(currentThemeMode == "ukui-dark" || currentThemeMode == "ukui-black")
+            {
+                pe.setColor(QPalette::WindowText,QColor(255,255,255,130));
+
+            }
+            else
+            {
+                pe.setColor(QPalette::WindowText,QColor(13,14,13,130));
+                qDebug()<<"this theme is default";
+            }
+            onehundredLabel->setPalette(pe);
+            threequarterLabel->setPalette(pe);
+            halfLabel->setPalette(pe);
+            onequarterLabel->setPalette(pe);
+            nullLabel->setPalette(pe);
+            tenGibLabel->setPalette(pe);
+            sevenpointFiveGibLabel->setPalette(pe);
+            fiveGibLabel->setPalette(pe);
+            twopointfiveGibLabel->setPalette(pe);
+            nullGibLabel->setPalette(pe);
+            theFirtSpeedLabel->setPalette(pe);
+            theSecondSpeedLabel->setPalette(pe);
+            theThirdSpeedLabel->setPalette(pe);
+            theFourthSpeedLabel->setPalette(pe);
+            theFifthSpeedLabel->setPalette(pe);
+            cpuUnitDataLabel->setPalette(pe);
+            swapUnitDataLabel->setPalette(pe);
+            memoryUnitDataLabel->setPalette(pe);
+            netrecvUnitDataLabel->setPalette(pe);
+            netsentUnitDataLabel->setPalette(pe);
+            qDebug()<<"theme change succesful";
+            repaint();
+        }
+    });
+    currentThemeMode = qtSettings->get(MODE_QT_KEY).toString();
+    if( currentThemeMode == "ukui-default")
+    {
+        pe.setColor(QPalette::WindowText,QColor(13,14,13,130));
+    }
+    else
+    {
+        pe.setColor(QPalette::WindowText,QColor(255,255,255,130));
+    }
 }
 
 void NewResouresDialog::initFontSize()

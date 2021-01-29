@@ -54,7 +54,7 @@ PropertiesDialog::PropertiesDialog(QWidget *parent, pid_t processId) : QDialog(p
     pid = processId;
 
     m_layout = new QVBoxLayout(this);
-    m_layout->setContentsMargins(0, 0, 0, 5);
+    m_layout->setContentsMargins(0, 0, 0, 0);
     m_topLayout = new QHBoxLayout;
     m_topLeftLayout = new QHBoxLayout;
     m_topLeftLayout->setContentsMargins(20, 20, 0, 0);
@@ -172,6 +172,7 @@ PropertiesDialog::PropertiesDialog(QWidget *parent, pid_t processId) : QDialog(p
         titleLabel->setMinimumHeight(20);
 
         QLabel *infoLabel = new QLabel();
+        infoLabel->setFixedWidth(100);
 //        infoLabel->setStyleSheet("QLabel{background-color:transparent;font-size:12px;color:#000000;}");
         infoLabel->setWordWrap(true);
         infoLabel->setMinimumHeight(28);
@@ -182,8 +183,6 @@ PropertiesDialog::PropertiesDialog(QWidget *parent, pid_t processId) : QDialog(p
         m_labelList << infoLabel;
         infoGrid->addWidget(titleLabel);
         infoGrid->addWidget(infoLabel);
-//        QLineEdit *line = new QLineEdit();
-//        infoGrid->addWidget(line);
     }
 
     this->moveToCenter();
@@ -277,12 +276,15 @@ void PropertiesDialog::initProcproperties()
 //        long memory = info->mem;
 
         std::string desktopFile;
-        desktopFile = getDesktopFileAccordProcName(name, "");
+        desktopFile = getDesktopFileAccordProcNameApp(name, "");
+//        QString q_str = QString::fromStdString(desktopFile);   // this is the way that convert from std::string to QString
+        if(desktopFile.empty())  //this is the way to detect that if the std::string is null or not.
+        {
+            desktopFile = getDesktopFileAccordProcName(name, "");
+        }
 
         QPixmap icon_pixmap;
         int iconSize = 48 * qApp->devicePixelRatio();
-
-
 
         QIcon defaultExecutableIcon = QIcon::fromTheme("application-x-executable");//gnome-mine-application-x-executable
         if (defaultExecutableIcon.isNull()) {
@@ -317,8 +319,11 @@ void PropertiesDialog::initProcproperties()
                    << QFileInfo(QString("/proc/%1").arg(pid)).created().toString("yyyy-MM-dd hh:mm:ss")
                    << formatDurationForDisplay(100 * info->cpu_time / info->frequency);
 
+        qDebug()<<"arguments"<<info->arguments;
         for (int i = 0; i < this->m_labelList.length(); ++i) {
-            this->m_labelList.value(i)->setText(valueList.value(i));
+            QString ShowValue = getElidedText(m_labelList.value(i)->font(), valueList.value(i), 500);
+//            this->m_labelList.value(i)->setText(valueList.value(i));
+            this->m_labelList.value(i)->setText(ShowValue);
         }
     }
     this->updateLabelFrameHeight();
@@ -400,7 +405,7 @@ void PropertiesDialog::paintEvent(QPaintEvent *event)
     QPainter painter(this);
 
     //绘制圆角矩形
-    painter.setPen(QPen(QColor("#808080"), 0)   );//边框颜色 #3f96e4
+    painter.setPen(QPen(QColor("#808080"), 0));//边框颜色 #3f96e4
 //    painter.setPen(Qt::NoPen);
     painter.setBrush(this->palette().base());//背景色
     painter.setRenderHint(QPainter::Antialiasing, true);

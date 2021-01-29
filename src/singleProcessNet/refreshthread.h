@@ -23,6 +23,7 @@
 
 #include <QThread>
 #include <QHostAddress>
+#include <QTimer>
 
 #include "conninode.h"
 #include "process.h"
@@ -37,6 +38,7 @@ private:
     void refresh_process_list();
     void refresh_cnx_list();
     int pid_cnx;
+    QTimer *timer;
 
 public:
     explicit RefreshThread(QObject *parent = 0);
@@ -50,6 +52,9 @@ signals:
 
 public slots:
     void update_cnx_list(int pid);
+    void onSearchFocusIn();
+    void onSearchFocusOut();
+    void refreshNetSpeed();
 
 };
 

@@ -22,7 +22,7 @@
 #include "propertiesdialog.h"
 #include "processdata.h"
 #include "processcategory.h"
-#include "renicedialog.h"
+//#include "renicedialog.h"
 #include "util.h"
 
 #include <QStringList>
@@ -123,29 +123,6 @@ ProcessDialog::ProcessDialog(QList<bool> toBeDisplayedColumns, int currentSortIn
     whose_processes = proSettings->value("WhoseProcesses", whose_processes).toString();
     proSettings->endGroup();
 
-//    int tabIndex = 1;
-//    if (whose_processes == "active") {
-//        tabIndex = 0;
-//    }
-//    else if (whose_processes == "all") {
-//        tabIndex = 2;
-//    }
-//    else {
-//        tabIndex = 1;
-//    }
-
-
-//    QWidget *w = new QWidget;
-//    w->setFixedHeight(0);
-//    m_categoryLayout = new QHBoxLayout(w);       //give up adding new widget
-//    m_categoryLayout->setContentsMargins(0, 0, 6, 3);
-//    m_categoryLayout->setSpacing(10);
-////    processCategory = new ProcessCategory(tabIndex);
-//    connect(processCategory, SIGNAL(activeWhoseProcessList(int)), this, SLOT(onActiveWhoseProcess(int)));
-////    m_categoryLayout->addWidget(processCategory, 0, Qt::AlignRight);
-//    m_layout->addWidget(w);
-
-
     QList<SortFunction> *sortFuncList = new QList<SortFunction>();
     sortFuncList->append(&ProcessListItem::sortByName);
     sortFuncList->append(&ProcessListItem::sortByUser);
@@ -155,7 +132,6 @@ ProcessDialog::ProcessDialog(QList<bool> toBeDisplayedColumns, int currentSortIn
     sortFuncList->append(&ProcessListItem::sortByFlowNet);
     sortFuncList->append(&ProcessListItem::sortByMemory);
     sortFuncList->append(&ProcessListItem::sortByPriority);
-
 
     m_processListWidget->setProcessSortFunctions(sortFuncList, currentSortIndex, isSort);
     m_processListWidget->setSearchFunction(&ProcessListItem::doSearch);
@@ -216,6 +192,8 @@ ProcessDialog::ProcessDialog(QList<bool> toBeDisplayedColumns, int currentSortIn
 
     connect(refreshThread, SIGNAL(procDetected(const QString &, quint64 , quint64 , int , unsigned int , const QString&)),
             this, SLOT(refreshLine(const QString &, quint64 , quint64 , int, unsigned int , const QString&)));
+    connect(this,SIGNAL(changeProcessNetRefresh()),this,SLOT(onSearchFocusIn()));
+    connect(this,SIGNAL(recoverProcessNetRefresh()),this,SLOT(onSearchFocusOut()));
 
     this->refreshProcessList();
     timer = new QTimer(this);
@@ -332,6 +310,7 @@ void ProcessDialog::clearOriginProcList()
 
 void ProcessDialog::changeProcPriority(int nice)
 {
+    qDebug()<<"nice value"<<nice;
     if (nice == 32) {
         //show renice dialog
         pid_t cur_pid = -1;
@@ -346,7 +325,7 @@ void ProcessDialog::changeProcPriority(int nice)
                 return;
             }
             QString name = QString::fromStdString(info->name);
-            ReniceDialog *w = new ReniceDialog(tr("Change Priority of Process %1 (PID: %2)").arg(name).arg(QString::number(cur_pid)));
+            /*ReniceDialog **/w = new ReniceDialog(tr("Change Priority of Process %1 (PID: %2)").arg(name).arg(QString::number(cur_pid)));
             w->loadData(info->nice);
             connect(w, &ReniceDialog::resetReniceValue, [=] (int value) {
                 this->changeProcPriority(value);
@@ -355,6 +334,7 @@ void ProcessDialog::changeProcPriority(int nice)
         }
     }
     else {
+        qDebug()<<"has entered";
         pid_t cur_pid = -1;
         for (pid_t pid : *actionPids) {
             cur_pid = pid;
@@ -370,17 +350,19 @@ void ProcessDialog::changeProcPriority(int nice)
                 actionPids->clear();
                 return;
             }
-            int saved_errno;
-            int error = setpriority(PRIO_PROCESS, cur_pid, nice);
-            //success
-            if(error != -1)  {
-                actionPids->clear();
-                return;
-            }
-            saved_errno = errno;
+            qDebug()<<"pkexec begin";
+//            int saved_errno;
+//            int error = setpriority(PRIO_PROCESS, cur_pid, nice);
+//            qDebug()<<"error num"<<error;
+//            //success
+//            if(error != -1)  {
+//                actionPids->clear();
+//                return;
+//            }
+//            saved_errno = errno;
 
-            //need to be root
-            if(errno == EPERM || errno == EACCES) {
+//            //need to be root
+//            if(errno == EPERM || errno == EACCES) {
                 qDebug() << "Change priority need to be root!!!";
                 /*
                  * renice: sudo apt install bsdutils
@@ -414,8 +396,6 @@ void ProcessDialog::changeProcPriority(int nice)
                 }
             }
         }
-    }
-    actionPids->clear();
 }
 
 //void ProcessDialog::onCloseButtonClicked()
@@ -432,7 +412,6 @@ void ProcessDialog::refreshProcessList()
 {
     pid_t* pid_list;
     glibtop_proclist proclist;
-    glibtop_cpu cpu;
     int which = 0;
     int arg = 0;
 
@@ -453,15 +432,6 @@ void ProcessDialog::refreshProcessList()
     }
 
     pid_list = glibtop_get_proclist(&proclist, which, arg);
-
-    /* FIXME: total cpu time elapsed should be calculated on an individual basis here
-    ** should probably have a total_time_last gint in the ProcInfo structure */
-    glibtop_get_cpu(&cpu);
-
-    this->frequency = cpu.frequency;
-
-    this->cpu_total_time = MAX(cpu.total - this->cpu_total_time_last, 1);
-    this->cpu_total_time_last = cpu.total;
 
     // FIXME: not sure if glibtop always returns a sorted list of pid
     // but it is important otherwise refresh_list won't find the parent
@@ -517,16 +487,53 @@ void ProcessDialog::refreshProcessList()
 
         info->set_user(procstate.uid);
 
-        guint64 difference = proctime.rtime - info->cpu_time;
+        /* FIXME: total cpu time elapsed should be calculated on an individual basis here
+        ** should probably have a total_time_last gint in the ProcInfo structure */
+        glibtop_cpu cpu;
+        glibtop_get_cpu(&cpu);
+
+        this->cpu_total_time = cpu.total;
+        this->process_total_time = proctime.rtime;
+
+//        if(prevCpuTime.size() == 0)
+//        {
+//            prevCpuTime.insert(0,0);;
+//        }
+
+//        if(prevCpuTime.size() >= 2)
+//        {
+//            prevCpuTime.pop_back();
+//        }
+
+//        if(prevProcessTime.size() == 0)
+//        {
+//            prevProcessTime.insert(0,0);
+//        }
+
+//        if(prevProcessTime.size() >=2 )
+//        {
+//            prevProcessTime.pop_back();
+//        }
+
+
+//        qDebug()<<"length"<<prevCpuTime.size()<<"--"<<prevProcessTime.size();
+//        info->pcpu = (process_total_time - prevProcessTime.first())/MAX(cpu_total_time - prevCpuTime.first(),1);
+
+//        prevCpuTime.insert(0,cpu_total_time);
+//        prevProcessTime.insert(0,process_total_time);
+        this->cpu_total_time = MAX(cpu.total - this->cpu_total_time_last, 1);
+        this->cpu_total_time_last = cpu.total;
+        guint64 difference = proctime.utime + proctime.stime + proctime.cutime + proctime.cstime - info->cpu_time ;
         if (difference > 0)
             info->status = GLIBTOP_PROCESS_RUNNING;
-        info->pcpu = difference * 100 / this->cpu_total_time;
-        info->pcpu = MIN(info->pcpu, 100);
-        //CPU 百分比使用 Solaris 模式，工作在“Solaris 模式”，其中任务的 CPU 使用量将被除以总的 CPU 数目。否则它将工作在“Irix 模式”。
-        info->pcpu *= this->num_cpus;
+        info->pcpu = difference / this->cpu_total_time;
+        info->pcpu = MIN(info->pcpu/2, 100);
+        info->pcpu *= /*info->pcpu **/ this->num_cpus /10.0;
+//        CPU 百分比使用 Solaris 模式，工作在“Solaris 模式”，其中任务的 CPU 使用量将被除以总的 CPU 数目。否则它将工作在“Irix 模式”。
+        this->frequency = cpu.frequency;
         info->frequency = this->frequency;
 
-        ProcessWorker::cpu_times[info->pid] = info->cpu_time = proctime.rtime;
+        ProcessWorker::cpu_times[info->pid] = info->cpu_time = proctime.utime + proctime.stime + proctime.cutime + proctime.cstime;
         info->nice = procuid.nice;
         if(!calDiskIoMap.contains(info->pid))
         {
@@ -578,13 +585,13 @@ void ProcessDialog::refreshProcessList()
         }
         QString status = formatProcessState(it->second->status);
 
-        uint cpu = it->second->pcpu;
+        double cpu = it->second->pcpu;
         long memory = it->second->mem;
         pid_t pid = it->second->pid;
         QString flownetpersec = it->second->flownet_persec;
         QString diskiopersec = it->second->diskio_persec;
-        int numFlowNetPersec = it->second->mNumFlownet;
-        int numDiskioPersec = it->second->mNumDiskIo;
+        long long int numFlowNetPersec = it->second->mNumFlownet;
+        long long int numDiskioPersec = it->second->mNumDiskIo;
 
         /*---------------------kobe test string---------------------
         //QString to std:string
@@ -596,9 +603,12 @@ void ProcessDialog::refreshProcessList()
         ----------------------------------------------------------*/
 
         std::string desktopFile;
-        desktopFile = getDesktopFileAccordProcName(name, "");
-//        qDebug() << "****************"<< QString::fromStdString(desktopFile);
-
+        desktopFile = getDesktopFileAccordProcNameApp(name, "");
+//        QString q_str = QString::fromStdString(desktopFile);   // this is the way that convert from std::string to QString
+        if(desktopFile.empty())  //this is the way to detect that if the std::string is null or not.
+        {
+            desktopFile = getDesktopFileAccordProcName(name, "");
+        }
         QPixmap icon_pixmap;
         int iconSize = 24 * qApp->devicePixelRatio();
 
@@ -624,7 +634,8 @@ void ProcessDialog::refreshProcessList()
         QString title = getDisplayNameAccordProcName(name, desktopFile);
         QString displayName;
         if (whose_processes == "all") {
-            displayName = QString("[%1] %2").arg(username).arg(title);
+//            displayName = QString("[%1] %2").arg(username).arg(title);
+            displayName = QString("%2").arg(title);
         } else {
             displayName = title;
         }
@@ -642,7 +653,16 @@ void ProcessDialog::refreshProcessList()
         info.m_session = session;
         info.m_flownet = flownetpersec;  //单个进程流量
         info.cpu_duration_time = formatDurationForDisplay(100 * it->second->cpu_time / this->frequency);    //CPU占用你时间
-        info.processName = QString::fromStdString(it->second->name);     //进程名称
+//        info.processName = QString::fromStdString(it->second->name);     //进程名称
+        QLocale locale;
+        if( locale.language() == QLocale::English )  //获取系统语言环境
+        {
+            info.processName = QString::fromStdString(it->second->name);     //进程名称
+        }
+        else if( locale.language() == QLocale::Chinese )
+        {
+            info.processName = displayName;
+        }
         info.m_diskio = diskiopersec;    //单个进程磁盘io速率
         info.m_numFlowNet = numFlowNetPersec;   //网络流量整数值
         info.m_numDiskIo = numDiskioPersec;      //磁盘读写整数值
@@ -661,14 +681,16 @@ void ProcessDialog::onSearchFocusIn()
 {
     qDebug()<<"focusin---";
     timer->stop();
-//    disconnect(refreshThread, SIGNAL(procDetected(const QString &, quint64 , quint64 , int , unsigned int , const QString&)),
-//            this, SLOT(refreshLine(const QString &, quint64 , quint64 , int, unsigned int , const QString&)));
+    disconnect(refreshThread, SIGNAL(procDetected(const QString &, quint64 , quint64 , int , unsigned int , const QString&)),
+            this, SLOT(refreshLine(const QString &, quint64 , quint64 , int, unsigned int , const QString&)));
 }
 
 void ProcessDialog::onSearchFocusOut()
 {
     qDebug()<<"focusout---";
     timer->start(1500);
+    connect(refreshThread, SIGNAL(procDetected(const QString &, quint64 , quint64 , int , unsigned int , const QString&)),
+            this, SLOT(refreshLine(const QString &, quint64 , quint64 , int, unsigned int , const QString&)));
 }
 
 void ProcessDialog::refreshLine(const QString &procname, quint64 rcv, quint64 sent, int pid, unsigned int uid, const QString &devname)
@@ -876,6 +898,8 @@ void ProcessDialog::continueProcesses()
     for (pid_t pid : *actionPids) {
         if (kill(pid, SIGCONT) != 0) {
             qDebug() << QString("Resume process %1 failed, permission denied.").arg(pid);
+            QProcess process;
+            process.execute(QString("pkexec %1 %2 %3 ").arg("kill").arg("-CONT").arg(pid));
         }
     }
 
@@ -939,6 +963,8 @@ void ProcessDialog::stopProcesses()
         if (pid != currentPid) {
             if (kill(pid, SIGSTOP) != 0) {
                 qDebug() << QString("Stop process %1 failed, permission denied.").arg(pid);
+                QProcess process;
+                process.execute(QString("pkexec %1 %2 %3 ").arg("kill").arg("-STOP").arg(pid));
             }
         }
     }

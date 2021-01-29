@@ -16,7 +16,7 @@ TARGET = ukui-system-monitor
 TEMPLATE = app
 DESTDIR = ..
 
-LIBS += -L/usr/lib/ -lX11 -lpcap -lm
+LIBS += -L/usr/lib/ -lX11 -lpcap -lm -lpthread
 
 CONFIG += link_pkgconfig \
                  c++11 \
@@ -41,6 +41,15 @@ target.path = /usr/bin
 schemes.files += ../data/*.xml
 schemes.path = /usr/share/glib-2.0/schemas/
 
+#userguidemd.files += ../zh_CN/
+#userguide.path += /usr/share/kylin-user-guide/data/guide/ukui-system-monitor
+
+#enuserguidemd.files += ../en_US/
+#enuserguidemd.path += /usr/share/kylin-user-guide/data/guide/ukui-system-monitor
+
+#userguidepng.files += ../ukui-system-monitor.png
+#userguidepng.path += /usr/share/kylin-user-guide/data/guide/ukui-system-monitor
+
 #include(src/QtSingleApplication/qtsingleapplication.pri)
 #include(qtsingleapplication/qtsingleapplication.pri)
 #INCLUDEPATH += qtsingleapplication
@@ -49,7 +58,10 @@ schemes.path = /usr/share/glib-2.0/schemas/
 INSTALLS += target \
             desktop \
             schemes \
-            ICON
+            ICON \
+            userguidemd \
+            userguidepng \
+            enuserguidemd
 
 unix {
     UI_DIR = .ui
@@ -59,6 +71,7 @@ unix {
 
 HEADERS += \
     ../shell/macro.h \
+    ../shell/xatom-helper.h \
     systemmonitor.h \
     processmanager.h \
     processdialog.h \
@@ -107,10 +120,12 @@ HEADERS += \
     newresource/newresourcesdialog.h \
     newresource/cpuhistorychart.h \
     newresource/swapandmemorychart.h \
-    newresource/networkchart.h
+    newresource/networkchart.h \
+    newaboutdialog.h
 #    newresourcesdialog.h
 
 SOURCES += \
+    ../shell/xatom-helper.cpp \
     main.cpp \
     systemmonitor.cpp \
     processmanager.cpp \
@@ -156,7 +171,8 @@ SOURCES += \
     newresource/sigcheck.cpp \
     newresource/cpuhistorychart.cpp \
     newresource/swapandmemorychart.cpp \
-    newresource/networkchart.cpp
+    newresource/networkchart.cpp \
+    newaboutdialog.cpp
 #    newresourcesdialog.cpp
 
 OTHER_FILES += \

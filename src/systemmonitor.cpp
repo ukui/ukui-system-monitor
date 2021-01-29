@@ -45,7 +45,7 @@ void  SystemMonitor::sltMessageReceived(const QString &msg)
     Qt::WindowFlags flags = windowFlags();
     flags |= Qt::WindowStaysOnTopHint;
     setWindowFlags(flags);
-    show();
+//    show();
     flags &= ~Qt::WindowStaysOnTopHint;
     setWindowFlags(flags);
     showNormal();
@@ -55,22 +55,10 @@ SystemMonitor::SystemMonitor(QWidget *parent)
     : QFrame(parent)
     , mousePressed(false)
     , opacitySettings(nullptr)
-    , qtSettings(nullptr)
 {
-//    this->setStyleSheet("QFrame{border: 1px solid #121212;border-radius:1px;background-color:#1f1f1f;}");
-//    this->setAttribute(Qt::WA_DeleteOnClose);
-//    this->setWindowFlags(this->windowFlags() | Qt::FramelessWindowHint  | Qt::WindowCloseButtonHint);//去掉边框
     this->setObjectName("SystemMonitor");
-
-    this->setWindowFlags(Qt::FramelessWindowHint);   //set for no windowhint
     this->setAttribute(Qt::WA_TranslucentBackground);//背景透明
     this->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
-    const QByteArray idd(THEME_QT_SCHEMA);
-
-    if(QGSettings::isSchemaInstalled(idd))
-    {
-        qtSettings = new QGSettings(idd);
-    }
 
     const QByteArray idtrans(THEME_QT_TRANS);
 
@@ -82,16 +70,10 @@ SystemMonitor::SystemMonitor(QWidget *parent)
     getOsRelease();
 
     this->setAutoFillBackground(true);
-//    this->setMouseTracking(true);
-//    installEventFilter(this);
-
     this->setWindowTitle(tr("Kylin System Monitor"));
     this->setWindowIcon(QIcon::fromTheme("ukui-system-monitor")); //control show img in panel
-
-
-    //this->setFixedSize(900, 600);
     this->resize(MAINWINDOWWIDTH,MAINWINDOWHEIGHT);
-    setMinimumSize(640, 480);  //set the minimum size of the mainwindow
+    setMinimumSize(760, 650);  //set the minimum size of the mainwindow
 
     proSettings = new QSettings(UKUI_COMPANY_SETTING, UKUI_SETTING_FILE_NAME_SETTING);
     proSettings->setIniCodec("UTF-8");
@@ -99,30 +81,14 @@ SystemMonitor::SystemMonitor(QWidget *parent)
     this->initTitleWidget();
     this->initPanelStack();
     this->initConnections();
-    initThemeMode();
     connect(m_titleWidget,SIGNAL(changeProcessItemDialog(int)),process_dialog,SLOT(onActiveWhoseProcess(int)));  //配置文件中为whoseprocess赋值
+    connect(m_titleWidget,SIGNAL(SearchFocusIn()),process_dialog,SLOT(onSearchFocusIn()));
+    connect(m_titleWidget,SIGNAL(SearchFocusOut()),process_dialog,SLOT(onSearchFocusOut()));
+    connect(m_titleWidget,SIGNAL(SearchFocusIn()),process_dialog,SIGNAL(changeProcessNetRefresh()));
+    connect(m_titleWidget,SIGNAL(SearchFocusOut()),process_dialog,SIGNAL(recoverProcessNetRefresh()));
     getTransparentData();
     this->moveCenter();
     qDebug()<<"--+--"<<version;
-}
-
-void SystemMonitor::initThemeMode()
-{
-    if (!qtSettings) {
-//        qWarning() << "Failed to load the gsettings: " << THEME_QT_SCHEMA;
-        return;
-    }
-
-    //监听主题改变
-    connect(qtSettings, &QGSettings::changed, this, [=](const QString &key)
-    {
-
-        if (key == "styleName")
-        {
-            currentThemeMode = qtSettings->get(MODE_QT_KEY).toString();
-        }
-    });
-    currentThemeMode = qtSettings->get(MODE_QT_KEY).toString();
 }
 
 void SystemMonitor::getTransparentData()
@@ -192,10 +158,8 @@ SystemMonitor::~SystemMonitor()
 
 void SystemMonitor::paintEvent(QPaintEvent *event)
 {
-
+/***********************************old main interface********************************
     QPainter p(this);
-
-
 #if (QT_VERSION < QT_VERSION_CHECK(5,7,0))
     p.setOpacity(0.95);
 #else
@@ -205,8 +169,8 @@ void SystemMonitor::paintEvent(QPaintEvent *event)
 
     p.setRenderHint(QPainter::Antialiasing);
     QPainterPath rectPath;
-    rectPath.addRoundedRect(this->rect().adjusted(1, 1, -1, -1), 6, 6);
-
+//    rectPath.addRoundedRect(this->rect().adjusted(1, 1, -1, -1), 6, 6);
+    rectPath.addRect(this->rect());
     // 画一个黑底
     QPixmap pixmap(this->rect().size());
     pixmap.fill(Qt::transparent);
@@ -242,6 +206,31 @@ void SystemMonitor::paintEvent(QPaintEvent *event)
     opt.init(this);
     style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
     KWindowEffects::enableBlurBehind(this->winId(),true,QRegion(rectPath.toFillPolygon().toPolygon()));
+******************************* old main interface paintEvent*********************************/
+    QPainterPath path;
+
+    QPainter painter(this);
+    painter.setOpacity(1);
+    painter.setRenderHint(QPainter::Antialiasing);  // 反锯齿;
+    painter.setClipping(true);
+    painter.setPen(Qt::transparent);
+
+    path.addRect(this->rect().adjusted(1, 1, -1, -1))/*, 6, 6)*/;
+//    path.addRoundedRect(QRectF(0,MONITOR_TITLE_WIDGET_HEIGHT, this->rect().width(),this->rect().height() - MONITOR_TITLE_WIDGET_HEIGHT).adjusted(1,1,-1,-1),6,6);
+
+//    path.addRect(width() - 6,MONITOR_TITLE_WIDGET_HEIGHT,6,6);
+//    path.addRect(0,MONITOR_TITLE_WIDGET_HEIGHT,6,6);
+    path.setFillRule(Qt::WindingFill);
+    painter.setBrush(this->palette().base());
+    painter.setPen(Qt::transparent);
+
+    painter.drawPath(path);
+//        setProperty("blurRegion", QRegion(path.toFillPolygon().toPolygon()));
+    QStyleOption opt;
+    opt.init(this);
+    style()->drawPrimitive(QStyle::PE_Widget, &opt, &painter, this);
+    KWindowEffects::enableBlurBehind(this->winId(), true, QRegion(path.toFillPolygon().toPolygon()));
+    QFrame::paintEvent(event);
 }
 
 void SystemMonitor::resizeEvent(QResizeEvent *e)

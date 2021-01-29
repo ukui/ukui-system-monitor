@@ -30,8 +30,6 @@
 #include <QPainterPath>
 #include <QtMath>
 #include <QPen>
- static int number = 0;
-
 /**
  * QT主题
  */
@@ -85,22 +83,6 @@ ProcessListWidget::ProcessListWidget(QList<bool> toBeDisplayedColumns, QWidget *
     this->m_downArrowPixmap = QPixmap(":/img/down_arrow.png");
     this->m_upArrowPixmap = QPixmap(":/img/up_arrow.png");
     this->columnTitles << tr("Process Name") << tr("User") << tr("Disk") << tr("CPU") << tr("ID") << tr("Flownet Persec") << tr("Memory") << tr("Priority");
-    QList<int> widths;
-    widths << 170 << 90 << 80 << 70 << 80 << -1 << 80 << 80;//-1时让该行填充所有剩余空间
-
-    QFont font;
-    font.setPixelSize(14);//需要和填充所有剩余空间的那个的文字字体大小一致 font.setPointSize(9)
-    QFontMetrics fm(font);
-
-    this->m_columnWidths.clear();
-    for (int i = 0; i < widths.length(); i++) {
-        if (widths[i] == -1) {
-            this->m_columnWidths << widths[i];
-        } else {//-1时让改行填充所有剩余空间
-            int maxWidth = fm.width(this->columnTitles[i]) + this->m_titlePadding + m_upArrowPixmap.width() / m_upArrowPixmap.devicePixelRatio() + 2 * 2;
-            this->m_columnWidths << std::max(widths[i], maxWidth);
-        }
-    }
 
     this->m_columnVisibles.clear();
     for (int i = 0; i < toBeDisplayedColumns.count(); i++) {
@@ -108,7 +90,7 @@ ProcessListWidget::ProcessListWidget(QList<bool> toBeDisplayedColumns, QWidget *
     }
 
     //this->setStyleSheet("border:none;background:rgba(00,00,00,1);");
-    this->setStyleSheet("{background-color:#000000;}");
+//    this->setStyleSheet("{background-color:#000000;}");
     //this->setStyleSheet("widget{border:10px solid red;}");
 
     this->setFocus();
@@ -777,48 +759,54 @@ void ProcessListWidget::wheelEvent(QWheelEvent *event)
     event->accept();
 }
 
+void ProcessListWidget::resizeEvent(QResizeEvent *event)
+{
+    if(m_widthsTitle.size() >= 1)
+    {
+        m_widthsTitle.clear();
+    }
+    if(window()->isMaximized())
+    {
+        m_widthsTitle << -1 << 180 << 160 << 140 << 160 << 240 << 160 << 160;
+    }
+    else
+    {
+        m_widthsTitle << -1 << 90 << 80 << 70 << 80 << 120 << 80 << 80;
+    }
+    repaint();
+}
+
 void ProcessListWidget::paintEvent(QPaintEvent *)
 {
-//    QPainter painter(this);
-//    painter.setRenderHint(QPainter::Antialiasing, true);
+    QFont font;
+    font.setPixelSize(14);//需要和填充所有剩余空间的那个的文字字体大小一致 font.setPointSize(9)
+    QFontMetrics fm(font);
 
-//    QList<int> titleItemsWidths = getTitleItemsWidths();
-
-//    //painter.setOpacity(1);
-
-//    painter.setPen(Qt::blue);
-
-//    painter.setBrush(QBrush(QColor(0xff,0xff,0xff,0xFF)));
-
-//    int penWidth = 1;
-//    QPainterPath framePath;
-//    framePath.addRoundedRect(QRect(rect().x()+5, rect().y()+5, rect().width() /*- penWidth * 2*/, rect().height()/* - penWidth * 2*/), 0, 0);//背景弧度
-//    painter.setClipPath(framePath);
-//    painter.drawRect(this->rect());
-
+    this->m_columnWidths.clear();
+    for (int i = 0; i < m_widthsTitle.length(); i++) {
+        if (m_widthsTitle[i] == -1) {
+            this->m_columnWidths << m_widthsTitle[i];
+        } else {//-1时让改行填充所有剩余空间
+            int maxWidth = fm.width(this->columnTitles[i]) + this->m_titlePadding + m_upArrowPixmap.width() / m_upArrowPixmap.devicePixelRatio() + 2 * 2;
+            this->m_columnWidths << std::max(m_widthsTitle[i], maxWidth);
+        }
+    }
     QPainter painter(this);
-        painter.setRenderHint(QPainter::Antialiasing, true);
+    painter.setRenderHint(QPainter::Antialiasing, true);
 
-        QList<int> titleItemsWidths = getTitleItemsWidths();
+    QList<int> titleItemsWidths = getTitleItemsWidths();
 
-        int penWidth = 0;
-        QPainterPath framePath;
-        framePath.addRoundedRect(QRect(rect().x() + penWidth, rect().y() + penWidth, rect().width() - penWidth * 2, rect().height() - penWidth * 2), 0, 0);//背景弧度
-        painter.setClipPath(framePath);
+    int penWidth = 0;
+    QPainterPath framePath;
+    framePath.addRoundedRect(QRect(rect().x() + penWidth, rect().y() + penWidth, rect().width() - penWidth * 2, rect().height() - penWidth * 2), 6, 6);//背景弧度
+    painter.setClipPath(framePath);
 
-        // draw border
-        QPainterPath path;
-        path.addRoundedRect(rect().adjusted(2, 2, -2, -2), 0, 0);
-        painter.setClipRect(QRect(), Qt::NoClip);
-//        QPen pen2(QColor(Qt::red));
-//        pen2.setWidth(1);
-//        painter.setPen(pen2);
-//        painter.drawPath(path);
-        painter.setPen(Qt::NoPen);
-        //painter.fillRect(this->rect(),QColor(0,0,FF,0x20));
-
-        painter.setOpacity(0.05);
-        //framePath.setFillRule(Qt::ImhNone);
+    // draw border
+    QPainterPath path;
+    path.addRoundedRect(rect().adjusted(2, 2, -2, -2), 0, 0);
+    painter.setClipRect(QRect(), Qt::NoClip);
+    painter.setPen(Qt::NoPen);
+    painter.setOpacity(0.05);
 
     //标题的背景
     if (this->m_titleHeight > 0)
@@ -843,16 +831,57 @@ void ProcessListWidget::paintEvent(QPaintEvent *)
                 //标题文字左上方的排序箭头图标
                 if (this->m_currentSortIndex == counter)
                 {
-                    if(counter == 0 || counter == 5)
+                    if(counter == 0)
                     {
                         painter.setOpacity(1);
                         if (this->m_isSort)
                         {
-                            painter.drawPixmap(QPoint(rect().x() + posX + 100, rect().y() + 20), m_downArrowPixmap);
+                            if(window()->isMaximized())
+                            {
+                                painter.drawPixmap(QPoint(rect().x() + posX + 300, rect().y() + 20), m_downArrowPixmap);
+                            }
+                            else
+                            {
+                                painter.drawPixmap(QPoint(rect().x() + posX + 140, rect().y() + 20), m_downArrowPixmap);
+                            }
                         }
                         else
                         {
-                            painter.drawPixmap(QPoint(rect().x() + posX + 100, rect().y() + 20), m_upArrowPixmap);
+                            if(window()->isMaximized())
+                            {
+                                painter.drawPixmap(QPoint(rect().x() + posX + 300, rect().y() + 20), m_upArrowPixmap);
+                            }
+                            else
+                            {
+                                painter.drawPixmap(QPoint(rect().x() + posX + 140, rect().y() + 20), m_upArrowPixmap);
+                            }
+
+                        }
+                    }
+                    else if(counter == 5)
+                    {
+                        painter.setOpacity(1);
+                        if (this->m_isSort)
+                        {
+                            if(window()->isMaximized())
+                            {
+                                painter.drawPixmap(QPoint(rect().x() + posX + 200, rect().y() + 20), m_downArrowPixmap);
+                            }
+                            else
+                            {
+                                painter.drawPixmap(QPoint(rect().x() + posX + 100, rect().y() + 20), m_downArrowPixmap);
+                            }
+                        }
+                        else
+                        {
+                            if(window()->isMaximized())
+                            {
+                                painter.drawPixmap(QPoint(rect().x() + posX + 200, rect().y() + 20), m_upArrowPixmap);
+                            }
+                            else
+                            {
+                                painter.drawPixmap(QPoint(rect().x() + posX + 100, rect().y() + 20), m_upArrowPixmap);
+                            }
                         }
                     }
                     else
@@ -860,11 +889,25 @@ void ProcessListWidget::paintEvent(QPaintEvent *)
                         painter.setOpacity(1);
                         if (this->m_isSort)
                         {
-                            painter.drawPixmap(QPoint(rect().x() + posX + 60, rect().y() + 20), m_downArrowPixmap);
+                            if(window()->isMaximized())
+                            {
+                                painter.drawPixmap(QPoint(rect().x() + posX + 120, rect().y() + 20), m_downArrowPixmap);
+                            }
+                            else
+                            {
+                                painter.drawPixmap(QPoint(rect().x() + posX + 60, rect().y() + 20), m_downArrowPixmap);
+                            }
                         }
                         else
                         {
-                            painter.drawPixmap(QPoint(rect().x() + posX + 60, rect().y() + 20), m_upArrowPixmap);
+                            if(window()->isMaximized())
+                            {
+                                painter.drawPixmap(QPoint(rect().x() + posX + 120, rect().y() + 20), m_upArrowPixmap);
+                            }
+                            else
+                            {
+                                painter.drawPixmap(QPoint(rect().x() + posX + 60, rect().y() + 20), m_upArrowPixmap);
+                            }
                         }
                     }
                 }
@@ -872,8 +915,7 @@ void ProcessListWidget::paintEvent(QPaintEvent *)
                 //标题文字
                 painter.setOpacity(0.57);
                 QFont font = painter.font();
-//                font.setPointSize(10);
-                font.setPixelSize(fontSize);
+                font.setPixelSize(fontSize + 3);
                 painter.setFont(font);
                 if(currentThemeMode == "ukui-light" || currentThemeMode == "ukui-default" || currentThemeMode == "ukui-white")
                 {
@@ -883,6 +925,7 @@ void ProcessListWidget::paintEvent(QPaintEvent *)
                 } else {
                     painter.setPen(QPen(QColor("#000000")));
                 }
+//                painter.setPen(QPen(QColor(QPalette::WindowText)));
 
 
 //                if (this->columnTitles[counter] == tr("Process Name") || this->columnTitles[counter] == tr("Flownet Persec"))
@@ -890,12 +933,6 @@ void ProcessListWidget::paintEvent(QPaintEvent *)
                     painter.drawText(QRect(posX + this->m_titlePadding, 0, itemWidth, this->m_titleHeight), Qt::AlignCenter, this->columnTitles[counter]);
                 else
                     painter.drawText(QRect(posX, 0, itemWidth - this->m_titlePadding, this->m_titleHeight), Qt::AlignCenter, this->columnTitles[counter]);
-
-                //水平下划线
-//                painter.setOpacity(0.8);
-//                QPainterPath h_separatorPath;
-//                h_separatorPath.addRect(QRectF(posX, rect().y() + this->m_titleHeight - 1, itemWidth, 1));
-//                painter.fillPath(h_separatorPath, QColor("#e0e0e0"));
 
                 if (counter < titleItemsWidths.size())
                 {//垂直分割线
@@ -979,12 +1016,7 @@ void ProcessListWidget::paintEvent(QPaintEvent *)
     }
 
     //背景
-//    QPen framePen;
-//    framePen.setColor(QColor("#F5F5F5"));
-//    painter.setPen(framePen);
     painter.setOpacity(0.2);
-//    painter.drawPath(framePath);
-
     //垂直滚动条
     if (this->m_mouseAtScrollArea) {
         paintScrollbar(&painter);

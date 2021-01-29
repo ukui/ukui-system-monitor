@@ -35,7 +35,7 @@
 #include <QStyleFactory>
 #include <QObject>
 #include <QStandardItemModel>
-#include <KWindowEffects>
+#include <QMenu>
 
 #define MENU_SCHEMA "org.ukui.system-monitor.menu"
 #define WHICH_MENU "which-menu"
@@ -51,7 +51,7 @@ MonitorTitleWidget::MonitorTitleWidget(QSettings *settings, QWidget *parent)
     m_queryIcon=new QLabel();
     QIcon queryIcon;
     queryIcon = QIcon::fromTheme("preferences-system-search-symbolic");
-    pixmap = queryIcon.pixmap(QSize(21, 21));
+    pixmap = queryIcon.pixmap(QSize(16, 16));
     whichBox = new QList<int>();
     const QByteArray idd(THEME_QT_SCHEMA);
 
@@ -79,10 +79,8 @@ MonitorTitleWidget::MonitorTitleWidget(QSettings *settings, QWidget *parent)
         opacitySettings = new QGSettings(idtrans);
     }
     
-    initFontSize();
-
     m_changeBox = new QComboBox();
-    m_changeBox->setFixedSize(NORMALWIDTH,NORMALHEIGHT+2);
+//    m_changeBox->setFixedSize(NORMALWIDTH,NORMALHEIGHT+2);
     m_changeBox->addItem(tr("Active Processes"));
     m_changeBox->addItem(tr("My Processes"));
     m_changeBox->addItem(tr("All Process"));
@@ -90,7 +88,7 @@ MonitorTitleWidget::MonitorTitleWidget(QSettings *settings, QWidget *parent)
     m_changeBox->setView(new  QListView());
     QFont changeBoxFont;
     changeBoxFont.setPointSize(fontSize);
-    m_changeBox->setFont(changeBoxFont);
+//    m_changeBox->setFont(changeBoxFont);
 
     initThemeMode();
     getTransparentData();
@@ -106,6 +104,7 @@ MonitorTitleWidget::MonitorTitleWidget(QSettings *settings, QWidget *parent)
     connect(m_searchTimer, SIGNAL(timeout()), this, SLOT(onRefreshSearchResult()));
 
     initWidgets();
+    initFontSize();
     this->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
     this->installEventFilter(this);
 }
@@ -150,18 +149,14 @@ void MonitorTitleWidget::initThemeMode()
             {
                 qDebug() << "The theme change to white";
                 this->setObjectName("MonitorTitle");
-                this->setStyleSheet("QFrame#MonitorTitle{background:rgba(255,255,255,0);border-top-left-radius:6px;border-top-right-radius:6px;color: palette(windowText);}");
                 m_queryIcon->setPixmap(drawSymbolicBlackColoredPixmap(pixmap));
-
             }
 
             else/*(currentThemeMode == "ukui-dark" || currentThemeMode == "ukui-black")*/
             {
                 this->setObjectName("MonitorTitle");
-                this->setStyleSheet("QFrame#MonitorTitle{background:rgba(13,14,14,0);border-top-left-radius:6px;border-top-right-radius:6px;color: palette(windowText);}");
                 m_queryIcon->setPixmap(drawSymbolicColoredPixmap(pixmap));
             }
-
         }
     });
 
@@ -169,17 +164,14 @@ void MonitorTitleWidget::initThemeMode()
     if (currentThemeMode == "ukui-light" || currentThemeMode == "ukui-default" || currentThemeMode == "ukui-white")
     {
         this->setObjectName("MonitorTitle");
-        this->setStyleSheet("QFrame#MonitorTitle{background:rgba(255,255,255,0);border-top-left-radius:6px;border-top-right-radius:6px;color: palette(windowText);}");
         m_queryIcon->setPixmap(drawSymbolicBlackColoredPixmap(pixmap));
     }
 
     if (currentThemeMode == "ukui-dark" || currentThemeMode == "ukui-black")
     {
         this->setObjectName("MonitorTitle");
-        this->setStyleSheet("QFrame#MonitorTitle{background:rgba(13,14,14,0);border-top-left-radius:6px;border-top-right-radius:6px;color: palette(windowText);}");
         m_queryIcon->setPixmap(drawSymbolicColoredPixmap(pixmap));
     }
-
 }
 
 void MonitorTitleWidget::initFontSize()
@@ -197,6 +189,7 @@ void MonitorTitleWidget::initFontSize()
         QFont font;
         font.setPointSize(fontSize);
         titleLabel->setFont(font);
+        m_queryText->setFont(font);
 
         QFont changeBoxFont;
         changeBoxFont.setPointSize(fontSize);
@@ -275,6 +268,7 @@ bool MonitorTitleWidget::eventFilter(QObject *obj, QEvent *event)    //set the e
 {
     if (event->type() == QEvent::KeyPress) {
         if (obj == this) {
+            m_isSearching = false;
             QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
             if (keyEvent->key() == Qt::Key_Escape || keyEvent->key() == Qt::Key_Tab) {
 //                m_searchEdit->clearEdit();
@@ -292,10 +286,11 @@ bool MonitorTitleWidget::eventFilter(QObject *obj, QEvent *event)    //set the e
         }
     }
 
-    if (obj == m_searchEditNew) {
+    if (obj == m_searchEditNew)
+    {
         if (event->type() == QEvent::FocusIn)
         {
-            emit SearchFocusIN();
+            emit SearchFocusIn();
             if(m_searchEditNew->text().isEmpty())
             {
                 qDebug()<<"it is real";
@@ -308,8 +303,9 @@ bool MonitorTitleWidget::eventFilter(QObject *obj, QEvent *event)    //set the e
                 m_animation->start();
             }
             m_isSearching=true;
+            qDebug()<<"what is m_isSearching"<<m_isSearching;
         }
-        else if(event->type() == QEvent::FocusOut)
+        else if(event->type() == QEvent::FocusOut && m_isSearching == false)
         {
             emit SearchFocusOut();
             m_searchEditNew->clear();
@@ -329,8 +325,8 @@ bool MonitorTitleWidget::eventFilter(QObject *obj, QEvent *event)    //set the e
     }
     if(obj != m_searchEditNew && event->type() == QEvent::MouseButtonPress)
     {
-        m_searchEditNew->clear();
-        m_searchEditNew->clearFocus();
+//        m_searchEditNew->clear();
+//        m_searchEditNew->clearFocus();
     }
 
     return QFrame::eventFilter(obj, event);
@@ -385,71 +381,171 @@ void MonitorTitleWidget::mouseDoubleClickEvent(QMouseEvent *e)
 
 void MonitorTitleWidget::initTitlebarLeftContent()
 {
+//    QWidget *w = new QWidget;
+//    m_titleLeftLayout = new QHBoxLayout(w);
+//    m_titleLeftLayout->setContentsMargins(6, 0, 0, 0);
+//    m_titleLeftLayout->setSpacing(0);
+//    emptyLabel = new QLabel;
+//    m_titleLeftLayout->addWidget(emptyLabel);
+//    m_topLayout->addWidget(w, 1, Qt::AlignLeft);
     QWidget *w = new QWidget;
-    m_titleLeftLayout = new QHBoxLayout(w);
-    m_titleLeftLayout->setContentsMargins(6, 0, 0, 0);
-    m_titleLeftLayout->setSpacing(0);
-    emptyLabel = new QLabel;
-    emptyLabel->setStyleSheet("QLabel{background-color:transparent;}");
-    m_titleLeftLayout->addWidget(emptyLabel);
-    m_topLayout->addWidget(w, 1, Qt::AlignLeft);
+    m_titleMiddleLayout = new QHBoxLayout(w);
+    m_titleMiddleLayout->setContentsMargins(8, 4, 0, 0);
+    titleLabel = new QLabel;
+    QLabel *picLabel = new QLabel;
+    QFont font;
+    font.setPointSize(fontSize);
+    titleLabel->setFont(font);
+    titleLabel->setText(tr("Kylin System Monitor"));
+    QPixmap pixmap("/usr/share/icons/hicolor/png/1-24*24/ukui-system-monitor.png");
+//    QSize sz(24,24);
+//    pixmap = pixmap.scaled(sz,Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    picLabel->setPixmap(pixmap);
+    m_titleMiddleLayout->addWidget(picLabel);
+    m_titleMiddleLayout->addWidget(titleLabel);
+    m_topLayout->addWidget(w/*,1,Qt::AlignLeft*/);
 }
 
 void MonitorTitleWidget::initTitlebarMiddleContent()
 {
-    QWidget *w = new QWidget;
-    m_titleMiddleLayout = new QHBoxLayout(w);
-    m_titleMiddleLayout->setContentsMargins(0, 0, 0, 0);
-
-    titleLabel = new QLabel;
-    QLabel *picLabel = new QLabel;
-    QFont font;
-    font.setPointSize(fontSize-2);
-    titleLabel->setFont(font);
-    titleLabel->setText(tr("Kylin System Monitor"));
-    picLabel->setPixmap(QPixmap(":img/ukui-system-monitor.png"));
-    m_titleMiddleLayout->addWidget(picLabel);
-    m_titleMiddleLayout->addWidget(titleLabel);
-    m_topLayout->addWidget(w);
+//    QWidget *w = new QWidget;
+//    m_titleMiddleLayout = new QHBoxLayout(w);
+//    m_titleMiddleLayout->setContentsMargins(0, 0, 0, 0);
+//    titleLabel = new QLabel;
+//    QLabel *picLabel = new QLabel;
+//    QFont font;
+//    font.setPointSize(fontSize);
+//    titleLabel->setFont(font);
+//    titleLabel->setText(tr("Kylin System Monitor"));
+//    picLabel->setPixmap(QPixmap(":img/ukui-system-monitor.png"));
+//    m_titleMiddleLayout->addWidget(picLabel);
+//    m_titleMiddleLayout->addWidget(titleLabel);
+//    m_topLayout->addWidget(w/*,1,Qt::AlignLeft*/);
 }
 
 void MonitorTitleWidget::initTitlebarRightContent()
 {
     QWidget *w = new QWidget;
     m_titleRightLayout = new QHBoxLayout(w);
-    m_titleRightLayout->setContentsMargins(0, 8, 8, 0);
+    m_titleRightLayout->setContentsMargins(0, 4, 4, 0);
     m_titleRightLayout->setSpacing(0);
 
     m_topLayout->addWidget(w, 1, Qt::AlignRight);
-    QPushButton *minBtn = new QPushButton(this);
+    QToolButton *menuBtn = new QToolButton(this);
+    menuBtn->setToolTip(tr("menu"));
+    menuBtn->setIcon(QIcon::fromTheme("open-menu-symbolic"));
+    menuBtn->setProperty("isWindowButton", 0x1);
+    menuBtn->setProperty("useIconHighlightEffect", 0x2);
+    menuBtn->setFixedSize(30,30);
+    menuBtn->setAutoRaise(true);
+//    connect(menuBtn, SIGNAL(clicked()), this, SLOT(onMinBtnClicked()));
+    QMenu *btnMenu = new QMenu(this);
+    QMenu *themeMenu = new QMenu(tr("theme"));
+    QAction *helpAction = new QAction(tr("help"),btnMenu);
+    QAction *aboutAction = new QAction(tr("about"),btnMenu);
+    QAction *quitAction = new QAction(tr("quit"),btnMenu);
+    actions <<helpAction <<aboutAction << quitAction;
+    btnMenu->addMenu(themeMenu);
+    btnMenu->addActions(actions);
+    menuBtn->setMenu(btnMenu);
+    menuBtn->setPopupMode(QToolButton::InstantPopup);
+
+    QList<QAction *>themeactions;
+    QAction *followTheme = new QAction(tr("following theme"),themeMenu);
+    QAction *darkTheme = new QAction(tr("dark theme"),themeMenu);
+    QAction *lightTheme = new QAction(tr("light theme"),themeMenu);
+    themeactions << followTheme << darkTheme << lightTheme;
+    themeMenu->addActions(themeactions);
+
+//    connect(darkTheme,&QAction::triggered,this,[=](){
+//        qDebug()<<"dark theme has enterd";
+//        system("gsettings set org.ukui.style style-name ukui-dark");
+//    });
+//    connect(lightTheme,&QAction::triggered,this,[=](){
+//        qDebug()<<"light theme has enterd";
+//        system("gsettings set org.ukui.style style-name ukui-default");
+//    });
+
+    connect(helpAction,&QAction::triggered,this,[=](){
+        if(!daemonIsNotRunning())
+        {
+            showGuide(qAppName());
+        }
+    });
+    connect(aboutAction,&QAction::triggered,this,[=]{
+            newaboutdialog *showaboutdialog = new newaboutdialog();
+            showaboutdialog->show();
+    });
+    connect(quitAction,&QAction::triggered,this,[=](){
+       window()->close();
+    });
+
+    QToolButton *minBtn = new QToolButton(this);
     minBtn->setToolTip(tr("minimize"));
     minBtn->setIcon(QIcon::fromTheme("window-minimize-symbolic"));
     minBtn->setProperty("isWindowButton", 0x1);
     minBtn->setProperty("useIconHighlightEffect", 0x2);
-    minBtn->setFlat(true);
+    minBtn->setFixedSize(30,30);
+    minBtn->setAutoRaise(true);
     connect(minBtn, SIGNAL(clicked()), this, SLOT(onMinBtnClicked()));
 
-    maxTitleBtn = new QPushButton();
+    maxTitleBtn = new QToolButton();
     maxTitleBtn->setToolTip(tr("maximize/restore"));
     maxTitleBtn->setProperty("isWindowButton", 0x1);
     maxTitleBtn->setProperty("useIconHighlightEffect", 0x2);
-    maxTitleBtn->setFlat(true);
+    maxTitleBtn->setFixedSize(30,30);
+    maxTitleBtn->setAutoRaise(true);
     maxTitleBtn->setIcon(QIcon::fromTheme("window-maximize-symbolic"));
     connect(maxTitleBtn, SIGNAL(clicked()), this, SLOT(onMaxBtnClicked()));
-    QPushButton *closeBtn = new QPushButton(this);
+    QToolButton *closeBtn = new QToolButton(this);
     closeBtn->setToolTip(tr("close"));
     closeBtn->setIcon(QIcon::fromTheme("window-close-symbolic"));
-    closeBtn->setFlat(true);
+    closeBtn->setAutoRaise(true);
     closeBtn->setProperty("isWindowButton", 0x2);
     closeBtn->setProperty("useIconHighlightEffect", 0x8);
+    closeBtn->setFixedSize(30,30);
+//    closeBtn->setIconSize(QSize(20,20));
     connect(closeBtn, SIGNAL(clicked()), this, SLOT(onCloseBtnClicked()));
     //进行GSettings设置，记忆用户选择的combox的内容
     whichNum = ifsettings->get(WHICH_MENU).toInt();
     m_changeBox->setCurrentIndex(whichNum);
+    switchChangeItemProcessSignal(whichNum);
     connect(m_changeBox,SIGNAL(currentIndexChanged(int)),this,SLOT(switchChangeItemProcessSignal(int)));
+    m_titleRightLayout->addWidget(menuBtn);
+    m_titleRightLayout->addSpacing(4);
     m_titleRightLayout->addWidget(minBtn);
+    m_titleRightLayout->addSpacing(4);
     m_titleRightLayout->addWidget(maxTitleBtn);
+    m_titleRightLayout->addSpacing(4);
     m_titleRightLayout->addWidget(closeBtn);
+}
+
+int MonitorTitleWidget::daemonIsNotRunning()
+{
+    QString service_name = "com.kylinUserGuide.hotel_" + QString::number(getuid());
+    QDBusConnection conn = QDBusConnection::sessionBus();
+    if (!conn.isConnected())
+        return 0;
+
+    QDBusReply<QString> reply = conn.interface()->call("GetNameOwner", service_name);
+    qDebug()<<"reply name"<<reply;
+    return reply.value() == "";
+}
+
+void MonitorTitleWidget::showGuide(QString appName)
+{
+
+    qDebug() << Q_FUNC_INFO << appName;
+
+    QString service_name = "com.kylinUserGuide.hotel_" + QString::number(getuid());
+
+    QDBusInterface *interface = new QDBusInterface(service_name,
+                                                       KYLIN_USER_GUIDE_PATH,
+                                                       KYLIN_USER_GUIDE_INTERFACE,
+                                                       QDBusConnection::sessionBus(),
+                                                       this);
+
+    QDBusMessage msg = interface->call(QStringLiteral("showGuide"),"kylin-system-monitor");
 }
 
 void MonitorTitleWidget::onMinBtnClicked()
@@ -472,6 +568,7 @@ void MonitorTitleWidget::resizeEvent(QResizeEvent *event)
     {
         maxTitleBtn->setIcon(QIcon::fromTheme("window-maximize-symbolic"));
     }
+    qDebug()<<"this---size"<<this->size();
 }
 
 void MonitorTitleWidget::onCloseBtnClicked()
@@ -481,7 +578,6 @@ void MonitorTitleWidget::onCloseBtnClicked()
 
 void MonitorTitleWidget::switchChangeItemProcessSignal(int a)
 {
-
     qDebug()<<"whichNum----"<<whichNum;
     emit changeProcessItemDialog(a);
     whichNum = ifsettings->get(WHICH_MENU).toInt();
@@ -587,19 +683,26 @@ void MonitorTitleWidget::initWidgets()
     m_searchEditNew->setFixedSize(SPECIALWIDTH, NORMALHEIGHT +2);
     m_searchEditNew->installEventFilter(this);
     m_searchEditNew->setContextMenuPolicy(Qt::NoContextMenu);
+    QFont ft;
+    ft.setPixelSize(fontSize);
+    m_searchEditNew->setFont(ft);
+    qDebug()<<"font size"<<fontSize;
     m_queryText=new QLabel();
-    m_queryText->setText(tr("Enter the relevant info of process"));
+    m_queryText->setText(tr("Search"));
     m_queryWid=new QWidget(m_searchEditNew);
     m_queryWid->setFocusPolicy(Qt::NoFocus);
 
     QHBoxLayout* queryWidLayout = new QHBoxLayout;
-    queryWidLayout->setContentsMargins(4,4,0,0);
+    queryWidLayout->setContentsMargins(4,6,0,0);
     queryWidLayout->setAlignment(Qt::AlignJustify);
     queryWidLayout->setSpacing(0);
     m_queryWid->setLayout(queryWidLayout);
 
     queryWidLayout->addWidget(m_queryIcon);
     queryWidLayout->addWidget(m_queryText);
+
+    queryWidLayout->setAlignment(m_queryIcon,Qt::AlignVCenter);
+    queryWidLayout->setAlignment(m_queryText,Qt::AlignVCenter);
 
     m_queryWid->setGeometry(QRect((m_searchEditNew->width() - (m_queryIcon->width()+m_queryText->width()+10))/2,0,
                                         m_queryIcon->width()+m_queryText->width()-10,(m_searchEditNew->height() + 20)/2));   //设置显示label的区域
@@ -617,6 +720,7 @@ void MonitorTitleWidget::initWidgets()
     QWidget *topWidget = new QWidget;
     m_topLayout = new QHBoxLayout(topWidget);
     m_topLayout->setSpacing(0);
+    m_topLayout->setContentsMargins(0,0,0,0);
     m_layout->addWidget(topWidget, 0, Qt::AlignTop);
 
     QWidget *bottomWidget = new QWidget;
@@ -650,23 +754,28 @@ void MonitorTitleWidget::animationFinishedSlot()
 
 void MonitorTitleWidget::paintEvent(QPaintEvent *event)
 {
-//    QPainterPath path;
-//    auto rect = this->rect();
-//    rect.adjust(1, 1, -1, -1);
-//    path.addRoundedRect(rect, 6, 6);
-//    setProperty("blurRegion", QRegion(path.toFillPolygon().toPolygon()));
+    QRect rect = this->rect();
+    rect.setWidth(rect.width());
+    rect.setHeight(rect.height());
+    rect.setX(this->rect().x());
+    rect.setY(this->rect().y());
+    rect.setWidth(this->rect().width());
+    rect.setHeight(this->rect().height());
 
-//    QStyleOption opt;
-//    opt.init(this);
-//    QPainter p(this);
-//    QRect rectReal = this->rect();
-//    p.setRenderHint(QPainter::Antialiasing);  // 反锯齿;
-//    p.setBrush(opt.palette.color(QPalette::Base));
-//    p.setOpacity(m_transparency);
-//    qDebug()<<"real transparency"<<m_transparency;
-//    p.setPen(Qt::NoPen);
-//    p.drawRoundedRect(rectReal, 6, 6);
-//    QWidget::paintEvent(event);
+    QPainter painter(this);
+    painter.setRenderHint(QPainter::Antialiasing);  // 反锯齿;
+    painter.setClipping(true);
+    painter.setPen(Qt::transparent);
 
-//    KWindowEffects::enableBlurBehind(this->winId(), true, QRegion(path.toFillPolygon().toPolygon()));
+    QPainterPath path;
+    path.addRoundedRect(this->rect(),6,6);
+    path.setFillRule(Qt::WindingFill); // 多块区域组合填充模式
+    path.addRect(0,height() - 6 ,6,6);
+    path.addRect(width() - 6,height() -6 ,6,6);
+
+    painter.setBrush(this->palette().base());
+    painter.setPen(Qt::transparent);
+//    painter.setOpacity(m_transparency);
+    painter.drawPath(path);
+    QWidget::paintEvent(event);
 }

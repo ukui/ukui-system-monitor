@@ -121,20 +121,7 @@ FileSystemListWidget* FileSystemDialog::getFileSysView()
 }
 
 void FileSystemDialog::initFileSystemMonitor() {
-    /*int fd = inotify_init();
-    int wd = inotify_add_watch (fd, path, mask);
-//    int ret = inotify_rm_watch (fd, wd);*/
 
-
-    /*m_fileSystemMonitor = new QFileSystemWatcher(this);
-//    m_fileSystemMonitor->addPath(m_monitorFile);
-    QFileInfo info(m_monitorFile);
-    m_fileSystemMonitor->addPath(info.absoluteFilePath());
-
-    connect(m_fileSystemMonitor, SIGNAL(directoryChanged(QString)), this, SLOT(onDirectoryChanged(QString)));
-    connect(m_fileSystemMonitor, &QFileSystemWatcher::fileChanged, [=] (const QString &path) {
-        qDebug()<< "file path===================="<<path;
-    });*/
 }
 
 void FileSystemDialog::onDirectoryChanged(QString path)
@@ -142,10 +129,4 @@ void FileSystemDialog::onDirectoryChanged(QString path)
     qDebug()<< "dir path===================="<<path;
 }
 
-//bool FileSystemDialog::event(QEvent *event)
-//{
-//    if (event->type() == QEvent::LayoutRequest)
-//        setFixedHeight(m_centralLayout->sizeHint().height());
 
-//    return QWidget::event(event);
-//}

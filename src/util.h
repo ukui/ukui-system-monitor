@@ -33,10 +33,12 @@
 #define MONITOR_TITLE_WIDGET_HEIGHT 97
 #define TITLE_WIDGET_HEIGHT 39
 #define DEVICE_MOUNT_PONINT_RECORD_FILE "/proc/mounts"
+#define FontSize 12
 
 using std::string;
 
 std::string getDesktopFileAccordProcName(QString procName, QString cmdline);
+std::string getDesktopFileAccordProcNameApp(QString procName, QString cmdline);
 QPixmap getAppIconFromDesktopFile(std::string desktopFile, int iconSize = 24);
 QString getDisplayNameAccordProcName(QString procName, std::string desktopFile);
 std::string make_string(char *c_str);
@@ -49,6 +51,7 @@ void setFontSize(QPainter &painter, int textSize);
 QString formatDurationForDisplay(unsigned centiseconds);
 QString getDeviceMountedPointPath(const QString &line);
 QString getFileContent(const QString &filePath);
+QString getElidedText(QFont font, QString str, int MaxWidth);
 QSet<QString> getFileContentsLineByLine(const QString &filePath);
 
 const QPixmap loadSvg(const QString &fileName, const int size);

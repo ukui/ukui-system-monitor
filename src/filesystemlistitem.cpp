@@ -139,7 +139,7 @@ void FileSystemListItem::drawBackground(QRect rect, QPainter *painter, int index
 
 void FileSystemListItem::drawForeground(QRect rect, QPainter *painter, int column, int, bool isSelect, bool isSeparator)
 {
-    setFontSize(*painter, fontSize);
+    setFontSize(*painter, fontSize + 3);
     painter->setOpacity(0.85);
     //painter->setPen(QPen(QColor("#000000")));
     if (column == 0) {
