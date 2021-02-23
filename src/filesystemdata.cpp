@@ -21,8 +21,11 @@
 #include "filesystemdata.h"
 #include <QDebug>
 
-FileSystemData::FileSystemData(QObject *parent)
-    : QObject(parent)
+FileSystemData::FileSystemData()
+{
+}
+
+FileSystemData::~FileSystemData()
 {
 }
 
@@ -67,7 +70,7 @@ const QString FileSystemData::usedCapactiy() const
     return m_usedCapactiy;
 }
 
-const int FileSystemData::usedPercentage()
+int FileSystemData::usedPercentage()
 {
     return m_percentage;
 }

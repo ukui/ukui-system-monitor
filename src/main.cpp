@@ -64,8 +64,7 @@ int main(int argc, char *argv[])
         }
 
         SystemMonitor monitor;
-        monitor.setAttribute(Qt::WA_DeleteOnClose);
-
+        //monitor.setAttribute(Qt::WA_DeleteOnClose);
         app.setActivationWindow(&monitor);
 
         MotifWmHints hints;
@@ -80,7 +79,7 @@ int main(int argc, char *argv[])
 //         qDebug()<<qAppName()<<"app name";
 //        FramelessHandle * pHandle = new FramelessHandle(monitor);
 //        pHandle->activateOn(monitor);
-        app.exec();
+        //app.exec();
         return app.exec();
     }
 }

@@ -162,7 +162,7 @@ void ScanThread::run()
 
     struct dpargs * userdata = (dpargs *) malloc (sizeof (struct dpargs));
 
-    while (1) // main loop
+    while (!m_isStoped) // main loop
     {
         bool packets_read = false;
 
@@ -188,4 +188,34 @@ void ScanThread::run()
             usleep(100);
         }
     }
+    //release userdata resource
+    if (userdata) {
+        free(userdata);
+    }
+    // release handle resource
+    while (handles != NULL) {
+        if (handles->content) {
+            free(handles->content);
+        }
+        handle* temp_handle = handles;
+        handles = handles->next;
+        delete temp_handle;
+        temp_handle = NULL;
+    }
+    // release devices resource
+    while (devices != NULL) {
+        if (devices->name) {
+            free(devices->name);
+        }
+        device* temp_dev = devices;
+        devices = devices->next;
+        delete temp_dev;
+        temp_dev = NULL;
+    }
+    process_delete();
+}
+
+void ScanThread::stop()
+{
+    m_isStoped = true;
 }

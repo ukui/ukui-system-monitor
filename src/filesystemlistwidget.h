@@ -42,9 +42,9 @@ public:
 
     void readyToHideScrollbar();
     void clearItems();
-    void addSelectedItems(QList<FileSystemListItem*> items, bool recordLastItem=true);
+    void addSelectedItems(QList<FileSystemListItem*>& items, bool recordLastItem=true);
     void clearSelectedItems(bool clearLast=true);
-    void refreshFileSystemItems(QList<FileSystemListItem*> items);
+    void refreshFileSystemItems(QList<FileSystemData>& listInfo);
 
     int getItemsTotalHeight();
     int getBottomOffset();
@@ -83,8 +83,8 @@ protected:
 private:
     QTimer *m_hideScrollbarTimer = nullptr;
     FileSystemListItem *m_lastItem = nullptr;
-    QList<FileSystemListItem*> *m_listItems;
-    QList<FileSystemListItem*> *m_selectedItems;
+    QList<FileSystemListItem*> m_listItems;
+    QList<FileSystemListItem*> m_selectedItems;
     QList<QString> columnTitles;
     QList<int> m_columnWidths;
     QList<bool> m_columnVisibles;

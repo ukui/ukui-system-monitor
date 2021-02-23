@@ -40,17 +40,11 @@ newaboutdialog::newaboutdialog(QWidget *parent) : QDialog(parent)
     initWidgets();
     this->setBackgroundRole(QPalette::Base);
     this->setAutoFillBackground(true);
+    this->setWindowTitle(tr("Kylin System Monitor"));
 }
 
 newaboutdialog::~newaboutdialog()
 {
-    QLayoutItem *child;
-    while ((child = main_V_BoxLayout->takeAt(0)) != 0)
-    {
-        if (child->widget())
-            child->widget()->deleteLater();
-        delete child;
-    }
 }
 
 void newaboutdialog::initWidgets()
@@ -137,7 +131,6 @@ void newaboutdialog::initContentWidget()
     {
         QTextStream stream(&file);
         QString line;
-        int n = 1;
         while(!stream.atEnd())
         {
             line = stream.readLine();

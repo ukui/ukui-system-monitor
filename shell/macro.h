@@ -49,12 +49,31 @@
 #define DEFAULT_FONT_SIZE 11
 
 #define SERVICE_NAME_SIZE 64
-#define UKUI_SYSTEM_MONITOR_PATH "/"
-#define UKUI_SYSTEM_MONITOR_SERVICE "com.ukuisystemmonitor.hotel"
-#define UKUI_SYSTEM_MONITOR_INTERFACE "com.systemmonitor.hotel"
+//#define UKUI_SYSTEM_MONITOR_PATH "/"
+//#define UKUI_SYSTEM_MONITOR_SERVICE "com.ukuisystemmonitor.hotel"
+//#define UKUI_SYSTEM_MONITOR_INTERFACE "com.systemmonitor.hotel"
 
 #define PADDING 1.5
 #define POINTSPACE 10
+
+
+//process setting
+#define userpadding 90
+#define diskpadding 80
+#define cpupadding 70
+#define idpadding 80
+#define networkpadding 80
+#define memorypadding 120
+#define prioritypadding 80
+#define direciconposition 100
+
+//file system setting
+#define devicepadding 120
+#define typepadding 80
+#define totalcapacitypadding 100
+#define idlepadding 100
+#define avaliablepadding 100
+#define usedpadding 100
 
 enum SIGTYPE
 {

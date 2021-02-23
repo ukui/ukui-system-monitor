@@ -33,18 +33,18 @@
 #include <QDesktopServices>
 
 FileSystemListWidget::FileSystemListWidget(QList<bool> toBeDisplayedColumns, QWidget *parent) : QWidget(parent)
-  ,m_titlePadding(10)
-  ,m_titleHeight(40)
-  ,m_rowHeight(29)
-  ,m_offSet(0)
-  ,m_origOffset(0)
-  ,m_scrollbarWidth(10)
-  ,m_titleHoverColumn(-1)
-  ,m_titlePressColumn(-1)
   ,m_mouseAtScrollArea(false)
   ,m_mouseDragScrollbar(false)
-  ,fontSettings(nullptr)
+  ,m_origOffset(0)
+  ,m_offSet(0)
+  ,m_rowHeight(29)
+  ,m_scrollbarWidth(10)
+  ,m_titleHeight(40)
+  ,m_titleHoverColumn(-1)
+  ,m_titlePadding(10)
+  ,m_titlePressColumn(-1)
   ,qtSettings(nullptr)
+  ,fontSettings(nullptr)
 {
     const QByteArray idd(THEME_QT_SCHEMA);
 
@@ -63,8 +63,8 @@ FileSystemListWidget::FileSystemListWidget(QList<bool> toBeDisplayedColumns, QWi
     initFontSize();
 
     this->m_lastItem = NULL;
-    this->m_listItems = new QList<FileSystemListItem*>();
-    this->m_selectedItems = new QList<FileSystemListItem*>();
+    this->m_listItems.clear();
+    this->m_selectedItems.clear();
 
     this->columnTitles << tr("Device") << tr("Directory") << tr("Type") << tr("Total") << tr("Free") << tr("Available") << tr("Used");
     this->m_columnVisibles.clear();
@@ -77,33 +77,38 @@ FileSystemListWidget::FileSystemListWidget(QList<bool> toBeDisplayedColumns, QWi
 
 FileSystemListWidget::~FileSystemListWidget()
 {
-    if (this->m_hideScrollbarTimer != NULL) {
+    if (this->m_hideScrollbarTimer) {
         disconnect(this->m_hideScrollbarTimer,SIGNAL(timeout()),this,SLOT(hideScrollbar()));
         if(this->m_hideScrollbarTimer->isActive()) {
             this->m_hideScrollbarTimer->stop();
         }
-        delete this->m_hideScrollbarTimer;
-        this->m_hideScrollbarTimer = nullptr;
     }
 
-    delete this->m_lastItem;
-    delete this->m_listItems;
-    delete this->m_selectedItems;
+    clearSelectedItems();
+    clearItems();
+
     if(fontSettings)
     {
         delete fontSettings;
+        fontSettings = nullptr;
     }
 
     if(qtSettings)
     {
         delete qtSettings;
+        qtSettings = nullptr;
     }
 }
 
 void FileSystemListWidget::clearItems()
 {
-    qDeleteAll(this->m_listItems->begin(), this->m_listItems->end());
-    this->m_listItems->clear();
+    for (FileSystemListItem* pListItem : this->m_listItems) {
+        if (pListItem) {
+            delete pListItem;
+            pListItem = nullptr;
+        }
+    }
+    this->m_listItems.clear();
 }
 
 void FileSystemListWidget::initThemeMode()
@@ -141,38 +146,44 @@ void FileSystemListWidget::initFontSize()
     fontSize = fontSettings->get(FONT_SIZE).toString().toFloat();
 }
 
-void FileSystemListWidget::addSelectedItems(QList<FileSystemListItem*> items, bool recordLastItem)
+void FileSystemListWidget::addSelectedItems(QList<FileSystemListItem*>& items, bool recordLastItem)
 {
-    this->m_selectedItems->append(items);
+    this->m_selectedItems.append(items);
 
-    if (recordLastItem && this->m_selectedItems->count() > 0) {
-        this->m_lastItem = this->m_selectedItems->last();
+    if (recordLastItem && this->m_selectedItems.count() > 0) {
+        this->m_lastItem = this->m_selectedItems.last();
     }
 }
 
 void FileSystemListWidget::clearSelectedItems(bool clearLast)
 {
-    this->m_selectedItems->clear();
+    this->m_selectedItems.clear();
     if (clearLast) {
         this->m_lastItem = NULL;
     }
 }
 
-void FileSystemListWidget::refreshFileSystemItems(QList<FileSystemListItem*> items)
+void FileSystemListWidget::refreshFileSystemItems(QList<FileSystemData>& listInfo)
 {
-    QList<FileSystemListItem*> *allItems = new QList<FileSystemListItem*>();
+    QList<FileSystemListItem*> allSelectedItems;
     FileSystemListItem *newLastItem = NULL;
+    QList<FileSystemListItem*> allNewItems;
 
-    for (FileSystemListItem *item:items) {
-        for (FileSystemListItem *selectionItem:*this->m_selectedItems) {
+    for (FileSystemData info : listInfo) {
+        FileSystemListItem* item = new FileSystemListItem(info);
+        allNewItems.push_back(item);
+    }
+
+    for (FileSystemListItem *item:allNewItems) {
+        for (FileSystemListItem *selectionItem:this->m_selectedItems) {
             if (item->isSameItem(selectionItem)) {
-                allItems->append(item);
+                allSelectedItems.append(item);
                 break;
             }
         }
     }
     if (this->m_lastItem != NULL) {
-        for (FileSystemListItem *item:items) {
+        for (FileSystemListItem *item:allNewItems) {
             if (item->isSameItem(this->m_lastItem)) {
                 newLastItem = item;
                 break;
@@ -181,10 +192,10 @@ void FileSystemListWidget::refreshFileSystemItems(QList<FileSystemListItem*> ite
     }
 
     clearItems();
-    this->m_listItems->append(items);
+    this->m_listItems.append(allNewItems);
 
     clearSelectedItems();
-    addSelectedItems(*allItems, false);
+    addSelectedItems(allSelectedItems, false);
 
     this->m_lastItem = newLastItem;
     this->m_offSet = setOffset(this->m_offSet);
@@ -224,15 +235,15 @@ void FileSystemListWidget::mouseDoubleClickEvent(QMouseEvent *event)
     bool isScrollArea = mouseAtScrollArea(event->x());
     if (!isTitleArea && !isScrollArea) {
         int pressedItemIndex = (this->m_offSet + event->y() - this->m_titleHeight) / this->m_rowHeight;
-        if (pressedItemIndex >= this->m_listItems->count()) {
+        if (pressedItemIndex >= this->m_listItems.count()) {
             clearSelectedItems();
             repaint();
         }
         else {
             if (event->button() == Qt::LeftButton) {
-                FileSystemListItem *pressItem = (*this->m_listItems)[pressedItemIndex];
+                FileSystemListItem *pressItem = (this->m_listItems)[pressedItemIndex];
                 bool pressInSelectionArea = false;
-                for (FileSystemListItem *item : *this->m_selectedItems) {
+                for (FileSystemListItem *item : this->m_selectedItems) {
                     if (item == pressItem) {
                         pressInSelectionArea = true;
                         break;
@@ -279,6 +290,7 @@ void FileSystemListWidget::mousePressEvent(QMouseEvent *mouseEvent)
                 }
                 menu->exec(this->mapToGlobal(mouseEvent->pos()));
                 delete menu;
+                menu = nullptr;
             }
         }
     }
@@ -295,17 +307,17 @@ void FileSystemListWidget::mousePressEvent(QMouseEvent *mouseEvent)
     }
     else {
         int pressedItemIndex = (this->m_offSet + mouseEvent->y() - this->m_titleHeight) / this->m_rowHeight;
-        if (pressedItemIndex >= this->m_listItems->count()) {
+        if (pressedItemIndex >= this->m_listItems.count()) {
             clearSelectedItems();
             repaint();
         }
         else {
             if (mouseEvent->button() == Qt::LeftButton) {
-                if (pressedItemIndex < this->m_listItems->count()) {
+                if (pressedItemIndex < this->m_listItems.count()) {
                     if (mouseEvent->modifiers() == Qt::ControlModifier) {
-                        FileSystemListItem *item = (*this->m_listItems)[pressedItemIndex];
-                        if (this->m_selectedItems->contains(item)) {
-                            this->m_selectedItems->removeOne(item);
+                        FileSystemListItem *item = (this->m_listItems)[pressedItemIndex];
+                        if (this->m_selectedItems.contains(item)) {
+                            this->m_selectedItems.removeOne(item);
                         } else {
                             QList<FileSystemListItem*> items = QList<FileSystemListItem*>();
                             items << item;
@@ -315,16 +327,16 @@ void FileSystemListWidget::mousePressEvent(QMouseEvent *mouseEvent)
                     else {
                         clearSelectedItems();
                         QList<FileSystemListItem*> items = QList<FileSystemListItem*>();
-                        items << (*this->m_listItems)[pressedItemIndex];
+                        items << (this->m_listItems)[pressedItemIndex];
                         addSelectedItems(items);
                     }
                     repaint();
                 }
             }
             else if (mouseEvent->button() == Qt::RightButton) {
-                FileSystemListItem *pressItem = (*this->m_listItems)[pressedItemIndex];
+                FileSystemListItem *pressItem = (this->m_listItems)[pressedItemIndex];
                 bool pressInSelectionArea = false;
-                for (FileSystemListItem *item : *this->m_selectedItems) {
+                for (FileSystemListItem *item : this->m_selectedItems) {
                     if (item == pressItem) {
                         pressInSelectionArea = true;
                         break;
@@ -369,14 +381,10 @@ void FileSystemListWidget::resizeEvent(QResizeEvent *event)
     {
         m_widthsTitle.clear();
     }
-    if(window()->isMaximized())
-    {
-        m_widthsTitle << 300 << -1 << 160 << 160 << 160 << 160 << 240;
-    }
-    else
-    {
-        m_widthsTitle << 150 << -1 << 80 << 80 << 80 << 80 << 120;
-    }
+
+    m_widthsTitle  << devicepadding + (this->width() - MAINWINDOWWIDTH) *  devicepadding / (1600 - MAINWINDOWWIDTH)  << -1 << typepadding + (this->width() - MAINWINDOWWIDTH) * typepadding / (1600 - MAINWINDOWWIDTH)
+                   <<totalcapacitypadding + (this->width() - MAINWINDOWWIDTH) * totalcapacitypadding / (1600 - MAINWINDOWWIDTH) <<idlepadding + (this->width() - MAINWINDOWWIDTH) * idlepadding / (1600 - MAINWINDOWWIDTH)
+                   <<avaliablepadding + (this->width() - MAINWINDOWWIDTH) * avaliablepadding / (1600 - MAINWINDOWWIDTH) <<usedpadding + (this->width() - MAINWINDOWWIDTH) * usedpadding / (1600 - MAINWINDOWWIDTH);
     repaint();
 }
 
@@ -462,13 +470,13 @@ void FileSystemListWidget::paintEvent(QPaintEvent *)
     scrollAreaPath.addRect(QRectF(rect().x(), rect().y() + this->m_titleHeight, rect().width(), getTheScrollAreaHeight()));
 
     int rowCounter = 0;
-    for (FileSystemListItem *item:*this->m_listItems) {
+    for (FileSystemListItem *item:this->m_listItems) {
         if (rowCounter > ((this->m_offSet - this->m_rowHeight) / this->m_rowHeight)) {
             QPainterPath itemPath;
             itemPath.addRect(QRect(0, title_Y + rowCounter * this->m_rowHeight - this->m_offSet, rect().width(), this->m_rowHeight));
 //            painter.setClipPath((framePath.intersected(scrollAreaPath)).intersected(itemPath));
 
-            bool isSelect = this->m_selectedItems->contains(item);
+            bool isSelect = this->m_selectedItems.contains(item);
             painter.save();
             item->drawBackground(QRect(0, title_Y + rowCounter * this->m_rowHeight - this->m_offSet, rect().width(), this->m_rowHeight), &painter, rowCounter, isSelect, currentThemeMode);
             painter.restore();
@@ -497,7 +505,7 @@ void FileSystemListWidget::paintEvent(QPaintEvent *)
 //    painter.setClipPath(framePath);
 
     //没有挂载的磁盘文件系统信息时绘制提示文字
-    if (this->m_listItems->size() == 0) {
+    if (this->m_listItems.size() == 0) {
         painter.setOpacity(1);
         painter.setPen(QPen(QColor("#666666")));
         QFont font = painter.font() ;
@@ -616,7 +624,7 @@ int FileSystemListWidget::setOffset(int offset)
 
 int FileSystemListWidget::getItemsTotalHeight()
 {
-    return m_listItems->count() * m_rowHeight;
+    return m_listItems.count() * m_rowHeight;
 }
 
 int FileSystemListWidget::getTheScrollAreaHeight()
@@ -651,7 +659,7 @@ void FileSystemListWidget::readyToHideScrollbar()
             this->m_hideScrollbarTimer->stop();
     }
     else {
-        this->m_hideScrollbarTimer = new QTimer();
+        this->m_hideScrollbarTimer = new QTimer(this);
         this->m_hideScrollbarTimer->setSingleShot(true);
         connect(this->m_hideScrollbarTimer, SIGNAL(timeout()), this, SLOT(hideScrollbar()));
     }

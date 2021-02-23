@@ -159,7 +159,7 @@ void RefreshThread::refresh_cnx_list()
 
 void RefreshThread::run()
 {
-    while (1) {
+    while (!m_isStoped) {
         sleep(5);
         refreshconninode();
         refresh_process_list();
@@ -175,6 +175,11 @@ void RefreshThread::run()
     connect(timer,SIGNAL(timeout()),this,SLOT(refreshNetSpeed()),Qt::QueuedConnection);
     timer->start(1500);
     exec();*/
+}
+
+void RefreshThread::stop()
+{
+    m_isStoped = true;
 }
 
 void RefreshThread::refreshNetSpeed()

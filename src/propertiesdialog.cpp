@@ -201,38 +201,9 @@ PropertiesDialog::~PropertiesDialog()
         if(timer->isActive()) {
             timer->stop();
         }
-        delete timer;
-        timer = NULL;
     }
 
-    delete closeButton;
-    delete m_iconLabel;
-    delete m_titleLabel;
-    delete m_okBtn;
-
-    QLayoutItem *child;
-    while ((child = m_topLeftLayout->takeAt(0)) != 0) {
-        if (child->widget())
-            child->widget()->deleteLater();
-        delete child;
-    }
-    while ((child = m_topRightLayout->takeAt(0)) != 0) {
-        if (child->widget())
-            child->widget()->deleteLater();
-        delete child;
-    }
-    while ((child = m_topLayout->takeAt(0)) != 0) {
-        if (child->widget())
-            child->widget()->deleteLater();
-        delete child;
-    }
-    while ((child = m_bottomLayout->takeAt(0)) != 0) {
-        if (child->widget())
-            child->widget()->deleteLater();
-        delete child;
-    }
     m_labelList.clear();
-    delete m_infoFrame;
     /*delete userTitleLabel;
     delete userLabel;
     delete nameTitleLabel;
@@ -248,7 +219,6 @@ PropertiesDialog::~PropertiesDialog()
     delete cmdlineLayout;
     delete cpuDurationLayout;
     delete startTimeLayout;*/
-    delete m_layout;
 }
 
 void PropertiesDialog::updateLabelFrameHeight()
@@ -321,7 +291,7 @@ void PropertiesDialog::initProcproperties()
 
         qDebug()<<"arguments"<<info->arguments;
         for (int i = 0; i < this->m_labelList.length(); ++i) {
-            QString ShowValue = getElidedText(m_labelList.value(i)->font(), valueList.value(i), 500);
+            QString ShowValue = getElidedText(m_labelList.value(i)->font(), valueList.value(i), 200);
 //            this->m_labelList.value(i)->setText(valueList.value(i));
             this->m_labelList.value(i)->setText(ShowValue);
         }

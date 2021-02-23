@@ -150,6 +150,7 @@ private:
     QString currentThemeMode;
 
     QScrollArea *m_scrollArea;
+    QFont font;
 
 public:
     int fontSize;

@@ -268,7 +268,6 @@ QPixmap getAppIconFromDesktopFile(std::string desktopFile, int iconSize)
     qreal devicePixelRatio = qApp->devicePixelRatio();
 
     QPixmap pixmap = icon.pixmap(iconSize * devicePixelRatio, iconSize * devicePixelRatio);
-    icon.setIsMask(false);
     pixmap.setDevicePixelRatio(devicePixelRatio);
 
     return pixmap;

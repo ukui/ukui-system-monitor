@@ -52,6 +52,7 @@ NetWorkChart::~NetWorkChart()
 
 void NetWorkChart::paintEvent(QPaintEvent *event)
 {
+
     QPainter painter(this);
     painter.save();
     painter.setOpacity(0.08);

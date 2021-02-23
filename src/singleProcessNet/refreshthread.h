@@ -39,10 +39,12 @@ private:
     void refresh_cnx_list();
     int pid_cnx;
     QTimer *timer;
+    bool m_isStoped = false;
 
 public:
     explicit RefreshThread(QObject *parent = 0);
     void run();
+    void stop();
 
 signals:
     void procDetected(const QString& procname, quint64 rcv, quint64 sent, int pid, unsigned int uid, const QString& devname);

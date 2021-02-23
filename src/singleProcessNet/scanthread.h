@@ -40,10 +40,14 @@ class ScanThread : public QThread
 public:
     explicit ScanThread(QObject *parent = 0);
     void run();
+    void stop();
 
 signals:
 
 public slots:
+
+private:
+    bool m_isStoped = false;
 };
 
 

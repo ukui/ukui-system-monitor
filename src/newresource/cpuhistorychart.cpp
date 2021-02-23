@@ -159,8 +159,3 @@ void CpuHistoryChart::onUpdateCpuPercent(double value)
 {
     this->refreshCpuHistoryData(value);                  //about the cpurateForm showing
 }
-
-void CpuHistoryChart::resizeEvent(QResizeEvent *event)
-{
-
-}

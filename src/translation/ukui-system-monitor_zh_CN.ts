@@ -1233,33 +1233,6 @@ Kylin Team &lt;ubuntukylin-members@list.launchpad.net&gt;</source>
     </message>
 </context>
 <context>
-    <name>newaboutdialog</name>
-    <message>
-        <source>Kylin System Monitor</source>
-        <translation type="unfinished">系统监视器</translation>
-    </message>
-    <message>
-        <source>close</source>
-        <translation type="unfinished">关闭</translation>
-    </message>
-    <message>
-        <source>kylin system monitor</source>
-        <translation type="unfinished">系统监视器</translation>
-    </message>
-    <message>
-        <source>version: </source>
-        <translation type="unfinished">版本号: </translation>
-    </message>
-    <message>
-        <source>System monitor is a desktop application that face desktop users of Kylin operating system,It meets the needs of users to monitor the system process, system resources and file system</source>
-        <translation type="unfinished">系统监视器是一款面向麒麟操作系统用户的应用，它满足用户对系统监视器，进程资源和文件系统监控的需求</translation>
-    </message>
-    <message>
-        <source>Service and support team: support@kylinos.cn</source>
-        <translation type="unfinished">服务与支持团队: support@kylinos.cn</translation>
-    </message>
-</context>
-<context>
     <name>MouseWidget</name>
     <message>
         <source>Mouse Pointer Theme</source>
@@ -1358,40 +1331,12 @@ Kylin Team &lt;ubuntukylin-members@list.launchpad.net&gt;</source>
         <translation type="unfinished">网络历史</translation>
     </message>
     <message>
-        <source>20Kib</source>
-        <translation type="unfinished"></translation>
+        <source>KiB</source>
+        <translation type="unfinished">KB</translation>
     </message>
     <message>
-        <source>15Kib</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>10Kib</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>5Kib</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>0Kib</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>1000Kib</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>750Kib</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>500Kib</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>250Kib</source>
-        <translation type="unfinished"></translation>
+        <source>GiB</source>
+        <translation type="unfinished">GB</translation>
     </message>
 </context>
 <context>
@@ -2251,27 +2196,27 @@ Are you sure to continue?</source>
     </message>
     <message>
         <source>MiB</source>
-        <translation>MiB</translation>
+        <translation>MB</translation>
     </message>
     <message>
         <source>MiB/s</source>
-        <translation>MiB/秒</translation>
+        <translation>MB/秒</translation>
     </message>
     <message>
         <source>GiB</source>
-        <translation>GiB</translation>
+        <translation>GB</translation>
     </message>
     <message>
         <source>GiB/s</source>
-        <translation>GiB/秒</translation>
+        <translation>GB/秒</translation>
     </message>
     <message>
         <source>TiB</source>
-        <translation>TiB</translation>
+        <translation>TB</translation>
     </message>
     <message>
         <source>TiB/s</source>
-        <translation>TiB/秒</translation>
+        <translation>TB/秒</translation>
     </message>
     <message>
         <source>net</source>
@@ -2343,18 +2288,6 @@ Are you sure to continue?</source>
     </message>
     <message>
         <source>ukui-system-monitor is already running!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>bit</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>bits</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>bits/s</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -2617,6 +2550,33 @@ Are you sure to continue?</source>
     <message>
         <source>Right</source>
         <translation type="vanished">右边</translation>
+    </message>
+</context>
+<context>
+    <name>newaboutdialog</name>
+    <message>
+        <source>Kylin System Monitor</source>
+        <translation type="unfinished">系统监视器</translation>
+    </message>
+    <message>
+        <source>close</source>
+        <translation type="unfinished">关闭</translation>
+    </message>
+    <message>
+        <source>kylin system monitor</source>
+        <translation type="unfinished">系统监视器</translation>
+    </message>
+    <message>
+        <source>version: </source>
+        <translation type="unfinished">版本号: </translation>
+    </message>
+    <message>
+        <source>System monitor is a desktop application that face desktop users of Kylin operating system,It meets the needs of users to monitor the system process, system resources and file system</source>
+        <translation type="unfinished">系统监视器是一款面向麒麟操作系统用户的应用，它满足用户对系统监视器，进程资源和文件系统监控的需求</translation>
+    </message>
+    <message>
+        <source>Service and support team: support@kylinos.cn</source>
+        <translation type="unfinished">服务与支持团队: support@kylinos.cn</translation>
     </message>
 </context>
 </TS>

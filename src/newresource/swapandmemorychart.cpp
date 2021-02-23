@@ -82,8 +82,13 @@ void SwapAndMemoryChart::onUpdateMemoryAndSwapData(float memoryData,double memor
 
 void SwapAndMemoryChart::refreshMemoryAndSwapData(float memoryData, double memoryPercent, float swapData, double swapPercent)
 {
-    m_memoryData = formatMemory(memoryData) * 9 *(rect().height() / 90);
-    m_swapData = formatMemory(swapData) * 9 *(rect().height() / 90);
+    m_memoryData = formatMemory(memoryData) * (this->height()/10) *(rect().height() / this->height());
+    m_swapData = formatMemory(swapData) * (this->height()/10) *(rect().height() / this->height());
+
+    if(m_memoryData >= 100)
+    {
+        m_memoryData /= 4;
+    }
 
     QList<QPointF> memoryPoints;
     m_memoryDataList->append(m_memoryData);

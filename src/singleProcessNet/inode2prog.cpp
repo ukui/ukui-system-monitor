@@ -132,6 +132,7 @@ void setnode (unsigned long inode, pid_t pid) {
 
 		inodeproc[inode] = newnode;
 		delete current_value;
+		current_value = nullptr;
 	}
 }
 
@@ -224,4 +225,13 @@ struct prg_node * findPID (unsigned long inode)
 	return retval;
 }
 
-//void prg_cache_clear() {};
+void prg_cache_clear() 
+{
+	std::map <unsigned long, prg_node *>::iterator itInodeProc = inodeproc.begin();
+	for ( ; itInodeProc != inodeproc.end(); itInodeProc++ ) {
+		if (itInodeProc->second) {
+			delete itInodeProc->second;
+			itInodeProc->second = nullptr;
+		}
+	}
+}

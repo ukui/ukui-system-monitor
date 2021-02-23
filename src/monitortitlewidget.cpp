@@ -80,7 +80,7 @@ MonitorTitleWidget::MonitorTitleWidget(QSettings *settings, QWidget *parent)
     }
     
     m_changeBox = new QComboBox();
-//    m_changeBox->setFixedSize(NORMALWIDTH,NORMALHEIGHT+2);
+    m_changeBox->setFixedSize(NORMALWIDTH,NORMALHEIGHT+2);
     m_changeBox->addItem(tr("Active Processes"));
     m_changeBox->addItem(tr("My Processes"));
     m_changeBox->addItem(tr("All Process"));
@@ -186,81 +186,58 @@ void MonitorTitleWidget::initFontSize()
         {
             fontSize = fontSettings->get(FONT_SIZE).toString().toFloat();
         }
-        QFont font;
-        font.setPointSize(fontSize);
-        titleLabel->setFont(font);
-        m_queryText->setFont(font);
+//        QFont font;
+//        font.setPointSize(fontSize);
+//        titleLabel->setFont(font);
+//        m_queryText->setFont(font);
 
-        QFont changeBoxFont;
-        changeBoxFont.setPointSize(fontSize);
-        m_changeBox->setFont(changeBoxFont);
+//        QFont changeBoxFont;
+//        changeBoxFont.setPointSize(fontSize);
+//        m_changeBox->setFont(changeBoxFont);
     });
     fontSize = fontSettings->get(FONT_SIZE).toString().toFloat();
 }
 
 MonitorTitleWidget::~MonitorTitleWidget()
 {
-    delete emptyLabel;
-    delete maxBtn;
+    if (emptyLabel) {
+        delete emptyLabel;
+        emptyLabel = nullptr;
+    }
+    if (maxBtn) {
+        delete maxBtn;
+        maxBtn = nullptr;
+    }
 
     if (m_searchTimer) {
         disconnect(m_searchTimer, SIGNAL(timeout()), this, SLOT(onRefreshSearchResult()));
         if(m_searchTimer->isActive()) {
             m_searchTimer->stop();
         }
-        delete m_searchTimer;
-        m_searchTimer = nullptr;
     }
 
-    //Segmentation fault
-    QLayoutItem *child;
-    while ((child = m_titleLeftLayout->takeAt(0)) != 0) {
-        if (child->widget())
-            child->widget()->deleteLater();
-        delete child;
+    if (m_toolLeftLayout) {
+        delete m_toolLeftLayout;
+        m_toolLeftLayout = nullptr;
     }
-    while ((child = m_titleMiddleLayout->takeAt(0)) != 0) {
-        if (child->widget())
-            child->widget()->deleteLater();
-        delete child;
+    if (m_toolRightLayout) {
+        delete m_toolRightLayout;
+        m_toolRightLayout = nullptr;
     }
-    while ((child = m_titleRightLayout->takeAt(0)) != 0) {
-        if (child->widget())
-            child->widget()->deleteLater();
-        delete child;
-    }
-    while ((child = m_toolLeftLayout->takeAt(0)) != 0) {
-        if (child->widget())
-            child->widget()->deleteLater();
-        delete child;
-    }
-    while ((child = m_toolRightLayout->takeAt(0)) != 0) {
-        if (child->widget())
-            child->widget()->deleteLater();
-        delete child;
-    }
-    while ((child = m_topLayout->takeAt(0)) != 0) {
-        if (child->widget())
-            child->widget()->deleteLater();
-        delete child;
-    }
-    while ((child = m_bottomLayout->takeAt(0)) != 0) {
-        if (child->widget())
-            child->widget()->deleteLater();
-        delete child;
-    }
-    delete m_layout;
     if(fontSettings)
     {
         delete fontSettings;
+        fontSettings = nullptr;
     }
     if(qtSettings)
     {
         delete qtSettings;
+        qtSettings = nullptr;
     }
     if(m_animation)
     {
         delete m_animation;
+        m_animation = nullptr;
     }
 }
 
@@ -296,9 +273,9 @@ bool MonitorTitleWidget::eventFilter(QObject *obj, QEvent *event)    //set the e
                 qDebug()<<"it is real";
                 m_animation->stop();
                 m_animation->setStartValue(QRectF((m_searchEditNew->width() - (m_queryIcon->width()+m_queryText->width()+10))/2,0,
-                                                 m_queryIcon->width()+m_queryText->width()+10,(m_searchEditNew->height() + 20)/2));
+                                                 m_queryIcon->width()+m_queryText->width()+30,(m_searchEditNew->height() + 20)/2));
                 m_animation->setEndValue(QRectF(0,0,
-                                               m_queryIcon->width()+3,(m_searchEditNew->height()+20)/2));
+                                               m_queryIcon->width()+5,(m_searchEditNew->height()+20)/2));
                 m_animation->setEasingCurve(QEasingCurve::OutQuad);
                 m_animation->start();
             }
@@ -314,9 +291,9 @@ bool MonitorTitleWidget::eventFilter(QObject *obj, QEvent *event)    //set the e
             {
                 m_queryText->adjustSize();
                 m_animation->setStartValue(QRectF(0,0,
-                                                 m_queryIcon->width()+3,(m_searchEditNew->height()+20)/2));
+                                                 m_queryIcon->width()+5,(m_searchEditNew->height()+20)/2));
                 m_animation->setEndValue(QRectF((m_searchEditNew->width() - (m_queryIcon->width()+m_queryText->width()+10))/2,0,
-                                               m_queryIcon->width()+m_queryText->width()+10,(m_searchEditNew->height()+20)/2));
+                                               m_queryIcon->width()+m_queryText->width()+15,(m_searchEditNew->height()+20)/2));
                 m_animation->setEasingCurve(QEasingCurve::InQuad);
                 m_animation->start();
             }
@@ -395,7 +372,7 @@ void MonitorTitleWidget::initTitlebarLeftContent()
     QLabel *picLabel = new QLabel;
     QFont font;
     font.setPointSize(fontSize);
-    titleLabel->setFont(font);
+//    titleLabel->setFont(font);
     titleLabel->setText(tr("Kylin System Monitor"));
     QPixmap pixmap("/usr/share/icons/hicolor/png/1-24*24/ukui-system-monitor.png");
 //    QSize sz(24,24);
@@ -445,7 +422,7 @@ void MonitorTitleWidget::initTitlebarRightContent()
     QAction *aboutAction = new QAction(tr("about"),btnMenu);
     QAction *quitAction = new QAction(tr("quit"),btnMenu);
     actions <<helpAction <<aboutAction << quitAction;
-    btnMenu->addMenu(themeMenu);
+//    btnMenu->addMenu(themeMenu);
     btnMenu->addActions(actions);
     menuBtn->setMenu(btnMenu);
     menuBtn->setPopupMode(QToolButton::InstantPopup);
@@ -511,6 +488,7 @@ void MonitorTitleWidget::initTitlebarRightContent()
     m_changeBox->setCurrentIndex(whichNum);
     switchChangeItemProcessSignal(whichNum);
     connect(m_changeBox,SIGNAL(currentIndexChanged(int)),this,SLOT(switchChangeItemProcessSignal(int)));
+    setMyComBoxTootip(whichNum);
     m_titleRightLayout->addWidget(menuBtn);
     m_titleRightLayout->addSpacing(4);
     m_titleRightLayout->addWidget(minBtn);
@@ -548,6 +526,22 @@ void MonitorTitleWidget::showGuide(QString appName)
     QDBusMessage msg = interface->call(QStringLiteral("showGuide"),"kylin-system-monitor");
 }
 
+void MonitorTitleWidget::setMyComBoxTootip(int index)
+{
+    if(index == 0)
+    {
+        m_changeBox->setToolTip(tr("Active Processes"));
+    }
+    if(index == 1)
+    {
+        m_changeBox->setToolTip(tr("My Processes"));
+    }
+    if(index == 2)
+    {
+        m_changeBox->setToolTip(tr("All Process"));
+    }
+}
+
 void MonitorTitleWidget::onMinBtnClicked()
 {
     emit minimizeWindow();
@@ -582,6 +576,7 @@ void MonitorTitleWidget::switchChangeItemProcessSignal(int a)
     emit changeProcessItemDialog(a);
     whichNum = ifsettings->get(WHICH_MENU).toInt();
     ifsettings->set(WHICH_MENU,a);
+    setMyComBoxTootip(a);
 }
 
 void MonitorTitleWidget::onUpdateMaxBtnStatusChanged()
@@ -596,17 +591,23 @@ void MonitorTitleWidget::initToolbarLeftContent()
     m_toolLeftLayout->setContentsMargins(0, 0, 0, 0);
     QPushButton *processButton = new QPushButton();
     processButton->setText(tr("Processes"));
+    processButton->setCheckable(true);
+    processButton->setAutoExclusive(true);
     processButton->setChecked(true);
     processButton->setFixedSize(NORMALWIDTH,NORMALHEIGHT+2);
 
     QPushButton *resourcesButton = new QPushButton();
     resourcesButton->setText(tr("Resources"));
     resourcesButton->setChecked(false);
+    resourcesButton->setCheckable(true);
+    resourcesButton->setAutoExclusive(true);
     resourcesButton->setFixedSize(NORMALWIDTH,NORMALHEIGHT+2);
 
     QPushButton *disksButton = new QPushButton();
     disksButton->setText(tr("File Systems"));
     disksButton->setChecked(false);
+    disksButton->setCheckable(true);
+    disksButton->setAutoExclusive(true);
     disksButton->setFixedSize(NORMALWIDTH,NORMALHEIGHT+2);
 
     connect(processButton, &QPushButton::clicked, this, [=] {
@@ -705,7 +706,7 @@ void MonitorTitleWidget::initWidgets()
     queryWidLayout->setAlignment(m_queryText,Qt::AlignVCenter);
 
     m_queryWid->setGeometry(QRect((m_searchEditNew->width() - (m_queryIcon->width()+m_queryText->width()+10))/2,0,
-                                        m_queryIcon->width()+m_queryText->width()-10,(m_searchEditNew->height() + 20)/2));   //设置显示label的区域
+                                        m_queryIcon->width()+m_queryText->width()+10,(m_searchEditNew->height() + 20)/2));   //设置显示label的区域
 
     m_animation= new QPropertyAnimation(m_queryWid, "geometry");
     m_animation->setDuration(50);

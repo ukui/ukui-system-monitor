@@ -30,8 +30,8 @@ MyUnderLineButton::MyUnderLineButton(QWidget *parent)
     : QWidget(parent)
     ,m_state(Normal)
     ,m_isChecked(false)
-    ,fontSettings(nullptr)
     ,qtSettings(nullptr)
+    ,fontSettings(nullptr)
 {
     const QByteArray idd(THEME_QT_SCHEMA);
 
@@ -222,6 +222,7 @@ void MyUnderLineButton::updateStyleSheet()
         {
             m_textLabel->setStyleSheet("QLabel{background-color:transparent;color:rgba(255,255,255,0.57); text-align:center;}");
         }
+        break;
 //    case Normal:
 
 //    case Checked:
@@ -232,6 +233,8 @@ void MyUnderLineButton::updateStyleSheet()
 //        m_textLabel->setStyleSheet("QLabel{background-color:transparent;color:778899; font-size:14px;text-align:center;}");
 //        //m_underlineLabel->hide();
 //        break;
+    default:
+        break;
     }
 //    m_textLabel->setStyleSheet("QLabel{color:white};");
 }

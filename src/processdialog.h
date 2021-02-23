@@ -124,16 +124,16 @@ private:
     ProcessCategory *processCategory = nullptr;
     ProcessListItem *item = nullptr;
 
-  QMenu *m_priorityMenu;
-  MyActionGroup * priorityGroup;
-  MyAction *veryHighAction;
-  MyAction *highAction;
-  MyAction *normalAction;
-  MyAction *lowAction;
-  MyAction *veryLowAction;
-  MyAction *customAction;
+    QMenu *m_priorityMenu;
+    MyActionGroup * priorityGroup;
+    MyAction *veryHighAction;
+    MyAction *highAction;
+    MyAction *normalAction;
+    MyAction *lowAction;
+    MyAction *veryLowAction;
+    MyAction *customAction;
 
-    QList<pid_t> *actionPids;
+    QList<pid_t> actionPids;
     QMenu *m_menu = nullptr;
     QString whose_processes;
     gint num_cpus;

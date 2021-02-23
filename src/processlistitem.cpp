@@ -24,7 +24,29 @@
 #include <QLocale>
 #include "util.h"
 #include "../shell/macro.h"
-static int number = 0;
+
+//get process memory data
+inline QString formatProcMemory(guint64 size)
+{
+    enum {
+        K_INDEX,
+        M_INDEX,
+        G_INDEX,
+        T_INDEX
+    };
+    QList<guint64> factorList;
+    factorList.append(G_GUINT64_CONSTANT(1) << 10);//KiB
+    factorList.append(G_GUINT64_CONSTANT(1) << 20);//MiB
+    factorList.append(G_GUINT64_CONSTANT(1) << 30);//GiB
+    factorList.append(G_GUINT64_CONSTANT(1) << 40);//TiB
+
+    guint64 factor;
+    QString format;
+    factor = factorList.at(M_INDEX);
+    format = QObject::tr("MiB");
+    std::string formatted_result(make_string(g_strdup_printf("%.1f", size / (double)factor)));
+    return QString::fromStdString(formatted_result) + format;
+}
 
 ProcessListItem::ProcessListItem(ProcData info)
     :qtSettings(nullptr)
@@ -55,11 +77,13 @@ ProcessListItem::ProcessListItem(ProcData info)
 ProcessListItem::~ProcessListItem()
 {
     if (qtSettings) {
-        qtSettings->deleteLater();
+        delete qtSettings;
+        qtSettings = nullptr;
     }
 
     if (fontSettings) {
-        fontSettings->deleteLater();
+        delete fontSettings;
+        fontSettings = nullptr;
     }
 }
 
@@ -239,8 +263,7 @@ void ProcessListItem::drawForeground(QRect rect, QPainter *painter, int column, 
     else if (column == 6) {
         if (m_data.m_memory > 0) {
             painter->setOpacity(1);
-            char *memory = g_format_size_full(m_data.m_memory, G_FORMAT_SIZE_IEC_UNITS);
-            QString Memory = QString(memory);
+            QString Memory = formatProcMemory(m_data.m_memory);
             if (m_data.m_memory < 102400000) {//<100M
                 //this->drawCellBackground(QRect(rect.x(), rect.y(), rect.width(), rect.height()), painter, 0);
             }
@@ -251,11 +274,10 @@ void ProcessListItem::drawForeground(QRect rect, QPainter *painter, int column, 
                 //this->drawCellBackground(QRect(rect.x(), rect.y(), rect.width(), rect.height()), painter, 2);
             }
             painter->drawText(QRect(rect.x(), rect.y(), rect.width() - textPadding, rect.height()), Qt::AlignCenter, Memory);
-            g_free(memory);
         }
         else
         {
-            QString Memory = "0 MiB";
+            QString Memory = "0 "+QObject::tr("MiB");
             painter->drawText(QRect(rect.x(), rect.y(), rect.width() - textPadding, rect.height()), Qt::AlignCenter, Memory);
         }
         if (!isSeparator) {

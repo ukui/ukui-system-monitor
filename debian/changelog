@@ -1,29 +1,14 @@
-ukui-system-monitor (1.0.4-1) unstable; urgency=medium
+ukui-system-monitor (2.0.2-7) v101; urgency=medium
 
-  * New upstream bugfix release.
-  * debian/control: bump Standards-Version to 4.5.1.
+  * 优化功能：统一内存单位显示
 
- -- handsome_feng <jianfengli@ubuntukylin.com>  Wed, 09 Dec 2020 17:12:54 +0800
+ -- Yang Min <yangmin@kylinos.cn>  Sun, 21 Feb 2021 16:39:47 +0800
 
-ukui-system-monitor (1.0.3-1) unstable; urgency=medium
+ukui-system-monitor (2.0.2-6) v101; urgency=medium
 
-  * New upstream release: fix the segmentation fault.
+  * 修复bug，系统监视器无法在触摸屏上手动拖动。
 
- -- handsome_feng <jianfengli@ubuntukylin.com>  Fri, 27 Nov 2020 11:53:38 +0800
-
-ukui-system-monitor (1.0.2-1) unstable; urgency=medium
-
-  * New upstream release.
-  * d/control: Remove useless depends to allow migration.
-
- -- handsome_feng <jianfengli@ubuntukylin.com>  Thu, 26 Nov 2020 10:12:45 +0800
-
-ukui-system-monitor (1.0.0-2) unstable; urgency=medium
-
-  * Team upload.
-  * No change rebuild to allow migration
-
- -- Aron Xu <aron@debian.org>  Tue, 29 Sep 2020 14:42:29 +0800
+ -- renxinyu <renxinyu@kylinos.cn>  Fri, 19 Feb 2021 09:46:38 +0800
 
 ukui-system-monitor (1.0.0-1) unstable; urgency=medium
 

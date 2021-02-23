@@ -74,6 +74,11 @@ void process_init ()
 	processes = new ProcList (unknowntcp, NULL);
 }
 
+void process_delete()
+{
+	prg_cache_clear();
+}
+
 int Process::getLastPacket()
 {
 	int lastpacket=0;

@@ -93,9 +93,9 @@ QDataStream &operator>>(QDataStream &dataStream, ProcDataPtr &object)
 
 ProcessDialog::ProcessDialog(QList<bool> toBeDisplayedColumns, int currentSortIndex, bool isSort, QSettings *settings, QWidget *parent)
     :QWidget(parent)
+    ,proSettings(settings)
     ,num_cpus(0)
     ,frequency(0U)
-    ,proSettings(settings)
 {
     setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     setAttribute(Qt::WA_NoMousePropagation);
@@ -104,8 +104,6 @@ ProcessDialog::ProcessDialog(QList<bool> toBeDisplayedColumns, int currentSortIn
     qRegisterMetaTypeStreamOperators<ProcDataPtr>();
     qRegisterMetaType<ProcDataPtrList>();
     qRegisterMetaType<QList<ProcData>>();
-
-    actionPids = new QList<pid_t>();
 
     m_layout = new QVBoxLayout(this);
     m_layout->setContentsMargins(0, 0, 0, 0);
@@ -123,19 +121,19 @@ ProcessDialog::ProcessDialog(QList<bool> toBeDisplayedColumns, int currentSortIn
     whose_processes = proSettings->value("WhoseProcesses", whose_processes).toString();
     proSettings->endGroup();
 
-    QList<SortFunction> *sortFuncList = new QList<SortFunction>();
-    sortFuncList->append(&ProcessListItem::sortByName);
-    sortFuncList->append(&ProcessListItem::sortByUser);
-    sortFuncList->append(&ProcessListItem::sortByDiskIo);
-    sortFuncList->append(&ProcessListItem::sortByCPU);
-    sortFuncList->append(&ProcessListItem::sortByPid);
-    sortFuncList->append(&ProcessListItem::sortByFlowNet);
-    sortFuncList->append(&ProcessListItem::sortByMemory);
-    sortFuncList->append(&ProcessListItem::sortByPriority);
+    QList<SortFunction> sortFuncList;
+    sortFuncList.append(&ProcessListItem::sortByName);
+    sortFuncList.append(&ProcessListItem::sortByUser);
+    sortFuncList.append(&ProcessListItem::sortByDiskIo);
+    sortFuncList.append(&ProcessListItem::sortByCPU);
+    sortFuncList.append(&ProcessListItem::sortByPid);
+    sortFuncList.append(&ProcessListItem::sortByFlowNet);
+    sortFuncList.append(&ProcessListItem::sortByMemory);
+    sortFuncList.append(&ProcessListItem::sortByPriority);
 
     m_processListWidget->setProcessSortFunctions(sortFuncList, currentSortIndex, isSort);
     m_processListWidget->setSearchFunction(&ProcessListItem::doSearch);
-    m_menu = new QMenu();
+    m_menu = new QMenu(this);
     m_menu->setObjectName("MonitorMenu");
     m_stopAction = new QAction(tr("Stop process"), this);
     connect(m_stopAction, &QAction::triggered, this, &ProcessDialog::stopProcesses);
@@ -205,54 +203,29 @@ ProcessDialog::~ProcessDialog()
 {
     glibtop_close();
     this->clearOriginProcList();
-
     if (timer != NULL) {
         disconnect(timer,SIGNAL(timeout()),this,SLOT(refreshProcessList()));
         if(timer->isActive()) {
             timer->stop();
         }
-        delete timer;
-        timer = NULL;
     }
-    delete processCategory;
-    delete endProcessDialog;
-    delete killProcessDialog;
-    delete m_processListWidget;
-    delete m_stopAction;
-    delete m_continueAction;
-    delete m_endAction;
-    delete m_killAction;
 
-    delete veryHighAction;
-    delete highAction;
-    delete normalAction;
-    delete lowAction;
-    delete veryLowAction;
-    delete customAction;
-    delete m_priorityMenu;
-
-    delete m_propertiyAction;
-    delete m_menu;
-    delete actionPids;
-    delete item;
+    if (item) {
+        delete item;
+        item = nullptr;
+    }
 
     if(scanThread)
     {
-        delete scanThread;
+        scanThread->stop();
+        scanThread->wait();
     }
 
     if(refreshThread)
     {
-        delete refreshThread;
+        refreshThread->stop();
+        refreshThread->wait();
     }
-
-    QLayoutItem *child;
-    while ((child = m_categoryLayout->takeAt(0)) != 0) {
-        if (child->widget())
-            child->widget()->deleteLater();
-        delete child;
-    }
-    delete m_layout;
 }
 
 void ProcessDialog::displayAllProcess()
@@ -303,8 +276,12 @@ void ProcessDialog::onActiveWhoseProcess(int index)
 
 void ProcessDialog::clearOriginProcList()
 {
-    for (ProcessWorker::Iterator it(ProcessWorker::begin()); it != ProcessWorker::end(); ++it)
-        delete it->second;
+    for (ProcessWorker::Iterator it(ProcessWorker::begin()); it != ProcessWorker::end(); ++it) {
+        if (it->second) {
+            delete it->second;
+            it->second = nullptr;
+        }
+    }
     ProcessWorker::all.clear();
 }
 
@@ -314,14 +291,14 @@ void ProcessDialog::changeProcPriority(int nice)
     if (nice == 32) {
         //show renice dialog
         pid_t cur_pid = -1;
-        for (pid_t pid : *actionPids) {
+        for (pid_t pid : actionPids) {
             cur_pid = pid;
             break;
         }
         if (cur_pid > -1) {
             ProcessWorker *info = ProcessWorker::find(cur_pid);
             if (!info) {
-                actionPids->clear();
+                actionPids.clear();
                 return;
             }
             QString name = QString::fromStdString(info->name);
@@ -336,18 +313,18 @@ void ProcessDialog::changeProcPriority(int nice)
     else {
         qDebug()<<"has entered";
         pid_t cur_pid = -1;
-        for (pid_t pid : *actionPids) {
+        for (pid_t pid : actionPids) {
             cur_pid = pid;
             break;
         }
         if (cur_pid > -1) {
             ProcessWorker *info = ProcessWorker::find(cur_pid);
             if (!info) {
-                actionPids->clear();
+                actionPids.clear();
                 return;
             }
             if (info->nice == nice) {
-                actionPids->clear();
+                actionPids.clear();
                 return;
             }
             qDebug()<<"pkexec begin";
@@ -356,7 +333,7 @@ void ProcessDialog::changeProcPriority(int nice)
 //            qDebug()<<"error num"<<error;
 //            //success
 //            if(error != -1)  {
-//                actionPids->clear();
+//                actionPids.clear();
 //                return;
 //            }
 //            saved_errno = errno;
@@ -566,10 +543,13 @@ void ProcessDialog::refreshProcessList()
         ProcessWorker::Iterator next(it);
         ++next;
 
-        if (pids.find(info->pid) == pids.end() || info->status == GLIBTOP_PROCESS_ZOMBIE) {
-            addition.remove(info);
-            ProcessWorker::all.erase(it);
-            delete info;
+        if (info) {
+            if (pids.find(info->pid) == pids.end() || info->status == GLIBTOP_PROCESS_ZOMBIE) {
+                addition.remove(info);
+                ProcessWorker::all.erase(it);
+                delete info;
+                it->second = nullptr;
+            }
         }
         it = next;
     }
@@ -668,8 +648,8 @@ void ProcessDialog::refreshProcessList()
         info.m_numDiskIo = numDiskioPersec;      //磁盘读写整数值
 //        info.commandLine = QString::fromStdString(it->second->arguments); //命令行
 
-        item = new ProcessListItem(info);
-        items << item;
+        ProcessListItem* itemLine = new ProcessListItem(info);
+        items << itemLine;
     }
 
     this->updateStatus(items);
@@ -762,7 +742,7 @@ void ProcessDialog::killProcesses()
 {
 //    int error;
 
-//    for (pid_t pid : *actionPids) {
+//    for (pid_t pid : actionPids) {
 //        // Resume process first, otherwise kill process too slow.
 //        kill(pid, SIGCONT);
 
@@ -789,9 +769,9 @@ void ProcessDialog::killProcesses()
 //        }
 //    }
 
-//    actionPids->clear();
+//    actionPids.clear();
     int error;
-    for (pid_t pid : *actionPids) {
+    for (pid_t pid : actionPids) {
         error = kill(pid, SIGTERM);
         if(error != -1)  {
             qDebug() << "success.....";
@@ -817,14 +797,14 @@ void ProcessDialog::killProcesses()
         }
     }
 
-    actionPids->clear();
+    actionPids.clear();
 }
 
 //结束
 void ProcessDialog::endProcesses()
 {
     int error;
-    for (pid_t pid : *actionPids) {
+    for (pid_t pid : actionPids) {
         error = kill(pid, SIGTERM);
         if(error != -1)  {
             qDebug() << "success.....";
@@ -850,12 +830,12 @@ void ProcessDialog::endProcesses()
         }
     }
 
-    actionPids->clear();
+    actionPids.clear();
 }
 
 void ProcessDialog::popupMenu(QPoint pos, QList<ProcessListItem*> items)
 {
-    actionPids->clear();
+    actionPids.clear();
 
     int count = 0;
     pid_t cur_pid = -1;
@@ -863,7 +843,7 @@ void ProcessDialog::popupMenu(QPoint pos, QList<ProcessListItem*> items)
         count ++;
         ProcessListItem *procItem = static_cast<ProcessListItem*>(item);
         cur_pid = procItem->getPid();
-        actionPids->append(cur_pid);
+        actionPids.append(cur_pid);
     }
     if (count == 1) {
         ProcessWorker *info = ProcessWorker::find(cur_pid);
@@ -895,7 +875,7 @@ void ProcessDialog::popupMenu(QPoint pos, QList<ProcessListItem*> items)
 
 void ProcessDialog::continueProcesses()
 {
-    for (pid_t pid : *actionPids) {
+    for (pid_t pid : actionPids) {
         if (kill(pid, SIGCONT) != 0) {
             qDebug() << QString("Resume process %1 failed, permission denied.").arg(pid);
             QProcess process;
@@ -903,19 +883,19 @@ void ProcessDialog::continueProcesses()
         }
     }
 
-    actionPids->clear();
+    actionPids.clear();
 }
 
 void ProcessDialog::showPropertiesDialog()
 {
-    for (pid_t pid : *actionPids) {
+    for (pid_t pid : actionPids) {
         foreach (QWidget *widget, QApplication::topLevelWidgets()) {
             // Show attribute dialog if it has create, avoid create attribute dialog duplicate.
             if (qobject_cast<const PropertiesDialog*>(widget) != 0) {
                 PropertiesDialog *dialog = qobject_cast<PropertiesDialog*>(widget);
                 if (dialog->getPid() == pid) {
                     dialog->show();
-                    actionPids->clear();
+                    actionPids.clear();
                     return;
                 }
             }
@@ -925,7 +905,7 @@ void ProcessDialog::showPropertiesDialog()
         dialog->show();
     }
 
-    actionPids->clear();
+    actionPids.clear();
 }
 
 void ProcessDialog::showKillProcessDialog()
@@ -938,6 +918,7 @@ void ProcessDialog::showKillProcessDialog()
     killProcessDialog->addButton(QString(tr("Kill process")), true);
     connect(killProcessDialog, &MyDialog::buttonClicked, this, &ProcessDialog::killDialogButtonClicked);
     killProcessDialog->show();
+    killProcessDialog->setAttribute(Qt::WA_DeleteOnClose);
     connect(this,&ProcessDialog::closeDialog,killProcessDialog,&MyDialog::onButtonClicked);
 }   
 
@@ -951,6 +932,7 @@ void ProcessDialog::showEndProcessDialog()
     endProcessDialog->addButton(QString(tr("End process")), true);
     connect(endProcessDialog, &MyDialog::buttonClicked, this, &ProcessDialog::endDialogButtonClicked);
     endProcessDialog->show();
+    endProcessDialog->setAttribute(Qt::WA_DeleteOnClose);
     connect(this,&ProcessDialog::closeDialog,endProcessDialog,&MyDialog::onButtonClicked);
 }
 
@@ -959,7 +941,7 @@ void ProcessDialog::stopProcesses()
 {
     pid_t currentPid = getpid();
 
-    for (pid_t pid : *actionPids) {
+    for (pid_t pid : actionPids) {
         if (pid != currentPid) {
             if (kill(pid, SIGSTOP) != 0) {
                 qDebug() << QString("Stop process %1 failed, permission denied.").arg(pid);
@@ -968,7 +950,7 @@ void ProcessDialog::stopProcesses()
             }
         }
     }
-    actionPids->clear();
+    actionPids.clear();
 }
 
 void ProcessDialog::updateStatus(QList<ProcessListItem*> items)

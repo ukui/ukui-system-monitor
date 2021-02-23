@@ -73,6 +73,7 @@ public slots:
 private:
     int daemonIsNotRunning();
     void showGuide(QString appName);
+    void setMyComBoxTootip(int index);
 signals:
     void updateMaxBtn();
     void changePage(int index);

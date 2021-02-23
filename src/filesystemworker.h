@@ -38,9 +38,9 @@ public:
 
     void removeDiskItem(const QString &devname);
 
-    FileSystemData *getDiskInfo(const QString &devname);
-    QList<FileSystemData *> diskInfoList() const;
-    void addDiskInfo(const QString &devname, FileSystemData *info);
+    bool getDiskInfo(const QString &devname, FileSystemData& info);
+    QList<FileSystemData> diskInfoList() const;
+    void addDiskInfo(const QString &devname, FileSystemData& info);
     void removeDiskInfo(const QString &devname);
     bool isDeviceContains(const QString &devname);
 
@@ -48,7 +48,7 @@ public slots:
     void onFileSystemListChanged();
 
 private:
-    QMap<QString, FileSystemData *> m_diskInfoList;
+    QMap<QString, FileSystemData> m_diskInfoList;
 };
 
 #endif // FILESYSTEMWORKER_H

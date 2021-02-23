@@ -30,9 +30,10 @@
 #include <QProgressBar>
 #include <QApplication>
 
-FileSystemListItem::FileSystemListItem(FileSystemData *info)
-    :fontSettings(nullptr)
+FileSystemListItem::FileSystemListItem(FileSystemData& info, QObject* parent)
+    :QObject(parent)
     ,qtSettings(nullptr)
+    ,fontSettings(nullptr)
 {
     m_data = info;
     iconSize = 20;
@@ -59,11 +60,13 @@ FileSystemListItem::~FileSystemListItem()
     if(qtSettings)
     {
         delete qtSettings;
+        qtSettings = nullptr;
     }
 
     if(fontSettings)
     {
         delete fontSettings;
+        fontSettings = nullptr;
     }
 }
 
@@ -106,7 +109,7 @@ void FileSystemListItem::initFontSize()
 
 bool FileSystemListItem::isSameItem(FileSystemListItem *item)
 {
-    return m_data->deviceName() == ((static_cast<FileSystemListItem*>(item)))->m_data->deviceName();
+    return m_data.deviceName() == ((static_cast<FileSystemListItem*>(item)))->m_data.deviceName();
 }
 
 void FileSystemListItem::drawBackground(QRect rect, QPainter *painter, int index, bool isSelect, QString currentTheme)
@@ -147,7 +150,7 @@ void FileSystemListItem::drawForeground(QRect rect, QPainter *painter, int colum
         int nameMaxWidth = rect.width() - iconSize - padding * 3;
         QFont font = painter->font();
         QFontMetrics fm(font);
-        QString deviceName = fm.elidedText(m_data->deviceName(), Qt::ElideRight, nameMaxWidth);//Qt::ElideMiddle
+        QString deviceName = fm.elidedText(m_data.deviceName(), Qt::ElideRight, nameMaxWidth);//Qt::ElideMiddle
         painter->drawText(QRect(rect.x() + iconSize + padding * 2, rect.y(), nameMaxWidth, rect.height()), Qt::AlignCenter, deviceName);
         if (!isSeparator) {
             painter->setOpacity(0.8);
@@ -157,11 +160,11 @@ void FileSystemListItem::drawForeground(QRect rect, QPainter *painter, int colum
         }
     }
     else if (column == 1) {
-        if (!m_data->mountDir().isEmpty()) {
+        if (!m_data.mountDir().isEmpty()) {
             int maxWidth = rect.width();
             QFont font = painter->font();
             QFontMetrics fm(font);
-            QString mountDir = fm.elidedText(m_data->mountDir(), Qt::ElideMiddle, maxWidth);
+            QString mountDir = fm.elidedText(m_data.mountDir(), Qt::ElideMiddle, maxWidth);
             painter->drawText(QRect(rect.x(), rect.y(), rect.width() - textPadding, rect.height()), Qt::AlignCenter, mountDir);
         }
         if (!isSeparator) {
@@ -172,11 +175,11 @@ void FileSystemListItem::drawForeground(QRect rect, QPainter *painter, int colum
         }
     }
     else if (column == 2) {
-        if (!m_data->diskType().isEmpty()) {
+        if (!m_data.diskType().isEmpty()) {
             int maxWidth = rect.width();
             QFont font = painter->font();
             QFontMetrics fm(font);
-            QString diskType = fm.elidedText(m_data->diskType(), Qt::ElideRight, maxWidth);
+            QString diskType = fm.elidedText(m_data.diskType(), Qt::ElideRight, maxWidth);
             painter->drawText(QRect(rect.x(), rect.y(), rect.width() - textPadding, rect.height()), Qt::AlignCenter, diskType);
         }
         if (!isSeparator) {
@@ -187,11 +190,11 @@ void FileSystemListItem::drawForeground(QRect rect, QPainter *painter, int colum
         }
     }
     else if (column == 3) {
-        if (!m_data->totalCapacity().isEmpty()) {
+        if (!m_data.totalCapacity().isEmpty()) {
             int maxWidth = rect.width();
             QFont font = painter->font();
             QFontMetrics fm(font);
-            QString tCapacity = fm.elidedText(m_data->totalCapacity(), Qt::ElideRight, maxWidth);
+            QString tCapacity = fm.elidedText(m_data.totalCapacity(), Qt::ElideRight, maxWidth);
             painter->drawText(QRect(rect.x(), rect.y(), rect.width() - textPadding, rect.height()), Qt::AlignCenter, tCapacity);
         }
         if (!isSeparator) {
@@ -202,11 +205,11 @@ void FileSystemListItem::drawForeground(QRect rect, QPainter *painter, int colum
         }
     }
     else if (column == 4) {
-        if (!m_data->freeCapacity().isEmpty()) {
+        if (!m_data.freeCapacity().isEmpty()) {
             int maxWidth = rect.width();
             QFont font = painter->font();
             QFontMetrics fm(font);
-            QString fCapacity = fm.elidedText(m_data->freeCapacity(), Qt::ElideRight, maxWidth);
+            QString fCapacity = fm.elidedText(m_data.freeCapacity(), Qt::ElideRight, maxWidth);
             painter->drawText(QRect(rect.x(), rect.y(), rect.width() - textPadding, rect.height()), Qt::AlignCenter, fCapacity);
         }
         if (!isSeparator) {
@@ -217,11 +220,11 @@ void FileSystemListItem::drawForeground(QRect rect, QPainter *painter, int colum
         }
     }
     else if (column == 5) {
-        if (!m_data->availCapacity().isEmpty()) {
+        if (!m_data.availCapacity().isEmpty()) {
             int maxWidth = rect.width();
             QFont font = painter->font();
             QFontMetrics fm(font);
-            QString aCapacity = fm.elidedText(m_data->availCapacity(), Qt::ElideRight, maxWidth);
+            QString aCapacity = fm.elidedText(m_data.availCapacity(), Qt::ElideRight, maxWidth);
             painter->drawText(QRect(rect.x(), rect.y(), rect.width() - textPadding, rect.height()), Qt::AlignCenter, aCapacity);
         }
         if (!isSeparator) {
@@ -238,10 +241,10 @@ void FileSystemListItem::drawForeground(QRect rect, QPainter *painter, int colum
         int progressWidth = 100;
         int progressHeight = rect.height() - 2 * topPadding;
         int textMaxWidth = rect.width() - progressWidth - 2 * leftPadding;
-        if (!m_data->usedCapactiy().isEmpty()) {
+        if (!m_data.usedCapactiy().isEmpty()) {
             QFont font = painter->font();
             QFontMetrics fm(font);
-            QString uCapacity = fm.elidedText(m_data->usedCapactiy(), Qt::ElideRight, maxWidth);
+            QString uCapacity = fm.elidedText(m_data.usedCapactiy(), Qt::ElideRight, maxWidth);
 //            painter->drawText(QRect(rect.x() + textPadding, rect.y(), textMaxWidth - textPadding, rect.height()), Qt::AlignCenter, uCapacity);
             painter->drawText(QRect(rect.x() , rect.y(), rect.width(), rect.height()), Qt::AlignCenter, uCapacity);
         }
@@ -253,10 +256,10 @@ void FileSystemListItem::drawForeground(QRect rect, QPainter *painter, int colum
 ////        painter->fillPath(bgPath,QColor("palette(Base)"));
 /////////////////////////////////////////////////
         QPainterPath fillPath;
-//        fillPath.addRect(QRectF(rect.x() + textMaxWidth + leftPadding, rect.y() + topPadding, m_data->usedPercentage(), progressHeight));
-        fillPath.addRect(QRectF(rect.x() + rect.width() - m_data->usedPercentage(), rect.y() + rect.height() -2, m_data->usedPercentage(), 2));
+//        fillPath.addRect(QRectF(rect.x() + textMaxWidth + leftPadding, rect.y() + topPadding, m_data.usedPercentage(), progressHeight));
+        fillPath.addRect(QRectF(rect.x() + rect.width() - m_data.usedPercentage(), rect.y() + rect.height() -2, m_data.usedPercentage(), 2));
         painter->setOpacity(0.5);
-        if (m_data->usedPercentage() < 75)
+        if (m_data.usedPercentage() < 75)
             painter->fillPath(fillPath, QColor("#0288d1"));
         else
             painter->fillPath(fillPath, QColor("#f8b551"));
@@ -269,8 +272,8 @@ void FileSystemListItem::drawForeground(QRect rect, QPainter *painter, int colum
         progressBarStyle.minimum = 0;
         progressBarStyle.maximum = 100;
         progressBarStyle.textAlignment = Qt::AlignCenter;
-        progressBarStyle.progress = m_data->usedPercentage();
-        progressBarStyle.text = QString("%1%").arg(m_data->usedPercentage());
+        progressBarStyle.progress = m_data.usedPercentage();
+        progressBarStyle.text = QString("%1%").arg(m_data.usedPercentage());
         progressBarStyle.textVisible = true;
         QProgressBar progressBar;
         progressBar.setStyleSheet("QProgressBar{border: none;text-align: center;background:#eeeeee;}QProgressBar::chunk {background:#0288d1;}");
@@ -288,10 +291,10 @@ void FileSystemListItem::drawForeground(QRect rect, QPainter *painter, int colum
 
 QString FileSystemListItem::getDeviceName() const
 {
-    return m_data->deviceName();
+    return m_data.deviceName();
 }
 
 QString FileSystemListItem::getDirectory() const
 {
-    return m_data->mountDir();
+    return m_data.mountDir();
 }

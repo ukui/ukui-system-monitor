@@ -50,23 +50,6 @@ MyTitleBar::MyTitleBar(const QString &title, bool needMin, QWidget *parent)
 
 MyTitleBar::~MyTitleBar()
 {
-    QLayoutItem *child;
-    while ((child = m_lLayout->takeAt(0)) != 0) {
-        if (child->widget())
-            child->widget()->deleteLater();
-        delete child;
-    }
-    while ((child = m_mLayout->takeAt(0)) != 0) {
-        if (child->widget())
-            child->widget()->deleteLater();
-        delete child;
-    }
-    while ((child = m_rLayout->takeAt(0)) != 0) {
-        if (child->widget())
-            child->widget()->deleteLater();
-        delete child;
-    }
-    delete m_layout;
 }
 
 void MyTitleBar::setLeftContent(QWidget *content)

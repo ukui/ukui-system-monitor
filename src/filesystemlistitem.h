@@ -36,7 +36,7 @@ class FileSystemListItem : public QObject
     Q_OBJECT
     
 public:
-    FileSystemListItem(FileSystemData *info);
+    FileSystemListItem(FileSystemData& info, QObject* parent = 0);
     ~FileSystemListItem();
     
     bool isSameItem(FileSystemListItem *item);
@@ -51,11 +51,10 @@ public:
     void initFontSize();
     
 private:
-    FileSystemData *m_data;
+    FileSystemData m_data;
     int iconSize;
     int padding;
     int textPadding;
-
     int fontSize;
 
     QGSettings * qtSettings;

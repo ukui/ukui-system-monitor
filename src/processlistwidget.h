@@ -44,11 +44,11 @@ public:
     ~ProcessListWidget();
 
     void readyToHideScrollbar();
-    void setProcessSortFunctions(QList<SortFunction> *list, int sortColumn=-1, bool isSort=false);
+    void setProcessSortFunctions(QList<SortFunction>& list, int sortColumn=-1, bool isSort=false);
     void setSearchFunction(SearchFunction func);
     void addItems(QList<ProcessListItem*> items);
     void clearItems();
-    void addSelectedItems(QList<ProcessListItem*> items, bool recordLastItem=true);
+    void addSelectedItems(QList<ProcessListItem*>& items, bool recordLastItem=true);
     void clearSelectedItems(bool clearLast=true);
     void refreshItems(QList<ProcessListItem*> items);
     void doSearch(QString text);
@@ -65,7 +65,7 @@ public:
     void shiftToSelectedItems(int start, int end);
 
     int getItemsTotalHeight();
-    QList<ProcessListItem*> getSearchedItems(QList<ProcessListItem*> items);
+    QList<ProcessListItem*> getSearchedItems(QList<ProcessListItem*>& items);
     void sortItemsByColumn(int column, bool isSort);
 
     int getBottomOffset();
@@ -108,12 +108,12 @@ private:
     SearchFunction m_searchFunc;
 
     ProcessListItem *m_lastItem = nullptr;
-    QList<ProcessListItem*> *m_listItems;
-    QList<ProcessListItem*> *m_searchedItems;
-    QList<ProcessListItem*> *m_selectedItems;
+    QList<ProcessListItem*> m_listItems;
+    QList<ProcessListItem*> m_searchedItems;
+    QList<ProcessListItem*> m_selectedItems;
     QList<QString> columnTitles;
-    QList<SortFunction> *m_sortFuncList;
-    QList<bool> *m_isSortList;
+    QList<SortFunction> m_sortFuncList;
+    QList<bool> m_isSortList;
     QList<int> m_columnWidths;
     QList<bool> m_columnVisibles;
     QList<int> widths;
@@ -143,6 +143,8 @@ private:
 
     qreal opacity;
     QList<int> m_widthsTitle;
+
+    int amendDistance;
 };
 
 #endif // PROCESSLISTWIDGET_H

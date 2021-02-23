@@ -56,6 +56,7 @@ SystemMonitor::SystemMonitor(QWidget *parent)
     , mousePressed(false)
     , opacitySettings(nullptr)
 {
+    this->setProperty("useStyleWindowManager",false);
     this->setObjectName("SystemMonitor");
     this->setAttribute(Qt::WA_TranslucentBackground);//背景透明
     this->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
@@ -73,7 +74,7 @@ SystemMonitor::SystemMonitor(QWidget *parent)
     this->setWindowTitle(tr("Kylin System Monitor"));
     this->setWindowIcon(QIcon::fromTheme("ukui-system-monitor")); //control show img in panel
     this->resize(MAINWINDOWWIDTH,MAINWINDOWHEIGHT);
-    setMinimumSize(760, 650);  //set the minimum size of the mainwindow
+    setMinimumSize(MAINWINDOWWIDTH, MAINWINDOWHEIGHT);  //set the minimum size of the mainwindow
 
     proSettings = new QSettings(UKUI_COMPANY_SETTING, UKUI_SETTING_FILE_NAME_SETTING);
     proSettings->setIniCodec("UTF-8");
@@ -121,39 +122,15 @@ void SystemMonitor::getTransparentData()
 
 SystemMonitor::~SystemMonitor()
 {
-    if (m_sysMonitorStack) {
-        foreach (QObject *child, m_sysMonitorStack->children()) {
-            QWidget *widget = static_cast<QWidget *>(child);
-            widget->deleteLater();
-        }
-        delete m_sysMonitorStack;
-    }
-    if (m_titleWidget) {
-        delete m_titleWidget;
-        m_titleWidget = nullptr;
-    }
-    if (process_dialog) {
-        //delete process_dialog;
-        process_dialog = nullptr;
-    }
-    if (resources_dialog) {
-        //resources_dialog->deleteLater() ;
-        resources_dialog = nullptr;
-        qDebug() <<"resources_dialog"<<"------------------";
-    }
-    if (filesystem_dialog) {
-        //delete filesystem_dialog;
-        filesystem_dialog = nullptr;
-    }
-    if (proSettings != NULL) {
+    if (proSettings) {
         delete proSettings;
-        proSettings = NULL;
+        proSettings = nullptr;
     }
-    if (opacitySettings != NULL){
+    if (opacitySettings){
         delete opacitySettings;
-        opacitySettings = NULL;
+        opacitySettings = nullptr;
     }
-
+    qDebug()<<"SystemMonitor Destroyed!!";
 }
 
 void SystemMonitor::paintEvent(QPaintEvent *event)
@@ -613,4 +590,8 @@ void SystemMonitor::showGuide(QString appName)
                                                        this);
 
     QDBusMessage msg = interface->call(QStringLiteral("showGuide"),"kylin-system-monitor");
+    if (interface) {
+        delete interface;
+        interface = nullptr;
+    }
 }

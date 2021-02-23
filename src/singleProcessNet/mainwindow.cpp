@@ -133,6 +133,11 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
+    ui = nullptr;
+    if (scanThread) {
+        scanThread->stop();
+        scanThread->wait();
+    }
 }
 
 int MainWindow::searchRow(int pid)

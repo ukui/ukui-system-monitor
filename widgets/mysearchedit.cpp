@@ -31,8 +31,8 @@ MySearchEdit::MySearchEdit(QWidget *parent)
     : QFrame(parent)
     ,m_showCurve(QEasingCurve::OutCubic)    
     ,m_hideCurve(QEasingCurve::InCubic)
-    ,fontSettings(nullptr)
     ,qtSettings(nullptr)
+    ,fontSettings(nullptr)
 {
     const QByteArray idd(THEME_QT_SCHEMA);
 

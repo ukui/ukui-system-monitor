@@ -266,24 +266,24 @@ static void get_process_systemd_info(ProcessWorker *info)
 }
 
 ProcessWorker::ProcessWorker(pid_t pid, gint cpus, guint64 cpu_time, QString flownet_persec)
-    : tooltip(NULL),
+    : mem(0UL),
+      flownet_persec(flownet_persec),
+      status(0U),
+      pcpu(0U),
+      nice(0),
+      tooltip(NULL),
       name(NULL),
       arguments(NULL),
 //      security_context(NULL),
 //      cgroup_name(NULL),
+      pid(pid),
+      uid(-1),
       unit(NULL),
       session(NULL),
       seat(NULL),
-      pid(pid),
-      uid(-1),
-      mem(0UL),
-      status(0U),
-      pcpu(0U),
-      nice(0),
       num_cpus(cpus),
       cpu_total_time(cpu_time),
-      frequency(0U),
-      flownet_persec(flownet_persec)
+      frequency(0U)
 {
     this->setProcData();
 }

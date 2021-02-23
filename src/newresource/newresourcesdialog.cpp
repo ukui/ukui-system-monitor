@@ -70,44 +70,30 @@ inline QString formatMemory(guint64 size)
     factorList.append(G_GUINT64_CONSTANT(1) << 30);//GiB
     factorList.append(G_GUINT64_CONSTANT(1) << 40);//TiB
 
-    if (size < factorList.at(K_INDEX))
+    guint64 factor;
+    QString format;
+    if (size < factorList.at(M_INDEX))
     {
-        if ((guint) size > 1)
-        {
-            return QString("%1 %2").arg((guint) size).arg(QObject::tr("bit"));
-        }
-        else
-        {
-            return QString("%1 %2").arg((guint) size).arg(QObject::tr("bits"));
-        }
+        factor = factorList.at(K_INDEX);
+        format = QObject::tr("KiB");
+    }
+    else if (size < factorList.at(G_INDEX))
+    {
+        factor = factorList.at(M_INDEX);
+        format = QObject::tr("MiB");
+    }
+    else if (size < factorList.at(T_INDEX))
+    {
+        factor = factorList.at(G_INDEX);
+        format = QObject::tr("GiB");
     }
     else
     {
-        guint64 factor;
-        QString format;
-        if (size < factorList.at(M_INDEX))
-        {
-            factor = factorList.at(K_INDEX);
-            format = QObject::tr("KiB");
-        }
-        else if (size < factorList.at(G_INDEX))
-        {
-            factor = factorList.at(M_INDEX);
-            format = QObject::tr("MiB");
-        }
-        if (size < factorList.at(T_INDEX))
-        {
-            factor = factorList.at(G_INDEX);
-            format = QObject::tr("GiB");
-        }
-        else
-        {
-            factor = factorList.at(T_INDEX);
-            format = QObject::tr("TiB");
-        }
-        std::string formatted_result(make_string(g_strdup_printf("%.1f", size / (double)factor)));
-        return QString::fromStdString(formatted_result) + format;
+        factor = factorList.at(T_INDEX);
+        format = QObject::tr("TiB");
     }
+    std::string formatted_result(make_string(g_strdup_printf("%.1f", size / (double)factor)));
+    return QString::fromStdString(formatted_result) + format;
 }
 
 void NewResouresDialog::onUpdateMemoryAndSwapStatus()
@@ -136,7 +122,6 @@ void NewResouresDialog::onUpdateMemoryAndSwapStatus()
     emit rebackMemoryAndSwapInfo(infoMemory, mi.percent,infoSwap,mi.swappercent);
     emit rebackMemoryAndSwapData(mi.user,mi.percent,mi.swapused,mi.swappercent);
 //    emit rebackSwapInfo(infoSwap,mi.swappercent);
-
     repaint();//this->update();
 }
 
@@ -227,44 +212,35 @@ inline QString formatNetworkBrandWidth(guint64 size, bool isTotal)
     factorList.append(G_GUINT64_CONSTANT(1) << 30);//GiB
     factorList.append(G_GUINT64_CONSTANT(1) << 40);//TiB
 
-    if (size < factorList.at(K_INDEX)) {
-        if ((guint) size > 1) {
-                return QString("%1 %2").arg((guint) size).arg(QObject::tr("bits/s"));
-        }
-        else {
-                return QString("%1 %2").arg((guint) size).arg(QObject::tr("bits/s"));
-        }
+    guint64 factor;
+    QString format;
+    if (size < factorList.at(M_INDEX)) {
+        factor = factorList.at(K_INDEX);
+        if (isTotal)
+            format = QObject::tr("KiB");
+        else
+            format = QObject::tr("KiB/s");
+    }else if (size < factorList.at(G_INDEX)) {
+        factor = factorList.at(M_INDEX);
+        if (isTotal)
+            format = QObject::tr("MiB");
+        else
+            format = QObject::tr("MiB/s");
+    } else if (size < factorList.at(T_INDEX)) {
+        factor = factorList.at(G_INDEX);
+        if (isTotal)
+            format = QObject::tr("GiB");
+        else
+            format = QObject::tr("GiB/s");
     } else {
-        guint64 factor;
-        QString format;
-        if (size < factorList.at(M_INDEX)) {
-            factor = factorList.at(K_INDEX);
-            if (isTotal)
-                format = QObject::tr("KiB");
-            else
-                format = QObject::tr("KiB/s");
-        }else if (size < factorList.at(G_INDEX)) {
-            factor = factorList.at(M_INDEX);
-            if (isTotal)
-                format = QObject::tr("MiB");
-            else
-                format = QObject::tr("MiB/s");
-        } else if (size < factorList.at(T_INDEX)) {
-            factor = factorList.at(G_INDEX);
-            if (isTotal)
-                format = QObject::tr("GiB");
-            else
-                format = QObject::tr("GiB/s");
-        } else {
-            factor = factorList.at(T_INDEX);
-            if (isTotal)
-                format = QObject::tr("TiB");
-            else
-                format = QObject::tr("TiB/s");
-        }
-        std::string formatted_result(make_string(g_strdup_printf("%.1f", size / (double)factor)));
-        return QString::fromStdString(formatted_result) + format;
+        factor = factorList.at(T_INDEX);
+        if (isTotal)
+            format = QObject::tr("TiB");
+        else
+            format = QObject::tr("TiB/s");
     }
+    std::string formatted_result(make_string(g_strdup_printf("%.1f", size / (double)factor)));
+    return QString::fromStdString(formatted_result) + format;
 }
 
 inline QString formatNetworkRate(guint64 rate)
@@ -297,9 +273,8 @@ NewResouresDialog::NewResouresDialog(QWidget *parent)
     netrecvUnitDataLabel = new QLabel;
     netsentUnitDataLabel = new QLabel;
     initThemeMode();
-
-    initFontSize();
     initWidget();
+    initFontSize();
     setChangeNetSpeedLabel();
     tosetFontSize();
 
@@ -340,19 +315,19 @@ NewResouresDialog::~NewResouresDialog()
 void NewResouresDialog::setChangeNetSpeedLabel()
 {
     connect(networkChart,&NetWorkChart::speedToLowKib,this,[=](){
-        theFifthSpeedLabel->setText(tr("20KiB"));
-        theFourthSpeedLabel->setText(tr("15KiB"));
-        theThirdSpeedLabel->setText(tr("10KiB"));
-        theSecondSpeedLabel->setText(tr("5KiB"));
-        theFirtSpeedLabel->setText(tr("0KiB"));
+        theFifthSpeedLabel->setText("20"+tr("KiB"));
+        theFourthSpeedLabel->setText("15"+tr("KiB"));
+        theThirdSpeedLabel->setText("10"+tr("KiB"));
+        theSecondSpeedLabel->setText("5"+tr("KiB"));
+        theFirtSpeedLabel->setText("0"+tr("KiB"));
     });
 
     connect(networkChart,&NetWorkChart::speedToHighKib,this,[=](){
-        theFifthSpeedLabel->setText(tr("1000KiB"));
-        theFourthSpeedLabel->setText(tr("750KiB"));
-        theThirdSpeedLabel->setText(tr("500KiB"));
-        theSecondSpeedLabel->setText(tr("250KiB"));
-        theFirtSpeedLabel->setText(tr("0KiB"));
+        theFifthSpeedLabel->setText("1000"+tr("KiB"));
+        theFourthSpeedLabel->setText("750"+tr("KiB"));
+        theThirdSpeedLabel->setText("500"+tr("KiB"));
+        theSecondSpeedLabel->setText("250"+tr("KiB"));
+        theFirtSpeedLabel->setText("0"+tr("KiB"));
     });
 }
 
@@ -415,6 +390,7 @@ void NewResouresDialog::initWidget()
 
 void NewResouresDialog::initCpuHistory()
 {
+    font.setPointSize(11);
     //set the part of CPU history
     cputitle_H_BoxLayout = new QHBoxLayout;
     cputitle_H_BoxLayout->setContentsMargins(13,0,0,0);
@@ -436,6 +412,7 @@ void NewResouresDialog::initCpuHistory()
     histoyChart = new CpuHistoryChart;
     onehundredLabel = new QLabel();
     onehundredLabel->setText("100%");
+    onehundredLabel->setFont(font);
 //    getsetFontSize(11,onehundredLabel);
     threequarterLabel = new QLabel();
     threequarterLabel->setText("75%");
@@ -455,7 +432,7 @@ void NewResouresDialog::initCpuHistory()
     onequarterLabel->setPalette(pe);
     nullLabel->setPalette(pe);
     cpuWidget = new QWidget();
-    cpuWidget->setFixedWidth(55);
+    cpuWidget->setFixedWidth(65);
     cpuWidget->setMinimumHeight(100);
     cpuWidget->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Expanding);
 //    cpuWidget->setFixedWidth(55);
@@ -504,32 +481,32 @@ void NewResouresDialog::initSwapMeomoryHistory()
         QVBoxLayout *swapmemory_V_BoxLayout = new QVBoxLayout();
         swapmemory_V_BoxLayout->setMargin(0);
         tenGibLabel = new QLabel();
-        tenGibLabel->setText("10.0GiB");
+        tenGibLabel->setText("10.0"+tr("GiB"));
 //        getsetFontSize(11,tenGibLabel);
         swapmemoryWiget = new QWidget();
-        swapmemoryWiget->setFixedWidth(55);
+        swapmemoryWiget->setFixedWidth(65);
         swapmemoryWiget->setMinimumHeight(100);
         swapmemoryWiget->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Expanding);
 //        swapmemoryWiget->setFixedWidth(55);
         swapmemory_V_BoxLayout->addWidget(tenGibLabel,1,Qt::AlignRight);
         tenGibLabel->setPalette(pe);
         sevenpointFiveGibLabel = new QLabel();
-        sevenpointFiveGibLabel->setText("7.5GiB");
+        sevenpointFiveGibLabel->setText("7.5"+tr("GiB"));
 //        getsetFontSize(11,sevenpointFiveGibLabel);
         swapmemory_V_BoxLayout->addWidget(sevenpointFiveGibLabel,1,Qt::AlignRight);
         sevenpointFiveGibLabel->setPalette(pe);
         fiveGibLabel = new QLabel();
-        fiveGibLabel->setText("5.0GiB");
+        fiveGibLabel->setText("5.0"+tr("GiB"));
 //        getsetFontSize(11,fiveGibLabel);
         swapmemory_V_BoxLayout->addWidget(fiveGibLabel,1,Qt::AlignRight);
         fiveGibLabel->setPalette(pe);
         twopointfiveGibLabel = new QLabel();
-        twopointfiveGibLabel->setText("2.5GiB");
+        twopointfiveGibLabel->setText("2.5"+tr("GiB"));
 //        getsetFontSize(11,twopointfiveGibLabel);
         swapmemory_V_BoxLayout->addWidget(twopointfiveGibLabel,1,Qt::AlignRight);
         twopointfiveGibLabel->setPalette(pe);
         nullGibLabel = new QLabel();
-        nullGibLabel->setText("0.0GiB");
+        nullGibLabel->setText("0.0"+tr("GiB"));
 //        getsetFontSize(11,nullGibLabel);
         swapmemory_V_BoxLayout->addWidget(nullGibLabel,1,Qt::AlignRight);
         nullGibLabel->setPalette(pe);
@@ -568,7 +545,7 @@ void NewResouresDialog::initNetSpeedHistory()
         QVBoxLayout *netspeed_V_BoxLayout = new QVBoxLayout();
         netspeed_V_BoxLayout->setMargin(0);
         networkWidget = new QWidget();
-        networkWidget->setFixedWidth(55);
+        networkWidget->setFixedWidth(65);
         networkWidget->setMinimumHeight(100);
         networkWidget->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Expanding);
 //        networkWidget->setFixedWidth(55);
@@ -601,6 +578,7 @@ void NewResouresDialog::initNetSpeedHistory()
 
 void NewResouresDialog::tosetFontSize()
 {
+//context font
     QFont fontTitle;
     fontTitle.setPointSize(fontSize*1.5);
     cpuHistoryLabel->setFont(fontTitle);
@@ -613,6 +591,38 @@ void NewResouresDialog::tosetFontSize()
     memoryUnitDataLabel->setFont(fontContext);
     netrecvUnitDataLabel->setFont(fontContext);
     netsentUnitDataLabel->setFont(fontContext);
+//left units font
+    int leftUnit = fontSize;
+    QFont fontLeftUnit;
+
+    if(leftUnit > 12 && leftUnit <=14)
+    {
+        leftUnit = 12;
+    }
+    else if(leftUnit >14 && leftUnit <= 16)
+    {
+        leftUnit = 13;
+    }
+    else
+    {
+        leftUnit = 11;
+    }
+    fontLeftUnit.setPointSize(leftUnit);
+    onehundredLabel->setFont(fontLeftUnit);
+    threequarterLabel->setFont(fontLeftUnit);
+    halfLabel->setFont(fontLeftUnit);
+    onequarterLabel->setFont(fontLeftUnit);
+    nullLabel->setFont(fontLeftUnit);
+    tenGibLabel->setFont(fontLeftUnit);
+    sevenpointFiveGibLabel->setFont(fontLeftUnit);
+    fiveGibLabel->setFont(fontLeftUnit);
+    twopointfiveGibLabel->setFont(fontLeftUnit);
+    nullGibLabel->setFont(fontLeftUnit);
+    theFifthSpeedLabel->setFont(fontLeftUnit);
+    theFourthSpeedLabel->setFont(fontLeftUnit);
+    theThirdSpeedLabel->setFont(fontLeftUnit);
+    theSecondSpeedLabel->setFont(fontLeftUnit);
+    theFirtSpeedLabel->setFont(fontLeftUnit);
 }
 
 void NewResouresDialog::initThemeMode()
@@ -685,6 +695,7 @@ void NewResouresDialog::initFontSize()
         tosetFontSize();
     });
     fontSize = fontSettings->get(FONT_SIZE).toInt();
+    tosetFontSize();
 }
 
 void NewResouresDialog::updateResourceStatus()

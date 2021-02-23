@@ -89,8 +89,4 @@ ProcessCategory::ProcessCategory(int tabIndex, QWidget *parent)
 
 ProcessCategory::~ProcessCategory()
 {
-    delete activeProcessButton;
-    delete userProcessButton;
-    delete allProcessButton;
-    delete layout;
 }

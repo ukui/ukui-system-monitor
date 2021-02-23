@@ -52,12 +52,12 @@ FileSystemDialog::FileSystemDialog(QList<bool> toBeDisplayedColumns, QSettings *
     connect(m_fileSysListWidget, SIGNAL(changeColumnVisible(int,bool,QList<bool>)), this, SIGNAL(changeColumnVisible(int,bool,QList<bool>)));
     m_layout->addWidget(m_fileSysListWidget);
 
-    m_fileSystemWorker = new FileSystemWorker;
+    m_fileSystemWorker = new FileSystemWorker(this);
     m_fileSystemWorker->moveToThread(qApp->thread());
 
 //    this->initFileSystemMonitor();
 
-    m_menu = new QMenu();
+    m_menu = new QMenu(this);
     m_refreshAction = new QAction(tr("Refresh"), this);
     connect(m_refreshAction, &QAction::triggered, this, &FileSystemDialog::refreshFileSysList);
     m_menu->addAction(m_refreshAction);
@@ -80,34 +80,25 @@ FileSystemDialog::FileSystemDialog(QList<bool> toBeDisplayedColumns, QSettings *
 
 FileSystemDialog::~FileSystemDialog()
 {
-//    m_fileSystemMonitor->removePath(m_monitorFile);
-//    delete m_fileSystemMonitor;
     if (m_timer != NULL) {
-        disconnect(m_timer,SIGNAL(timeout()),this,SLOT(refreshProcproperties()));
+        disconnect(m_timer,SIGNAL(timeout()),this,SLOT(refreshFileSysList()));
         if(m_timer->isActive()) {
             m_timer->stop();
         }
-        delete m_timer;
-        m_timer = NULL;
     }
-
-    m_fileSystemWorker->deleteLater();
-    delete m_fileSysListWidget;
-    delete m_refreshAction;
-    delete m_menu;
-    delete m_layout;
 }
 
 void FileSystemDialog::refreshFileSysList()
 {
-    m_fileSystemWorker->onFileSystemListChanged();
+    if (m_fileSystemWorker) {
+        m_fileSystemWorker->onFileSystemListChanged();
 
-    QList<FileSystemListItem*> items;
-    for (FileSystemData *info : m_fileSystemWorker->diskInfoList()) {
-        FileSystemListItem *item = new FileSystemListItem(info);
-        items << item;
+        QList<FileSystemData> listInfo;
+        for (FileSystemData info : m_fileSystemWorker->diskInfoList()) {
+            listInfo << info;
+        }
+        m_fileSysListWidget->refreshFileSystemItems(listInfo);
     }
-    m_fileSysListWidget->refreshFileSystemItems(items);
 }
 
 void FileSystemDialog::popupMenu(QPoint pos)

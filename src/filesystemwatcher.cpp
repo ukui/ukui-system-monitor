@@ -74,12 +74,10 @@ bool FileSystemWatcher::watcherInitSuccess()
 bool FileSystemWatcher::clearWatcher()
 {
     if (this->watcherInitSuccess()) {
-        close(m_fd);
-        m_fd = -1;
-
-        delete m_socketNotifier;
-        m_socketNotifier = nullptr;
-
+        if (m_fd != -1) {
+            close(m_fd);
+            m_fd = -1;
+        }
         return true;
     }
     else {
