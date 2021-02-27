@@ -130,7 +130,7 @@ SystemMonitor::~SystemMonitor()
         delete opacitySettings;
         opacitySettings = nullptr;
     }
-    qDebug()<<"SystemMonitor Destroyed!!";
+    //qDebug()<<"SystemMonitor Destroyed!!";
 }
 
 void SystemMonitor::paintEvent(QPaintEvent *event)
