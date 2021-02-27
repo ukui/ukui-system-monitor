@@ -58,6 +58,7 @@
 
 
 //process setting
+#define namepadding 160
 #define userpadding 90
 #define diskpadding 80
 #define cpupadding 70

@@ -98,7 +98,7 @@ void ProcessListItem::initThemeMode()
         if (key == "styleName")
         {
             currentThemeMode = qtSettings->get(MODE_QT_KEY).toString();
-            qDebug() << "Current theme mode: "<< currentThemeMode << endl;
+            //qDebug() << "Current theme mode: "<< currentThemeMode << endl;
 //            repaint();
         }
     });
@@ -141,18 +141,24 @@ void ProcessListItem::drawBackground(QRect rect, QPainter *painter, int index, b
 
     if (isSelect) {
         painter->setOpacity(0.08);
-        painter->fillPath(path,QColor("palette(windowText)"));
-
-    } else {
+        painter->fillPath(path, QColor("palette(windowText)"));
+    }
+    else {
         painter->setOpacity(0.08);
-        if(currentThemeMode == "ukui-light" || currentThemeMode == "ukui-default" || currentThemeMode == "ukui-white")
-        {
-            painter->fillPath(path, QColor("#ffffff"));
-        } else if (currentThemeMode == "ukui-dark" || currentThemeMode == "ukui-black")
-        {
-            painter->fillPath(path,QColor("#131414"));
+        if (currentThemeMode == "ukui-light" || currentThemeMode == "ukui-default" || currentThemeMode == "ukui-white") {
+            if (index % 2 == 0) {
+                painter->fillPath(path, QColor("#ffffff"));
+            } else {
+                painter->fillPath(path, QColor("#aaaaaa"));
+            }
+        } else if (currentThemeMode == "ukui-dark" || currentThemeMode == "ukui-black") {
+            if (index % 2 == 0) {
+                painter->fillPath(path, QColor("#000000"));
+            } else {
+                painter->fillPath(path, QColor("#555555"));
+            }
         } else {
-            painter->fillPath(path, QColor("000000"));
+            painter->fillPath(path, QColor("#000000"));
         }
     }
 }

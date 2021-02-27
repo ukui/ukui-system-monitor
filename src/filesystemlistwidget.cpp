@@ -61,6 +61,7 @@ FileSystemListWidget::FileSystemListWidget(QList<bool> toBeDisplayedColumns, QWi
     }
 
     initFontSize();
+    initThemeMode();
 
     this->m_lastItem = NULL;
     this->m_listItems.clear();
@@ -121,7 +122,7 @@ void FileSystemListWidget::initThemeMode()
     connect(qtSettings, &QGSettings::changed, this, [=](const QString &key)
     {
 
-        if (key == "styleName")
+        if (key == "style-name")
         {
             currentThemeMode = qtSettings->get(MODE_QT_KEY).toString();
             repaint();

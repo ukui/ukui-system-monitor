@@ -366,7 +366,7 @@ void NewResouresDialog::networkSetText(long recvTotalBytes, long sentTotalBytes,
 
 void NewResouresDialog::initWidget()
 {
-    qDebug()<<this->height()<<"this.height-------";
+    //qDebug()<<this->height()<<"this.height-------";
     initCpuHistory();
     initSwapMeomoryHistory();
     initNetSpeedHistory();
@@ -638,7 +638,7 @@ void NewResouresDialog::initThemeMode()
         if (key == "styleName")
         {
             currentThemeMode = qtSettings->get("styleName").toString();
-            qDebug()<<currentThemeMode<<"theme mode";
+            //qDebug()<<currentThemeMode<<"theme mode";
             if(currentThemeMode == "ukui-dark" || currentThemeMode == "ukui-black")
             {
                 pe.setColor(QPalette::WindowText,QColor(255,255,255,130));
@@ -647,7 +647,7 @@ void NewResouresDialog::initThemeMode()
             else
             {
                 pe.setColor(QPalette::WindowText,QColor(13,14,13,130));
-                qDebug()<<"this theme is default";
+                //qDebug()<<"this theme is default";
             }
             onehundredLabel->setPalette(pe);
             threequarterLabel->setPalette(pe);
@@ -669,7 +669,7 @@ void NewResouresDialog::initThemeMode()
             memoryUnitDataLabel->setPalette(pe);
             netrecvUnitDataLabel->setPalette(pe);
             netsentUnitDataLabel->setPalette(pe);
-            qDebug()<<"theme change succesful";
+            //qDebug()<<"theme change succesful";
             repaint();
         }
     });

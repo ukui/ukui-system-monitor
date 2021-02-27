@@ -52,11 +52,11 @@ void MainController::init()                   //init select
     if(IsNotRunning())
     {
         creatDBusService();                 //create connect
-        qDebug()<<"Create DBus Service";
+        //qDebug()<<"Create DBus Service";
     }
     else
     {
-        qDebug()<<"ukui-system-monior is running";  //or finish the process
+        //qDebug()<<"ukui-system-monior is running";  //or finish the process
         exit(0);
     }
 }

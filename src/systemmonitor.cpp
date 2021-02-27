@@ -20,6 +20,9 @@
 
 #include "systemmonitor.h"
 #include "../shell/macro.h"
+#include "gui/ktableview.h"
+#include "gui/processtableview.h"
+#include "process/process_monitor.h"
 
 #include "util.h"
 #include <QFileSystemWatcher>
@@ -37,6 +40,9 @@
 #include <QDBusArgument>
 //#include <KWindowSystem/NETWM>
 #include <KWindowEffects>
+#include <QTreeView>
+#include <QFileSystemModel>
+#include <QStandardItemModel>
 
 extern void qt_blurImage(QImage &blurImage, qreal radius, bool quality, int transposed);
 
@@ -83,6 +89,7 @@ SystemMonitor::SystemMonitor(QWidget *parent)
     this->initPanelStack();
     this->initConnections();
     connect(m_titleWidget,SIGNAL(changeProcessItemDialog(int)),process_dialog,SLOT(onActiveWhoseProcess(int)));  //配置文件中为whoseprocess赋值
+    connect(m_titleWidget,SIGNAL(changeProcessItemDialog(int)),newProcessDialog,SLOT(onChangeProcessFilter(int)));  //配置文件中为whoseprocess赋值
     connect(m_titleWidget,SIGNAL(SearchFocusIn()),process_dialog,SLOT(onSearchFocusIn()));
     connect(m_titleWidget,SIGNAL(SearchFocusOut()),process_dialog,SLOT(onSearchFocusOut()));
     connect(m_titleWidget,SIGNAL(SearchFocusIn()),process_dialog,SIGNAL(changeProcessNetRefresh()));
@@ -130,7 +137,7 @@ SystemMonitor::~SystemMonitor()
         delete opacitySettings;
         opacitySettings = nullptr;
     }
-    qDebug()<<"SystemMonitor Destroyed!!";
+    //qDebug()<<"SystemMonitor Destroyed!!";
 }
 
 void SystemMonitor::paintEvent(QPaintEvent *event)
@@ -219,7 +226,7 @@ void SystemMonitor::resizeEvent(QResizeEvent *e)
         m_sysMonitorStack->resize(width() - 2, this->height() - MONITOR_TITLE_WIDGET_HEIGHT - 2);
         m_sysMonitorStack->move(1, MONITOR_TITLE_WIDGET_HEIGHT + 1);
     }
-    qDebug()<<"m_titleWid.x"<<m_titleWidget->geometry();
+    //qDebug()<<"m_titleWid.x"<<m_titleWidget->geometry();
 }
 
 void SystemMonitor::recordProcessVisibleColumn(int, bool, QList<bool> columnVisible)
@@ -350,6 +357,10 @@ void SystemMonitor::initPanelStack()
     m_sysMonitorStack->addWidget(process_dialog);
     m_sysMonitorStack->addWidget(resources_dialog);
     m_sysMonitorStack->addWidget(filesystem_dialog);
+
+    newProcessDialog = new ProcessTableView(proSettings);
+    connect(newProcessDialog, &ProcessTableView::changeSortStatus, this, &SystemMonitor::recordSortStatus);
+    m_sysMonitorStack->addWidget(newProcessDialog);
     m_sysMonitorStack->setCurrentWidget(process_dialog);
 }
 
@@ -572,14 +583,14 @@ int SystemMonitor::daemonIsNotRunning()
         return 0;
 
     QDBusReply<QString> reply = conn.interface()->call("GetNameOwner", service_name);
-    qDebug()<<"reply name"<<reply;
+    //qDebug()<<"reply name"<<reply;
     return reply.value() == "";
 }
 
 void SystemMonitor::showGuide(QString appName)
 {
 
-    qDebug() << Q_FUNC_INFO << appName;
+    //qDebug() << Q_FUNC_INFO << appName;
 
     QString service_name = "com.kylinUserGuide.hotel_" + QString::number(getuid());
 

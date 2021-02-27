@@ -117,7 +117,7 @@ void FileSystemDialog::initFileSystemMonitor() {
 
 void FileSystemDialog::onDirectoryChanged(QString path)
 {
-    qDebug()<< "dir path===================="<<path;
+    //qDebug()<< "dir path===================="<<path;
 }
 
 

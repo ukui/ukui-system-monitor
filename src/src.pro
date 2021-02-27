@@ -121,8 +121,17 @@ HEADERS += \
     newresource/cpuhistorychart.h \
     newresource/swapandmemorychart.h \
     newresource/networkchart.h \
-    newaboutdialog.h
+    newaboutdialog.h \
 #    newresourcesdialog.h
+    gui/kitemdelegate.h \
+    gui/kheaderview.h \
+    gui/ktableview.h \
+    gui/processtableview.h \
+    process/process_data.h \
+    process/process_list.h \
+    process/process_monitor.h \
+    model/processtablemodel.h \
+    model/processsortfilterproxymodel.h 
 
 SOURCES += \
     ../shell/xatom-helper.cpp \
@@ -172,8 +181,16 @@ SOURCES += \
     newresource/cpuhistorychart.cpp \
     newresource/swapandmemorychart.cpp \
     newresource/networkchart.cpp \
-    newaboutdialog.cpp
+    newaboutdialog.cpp \
 #    newresourcesdialog.cpp
+    gui/kitemdelegate.cpp \
+    gui/kheaderview.cpp \
+    gui/ktableview.cpp \
+    gui/processtableview.cpp \
+    process/process_list.cpp \
+    process/process_monitor.cpp \
+    model/processtablemodel.cpp \
+    model/processsortfilterproxymodel.cpp 
 
 OTHER_FILES += \
     systemmonitor.json

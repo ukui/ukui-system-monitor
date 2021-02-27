@@ -772,7 +772,7 @@ void ProcessListWidget::resizeEvent(QResizeEvent *event)
                    <<cpupadding + (this->width() - MAINWINDOWWIDTH) * cpupadding / (1600 - MAINWINDOWWIDTH) <<idpadding + (this->width() - MAINWINDOWWIDTH) * idpadding / (1600 - MAINWINDOWWIDTH)
                    <<networkpadding + (this->width() - MAINWINDOWWIDTH) * networkpadding / (1600 - MAINWINDOWWIDTH) <<memorypadding + (this->width() - MAINWINDOWWIDTH) * memorypadding / (1600 - MAINWINDOWWIDTH)
                    <<prioritypadding + (this->width() - MAINWINDOWWIDTH) * prioritypadding / (1600 - MAINWINDOWWIDTH);
-    qDebug()<<"this width and height"<<this->rect();
+    // qDebug()<<"this width and height"<<this->rect();
 
     repaint();
 }

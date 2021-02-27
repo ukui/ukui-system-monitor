@@ -289,7 +289,7 @@ void PropertiesDialog::initProcproperties()
                    << QFileInfo(QString("/proc/%1").arg(pid)).created().toString("yyyy-MM-dd hh:mm:ss")
                    << formatDurationForDisplay(100 * info->cpu_time / info->frequency);
 
-        qDebug()<<"arguments"<<info->arguments;
+        //qDebug()<<"arguments"<<info->arguments;
         for (int i = 0; i < this->m_labelList.length(); ++i) {
             QString ShowValue = getElidedText(m_labelList.value(i)->font(), valueList.value(i), 200);
 //            this->m_labelList.value(i)->setText(valueList.value(i));

@@ -147,7 +147,7 @@ void MonitorTitleWidget::initThemeMode()
             currentThemeMode = qtSettings->get(MODE_QT_KEY).toString();
             if (currentThemeMode == "ukui-light" || currentThemeMode == "ukui-default" || currentThemeMode == "ukui-white")
             {
-                qDebug() << "The theme change to white";
+                //qDebug() << "The theme change to white";
                 this->setObjectName("MonitorTitle");
                 m_queryIcon->setPixmap(drawSymbolicBlackColoredPixmap(pixmap));
             }
@@ -270,7 +270,7 @@ bool MonitorTitleWidget::eventFilter(QObject *obj, QEvent *event)    //set the e
             emit SearchFocusIn();
             if(m_searchEditNew->text().isEmpty())
             {
-                qDebug()<<"it is real";
+                //qDebug()<<"it is real";
                 m_animation->stop();
                 m_animation->setStartValue(QRectF((m_searchEditNew->width() - (m_queryIcon->width()+m_queryText->width()+10))/2,0,
                                                  m_queryIcon->width()+m_queryText->width()+30,(m_searchEditNew->height() + 20)/2));
@@ -280,7 +280,7 @@ bool MonitorTitleWidget::eventFilter(QObject *obj, QEvent *event)    //set the e
                 m_animation->start();
             }
             m_isSearching=true;
-            qDebug()<<"what is m_isSearching"<<m_isSearching;
+            //qDebug()<<"what is m_isSearching"<<m_isSearching;
         }
         else if(event->type() == QEvent::FocusOut && m_isSearching == false)
         {
@@ -506,14 +506,14 @@ int MonitorTitleWidget::daemonIsNotRunning()
         return 0;
 
     QDBusReply<QString> reply = conn.interface()->call("GetNameOwner", service_name);
-    qDebug()<<"reply name"<<reply;
+    //qDebug()<<"reply name"<<reply;
     return reply.value() == "";
 }
 
 void MonitorTitleWidget::showGuide(QString appName)
 {
 
-    qDebug() << Q_FUNC_INFO << appName;
+    //() << Q_FUNC_INFO << appName;
 
     QString service_name = "com.kylinUserGuide.hotel_" + QString::number(getuid());
 
@@ -562,7 +562,7 @@ void MonitorTitleWidget::resizeEvent(QResizeEvent *event)
     {
         maxTitleBtn->setIcon(QIcon::fromTheme("window-maximize-symbolic"));
     }
-    qDebug()<<"this---size"<<this->size();
+    //qDebug()<<"this---size"<<this->size();
 }
 
 void MonitorTitleWidget::onCloseBtnClicked()
@@ -572,7 +572,7 @@ void MonitorTitleWidget::onCloseBtnClicked()
 
 void MonitorTitleWidget::switchChangeItemProcessSignal(int a)
 {
-    qDebug()<<"whichNum----"<<whichNum;
+    //qDebug()<<"whichNum----"<<whichNum;
     emit changeProcessItemDialog(a);
     whichNum = ifsettings->get(WHICH_MENU).toInt();
     ifsettings->set(WHICH_MENU,a);
@@ -610,11 +610,15 @@ void MonitorTitleWidget::initToolbarLeftContent()
     disksButton->setAutoExclusive(true);
     disksButton->setFixedSize(NORMALWIDTH,NORMALHEIGHT+2);
 
+    QPushButton *treeViewButton = new QPushButton();
+    treeViewButton->setText(tr("Tree View"));
+    treeViewButton->setChecked(false);
+    treeViewButton->setCheckable(true);
+    treeViewButton->setAutoExclusive(true);
+    treeViewButton->setFixedSize(NORMALWIDTH,NORMALHEIGHT+2);
+
     connect(processButton, &QPushButton::clicked, this, [=] {
         emit this->changePage(0);
-        processButton->setChecked(true);
-        resourcesButton->setChecked(false);
-        disksButton->setChecked(false);
 //        if (!m_searchEdit->isVisible())
 //            m_searchEdit->setVisible(true);
         if (!m_changeBox->isVisible())
@@ -624,9 +628,6 @@ void MonitorTitleWidget::initToolbarLeftContent()
     });
     connect(resourcesButton, &QPushButton::clicked, this, [=] {
         emit this->changePage(1);
-        processButton->setChecked(false);
-        resourcesButton->setChecked(true);
-        disksButton->setChecked(false);
 //        if (m_searchEdit->isVisible())
 //            m_searchEdit->setVisible(false);
         if (m_changeBox->isVisible())
@@ -639,9 +640,6 @@ void MonitorTitleWidget::initToolbarLeftContent()
     });
     connect(disksButton, &QPushButton::clicked, this, [=] {
         emit this->changePage(2);
-        processButton->setChecked(false);
-        resourcesButton->setChecked(false);
-        disksButton->setChecked(true);
 //        if (m_searchEdit->isVisible())
 //            m_searchEdit->setVisible(false);
         if (m_changeBox->isVisible())
@@ -652,16 +650,27 @@ void MonitorTitleWidget::initToolbarLeftContent()
         m_searchEditNew->clear();
         emit canelSearchEditFocus();
     });
+    connect(treeViewButton, &QPushButton::clicked, this, [=] {
+        emit this->changePage(3);
+//        if (m_searchEdit->isVisible())
+//            m_searchEdit->setVisible(false);
+        if (!m_changeBox->isVisible())
+            m_changeBox->setVisible(true);
+        if (!m_searchEditNew->isVisible())
+            m_searchEditNew->setVisible(true);
+    });
     emptyWidget = new QWidget();
 
     processButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     resourcesButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     disksButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    treeViewButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     emptyWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
 
     m_bottomLayout->addWidget(processButton);
     m_bottomLayout->addWidget(resourcesButton);
     m_bottomLayout->addWidget(disksButton);
+    m_bottomLayout->addWidget(treeViewButton);
     m_bottomLayout->addWidget(emptyWidget, 3);
 }
 
@@ -687,7 +696,7 @@ void MonitorTitleWidget::initWidgets()
     QFont ft;
     ft.setPixelSize(fontSize);
     m_searchEditNew->setFont(ft);
-    qDebug()<<"font size"<<fontSize;
+    //qDebug()<<"font size"<<fontSize;
     m_queryText=new QLabel();
     m_queryText->setText(tr("Search"));
     m_queryWid=new QWidget(m_searchEditNew);

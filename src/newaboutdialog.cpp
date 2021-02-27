@@ -124,7 +124,7 @@ void newaboutdialog::initContentWidget()
     QString versionText;
     QString tmpPath = "/tmp/ukui-system-monitor-" + QDir::home().dirName();
     QString cmd = "dpkg -l |grep ukui-system-monitor >" + tmpPath;
-    qDebug()<<"what is cmd"<<cmd;
+    //qDebug()<<"what is cmd"<<cmd;
     system(cmd.toUtf8().data());
     QFile file(tmpPath);
     if(file.open(QIODevice::ReadOnly | QIODevice::Text))

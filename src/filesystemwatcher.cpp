@@ -51,7 +51,7 @@ bool FileSystemWatcher::initWatcher()
     m_origFileSet = getFileContentsLineByLine(DEVICE_MOUNT_PONINT_RECORD_FILE);
     m_fd = open(DEVICE_MOUNT_PONINT_RECORD_FILE, O_RDONLY);
     if (m_fd == -1) {
-        qDebug() << QString("open %1 failed!").arg(DEVICE_MOUNT_PONINT_RECORD_FILE);
+        //qDebug() << QString("open %1 failed!").arg(DEVICE_MOUNT_PONINT_RECORD_FILE);
         return false;
     }
 

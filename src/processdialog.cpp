@@ -287,7 +287,7 @@ void ProcessDialog::clearOriginProcList()
 
 void ProcessDialog::changeProcPriority(int nice)
 {
-    qDebug()<<"nice value"<<nice;
+    //qDebug()<<"nice value"<<nice;
     if (nice == 32) {
         //show renice dialog
         pid_t cur_pid = -1;
@@ -311,7 +311,7 @@ void ProcessDialog::changeProcPriority(int nice)
         }
     }
     else {
-        qDebug()<<"has entered";
+        //qDebug()<<"has entered";
         pid_t cur_pid = -1;
         for (pid_t pid : actionPids) {
             cur_pid = pid;
@@ -327,7 +327,7 @@ void ProcessDialog::changeProcPriority(int nice)
                 actionPids.clear();
                 return;
             }
-            qDebug()<<"pkexec begin";
+            //qDebug()<<"pkexec begin";
 //            int saved_errno;
 //            int error = setpriority(PRIO_PROCESS, cur_pid, nice);
 //            qDebug()<<"error num"<<error;
@@ -340,7 +340,7 @@ void ProcessDialog::changeProcPriority(int nice)
 
 //            //need to be root
 //            if(errno == EPERM || errno == EACCES) {
-                qDebug() << "Change priority need to be root!!!";
+                //qDebug() << "Change priority need to be root!!!";
                 /*
                  * renice: sudo apt install bsdutils
                  * Maybe: QProcess::startDetached(command)
@@ -472,32 +472,6 @@ void ProcessDialog::refreshProcessList()
         this->cpu_total_time = cpu.total;
         this->process_total_time = proctime.rtime;
 
-//        if(prevCpuTime.size() == 0)
-//        {
-//            prevCpuTime.insert(0,0);;
-//        }
-
-//        if(prevCpuTime.size() >= 2)
-//        {
-//            prevCpuTime.pop_back();
-//        }
-
-//        if(prevProcessTime.size() == 0)
-//        {
-//            prevProcessTime.insert(0,0);
-//        }
-
-//        if(prevProcessTime.size() >=2 )
-//        {
-//            prevProcessTime.pop_back();
-//        }
-
-
-//        qDebug()<<"length"<<prevCpuTime.size()<<"--"<<prevProcessTime.size();
-//        info->pcpu = (process_total_time - prevProcessTime.first())/MAX(cpu_total_time - prevCpuTime.first(),1);
-
-//        prevCpuTime.insert(0,cpu_total_time);
-//        prevProcessTime.insert(0,process_total_time);
         this->cpu_total_time = MAX(cpu.total - this->cpu_total_time_last, 1);
         this->cpu_total_time_last = cpu.total;
         guint64 difference = proctime.utime + proctime.stime + proctime.cutime + proctime.cstime - info->cpu_time ;
@@ -506,6 +480,7 @@ void ProcessDialog::refreshProcessList()
         info->pcpu = difference / this->cpu_total_time;
         info->pcpu = MIN(info->pcpu/2, 100);
         info->pcpu *= /*info->pcpu **/ this->num_cpus /10.0;
+
 //        CPU 百分比使用 Solaris 模式，工作在“Solaris 模式”，其中任务的 CPU 使用量将被除以总的 CPU 数目。否则它将工作在“Irix 模式”。
         this->frequency = cpu.frequency;
         info->frequency = this->frequency;
@@ -604,7 +579,7 @@ void ProcessDialog::refreshProcessList()
             icon_pixmap = defaultPixmap;
             icon_pixmap.setDevicePixelRatio(qApp->devicePixelRatio());
         } else {
-            icon_pixmap = getAppIconFromDesktopFile(desktopFile, 24);
+            //icon_pixmap = getAppIconFromDesktopFile(desktopFile, 24);
             if (icon_pixmap.isNull()) {
                 icon_pixmap = defaultPixmap;
                 icon_pixmap.setDevicePixelRatio(qApp->devicePixelRatio());
@@ -659,7 +634,7 @@ void ProcessDialog::refreshProcessList()
 
 void ProcessDialog::onSearchFocusIn()
 {
-    qDebug()<<"focusin---";
+    //qDebug()<<"focusin---";
     timer->stop();
     disconnect(refreshThread, SIGNAL(procDetected(const QString &, quint64 , quint64 , int , unsigned int , const QString&)),
             this, SLOT(refreshLine(const QString &, quint64 , quint64 , int, unsigned int , const QString&)));
@@ -667,7 +642,7 @@ void ProcessDialog::onSearchFocusIn()
 
 void ProcessDialog::onSearchFocusOut()
 {
-    qDebug()<<"focusout---";
+    //qDebug()<<"focusout---";
     timer->start(1500);
     connect(refreshThread, SIGNAL(procDetected(const QString &, quint64 , quint64 , int , unsigned int , const QString&)),
             this, SLOT(refreshLine(const QString &, quint64 , quint64 , int, unsigned int , const QString&)));
@@ -774,12 +749,12 @@ void ProcessDialog::killProcesses()
     for (pid_t pid : actionPids) {
         error = kill(pid, SIGTERM);
         if(error != -1)  {
-            qDebug() << "success.....";
+            //qDebug() << "success.....";
         }
         else {
             //need to be root
             if(errno == EPERM) {
-                qDebug() << QString("End process %1 failed, permission denied.").arg(pid);
+                //qDebug() << QString("End process %1 failed, permission denied.").arg(pid);
 
                 if (QFileInfo("/usr/bin/pkexec").exists()) {//sudo apt install policykit-1
                     QProcess process;
@@ -807,12 +782,12 @@ void ProcessDialog::endProcesses()
     for (pid_t pid : actionPids) {
         error = kill(pid, SIGTERM);
         if(error != -1)  {
-            qDebug() << "success.....";
+            //qDebug() << "success.....";
         }
         else {
             //need to be root
             if(errno == EPERM) {
-                qDebug() << QString("End process %1 failed, permission denied.").arg(pid);
+                //qDebug() << QString("End process %1 failed, permission denied.").arg(pid);
 
                 if (QFileInfo("/usr/bin/pkexec").exists()) {//sudo apt install policykit-1
                     QProcess process;
@@ -877,7 +852,7 @@ void ProcessDialog::continueProcesses()
 {
     for (pid_t pid : actionPids) {
         if (kill(pid, SIGCONT) != 0) {
-            qDebug() << QString("Resume process %1 failed, permission denied.").arg(pid);
+            //qDebug() << QString("Resume process %1 failed, permission denied.").arg(pid);
             QProcess process;
             process.execute(QString("pkexec %1 %2 %3 ").arg("kill").arg("-CONT").arg(pid));
         }
@@ -944,7 +919,7 @@ void ProcessDialog::stopProcesses()
     for (pid_t pid : actionPids) {
         if (pid != currentPid) {
             if (kill(pid, SIGSTOP) != 0) {
-                qDebug() << QString("Stop process %1 failed, permission denied.").arg(pid);
+                //qDebug() << QString("Stop process %1 failed, permission denied.").arg(pid);
                 QProcess process;
                 process.execute(QString("pkexec %1 %2 %3 ").arg("kill").arg("-STOP").arg(pid));
             }

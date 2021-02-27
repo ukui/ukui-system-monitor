@@ -84,7 +84,7 @@ void FileSystemListItem::initThemeMode()
         if (key == "styleName")
         {
             currentThemeMode = qtSettings->get(MODE_QT_KEY).toString();
-            qDebug() <<" Current theme mode change to: "<<currentThemeMode<<endl;
+            //qDebug() <<" Current theme mode change to: "<<currentThemeMode<<endl;
         }
     });
     currentThemeMode = qtSettings->get(MODE_QT_KEY).toString();
@@ -123,20 +123,21 @@ void FileSystemListItem::drawBackground(QRect rect, QPainter *painter, int index
     }
     else {
         painter->setOpacity(0.08);
-        if(currentTheme == "ukui-light" || currentTheme == "ukui-default" || currentTheme == "ukui-white")
-        {
-            painter->fillPath(path, QColor("#ffffff"));
-        }
-
-        if(currentTheme == "ukui-dark" || currentTheme == "ukui-black")
-        {
+        if (currentTheme == "ukui-light" || currentTheme == "ukui-default" || currentTheme == "ukui-white") {
+            if (index % 2 == 0) {
+                painter->fillPath(path, QColor("#ffffff"));
+            } else {
+                painter->fillPath(path, QColor("#aaaaaa"));
+            }
+        } else if (currentTheme == "ukui-dark" || currentTheme == "ukui-black") {
+            if (index % 2 == 0) {
+                painter->fillPath(path, QColor("#000000"));
+            } else {
+                painter->fillPath(path, QColor("#555555"));
+            }
+        } else {
             painter->fillPath(path, QColor("#000000"));
         }
-//        if (index % 2 == 0) {
-//            painter->fillPath(path, QColor("#ffffff"));
-//        } else {
-//            painter->fillPath(path, QColor("#e9eef0"));
-//        }
     }
 }
 

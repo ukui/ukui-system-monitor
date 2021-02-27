@@ -28,6 +28,7 @@
 #include "filesystemdialog.h"
 #include "shell/customstyle.h"
 #include "../shell/macro.h"
+#include "gui/processtableview.h"
 
 #include <QFrame>
 #include <QStackedWidget>
@@ -90,6 +91,7 @@ private:
     ProcessDialog *process_dialog = nullptr;
     NewResouresDialog *resources_dialog = nullptr;
     FileSystemDialog *filesystem_dialog = nullptr;
+    ProcessTableView *newProcessDialog = nullptr;
     QSettings *proSettings;
 
     QPoint dragPosition;
@@ -101,6 +103,7 @@ private:
     QGSettings *opacitySettings;
     double m_transparency;
     QString version;
+    bool m_initLoad = false;
 };
 
 #endif // SYSTEMMONITOR_H

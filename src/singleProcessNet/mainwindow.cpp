@@ -402,7 +402,7 @@ void MainWindow::cnxDetected(const QHostAddress& sourceip, quint16 sport, const 
 void MainWindow::lookedUp(const QHostInfo &host)
 {
     if (host.error() != QHostInfo::NoError) {
-        qDebug() << "Lookup failed:" << host.errorString();
+        //qDebug() << "Lookup failed:" << host.errorString();
         return;
     }
 
