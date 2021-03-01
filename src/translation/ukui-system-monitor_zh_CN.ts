@@ -1407,6 +1407,13 @@ Kylin Team &lt;ubuntukylin-members@list.launchpad.net&gt;</source>
     </message>
 </context>
 <context>
+    <name>ProcPropertiesDlg</name>
+    <message>
+        <source>OK</source>
+        <translation type="unfinished">确定</translation>
+    </message>
+</context>
+<context>
     <name>ProcessCategory</name>
     <message>
         <source>Active Processes</source>
@@ -1491,6 +1498,14 @@ Are you sure to continue?</source>
         <source>Change Priority of Process %1 (PID: %2)</source>
         <translation>更改进程“%1”(PID：%2)的优先级</translation>
     </message>
+    <message>
+        <source>Very low</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ProcessListItem</name>
@@ -1567,6 +1582,124 @@ Are you sure to continue?</source>
     <message>
         <source>Help user to kill process</source>
         <translation>帮助用户管理进程</translation>
+    </message>
+</context>
+<context>
+    <name>ProcessTableModel</name>
+    <message>
+        <source>Suspend</source>
+        <translation type="unfinished">停止</translation>
+    </message>
+    <message>
+        <source>No response</source>
+        <translation type="unfinished">无反应</translation>
+    </message>
+    <message>
+        <source>Uninterruptible</source>
+        <translation type="unfinished">不可中断</translation>
+    </message>
+</context>
+<context>
+    <name>ProcessTableView</name>
+    <message>
+        <source>No search result</source>
+        <translation type="unfinished">无搜索结果</translation>
+    </message>
+    <message>
+        <source>Stop process</source>
+        <translation type="unfinished">停止进程</translation>
+    </message>
+    <message>
+        <source>Continue process</source>
+        <translation type="unfinished">继续进程</translation>
+    </message>
+    <message>
+        <source>End process</source>
+        <translation type="unfinished">结束进程</translation>
+    </message>
+    <message>
+        <source>Kill process</source>
+        <translation type="unfinished">杀死进程</translation>
+    </message>
+    <message>
+        <source>Very High</source>
+        <translation type="unfinished">非常高</translation>
+    </message>
+    <message>
+        <source>High</source>
+        <translation type="unfinished">高</translation>
+    </message>
+    <message>
+        <source>Normal</source>
+        <translation type="unfinished">普通</translation>
+    </message>
+    <message>
+        <source>Low</source>
+        <translation type="unfinished">低</translation>
+    </message>
+    <message>
+        <source>Very Low</source>
+        <translation type="unfinished">非常低</translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation type="unfinished">自定义</translation>
+    </message>
+    <message>
+        <source>Change Priority</source>
+        <translation type="unfinished">改变优先级</translation>
+    </message>
+    <message>
+        <source>Properties</source>
+        <translation type="unfinished">属性</translation>
+    </message>
+    <message>
+        <source>User</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Disk</source>
+        <translation type="unfinished">磁盘</translation>
+    </message>
+    <message>
+        <source>CPU</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>ID</source>
+        <translation type="unfinished">ID</translation>
+    </message>
+    <message>
+        <source>Flownet Persec</source>
+        <translation type="unfinished">网络</translation>
+    </message>
+    <message>
+        <source>Memory</source>
+        <translation type="unfinished">内存</translation>
+    </message>
+    <message>
+        <source>Priority</source>
+        <translation type="unfinished">优先级</translation>
+    </message>
+    <message>
+        <source>Ending a process may destroy data, break the session or introduce a security risk. Only unresponsive processes should be ended.
+Are you sure to continue?</source>
+        <translation type="unfinished">结束进程可能导致数据损坏，中断会话或带来安全风险。您应该只结束无响应的进程。
+您确定要继续该操作？</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">取消</translation>
+    </message>
+    <message>
+        <source>Killing a process may destroy data, break the session or introduce a security risk. Only unresponsive processes should be killed.
+Are you sure to continue?</source>
+        <translation type="unfinished">杀死进程可能导致数据损坏，中断会话或带来安全风险。您应该只杀死无响应的进程。
+您确定要继续该操作？</translation>
+    </message>
+    <message>
+        <source>Change Priority of Process %1 (PID: %2)</source>
+        <translation type="unfinished">更改进程“%1”(PID：%2)的优先级</translation>
     </message>
 </context>
 <context>

@@ -34,6 +34,10 @@
 #define MODE_QT_KEY "style-name"
 #define FONT_SIZE "system-font-size"
 #define THEME_QT_TRANS "org.ukui.control-center.personalise"
+
+// process table view backup setting key
+#define SETTINGSOPTION_PROCESSTABLEHEADERSTATE "process_table_header_state"
+
 /* QT图标主题 */
 #define ICON_QT_KEY "icon-theme-name"
 
@@ -58,7 +62,7 @@
 
 
 //process setting
-#define namepadding 160
+#define namepadding 150
 #define userpadding 90
 #define diskpadding 80
 #define cpupadding 70

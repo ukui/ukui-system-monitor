@@ -610,13 +610,6 @@ void MonitorTitleWidget::initToolbarLeftContent()
     disksButton->setAutoExclusive(true);
     disksButton->setFixedSize(NORMALWIDTH,NORMALHEIGHT+2);
 
-    QPushButton *treeViewButton = new QPushButton();
-    treeViewButton->setText(tr("Tree View"));
-    treeViewButton->setChecked(false);
-    treeViewButton->setCheckable(true);
-    treeViewButton->setAutoExclusive(true);
-    treeViewButton->setFixedSize(NORMALWIDTH,NORMALHEIGHT+2);
-
     connect(processButton, &QPushButton::clicked, this, [=] {
         emit this->changePage(0);
 //        if (!m_searchEdit->isVisible())
@@ -650,27 +643,16 @@ void MonitorTitleWidget::initToolbarLeftContent()
         m_searchEditNew->clear();
         emit canelSearchEditFocus();
     });
-    connect(treeViewButton, &QPushButton::clicked, this, [=] {
-        emit this->changePage(3);
-//        if (m_searchEdit->isVisible())
-//            m_searchEdit->setVisible(false);
-        if (!m_changeBox->isVisible())
-            m_changeBox->setVisible(true);
-        if (!m_searchEditNew->isVisible())
-            m_searchEditNew->setVisible(true);
-    });
     emptyWidget = new QWidget();
 
     processButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     resourcesButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     disksButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-    treeViewButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     emptyWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
 
     m_bottomLayout->addWidget(processButton);
     m_bottomLayout->addWidget(resourcesButton);
     m_bottomLayout->addWidget(disksButton);
-    m_bottomLayout->addWidget(treeViewButton);
     m_bottomLayout->addWidget(emptyWidget, 3);
 }
 

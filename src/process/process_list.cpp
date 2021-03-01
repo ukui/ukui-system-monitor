@@ -593,6 +593,18 @@ ProcessList::~ProcessList()
     glibtop_close();
 }
 
+void ProcessList::connectNetStateRefresh()
+{
+    connect(refreshThread, SIGNAL(procDetected(const QString &, quint64 , quint64 , int , unsigned int , const QString&)),
+            this, SLOT(refreshLine(const QString &, quint64 , quint64 , int, unsigned int , const QString&)));
+}
+
+void ProcessList::disconnectNetStateRefresh()
+{
+    disconnect(refreshThread, SIGNAL(procDetected(const QString &, quint64 , quint64 , int , unsigned int , const QString&)),
+            this, SLOT(refreshLine(const QString &, quint64 , quint64 , int, unsigned int , const QString&)));
+}
+
 bool ProcessList::containsById(pid_t pid)
 {
     return m_set.contains(pid);
@@ -639,7 +651,7 @@ void ProcessList::scanProcess()
     }
 
     pid_list = glibtop_get_proclist(&proclist, which, arg);
-
+    //qDebug()<<__FUNCTION__<<"scan process list info:param:"<<which<<"|"<<arg<<",size:"<<proclist.number;
     // FIXME: not sure if glibtop always returns a sorted list of pid
     // but it is important otherwise refresh_list won't find the parent
     std::sort(pid_list, pid_list + proclist.number);
@@ -770,7 +782,7 @@ void ProcessList::scanProcess()
                 icon_pixmap = defaultPixmap;
                 icon_pixmap.setDevicePixelRatio(qApp->devicePixelRatio());
             } else {
-                //icon_pixmap = getAppIconFromDesktopFile(desktopFile, 20);
+                icon_pixmap = getAppIconFromDesktopFile(desktopFile, 20);
                 if (icon_pixmap.isNull()) {
                     icon_pixmap = defaultPixmap;
                     icon_pixmap.setDevicePixelRatio(qApp->devicePixelRatio());

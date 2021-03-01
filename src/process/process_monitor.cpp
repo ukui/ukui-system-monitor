@@ -30,6 +30,8 @@
 namespace sysmonitor {
 namespace process {
 
+#define TIME_SCANPROCESS    1500
+
 Q_GLOBAL_STATIC(ProcessMonitorThread, theInstance)
 ProcessMonitorThread *ProcessMonitorThread::instance()
 {
@@ -87,8 +89,16 @@ ProcessList *ProcessMonitor::processList()
 void ProcessMonitor::startMonitorJob()
 {
     m_basicTimer.stop();
-    m_basicTimer.start(1500, Qt::PreciseTimer, this);
+    m_basicTimer.start(TIME_SCANPROCESS, Qt::PreciseTimer, this);
     updateProcMonitorInfo();
+}
+
+void ProcessMonitor::timerEvent(QTimerEvent *event)
+{
+    QObject::timerEvent(event);
+    if (event->timerId() == m_basicTimer.timerId()) {
+        updateProcMonitorInfo();
+    }
 }
 
 void ProcessMonitor::requestInterrupt()
@@ -99,9 +109,24 @@ void ProcessMonitor::requestInterrupt()
 void ProcessMonitor::onChangeRefreshFilter(QString strFilter)
 {
     requestInterrupt();
-    emit clearProcessList();
+    m_basicTimer.stop();
+    //emit clearProcessList();
+    processList()->onClearAllProcess();
     processList()->setScanFilter(strFilter);
+    m_basicTimer.start(TIME_SCANPROCESS, Qt::PreciseTimer, this);
+    updateProcMonitorInfo();
+}
+
+void ProcessMonitor::onStartScanProcess()
+{
+    processList()->connectNetStateRefresh();
     startMonitorJob();
+}
+
+void ProcessMonitor::onStopScanProcess()
+{
+    requestInterrupt();
+    processList()->disconnectNetStateRefresh();
 }
 
 void ProcessMonitor::updateProcMonitorInfo()

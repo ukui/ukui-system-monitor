@@ -107,45 +107,45 @@
 <context>
     <name>FileSystemListWidget</name>
     <message>
-        <location filename="../filesystemlistwidget.cpp" line="69"/>
-        <location filename="../filesystemlistwidget.cpp" line="427"/>
+        <location filename="../filesystemlistwidget.cpp" line="70"/>
+        <location filename="../filesystemlistwidget.cpp" line="440"/>
         <source>Device</source>
         <translation>Aygıt</translation>
     </message>
     <message>
-        <location filename="../filesystemlistwidget.cpp" line="69"/>
-        <location filename="../filesystemlistwidget.cpp" line="427"/>
+        <location filename="../filesystemlistwidget.cpp" line="70"/>
+        <location filename="../filesystemlistwidget.cpp" line="440"/>
         <source>Directory</source>
         <translation>Dizin</translation>
     </message>
     <message>
-        <location filename="../filesystemlistwidget.cpp" line="69"/>
+        <location filename="../filesystemlistwidget.cpp" line="70"/>
         <source>Type</source>
         <translation>Tür</translation>
     </message>
     <message>
-        <location filename="../filesystemlistwidget.cpp" line="69"/>
+        <location filename="../filesystemlistwidget.cpp" line="70"/>
         <source>Total</source>
         <translation>Toplam</translation>
     </message>
     <message>
-        <location filename="../filesystemlistwidget.cpp" line="69"/>
+        <location filename="../filesystemlistwidget.cpp" line="70"/>
         <source>Free</source>
         <translation>Boş</translation>
     </message>
     <message>
-        <location filename="../filesystemlistwidget.cpp" line="69"/>
+        <location filename="../filesystemlistwidget.cpp" line="70"/>
         <source>Available</source>
         <translation>Mevcut</translation>
     </message>
     <message>
-        <location filename="../filesystemlistwidget.cpp" line="69"/>
-        <location filename="../filesystemlistwidget.cpp" line="427"/>
+        <location filename="../filesystemlistwidget.cpp" line="70"/>
+        <location filename="../filesystemlistwidget.cpp" line="440"/>
         <source>Used</source>
         <translation>Kullanılan</translation>
     </message>
     <message>
-        <location filename="../filesystemlistwidget.cpp" line="502"/>
+        <location filename="../filesystemlistwidget.cpp" line="515"/>
         <source>No File System Info</source>
         <translation>Dosya Sistemi Bilgisi Yok</translation>
     </message>
@@ -265,84 +265,84 @@
     <name>MonitorTitleWidget</name>
     <message>
         <location filename="../monitortitlewidget.cpp" line="84"/>
-        <location filename="../monitortitlewidget.cpp" line="556"/>
+        <location filename="../monitortitlewidget.cpp" line="533"/>
         <source>Active Processes</source>
         <translation>Aktif Süreçler</translation>
     </message>
     <message>
         <location filename="../monitortitlewidget.cpp" line="85"/>
-        <location filename="../monitortitlewidget.cpp" line="560"/>
+        <location filename="../monitortitlewidget.cpp" line="537"/>
         <source>My Processes</source>
         <translation>Süreçlerim</translation>
     </message>
     <message>
         <location filename="../monitortitlewidget.cpp" line="86"/>
-        <location filename="../monitortitlewidget.cpp" line="564"/>
+        <location filename="../monitortitlewidget.cpp" line="541"/>
         <source>All Process</source>
         <translation>Tüm İşlemler</translation>
     </message>
     <message>
-        <location filename="../monitortitlewidget.cpp" line="399"/>
+        <location filename="../monitortitlewidget.cpp" line="376"/>
         <source>Kylin System Monitor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../monitortitlewidget.cpp" line="435"/>
+        <location filename="../monitortitlewidget.cpp" line="412"/>
         <source>menu</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../monitortitlewidget.cpp" line="443"/>
+        <location filename="../monitortitlewidget.cpp" line="420"/>
         <source>theme</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../monitortitlewidget.cpp" line="444"/>
+        <location filename="../monitortitlewidget.cpp" line="421"/>
         <source>help</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../monitortitlewidget.cpp" line="445"/>
+        <location filename="../monitortitlewidget.cpp" line="422"/>
         <source>about</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../monitortitlewidget.cpp" line="446"/>
+        <location filename="../monitortitlewidget.cpp" line="423"/>
         <source>quit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../monitortitlewidget.cpp" line="454"/>
+        <location filename="../monitortitlewidget.cpp" line="431"/>
         <source>following theme</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../monitortitlewidget.cpp" line="455"/>
+        <location filename="../monitortitlewidget.cpp" line="432"/>
         <source>dark theme</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../monitortitlewidget.cpp" line="456"/>
+        <location filename="../monitortitlewidget.cpp" line="433"/>
         <source>light theme</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../monitortitlewidget.cpp" line="484"/>
+        <location filename="../monitortitlewidget.cpp" line="461"/>
         <source>minimize</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../monitortitlewidget.cpp" line="493"/>
+        <location filename="../monitortitlewidget.cpp" line="470"/>
         <source>maximize/restore</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../monitortitlewidget.cpp" line="501"/>
+        <location filename="../monitortitlewidget.cpp" line="478"/>
         <source>close</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../monitortitlewidget.cpp" line="709"/>
+        <location filename="../monitortitlewidget.cpp" line="683"/>
         <source>Search</source>
         <translation type="unfinished"></translation>
     </message>
@@ -363,17 +363,17 @@
         <translation type="vanished">:/img/close.png</translation>
     </message>
     <message>
-        <location filename="../monitortitlewidget.cpp" line="616"/>
+        <location filename="../monitortitlewidget.cpp" line="593"/>
         <source>Processes</source>
         <translation>Süreçler</translation>
     </message>
     <message>
-        <location filename="../monitortitlewidget.cpp" line="621"/>
+        <location filename="../monitortitlewidget.cpp" line="600"/>
         <source>Resources</source>
         <translation>Kaynaklar</translation>
     </message>
     <message>
-        <location filename="../monitortitlewidget.cpp" line="626"/>
+        <location filename="../monitortitlewidget.cpp" line="607"/>
         <source>File Systems</source>
         <translation>Dosya Sistemi</translation>
     </message>
@@ -482,6 +482,14 @@
     </message>
 </context>
 <context>
+    <name>ProcPropertiesDlg</name>
+    <message>
+        <location filename="../gui/procpropertiesdlg.cpp" line="118"/>
+        <source>OK</source>
+        <translation type="unfinished">Tamam</translation>
+    </message>
+</context>
+<context>
     <name>ProcessCategory</name>
     <message>
         <location filename="../processcategory.cpp" line="38"/>
@@ -502,91 +510,106 @@
 <context>
     <name>ProcessDialog</name>
     <message>
-        <location filename="../processdialog.cpp" line="144"/>
-        <location filename="../processdialog.cpp" line="948"/>
-        <location filename="../processdialog.cpp" line="951"/>
+        <location filename="../processdialog.cpp" line="142"/>
+        <location filename="../processdialog.cpp" line="904"/>
+        <location filename="../processdialog.cpp" line="907"/>
         <source>End process</source>
         <translation>İşlemi bitir</translation>
     </message>
     <message>
-        <location filename="../processdialog.cpp" line="948"/>
+        <location filename="../processdialog.cpp" line="904"/>
         <source>Ending a process may destroy data, break the session or introduce a security risk. Only unresponsive processes should be ended.
 Are you sure to continue?</source>
         <translation>Bir işlemi sonlandırmak verileri yok edebilir, oturumu bozabilir veya güvenlik riski oluşturabilir. Sadece tepkisiz süreçler sona erdirilmelidir.
 Devam etmek istediğinizden emin misiniz?</translation>
     </message>
     <message>
-        <location filename="../processdialog.cpp" line="937"/>
-        <location filename="../processdialog.cpp" line="950"/>
+        <location filename="../processdialog.cpp" line="892"/>
+        <location filename="../processdialog.cpp" line="906"/>
         <source>Cancel</source>
         <translation>İptal</translation>
     </message>
     <message>
-        <location filename="../processdialog.cpp" line="146"/>
-        <location filename="../processdialog.cpp" line="935"/>
-        <location filename="../processdialog.cpp" line="938"/>
+        <location filename="../processdialog.cpp" line="144"/>
+        <location filename="../processdialog.cpp" line="890"/>
+        <location filename="../processdialog.cpp" line="893"/>
         <source>Kill process</source>
         <translation>İşlemi öldür</translation>
     </message>
     <message>
-        <location filename="../processdialog.cpp" line="935"/>
+        <location filename="../processdialog.cpp" line="890"/>
         <source>Killing a process may destroy data, break the session or introduce a security risk. Only unresponsive processes should be killed.
 Are you sure to continue?</source>
         <translation>Bir işlemi öldürmek verileri yok edebilir, oturumu bozabilir veya güvenlik riski oluşturabilir. Sadece tepkisiz süreçler öldürülmelidir.
 Devam etmek istediğinizden emin misiniz?</translation>
     </message>
     <message>
-        <location filename="../processdialog.cpp" line="140"/>
+        <location filename="../processdialog.cpp" line="138"/>
         <source>Stop process</source>
         <translation>İşlemi durdur</translation>
     </message>
     <message>
-        <location filename="../processdialog.cpp" line="142"/>
+        <location filename="../processdialog.cpp" line="140"/>
         <source>Continue process</source>
         <translation>İşleme devam et</translation>
     </message>
     <message>
-        <location filename="../processdialog.cpp" line="160"/>
+        <location filename="../process/process_list.cpp" line="65"/>
+        <location filename="../processdialog.cpp" line="158"/>
         <source>Very High</source>
         <translation>Çok Yüksek</translation>
     </message>
     <message>
-        <location filename="../processdialog.cpp" line="161"/>
+        <location filename="../process/process_list.cpp" line="66"/>
+        <location filename="../processdialog.cpp" line="159"/>
         <source>High</source>
         <translation>Yüksek</translation>
     </message>
     <message>
-        <location filename="../processdialog.cpp" line="162"/>
+        <location filename="../process/process_list.cpp" line="67"/>
+        <location filename="../processdialog.cpp" line="160"/>
         <source>Normal</source>
         <translation>Normal</translation>
     </message>
     <message>
-        <location filename="../processdialog.cpp" line="163"/>
+        <location filename="../process/process_list.cpp" line="68"/>
+        <location filename="../processdialog.cpp" line="161"/>
         <source>Low</source>
         <translation>Düşük</translation>
     </message>
     <message>
-        <location filename="../processdialog.cpp" line="164"/>
+        <location filename="../process/process_list.cpp" line="69"/>
+        <source>Very low</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../process/process_list.cpp" line="71"/>
+        <source>Invalid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../processdialog.cpp" line="162"/>
         <source>Very Low</source>
         <translation>Çok düşük</translation>
     </message>
     <message>
-        <location filename="../processdialog.cpp" line="165"/>
+        <location filename="../process/process_list.cpp" line="70"/>
+        <location filename="../processdialog.cpp" line="163"/>
         <source>Custom</source>
         <translation>Özel</translation>
     </message>
     <message>
-        <location filename="../processdialog.cpp" line="170"/>
+        <location filename="../processdialog.cpp" line="168"/>
         <source>Change Priority</source>
         <translation>Önceliği Değiştir</translation>
     </message>
     <message>
-        <location filename="../processdialog.cpp" line="172"/>
+        <location filename="../processdialog.cpp" line="170"/>
         <source>Properties</source>
         <translation>Özellikler</translation>
     </message>
     <message>
-        <location filename="../processdialog.cpp" line="328"/>
+        <location filename="../processdialog.cpp" line="305"/>
         <source>Change Priority of Process %1 (PID: %2)</source>
         <translation>%1 Sürecinin Önceliğini Değiştir (PID:%2)</translation>
     </message>
@@ -594,28 +617,28 @@ Devam etmek istediğinizden emin misiniz?</translation>
 <context>
     <name>ProcessListItem</name>
     <message>
-        <location filename="../processlistitem.cpp" line="145"/>
+        <location filename="../processlistitem.cpp" line="175"/>
         <source>Stopped</source>
         <translation>Durduruldu</translation>
     </message>
     <message>
-        <location filename="../processlistitem.cpp" line="147"/>
+        <location filename="../processlistitem.cpp" line="177"/>
         <source>Suspend</source>
         <translation>Askıya al</translation>
     </message>
     <message>
-        <location filename="../processlistitem.cpp" line="149"/>
+        <location filename="../processlistitem.cpp" line="179"/>
         <source>Zombie</source>
         <translation>Zombi</translation>
     </message>
     <message>
-        <location filename="../processlistitem.cpp" line="151"/>
+        <location filename="../processlistitem.cpp" line="181"/>
         <source>No response</source>
         <translation>Cevap yok</translation>
     </message>
     <message>
-        <location filename="../processlistitem.cpp" line="153"/>
-        <location filename="../processlistitem.cpp" line="155"/>
+        <location filename="../processlistitem.cpp" line="183"/>
+        <location filename="../processlistitem.cpp" line="185"/>
         <source>Uninterruptible</source>
         <translation>Kesintisiz</translation>
     </message>
@@ -623,12 +646,14 @@ Devam etmek istediğinizden emin misiniz?</translation>
 <context>
     <name>ProcessListWidget</name>
     <message>
+        <location filename="../model/processtablemodel.cpp" line="166"/>
         <location filename="../processlistwidget.cpp" line="85"/>
-        <location filename="../processlistwidget.cpp" line="900"/>
+        <location filename="../processlistwidget.cpp" line="902"/>
         <source>Process Name</source>
         <translation>İşlem Adı</translation>
     </message>
     <message>
+        <location filename="../model/processtablemodel.cpp" line="170"/>
         <location filename="../processlistwidget.cpp" line="85"/>
         <source>User</source>
         <translation>Kullanıcı</translation>
@@ -638,11 +663,13 @@ Devam etmek istediğinizden emin misiniz?</translation>
         <translation type="vanished">Durum</translation>
     </message>
     <message>
+        <location filename="../model/processtablemodel.cpp" line="177"/>
         <location filename="../processlistwidget.cpp" line="85"/>
         <source>CPU</source>
         <translation>İşlemci</translation>
     </message>
     <message>
+        <location filename="../model/processtablemodel.cpp" line="180"/>
         <location filename="../processlistwidget.cpp" line="85"/>
         <source>ID</source>
         <translation>ID</translation>
@@ -652,27 +679,31 @@ Devam etmek istediğinizden emin misiniz?</translation>
         <translation type="vanished">Komut Satırı</translation>
     </message>
     <message>
+        <location filename="../model/processtablemodel.cpp" line="186"/>
         <location filename="../processlistwidget.cpp" line="85"/>
         <source>Memory</source>
         <translation>Hafıza</translation>
     </message>
     <message>
+        <location filename="../model/processtablemodel.cpp" line="189"/>
         <location filename="../processlistwidget.cpp" line="85"/>
         <source>Priority</source>
         <translation>Öncelik</translation>
     </message>
     <message>
+        <location filename="../model/processtablemodel.cpp" line="174"/>
         <location filename="../processlistwidget.cpp" line="85"/>
         <source>Disk</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../model/processtablemodel.cpp" line="183"/>
         <location filename="../processlistwidget.cpp" line="85"/>
         <source>Flownet Persec</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../processlistwidget.cpp" line="983"/>
+        <location filename="../processlistwidget.cpp" line="985"/>
         <source>No search result</source>
         <translation>Arama sonucu yok</translation>
     </message>
@@ -691,6 +722,156 @@ Devam etmek istediğinizden emin misiniz?</translation>
     </message>
 </context>
 <context>
+    <name>ProcessTableModel</name>
+    <message>
+        <location filename="../model/processtablemodel.cpp" line="223"/>
+        <source>Suspend</source>
+        <translation type="unfinished">Askıya al</translation>
+    </message>
+    <message>
+        <location filename="../model/processtablemodel.cpp" line="226"/>
+        <source>No response</source>
+        <translation type="unfinished">Cevap yok</translation>
+    </message>
+    <message>
+        <location filename="../model/processtablemodel.cpp" line="229"/>
+        <source>Uninterruptible</source>
+        <translation type="unfinished">Kesintisiz</translation>
+    </message>
+</context>
+<context>
+    <name>ProcessTableView</name>
+    <message>
+        <location filename="../gui/processtableview.cpp" line="159"/>
+        <source>No search result</source>
+        <translation type="unfinished">Arama sonucu yok</translation>
+    </message>
+    <message>
+        <location filename="../gui/processtableview.cpp" line="243"/>
+        <source>Stop process</source>
+        <translation type="unfinished">İşlemi durdur</translation>
+    </message>
+    <message>
+        <location filename="../gui/processtableview.cpp" line="245"/>
+        <source>Continue process</source>
+        <translation type="unfinished">İşleme devam et</translation>
+    </message>
+    <message>
+        <location filename="../gui/processtableview.cpp" line="247"/>
+        <location filename="../gui/processtableview.cpp" line="628"/>
+        <location filename="../gui/processtableview.cpp" line="631"/>
+        <source>End process</source>
+        <translation type="unfinished">İşlemi bitir</translation>
+    </message>
+    <message>
+        <location filename="../gui/processtableview.cpp" line="249"/>
+        <location filename="../gui/processtableview.cpp" line="641"/>
+        <location filename="../gui/processtableview.cpp" line="644"/>
+        <source>Kill process</source>
+        <translation type="unfinished">İşlemi öldür</translation>
+    </message>
+    <message>
+        <location filename="../gui/processtableview.cpp" line="263"/>
+        <source>Very High</source>
+        <translation type="unfinished">Çok Yüksek</translation>
+    </message>
+    <message>
+        <location filename="../gui/processtableview.cpp" line="264"/>
+        <source>High</source>
+        <translation type="unfinished">Yüksek</translation>
+    </message>
+    <message>
+        <location filename="../gui/processtableview.cpp" line="265"/>
+        <source>Normal</source>
+        <translation type="unfinished">Normal</translation>
+    </message>
+    <message>
+        <location filename="../gui/processtableview.cpp" line="266"/>
+        <source>Low</source>
+        <translation type="unfinished">Düşük</translation>
+    </message>
+    <message>
+        <location filename="../gui/processtableview.cpp" line="267"/>
+        <source>Very Low</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../gui/processtableview.cpp" line="268"/>
+        <source>Custom</source>
+        <translation type="unfinished">Özel</translation>
+    </message>
+    <message>
+        <location filename="../gui/processtableview.cpp" line="273"/>
+        <source>Change Priority</source>
+        <translation type="unfinished">Önceliği Değiştir</translation>
+    </message>
+    <message>
+        <location filename="../gui/processtableview.cpp" line="275"/>
+        <source>Properties</source>
+        <translation type="unfinished">Özellikler</translation>
+    </message>
+    <message>
+        <location filename="../gui/processtableview.cpp" line="296"/>
+        <source>User</source>
+        <translation type="unfinished">Kullanıcı</translation>
+    </message>
+    <message>
+        <location filename="../gui/processtableview.cpp" line="303"/>
+        <source>Disk</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../gui/processtableview.cpp" line="310"/>
+        <source>CPU</source>
+        <translation type="unfinished">İşlemci</translation>
+    </message>
+    <message>
+        <location filename="../gui/processtableview.cpp" line="317"/>
+        <source>ID</source>
+        <translation type="unfinished">ID</translation>
+    </message>
+    <message>
+        <location filename="../gui/processtableview.cpp" line="324"/>
+        <source>Flownet Persec</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../gui/processtableview.cpp" line="331"/>
+        <source>Memory</source>
+        <translation type="unfinished">Hafıza</translation>
+    </message>
+    <message>
+        <location filename="../gui/processtableview.cpp" line="338"/>
+        <source>Priority</source>
+        <translation type="unfinished">Öncelik</translation>
+    </message>
+    <message>
+        <location filename="../gui/processtableview.cpp" line="628"/>
+        <source>Ending a process may destroy data, break the session or introduce a security risk. Only unresponsive processes should be ended.
+Are you sure to continue?</source>
+        <translation type="unfinished">Bir işlemi sonlandırmak verileri yok edebilir, oturumu bozabilir veya güvenlik riski oluşturabilir. Sadece tepkisiz süreçler sona erdirilmelidir.
+Devam etmek istediğinizden emin misiniz?</translation>
+    </message>
+    <message>
+        <location filename="../gui/processtableview.cpp" line="630"/>
+        <location filename="../gui/processtableview.cpp" line="643"/>
+        <source>Cancel</source>
+        <translation type="unfinished">İptal</translation>
+    </message>
+    <message>
+        <location filename="../gui/processtableview.cpp" line="641"/>
+        <source>Killing a process may destroy data, break the session or introduce a security risk. Only unresponsive processes should be killed.
+Are you sure to continue?</source>
+        <translation type="unfinished">Bir işlemi öldürmek verileri yok edebilir, oturumu bozabilir veya güvenlik riski oluşturabilir. Sadece tepkisiz süreçler öldürülmelidir.
+Devam etmek istediğinizden emin misiniz?</translation>
+    </message>
+    <message>
+        <location filename="../gui/processtableview.cpp" line="682"/>
+        <source>Change Priority of Process %1 (PID: %2)</source>
+        <translation type="unfinished">%1 Sürecinin Önceliğini Değiştir (PID:%2)</translation>
+    </message>
+</context>
+<context>
     <name>PropertiesDialog</name>
     <message>
         <location filename="../propertiesdialog.cpp" line="141"/>
@@ -706,16 +887,22 @@ Devam etmek istediğinizden emin misiniz?</translation>
         <translation>Yürütülüyor</translation>
     </message>
     <message>
+        <location filename="../model/processtablemodel.cpp" line="222"/>
+        <location filename="../model/processtablemodel.cpp" line="305"/>
         <location filename="../util.cpp" line="323"/>
         <source>Stopped</source>
         <translation>Durduruldu</translation>
     </message>
     <message>
+        <location filename="../model/processtablemodel.cpp" line="225"/>
+        <location filename="../model/processtablemodel.cpp" line="308"/>
         <location filename="../util.cpp" line="327"/>
         <source>Zombie</source>
         <translation>Ölü</translation>
     </message>
     <message>
+        <location filename="../model/processtablemodel.cpp" line="228"/>
+        <location filename="../model/processtablemodel.cpp" line="311"/>
         <location filename="../util.cpp" line="331"/>
         <source>Uninterruptible</source>
         <translation>Kesintisiz</translation>
@@ -827,8 +1014,11 @@ Devam etmek istediğinizden emin misiniz?</translation>
         <translation>KB/s</translation>
     </message>
     <message>
+        <location filename="../model/processtablemodel.cpp" line="49"/>
         <location filename="../newresource/newresourcesdialog.cpp" line="83"/>
         <location filename="../newresource/newresourcesdialog.cpp" line="226"/>
+        <location filename="../processlistitem.cpp" line="46"/>
+        <location filename="../processlistitem.cpp" line="286"/>
         <source>MiB</source>
         <translation>MB</translation>
     </message>
@@ -892,26 +1082,31 @@ Devam etmek istediğinizden emin misiniz?</translation>
         <translation type="vanished">%1 gün</translation>
     </message>
     <message>
+        <location filename="../gui/procpropertiesdlg.cpp" line="144"/>
         <location filename="../propertiesdialog.cpp" line="167"/>
         <source>User name:</source>
         <translation>Kullanıcı Adı:</translation>
     </message>
     <message>
+        <location filename="../gui/procpropertiesdlg.cpp" line="144"/>
         <location filename="../propertiesdialog.cpp" line="167"/>
         <source>Process name:</source>
         <translation>İşlem Adı:</translation>
     </message>
     <message>
+        <location filename="../gui/procpropertiesdlg.cpp" line="144"/>
         <location filename="../propertiesdialog.cpp" line="167"/>
         <source>Command line:</source>
         <translation>Komut Satırı:</translation>
     </message>
     <message>
+        <location filename="../gui/procpropertiesdlg.cpp" line="144"/>
         <location filename="../propertiesdialog.cpp" line="167"/>
         <source>CPU Time:</source>
         <translation>CPU Zamanı:</translation>
     </message>
     <message>
+        <location filename="../gui/procpropertiesdlg.cpp" line="144"/>
         <location filename="../propertiesdialog.cpp" line="167"/>
         <source>Started Time:</source>
         <translation>Başlama Zamanı:</translation>
@@ -979,7 +1174,7 @@ Devam etmek istediğinizden emin misiniz?</translation>
         <translation type="vanished">Ukui Sistem Monitor</translation>
     </message>
     <message>
-        <location filename="../systemmonitor.cpp" line="74"/>
+        <location filename="../systemmonitor.cpp" line="80"/>
         <source>Kylin System Monitor</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1006,32 +1201,32 @@ Devam etmek istediğinizden emin misiniz?</translation>
     <name>newaboutdialog</name>
     <message>
         <location filename="../newaboutdialog.cpp" line="43"/>
-        <location filename="../newaboutdialog.cpp" line="89"/>
+        <location filename="../newaboutdialog.cpp" line="82"/>
         <source>Kylin System Monitor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../newaboutdialog.cpp" line="99"/>
+        <location filename="../newaboutdialog.cpp" line="92"/>
         <source>close</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../newaboutdialog.cpp" line="128"/>
+        <location filename="../newaboutdialog.cpp" line="121"/>
         <source>kylin system monitor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../newaboutdialog.cpp" line="151"/>
+        <location filename="../newaboutdialog.cpp" line="143"/>
         <source>version: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../newaboutdialog.cpp" line="169"/>
+        <location filename="../newaboutdialog.cpp" line="161"/>
         <source>System monitor is a desktop application that face desktop users of Kylin operating system,It meets the needs of users to monitor the system process, system resources and file system</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../newaboutdialog.cpp" line="187"/>
+        <location filename="../newaboutdialog.cpp" line="179"/>
         <source>Service and support team: support@kylinos.cn</source>
         <translation type="unfinished"></translation>
     </message>

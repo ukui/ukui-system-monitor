@@ -67,6 +67,10 @@ bool ProcessSortFilterProxyModel::filterAcceptsRow(int row, const QModelIndex &p
 
     if (!filter) return false;
 
+    if (filterRegExp().isEmpty()) {
+        return true;
+    }
+    
     bool rc = false;
     const QModelIndex &name = sourceModel()->index(row, ProcessTableModel::ProcessNameColumn, parent);
     // display name or name matches pattern
@@ -77,7 +81,7 @@ bool ProcessSortFilterProxyModel::filterAcceptsRow(int row, const QModelIndex &p
         rc |= name.data(Qt::UserRole).toString().contains(filterRegExp());
         if (rc) return rc;
 
-        if (QLocale::system().language() == QLocale::Chinese) {
+        if (!m_hanwords.isEmpty() && QLocale::system().language() == QLocale::Chinese) {
             // pinyin matches pattern
             rc |= name.data(Qt::UserRole).toString().contains(m_hanwords);
             if (rc) return rc;

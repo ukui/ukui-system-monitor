@@ -23,6 +23,11 @@
 
 #include "ktableview.h"
 #include "process/process_list.h"
+#include "../widgets/mydialog.h"
+#include "../widgets/myactiongroup.h"
+#include "../widgets/myactiongroupitem.h"
+#include "../widgets/myaction.h"
+#include "../renicedialog.h"
 
 #include <QLabel>
 #include <QTreeView>
@@ -67,37 +72,61 @@ public:
 signals:
     void changeSortStatus(int index, bool isSort);
     void changeRefreshFilter(QString strFilter);
+    void startScanProcess();
+    void stopScanProcess();
+    void changeColumnVisible(int index, bool visible, QList<bool> columnVisible);
+    void closeDialog();
 
 public Q_SLOTS:
     /**
-     * @brief End process handler
+     * @brief focus on this widget
      */
-    void endProcess();
+    void focusProcessView();
     /**
-     * @brief Pause process handler
+     * @brief stop process
      */
-    void pauseProcess();
+    void stopProcesses();
     /**
-     * @brief Resume process handler
+     * @brief continue process
      */
-    void resumeProcess();
+    void continueProcesses();
     /**
-     * @brief Open process bin dir handler
+     * @brief end process
      */
-    void openExecDirWithFM();
+    void endProcesses();
     /**
-     * @brief Show process attribute handler
+     * @brief kill process
      */
-    void showProperties();
+    void killProcesses();
     /**
-     * @brief Kill process handler
+     * @brief show process properties
      */
-    void killProcess();
+    void showPropertiesDialog();
+    /**
+     * @brief show end proc dialog
+     */
+    void showEndProcessDialog();
+    /**
+     * @brief show kill proc dialog
+     */
+    void showKillProcessDialog();
+    /**
+     * @brief on end dialog btn clicked
+     */
+    void endDialogButtonClicked(int index, QString buttonText);
+    /**
+     * @brief on kill dialog btn clicked
+     */
+    void killDialogButtonClicked(int index, QString buttonText);
+    /**
+     * @brief change process priority
+     */
+    void changeProcPriority(int nice);
     /**
      * @brief Filter process handler
      * @param text Text to be filtered out
      */
-    void search(const QString &text);
+    void onSearch(const QString text);
     /**
      * @brief Switch process display mode
      * @param type Process display mode
@@ -113,8 +142,25 @@ public Q_SLOTS:
      * @param index filter index
      */
     void onChangeProcessFilter(int index);
+    /**
+     * @brief do search focus in event
+     */
+    void onSearchFocusIn();
+    /**
+     * @brief do search focus out event
+     */
+    void onSearchFocusOut();
 
 protected:
+    /**
+     * @brief Load process table view backup settings
+     * @return Settings load success or not
+     */
+    bool loadSettings();
+    /**
+     * @brief Backup process table view settings
+     */
+    void saveSettings();
     /**
      * @brief Initialize ui components
      * @param Backup settings loaded or not flag
@@ -167,10 +213,6 @@ private:
      * @brief Adjust search result tip label's position & visibility
      */
     void adjustInfoLabelVisibility();
-    /**
-     * @brief Customize process priority handler
-     */
-    void customizeProcessPriority();
 
 private:
     // Process model for process table view
@@ -203,6 +245,8 @@ private:
     QSettings *m_proSettings = nullptr;
     // filter type
     QString m_strFilter = "all";
+    // change nice dialog
+    ReniceDialog *m_dlgRenice = nullptr;
 };
 
 #endif  // __PROCESSTABLEVIEW_H__

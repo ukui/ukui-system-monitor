@@ -409,7 +409,7 @@ void ProcessDialog::refreshProcessList()
     }
 
     pid_list = glibtop_get_proclist(&proclist, which, arg);
-
+    qDebug()<<__FUNCTION__<<"scan process list info:param:"<<which<<"|"<<arg<<",size:"<<proclist.number;
     // FIXME: not sure if glibtop always returns a sorted list of pid
     // but it is important otherwise refresh_list won't find the parent
     std::sort(pid_list, pid_list + proclist.number);
@@ -579,7 +579,7 @@ void ProcessDialog::refreshProcessList()
             icon_pixmap = defaultPixmap;
             icon_pixmap.setDevicePixelRatio(qApp->devicePixelRatio());
         } else {
-            //icon_pixmap = getAppIconFromDesktopFile(desktopFile, 24);
+            icon_pixmap = getAppIconFromDesktopFile(desktopFile, 24);
             if (icon_pixmap.isNull()) {
                 icon_pixmap = defaultPixmap;
                 icon_pixmap.setDevicePixelRatio(qApp->devicePixelRatio());

@@ -25,6 +25,7 @@
 #include <QObject>
 #include <QBasicTimer>
 #include <QThread>
+#include <QTimerEvent>
 
 #include <memory>
 
@@ -75,6 +76,11 @@ public:
 public slots:
     void updateProcMonitorInfo();
     void onChangeRefreshFilter(QString strFilter);
+    void onStartScanProcess();
+    void onStopScanProcess();
+
+protected:
+    void timerEvent(QTimerEvent *event);
 
 private:
     ProcessList *m_processList = nullptr;

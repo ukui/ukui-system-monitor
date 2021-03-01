@@ -178,6 +178,8 @@ public:
     void updateProcessPriority(pid_t pid, qulonglong priority);
     void refresh();
     void setScanFilter(QString strFilter);
+    void connectNetStateRefresh();
+    void disconnectNetStateRefresh();
 
 public slots:
     void endProcess(pid_t pid);

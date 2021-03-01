@@ -25,7 +25,10 @@
 #include "process/process_list.h"
 #include "process/process_monitor.h"
 #include "../shell/macro.h"
+#include "procpropertiesdlg.h"
 
+#include <sys/types.h>
+#include <unistd.h>
 #include <QApplication>
 #include <QDialog>
 #include <QErrorMessage>
@@ -61,15 +64,10 @@ ProcessTableView::ProcessTableView(QSettings* proSettings, QWidget *parent)
     setModel(m_proxyModel);
 
     // load process table view backup settings
-    bool settingsLoaded = false;
-    connect(this,SIGNAL(changeRefreshFilter(QString)),
-        ProcessMonitorThread::instance()->procMonitorInstance(),SLOT(onChangeRefreshFilter(QString)));
-    if (proSettings) {
-        proSettings->beginGroup("PROCESS");
-        m_strFilter = proSettings->value("WhoseProcesses", m_strFilter).toString();
-        proSettings->endGroup();
-        ProcessMonitorThread::instance()->procMonitorInstance()->processList()->setScanFilter(m_strFilter);
-    }
+    bool settingsLoaded = loadSettings();
+
+    // init first scanproc filter
+    ProcessMonitorThread::instance()->procMonitorInstance()->processList()->setScanFilter(m_strFilter);
 
     // initialize ui components & connections
     initUI(settingsLoaded);
@@ -109,50 +107,14 @@ void ProcessTableView::displayCurrentUserProcess()
     emit changeRefreshFilter(m_strFilter);
 }
 
-// end process handler
-void ProcessTableView::endProcess()
+// focus on this widget
+void ProcessTableView::focusProcessView()
 {
-    // no selected item, do nothing
-    if (m_selectedPID.isNull()) {
-        return;
-    }
-}
-
-// pause process handler
-void ProcessTableView::pauseProcess()
-{
-    auto pid = qvariant_cast<pid_t>(m_selectedPID);
-}
-
-// resume process handler
-void ProcessTableView::resumeProcess()
-{
-    auto pid = qvariant_cast<pid_t>(m_selectedPID);
-    //no selected item or app self been selected, then do nothing
-}
-
-// open process bin path in file manager
-void ProcessTableView::openExecDirWithFM()
-{
-}
-
-// show process attribute dialog
-void ProcessTableView::showProperties()
-{
-}
-
-// kill process handler
-void ProcessTableView::killProcess()
-{
-    // no selected item, do nothing
-    if (m_selectedPID.isNull()) {
-        return;
-    }
-
+    QTimer::singleShot(100, this, SLOT(setFocus()));
 }
 
 // filter process table based on searched text
-void ProcessTableView::search(const QString &text)
+void ProcessTableView::onSearch(const QString text)
 {
     m_proxyModel->setSortFilterString(text);
     // adjust search result tip label's visibility & position if needed
@@ -185,12 +147,7 @@ void ProcessTableView::onChangeProcessFilter(int index)
             this->displayAllProcess();
     }
 
-    if (m_proSettings) {
-        m_proSettings->beginGroup("PROCESS");
-        m_proSettings->setValue("WhoseProcesses", m_strFilter);
-        m_proSettings->endGroup();
-        m_proSettings->sync();
-    }
+    saveSettings();
 }
 
 // initialize ui components
@@ -199,13 +156,10 @@ void ProcessTableView::initUI(bool settingsLoaded)
     setAccessibleName("ProcessTableView");
 
     // search result not found tip label instance
-    m_notFoundLabel = new QLabel(tr("No search results"), this);
-    //QFontSizeManager::instance()->bind(m_notFoundLabel, QFontSizeManager::T4);
-    // change text color
-    auto palette = m_notFoundLabel->palette();//QApplicationHelper::instance()->palette(m_notFoundLabel);
-    QColor labelColor = palette.color(QPalette::PlaceholderText);
-    palette.setColor(QPalette::Text, labelColor);
-    m_notFoundLabel->setPalette(palette);
+    m_notFoundLabel = new QLabel(tr("No search result"), this);
+    QFont font = m_notFoundLabel->font() ;
+    font.setPointSize(22);
+    m_notFoundLabel->setFont(font);
     m_notFoundLabel->setVisible(false);
 
     // header view options
@@ -235,51 +189,200 @@ void ProcessTableView::initUI(bool settingsLoaded)
 
     // context menu & header context menu instance
     m_contextMenu = new QMenu(this);
+    m_contextMenu->setObjectName("MonitorMenu");
     m_headerContextMenu = new QMenu(this);
+    m_headerContextMenu->setObjectName("MonitorMenu");
 
-    // if no backup settings loaded, show default style
+    // show default style
+    // proc name
+    setColumnWidth(ProcessTableModel::ProcessNameColumn, namepadding);
+    // account
+    setColumnWidth(ProcessTableModel::ProcessUserColumn, userpadding);
+    // diskio
+    setColumnWidth(ProcessTableModel::ProcessDiskIoColumn, diskpadding);
+    // cpu
+    setColumnWidth(ProcessTableModel::ProcessCpuColumn, cpupadding);
+    // pid
+    setColumnWidth(ProcessTableModel::ProcessIdColumn, idpadding);
+    // flownet
+    setColumnWidth(ProcessTableModel::ProcessFlowNetColumn, networkpadding);
+    // memory
+    setColumnWidth(ProcessTableModel::ProcessMemoryColumn, memorypadding);
+    // priority
+    setColumnWidth(ProcessTableModel::ProcessNiceColumn, prioritypadding);
+
     if (!settingsLoaded) {
-        // proc name
-        setColumnWidth(ProcessTableModel::ProcessNameColumn, namepadding);
         setColumnHidden(ProcessTableModel::ProcessNameColumn, false);
-
-        // account
-        setColumnWidth(ProcessTableModel::ProcessUserColumn, userpadding);
         setColumnHidden(ProcessTableModel::ProcessUserColumn, false);
-
-        // diskio
-        setColumnWidth(ProcessTableModel::ProcessDiskIoColumn, diskpadding);
         setColumnHidden(ProcessTableModel::ProcessDiskIoColumn, false);
-
-        // cpu
-        setColumnWidth(ProcessTableModel::ProcessCpuColumn, cpupadding);
         setColumnHidden(ProcessTableModel::ProcessCpuColumn, false);
-
-        // pid
-        setColumnWidth(ProcessTableModel::ProcessIdColumn, idpadding);
         setColumnHidden(ProcessTableModel::ProcessIdColumn, false);
-
-        // flownet
-        setColumnWidth(ProcessTableModel::ProcessFlowNetColumn, networkpadding);
         setColumnHidden(ProcessTableModel::ProcessFlowNetColumn, false);
-
-        // memory
-        setColumnWidth(ProcessTableModel::ProcessMemoryColumn, memorypadding);
         setColumnHidden(ProcessTableModel::ProcessMemoryColumn, false);
-
-        // priority
-        setColumnWidth(ProcessTableModel::ProcessNiceColumn, prioritypadding);
         setColumnHidden(ProcessTableModel::ProcessNiceColumn, false);
 
         //sort
         sortByColumn(ProcessTableModel::ProcessCpuColumn, Qt::DescendingOrder);
     }
+    saveSettings();
 }
 
 // initialize connections
 void ProcessTableView::initConnections(bool settingsLoaded)
 {
+    connect(this,SIGNAL(changeRefreshFilter(QString)),
+        ProcessMonitorThread::instance()->procMonitorInstance(),SLOT(onChangeRefreshFilter(QString)));
+    connect(this,SIGNAL(startScanProcess()),
+        ProcessMonitorThread::instance()->procMonitorInstance(),SLOT(onStartScanProcess()));
+    connect(this,SIGNAL(stopScanProcess()),
+        ProcessMonitorThread::instance()->procMonitorInstance(),SLOT(onStopScanProcess()));
 
+    // table context menu
+    connect(this, &ProcessTableView::customContextMenuRequested, this,
+            &ProcessTableView::displayProcessTableContextMenu);
+    auto *stopAction = new QAction(tr("Stop process"), this);
+    connect(stopAction, &QAction::triggered, this, &ProcessTableView::stopProcesses);
+    auto *continueAction = new QAction(tr("Continue process"), this);
+    connect(continueAction, &QAction::triggered, this, &ProcessTableView::continueProcesses);
+    auto *endAction = new QAction(tr("End process"), this);
+    connect(endAction, &QAction::triggered, this, &ProcessTableView::showEndProcessDialog);
+    auto *killAction = new QAction(tr("Kill process"), this);
+    connect(killAction, &QAction::triggered, this, &ProcessTableView::showKillProcessDialog);
+
+    auto *priorityGroup = new MyActionGroup(this);
+    auto *veryHighAction = new MyActionGroupItem(this, priorityGroup, "very_high_action", -20);
+    auto *highAction = new MyActionGroupItem(this, priorityGroup, "high_action", -5);
+    auto *normalAction = new MyActionGroupItem(this, priorityGroup, "normal_action", 0);
+    auto *lowAction = new MyActionGroupItem(this, priorityGroup, "low_action", 5);
+    auto *veryLowAction = new MyActionGroupItem(this, priorityGroup, "very_low_action", 19);
+    auto *customAction = new MyActionGroupItem(this, priorityGroup, "custom_action", 32);
+    {
+        QAction *sep = new QAction(priorityGroup);
+        sep->setSeparator(true);
+    }
+    veryHighAction->change(tr("Very High"));
+    highAction->change(tr("High"));
+    normalAction->change(tr("Normal"));
+    lowAction->change(tr("Low"));
+    veryLowAction->change(tr("Very Low"));
+    customAction->change(tr("Custom"));
+    connect(priorityGroup, SIGNAL(activated(int)), this, SLOT(changeProcPriority(int)));
+    auto *priorityMenu = new QMenu();
+    priorityMenu->setObjectName("MonitorMenu");
+    priorityMenu->addActions(priorityGroup->actions());
+    priorityMenu->menuAction()->setText(tr("Change Priority"));
+
+    auto *propertiyAction = new QAction(tr("Properties"), this);
+    connect(propertiyAction, &QAction::triggered, this, &ProcessTableView::showPropertiesDialog);
+    
+    m_contextMenu->addAction(stopAction);//停止
+    m_contextMenu->addAction(continueAction);//继续进程
+    m_contextMenu->addAction(endAction);//结束
+    m_contextMenu->addAction(killAction);//杀死
+    m_contextMenu->addSeparator();
+    m_contextMenu->addMenu(priorityMenu);
+    m_contextMenu->addSeparator();
+    m_contextMenu->addAction(propertiyAction);
+
+    auto *h = header();
+    connect(h, &QHeaderView::sectionResized, this, [ = ]() { saveSettings(); });
+    connect(h, &QHeaderView::sectionMoved, this, [ = ]() { saveSettings(); });
+    connect(h, &QHeaderView::sortIndicatorChanged, this, [ = ]() { saveSettings(); });
+    connect(h, &QHeaderView::customContextMenuRequested, this,
+            &ProcessTableView::displayProcessTableHeaderContextMenu);
+
+    // header context menu
+    // user action
+    auto *userHeaderAction = m_headerContextMenu->addAction(tr("User"));
+    userHeaderAction->setCheckable(true);
+    connect(userHeaderAction, &QAction::triggered, this, [this](bool b) {
+        header()->setSectionHidden(ProcessTableModel::ProcessUserColumn, !b);
+        saveSettings();
+    });
+    // diskio action
+    auto *diskioHeaderAction = m_headerContextMenu->addAction(tr("Disk"));
+    diskioHeaderAction->setCheckable(true);
+    connect(diskioHeaderAction, &QAction::triggered, this, [this](bool b) {
+        header()->setSectionHidden(ProcessTableModel::ProcessDiskIoColumn, !b);
+        saveSettings();
+    });
+    // cpu action
+    auto *cpuHeaderAction = m_headerContextMenu->addAction(tr("CPU"));
+    cpuHeaderAction->setCheckable(true);
+    connect(cpuHeaderAction, &QAction::triggered, this, [this](bool b) {
+        header()->setSectionHidden(ProcessTableModel::ProcessCpuColumn, !b);
+        saveSettings();
+    });
+    // id action
+    auto *idHeaderAction = m_headerContextMenu->addAction(tr("ID"));
+    idHeaderAction->setCheckable(true);
+    connect(idHeaderAction, &QAction::triggered, this, [this](bool b) {
+        header()->setSectionHidden(ProcessTableModel::ProcessIdColumn, !b);
+        saveSettings();
+    });
+    // flownet action
+    auto *flownetHeaderAction = m_headerContextMenu->addAction(tr("Flownet Persec"));
+    flownetHeaderAction->setCheckable(true);
+    connect(flownetHeaderAction, &QAction::triggered, this, [this](bool b) {
+        header()->setSectionHidden(ProcessTableModel::ProcessFlowNetColumn, !b);
+        saveSettings();
+    });
+    // memory action
+    auto *memHeaderAction = m_headerContextMenu->addAction(tr("Memory"));
+    memHeaderAction->setCheckable(true);
+    connect(memHeaderAction, &QAction::triggered, this, [this](bool b) {
+        header()->setSectionHidden(ProcessTableModel::ProcessMemoryColumn, !b);
+        saveSettings();
+    });
+    // priority action
+    auto *priHeaderAction = m_headerContextMenu->addAction(tr("Priority"));
+    priHeaderAction->setCheckable(true);
+    connect(priHeaderAction, &QAction::triggered, this, [this](bool b) {
+        header()->setSectionHidden(ProcessTableModel::ProcessNiceColumn, !b);
+        saveSettings();
+    });
+
+    // set default header context menu checkable state when settings load without success
+    if (!settingsLoaded) {
+        userHeaderAction->setChecked(true);
+        diskioHeaderAction->setChecked(true);
+        cpuHeaderAction->setChecked(true);
+        idHeaderAction->setChecked(true);
+        flownetHeaderAction->setChecked(true);
+        memHeaderAction->setChecked(true);
+        priHeaderAction->setChecked(true);
+    }
+    // set header context menu checkable state based on current header section's visible state before popup
+    connect(m_headerContextMenu, &QMenu::aboutToShow, this, [ = ]() {
+        bool b;
+        b = header()->isSectionHidden(ProcessTableModel::ProcessUserColumn);
+        userHeaderAction->setChecked(!b);
+        b = header()->isSectionHidden(ProcessTableModel::ProcessDiskIoColumn);
+        diskioHeaderAction->setChecked(!b);
+        b = header()->isSectionHidden(ProcessTableModel::ProcessCpuColumn);
+        cpuHeaderAction->setChecked(!b);
+        b = header()->isSectionHidden(ProcessTableModel::ProcessIdColumn);
+        idHeaderAction->setChecked(!b);
+        b = header()->isSectionHidden(ProcessTableModel::ProcessFlowNetColumn);
+        flownetHeaderAction->setChecked(!b);
+        b = header()->isSectionHidden(ProcessTableModel::ProcessMemoryColumn);
+        memHeaderAction->setChecked(!b);
+        b = header()->isSectionHidden(ProcessTableModel::ProcessNiceColumn);
+        priHeaderAction->setChecked(!b);
+    });
+
+    // on each model update, we restore settings, adjust search result tip lable's visibility & positon, select the same process item before update if any
+    connect(m_model, &ProcessTableModel::modelUpdated, this, [&]() {
+        loadSettings();
+        adjustInfoLabelVisibility();
+        if (m_selectedPID.isValid()) {
+            for (int i = 0; i < m_proxyModel->rowCount(); i++) {
+                if (m_proxyModel->data(m_proxyModel->index(i, ProcessTableModel::ProcessIdColumn),
+                                       Qt::UserRole) == m_selectedPID)
+                    this->setCurrentIndex(m_proxyModel->index(i, 0));
+            }
+        }
+    });
 }
 
 // show process table view context menu on specified positon
@@ -337,7 +440,7 @@ int ProcessTableView::sizeHintForColumn(int column) const
     QStyleOptionHeader option;
     option.initFrom(this);
     QStyle *style = dynamic_cast<QStyle *>(QApplication::style());
-    int margin = 10;//style->pixelMetric(QStyle::PM_ContentsMargins, &option);
+    int margin = 10;
     return std::max(header()->sizeHintForColumn(column) + margin * 2,
                     QTreeView::sizeHintForColumn(column) + margin * 2);
 }
@@ -347,17 +450,273 @@ void ProcessTableView::adjustInfoLabelVisibility()
 {
     setUpdatesEnabled(false);
     // show search not found label only when proxy model is empty & search text input is none empty
-    // m_notFoundLabel->setVisible(m_proxyModel->rowCount() == 0
-    //                            && gApp->mainWindow()->toolbar()->isSearchContentEmpty());
+    m_notFoundLabel->setVisible(m_proxyModel->rowCount() == 0);
     // move label to center of the process table view
     if (m_notFoundLabel->isVisible())
         m_notFoundLabel->move(rect().center() - m_notFoundLabel->rect().center());
     setUpdatesEnabled(true);
 }
 
-// show customize process priority dialog
-void ProcessTableView::customizeProcessPriority()
+void ProcessTableView::onSearchFocusIn()
 {
-    // priority dialog instance
-    
+    // emit stopScanProcess();
+}
+
+void ProcessTableView::onSearchFocusOut()
+{
+    // emit startScanProcess();
+}
+
+// load & restore table view settings from backup storage
+bool ProcessTableView::loadSettings()
+{
+    if (m_proSettings) {
+        m_proSettings->beginGroup("PROCESS");
+        m_strFilter = m_proSettings->value("WhoseProcesses", m_strFilter).toString();
+        m_proSettings->endGroup();
+        m_proSettings->beginGroup("PROCESS");
+        QVariant opt = m_proSettings->value(SETTINGSOPTION_PROCESSTABLEHEADERSTATE);
+        m_proSettings->endGroup();
+        if (opt.isValid()) {
+            QByteArray buf = QByteArray::fromBase64(opt.toByteArray());
+            header()->restoreState(buf);
+            return true;
+        }
+    }
+    return false;
+}
+
+// save table view settings to backup storage
+void ProcessTableView::saveSettings()
+{
+    if (m_proSettings) {
+        m_proSettings->beginGroup("PROCESS");
+        m_proSettings->setValue("WhoseProcesses", m_strFilter);
+        m_proSettings->endGroup();
+        QByteArray buf = header()->saveState();
+        m_proSettings->beginGroup("PROCESS");
+        m_proSettings->setValue(SETTINGSOPTION_PROCESSTABLEHEADERSTATE, buf.toBase64());
+        m_proSettings->endGroup();
+        m_proSettings->sync();
+    }
+}
+
+// stop process
+void ProcessTableView::stopProcesses()
+{
+    if (!m_selectedPID.isValid()) {
+        return ;
+    }
+    pid_t currentPid = getpid();
+    pid_t selectPid = qvariant_cast<pid_t>(m_selectedPID);
+
+    if (selectPid != currentPid) {
+        if (kill(selectPid, SIGSTOP) != 0) {
+            //qDebug() << QString("Stop process %1 failed, permission denied.").arg(pid);
+            QProcess process;
+            process.execute(QString("pkexec %1 %2 %3 ").arg("kill").arg("-STOP").arg(selectPid));
+        }
+    }
+}
+
+// continue process
+void ProcessTableView::continueProcesses()
+{
+    if (!m_selectedPID.isValid()) {
+        return ;
+    }
+    pid_t selectPid = qvariant_cast<pid_t>(m_selectedPID);
+    if (kill(selectPid, SIGCONT) != 0) {
+        //qDebug() << QString("Resume process %1 failed, permission denied.").arg(pid);
+        QProcess process;
+        process.execute(QString("pkexec %1 %2 %3 ").arg("kill").arg("-CONT").arg(selectPid));
+    }
+}
+
+// end process
+void ProcessTableView::endProcesses()
+{
+    int error;
+    if (!m_selectedPID.isValid()) {
+        return ;
+    }
+    pid_t selectPid = qvariant_cast<pid_t>(m_selectedPID);
+    error = kill(selectPid, SIGTERM);
+    if(error != -1)  {
+        //qDebug() << "success.....";
+    }
+    else {
+        //need to be root
+        if(errno == EPERM) {
+            //qDebug() << QString("End process %1 failed, permission denied.").arg(pid);
+
+            if (QFileInfo("/usr/bin/pkexec").exists()) {//sudo apt install policykit-1
+                QProcess process;
+                process.execute(QString("pkexec --disable-internal-agent %1 %2 %3").arg("kill").arg(SIGTERM).arg(selectPid));
+            } else if (QFileInfo("/usr/bin/gksudo").exists()) {//sudo apt install gksu
+                QProcess process;
+                process.execute(QString("gksudo \"%1 %2 %3\"").arg("kill").arg(SIGTERM).arg(selectPid));
+            } else if (QFileInfo("/usr/bin/gksu").exists()) {//sudo apt install gksu
+                QProcess process;
+                process.execute(QString("gksu \"%1 %2 %3\"").arg("kill").arg(SIGTERM).arg(selectPid));
+            } else {
+                qWarning() << "Failed to choose a tool to end process " << selectPid;
+            }
+        }
+    }
+}
+
+// kill process
+void ProcessTableView::killProcesses()
+{
+    int error;
+    if (!m_selectedPID.isValid()) {
+        return ;
+    }
+    pid_t selectPid = qvariant_cast<pid_t>(m_selectedPID);
+    error = kill(selectPid, SIGTERM);
+    if(error != -1)  {
+        //qDebug() << "success.....";
+    }
+    else {
+        //need to be root
+        if(errno == EPERM) {
+            //qDebug() << QString("End process %1 failed, permission denied.").arg(pid);
+
+            if (QFileInfo("/usr/bin/pkexec").exists()) {//sudo apt install policykit-1
+                QProcess process;
+                process.execute(QString("pkexec --disable-internal-agent %1 %2 %3").arg("kill").arg(SIGTERM).arg(selectPid));
+            } else if (QFileInfo("/usr/bin/gksudo").exists()) {//sudo apt install gksu
+                QProcess process;
+                process.execute(QString("gksudo \"%1 %2 %3\"").arg("kill").arg(SIGTERM).arg(selectPid));
+            } else if (QFileInfo("/usr/bin/gksu").exists()) {//sudo apt install gksu
+                QProcess process;
+                process.execute(QString("gksu \"%1 %2 %3\"").arg("kill").arg(SIGTERM).arg(selectPid));
+            } else {
+                qWarning() << "Failed to choose a tool to end process " << selectPid;
+            }
+        }
+    }
+}
+
+// show process properties
+void ProcessTableView::showPropertiesDialog()
+{
+    if (!m_selectedPID.isValid()) {
+        return ;
+    }
+    pid_t selectPid = qvariant_cast<pid_t>(m_selectedPID);
+    foreach (QWidget *widget, QApplication::topLevelWidgets()) {
+        // Show attribute dialog if it has create, avoid create attribute dialog duplicate.
+        if (qobject_cast<const ProcPropertiesDlg*>(widget) != 0) {
+            ProcPropertiesDlg *dialog = qobject_cast<ProcPropertiesDlg*>(widget);
+            if (dialog->getPid() == selectPid) {
+                dialog->show();
+                return;
+            }
+        }
+    }
+
+    ProcPropertiesDlg *dialog = new ProcPropertiesDlg(selectPid, this);
+    dialog->show();
+    dialog->setAttribute(Qt::WA_DeleteOnClose);
+}
+
+// show end proc dialog
+void ProcessTableView::showEndProcessDialog()
+{
+    MyDialog* endProcessDialog = new MyDialog(QString(tr("End process")), QString(tr("Ending a process may destroy data, break the session or introduce a security risk. Only unresponsive processes should be ended.\nAre you sure to continue?")));
+//    endProcessDialog->setWindowFlags(endProcessDialog->windowFlags() | Qt::WindowStaysOnTopHint);
+    endProcessDialog->addButton(QString(tr("Cancel")), false);
+    endProcessDialog->addButton(QString(tr("End process")), true);
+    connect(endProcessDialog, &MyDialog::buttonClicked, this, &ProcessTableView::endDialogButtonClicked);
+    endProcessDialog->show();
+    endProcessDialog->setAttribute(Qt::WA_DeleteOnClose);
+    connect(this,&ProcessTableView::closeDialog,endProcessDialog,&MyDialog::onButtonClicked);
+}
+
+// show kill proc dialog
+void ProcessTableView::showKillProcessDialog()
+{
+    MyDialog* killProcessDialog = new MyDialog(QString(tr("Kill process")), QString(tr("Killing a process may destroy data, break the session or introduce a security risk. Only unresponsive processes should be killed.\nAre you sure to continue?")));
+//    killProcessDialog->setWindowFlags(killProcessDialog->windowFlags() | Qt::WindowStaysOnTopHint);
+    killProcessDialog->addButton(QString(tr("Cancel")), false);
+    killProcessDialog->addButton(QString(tr("Kill process")), true);
+    connect(killProcessDialog, &MyDialog::buttonClicked, this, &ProcessTableView::killDialogButtonClicked);
+    killProcessDialog->show();
+    killProcessDialog->setAttribute(Qt::WA_DeleteOnClose);
+    connect(this,&ProcessTableView::closeDialog,killProcessDialog,&MyDialog::onButtonClicked);
+}
+
+// on end dialog btn clicked
+void ProcessTableView::endDialogButtonClicked(int index, QString buttonText)
+{
+    emit closeDialog();
+    if (index == 1) {//cancel:0   ok:1
+        endProcesses();
+    }
+}
+
+// on kill dialog btn clicked
+void ProcessTableView::killDialogButtonClicked(int index, QString buttonText)
+{
+    emit closeDialog();
+    if (index == 1) {//cancel:0   ok:1
+        killProcesses();
+    }
+}
+
+// change process priority
+void ProcessTableView::changeProcPriority(int nice)
+{
+    //qDebug()<<"nice value"<<nice;
+    if (!m_selectedPID.isValid()) {
+        return ;
+    }
+    pid_t selectPid = qvariant_cast<pid_t>(m_selectedPID);
+    if (nice == 32) {
+        //show renice dialog
+        if (selectPid > -1) {
+            if (ProcessMonitorThread::instance()->procMonitorInstance()->processList()->containsById(selectPid)) {
+                sysmonitor::process::Process info = ProcessMonitorThread::instance()->procMonitorInstance()->processList()->getProcessById(selectPid);
+                m_dlgRenice= new ReniceDialog(tr("Change Priority of Process %1 (PID: %2)").arg(info.getDisplayName()).arg(QString::number(selectPid)));
+                m_dlgRenice->loadData(info.getNice());
+                connect(m_dlgRenice, &ReniceDialog::resetReniceValue, [=] (int value) {
+                    this->changeProcPriority(value);
+                });
+                m_dlgRenice->exec();
+            }
+        }
+    }
+    else {
+        //qDebug()<<"has entered";
+        if (selectPid > -1) {
+            if (ProcessMonitorThread::instance()->procMonitorInstance()->processList()->containsById(selectPid)) {
+                sysmonitor::process::Process info = ProcessMonitorThread::instance()->procMonitorInstance()->processList()->getProcessById(selectPid);
+                if (info.getNice() == nice) {
+                    return;
+                }
+                /*
+                    * renice: sudo apt install bsdutils
+                    * Maybe: QProcess::startDetached(command)
+                    * QProcess::start()与QProcess::execute()都能完成启动外部程序的任务，区别在于start()是非阻塞的，而execute()是阻塞的: execute()=start()+waitforFinished()
+                */
+                if (QFileInfo("/usr/bin/pkexec").exists()) {//sudo apt install policykit-1
+                    QProcess process;
+                    process.execute(QString("pkexec --disable-internal-agent %1 %2 %3").arg("renice").arg(nice).arg(selectPid));
+                }
+                else if (QFileInfo("/usr/bin/gksudo").exists()) {//sudo apt install gksu
+                    QProcess process;
+                    process.execute(QString("gksudo \"%1 %2 %3\"").arg("renice").arg(nice).arg(selectPid));
+                }
+                else if (QFileInfo("/usr/bin/gksu").exists()) {//sudo apt install gksu
+                    QProcess process;
+                    process.execute(QString("gksu \"%1 %2 %3\"").arg("renice").arg(nice).arg(selectPid));
+                }
+                else {
+                    //
+                }
+            }
+        }
+    }
 }

@@ -127,6 +127,7 @@ HEADERS += \
     gui/kheaderview.h \
     gui/ktableview.h \
     gui/processtableview.h \
+    gui/procpropertiesdlg.h \
     process/process_data.h \
     process/process_list.h \
     process/process_monitor.h \
@@ -187,6 +188,7 @@ SOURCES += \
     gui/kheaderview.cpp \
     gui/ktableview.cpp \
     gui/processtableview.cpp \
+    gui/procpropertiesdlg.cpp \
     process/process_list.cpp \
     process/process_monitor.cpp \
     model/processtablemodel.cpp \
