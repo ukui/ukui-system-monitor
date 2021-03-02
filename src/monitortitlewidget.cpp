@@ -48,6 +48,7 @@ MonitorTitleWidget::MonitorTitleWidget(QSettings *settings, QWidget *parent)
 {
     m_animation = nullptr;
     this->setAttribute(Qt::WA_TranslucentBackground);
+    fontSize = DEFAULT_FONT_SIZE;
     m_queryIcon=new QLabel();
     QIcon queryIcon;
     queryIcon = QIcon::fromTheme("preferences-system-search-symbolic");
@@ -103,8 +104,8 @@ MonitorTitleWidget::MonitorTitleWidget(QSettings *settings, QWidget *parent)
     m_searchTimer->setSingleShot(true);
     connect(m_searchTimer, SIGNAL(timeout()), this, SLOT(onRefreshSearchResult()));
 
-    initWidgets();
     initFontSize();
+    initWidgets();
     this->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
     this->installEventFilter(this);
 }
@@ -682,7 +683,6 @@ void MonitorTitleWidget::initWidgets()
     QFont ft;
     ft.setPixelSize(fontSize);
     m_searchEditNew->setFont(ft);
-    //qDebug()<<"font size"<<fontSize;
     m_queryText=new QLabel();
     m_queryText->setText(tr("Search"));
     m_queryWid=new QWidget(m_searchEditNew);
