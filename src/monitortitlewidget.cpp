@@ -274,7 +274,7 @@ bool MonitorTitleWidget::eventFilter(QObject *obj, QEvent *event)    //set the e
                 //qDebug()<<"it is real";
                 m_animation->stop();
                 m_animation->setStartValue(QRectF((m_searchEditNew->width() - (m_queryIcon->width()+m_queryText->width()+10))/2,0,
-                                                 m_queryIcon->width()+m_queryText->width()+30,(m_searchEditNew->height() + 20)/2));
+                                                 m_queryIcon->width()+m_queryText->width()+30,(m_searchEditNew->height() + 30)/2));
                 m_animation->setEndValue(QRectF(0,0,
                                                m_queryIcon->width()+5,(m_searchEditNew->height()+20)/2));
                 m_animation->setEasingCurve(QEasingCurve::OutQuad);
@@ -293,7 +293,7 @@ bool MonitorTitleWidget::eventFilter(QObject *obj, QEvent *event)    //set the e
                 m_animation->setStartValue(QRectF(0,0,
                                                  m_queryIcon->width()+5,(m_searchEditNew->height()+20)/2));
                 m_animation->setEndValue(QRectF((m_searchEditNew->width() - (m_queryIcon->width()+m_queryText->width()+10))/2,0,
-                                               m_queryIcon->width()+m_queryText->width()+15,(m_searchEditNew->height()+20)/2));
+                                               m_queryIcon->width()+m_queryText->width()+15,(m_searchEditNew->height()+30)/2));
                 m_animation->setEasingCurve(QEasingCurve::InQuad);
                 m_animation->start();
             }
@@ -682,7 +682,7 @@ void MonitorTitleWidget::initWidgets()
     m_searchEditNew->setContextMenuPolicy(Qt::NoContextMenu);
     QFont ft;
     ft.setPixelSize(fontSize);
-    m_searchEditNew->setFont(ft);
+    //m_searchEditNew->setFont(ft);
     m_queryText=new QLabel();
     m_queryText->setText(tr("Search"));
     m_queryWid=new QWidget(m_searchEditNew);
@@ -701,7 +701,7 @@ void MonitorTitleWidget::initWidgets()
     queryWidLayout->setAlignment(m_queryText,Qt::AlignVCenter);
 
     m_queryWid->setGeometry(QRect((m_searchEditNew->width() - (m_queryIcon->width()+m_queryText->width()+10))/2,0,
-                                        m_queryIcon->width()+m_queryText->width()+10,(m_searchEditNew->height() + 20)/2));   //设置显示label的区域
+                                        m_queryIcon->width()+m_queryText->width()+10,(m_searchEditNew->height() + 30)/2));   //设置显示label的区域
 
     m_animation= new QPropertyAnimation(m_queryWid, "geometry");
     m_animation->setDuration(50);
