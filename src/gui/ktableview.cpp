@@ -160,47 +160,5 @@ bool KTableView::viewportEvent(QEvent *event)
 // scroll viewport to ensure specified indexed item be visible
 void KTableView::scrollTo(const QModelIndex &index, QAbstractItemView::ScrollHint hint)
 {
-    // check index validity
-    if (!(index.isValid() && index.row() >= 0 && index.column() >= 0 && index.model() == model())) {
-        return;
-    }
-
-    // reset last hovered item in case user scroll viewport with up/down key press
-    m_hover = {};
-
-    auto area = viewport()->rect();
-    // calculate current indexed item's rect
-    QRect rect(columnViewportPosition(index.column()),
-               indexRowSizeHint(index) * index.row() - verticalScrollBar()->value(),
-               columnWidth(index.column()),
-               indexRowSizeHint(index));
-
-    if (rect.isEmpty()) {
-        // nothing to do
-    } else if (hint == EnsureVisible && area.contains(rect)) {
-        viewport()->update(QRect {0,
-                                  indexRowSizeHint(index) * index.row() - verticalScrollBar()->value(),
-                                  viewport()->width(),
-                                  indexRowSizeHint(index)});
-        // nothing to do
-    } else {
-        // current item above viewport rect
-        bool above = (hint == EnsureVisible
-                      && (rect.top() < area.top()
-                          || area.height() < rect.height()));
-        // current item below viewport rect
-        bool below = (hint == EnsureVisible
-                      && rect.bottom() > area.bottom()
-                      && rect.height() < area.height());
-
-        int verticalValue = verticalScrollBar()->value();
-        if (hint == PositionAtTop || above)
-            verticalValue += rect.top();
-        else if (hint == PositionAtBottom || below)
-            verticalValue += rect.bottom() - area.height();
-        else if (hint == PositionAtCenter)
-            verticalValue += rect.top() - ((area.height() - rect.height()) / 2);
-        // adjust scroll bar to a new position to ensure item visible
-        verticalScrollBar()->setValue(verticalValue);
-    }
+    QTreeView::scrollTo(index, hint);
 }

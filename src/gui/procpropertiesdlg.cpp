@@ -238,6 +238,8 @@ void ProcPropertiesDlg::initProcproperties()
         for (int i = 0; i < this->m_labelList.length(); ++i) {
             QString ShowValue = getElidedText(m_labelList.value(i)->font(), valueList.value(i), 200);
             this->m_labelList.value(i)->setText(ShowValue);
+            if (ShowValue != valueList.value(i))
+                this->m_labelList.value(i)->setToolTip(valueList.value(i));
         }
     }
     this->updateLabelFrameHeight();

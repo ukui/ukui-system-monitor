@@ -232,8 +232,6 @@ std::string getDesktopFileAccordProcNameApp(QString procName, QString cmdline)
 
 QPixmap getAppIconFromDesktopFile(std::string desktopFile, int iconSize)
 {
-    std::ifstream in;
-    in.open(desktopFile);
     QIcon defaultExecutableIcon = QIcon::fromTheme("application-x-executable");//gnome-mine-application-x-executable
     if (defaultExecutableIcon.isNull()) {
         defaultExecutableIcon = QIcon("/usr/share/icons/ukui-icon-theme-default/48x48/mimetypes/application-x-executable.png");
@@ -243,27 +241,33 @@ QPixmap getAppIconFromDesktopFile(std::string desktopFile, int iconSize)
 
     QIcon icon;
     QString iconName;
-    while(!in.eof()) {
-        std::string line;
-        std::getline(in,line);
-        iconName = QString::fromStdString(line);
+    QFile file(QString::fromStdString(desktopFile));
+    if(file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        QTextStream stream(&file);
+        while(!stream.atEnd())
+        {
+            iconName = stream.readLine();
 
-        if (iconName.startsWith("Icon=")) {
-            iconName.remove(0,5);
-        }
-        else {
-            continue;
-        }
+            if (iconName.startsWith("Icon=")) {
+                iconName.remove(0,5);
+            }
+            else {
+                continue;
+            }
 
-        if (iconName.contains("/")) {
-            icon = QIcon(iconName);
+            if (iconName.contains("/")) {
+                QFileInfo fileInfo(iconName);
+                if (fileInfo.exists())
+                    icon = QIcon(iconName);
+            }
+            else {
+                icon = QIcon::fromTheme(iconName, defaultExecutableIcon);
+                break;
+            }
         }
-        else {
-            icon = QIcon::fromTheme(iconName, defaultExecutableIcon);
-            break;
-        }
+        file.close();
     }
-    in.close();
 
     qreal devicePixelRatio = qApp->devicePixelRatio();
 
@@ -278,34 +282,38 @@ QString getDisplayNameAccordProcName(QString procName, std::string desktopFile)
     if (desktopFile.size() == 0) {
         return procName;
     }
-    std::ifstream in;
-    in.open(desktopFile);
-    QString displayName = procName;
-    while(!in.eof()) {
-        std::string line;
-        std::getline(in,line);
-        QString lineContent = QString::fromStdString(line);
-        QString localNameFlag = QString("Name[%1]=").arg(QLocale::system().name());
-        QString nameFlag = "Name=";
-        QString genericNameFlag = QString("GenericName[%1]=").arg(QLocale::system().name());
 
-        if (lineContent.startsWith(localNameFlag)) {
-            displayName = lineContent.remove(0, localNameFlag.size());
-            break;
+    QString iconName;
+    QFile file(QString::fromStdString(desktopFile));
+    QString displayName = procName;
+    if(file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        QTextStream stream(&file);
+        while(!stream.atEnd())
+        {
+            QString lineContent = stream.readLine();
+            QString localNameFlag = QString("Name[%1]=").arg(QLocale::system().name());
+            QString nameFlag = "Name=";
+            QString genericNameFlag = QString("GenericName[%1]=").arg(QLocale::system().name());
+
+            if (lineContent.startsWith(localNameFlag)) {
+                displayName = lineContent.remove(0, localNameFlag.size());
+                break;
+            }
+            else if (lineContent.startsWith(genericNameFlag)) {
+                displayName = lineContent.remove(0, genericNameFlag.size());
+                break;
+            }
+            else if (lineContent.startsWith(nameFlag)) {
+                displayName = lineContent.remove(0, nameFlag.size());
+                continue;
+            }
+            else {
+                continue;
+            }
         }
-        else if (lineContent.startsWith(genericNameFlag)) {
-            displayName = lineContent.remove(0, genericNameFlag.size());
-            break;
-        }
-        else if (lineContent.startsWith(nameFlag)) {
-            displayName = lineContent.remove(0, nameFlag.size());
-            continue;
-        }
-        else {
-            continue;
-        }
+        file.close();
     }
-    in.close();
 
     return displayName;
 }

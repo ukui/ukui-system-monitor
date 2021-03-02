@@ -371,9 +371,8 @@ void ProcessTableView::initConnections(bool settingsLoaded)
         priHeaderAction->setChecked(!b);
     });
 
-    // on each model update, we restore settings, adjust search result tip lable's visibility & positon, select the same process item before update if any
+    // on each model update, we adjust search result tip lable's visibility & positon, select the same process item before update if any
     connect(m_model, &ProcessTableModel::modelUpdated, this, [&]() {
-        loadSettings();
         adjustInfoLabelVisibility();
         if (m_selectedPID.isValid()) {
             for (int i = 0; i < m_proxyModel->rowCount(); i++) {

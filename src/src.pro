@@ -19,8 +19,7 @@ DESTDIR = ..
 LIBS += -L/usr/lib/ -lX11 -lpcap -lm -lpthread
 
 CONFIG += link_pkgconfig \
-                 c++11 \
-                 debug
+                 c++11
 #gio-2.0
 #LIBS +=-lgio-2.0 -lglib-2.0
 

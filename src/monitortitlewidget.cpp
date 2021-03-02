@@ -279,7 +279,6 @@ bool MonitorTitleWidget::eventFilter(QObject *obj, QEvent *event)    //set the e
                 m_animation->setEasingCurve(QEasingCurve::OutQuad);
                 m_animation->start();
             }
-            m_isSearching=true;
             //qDebug()<<"what is m_isSearching"<<m_isSearching;
         }
         else if(event->type() == QEvent::FocusOut && m_isSearching == false)
@@ -332,6 +331,11 @@ void MonitorTitleWidget::handleSearchTextChanged()
 {
 //    searchTextCache = m_searchEdit->searchedText();
     searchTextCache = m_searchEditNew->text();
+    if (searchTextCache.isEmpty()) {
+        m_isSearching = false;
+    } else {
+        m_isSearching = true;
+    }
     if (m_searchTimer->isActive()) {
         m_searchTimer->stop();
     }
@@ -732,14 +736,11 @@ void MonitorTitleWidget::initWidgets()
 
 void MonitorTitleWidget::animationFinishedSlot()
 {
-    if(m_isSearching)
-    {
+    if(m_queryText->parent() == m_queryWid) {
         m_queryWid->layout()->removeWidget(m_queryText);
         m_queryText->setParent(nullptr);
         m_searchEditNew->setTextMargins(30,1,0,1);
-    }
-    else
-    {
+    } else {
         m_queryWid->layout()->addWidget(m_queryText);
     }
 }

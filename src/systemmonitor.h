@@ -84,6 +84,8 @@ private:
     void showGuide(QString appName);
     void getOsRelease();
 private:
+    QSettings *proSettings;
+
 //    WId mWindow;
     QStackedWidget  *m_sysMonitorStack = nullptr;
     MonitorTitleWidget  *m_titleWidget = nullptr;
@@ -92,8 +94,6 @@ private:
     NewResouresDialog *resources_dialog = nullptr;
     FileSystemDialog *filesystem_dialog = nullptr;
     ProcessTableView *newProcessDialog = nullptr;
-    QSettings *proSettings;
-
     QPoint dragPosition;
     bool mousePressed;
     

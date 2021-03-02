@@ -137,7 +137,7 @@ private:
     int whichNum;
     int i=0;
     QPixmap pixmap;
-    bool m_isSearching;
+    bool m_isSearching = false;
     QHBoxLayout* queryWidLayout;
     QList<QAction *>actions;
 //    aboutdialog *showaboutdialog;

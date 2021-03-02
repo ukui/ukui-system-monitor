@@ -82,7 +82,7 @@ SystemMonitor::SystemMonitor(QWidget *parent)
     this->resize(MAINWINDOWWIDTH,MAINWINDOWHEIGHT);
     setMinimumSize(MAINWINDOWWIDTH, MAINWINDOWHEIGHT);  //set the minimum size of the mainwindow
 
-    proSettings = new QSettings(UKUI_COMPANY_SETTING, UKUI_SETTING_FILE_NAME_SETTING);
+    proSettings = new QSettings(UKUI_COMPANY_SETTING, UKUI_SETTING_FILE_NAME_SETTING, this);
     proSettings->setIniCodec("UTF-8");
 
     this->initTitleWidget();
@@ -131,10 +131,6 @@ void SystemMonitor::getTransparentData()
 
 SystemMonitor::~SystemMonitor()
 {
-    if (proSettings) {
-        delete proSettings;
-        proSettings = nullptr;
-    }
     if (opacitySettings){
         delete opacitySettings;
         opacitySettings = nullptr;
