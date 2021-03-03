@@ -86,7 +86,8 @@ static std::string read_file (int fd) {
 	for (int length; (length = read(fd, buf, sizeof(buf))) > 0;) {
 		if (length < 0) {
 			std::fprintf(stderr, "Error reading file: %s\n", std::strerror(errno));
-			std::exit(34);
+			// std::exit(34);
+			break;
 		}
 		content.append(buf, length);
 	}
@@ -99,15 +100,16 @@ static std::string read_file (const char* filepath) {
 
 	if (fd < 0) {
 		std::fprintf(stderr, "Error opening %s: %s\n", filepath, std::strerror(errno));
-		std::exit(3);
-		return NULL;
+		// std::exit(3);
+		return "";
 	}
 
 	std::string contents = read_file(fd);
 
 	if (close(fd)) {
 		std::fprintf(stderr, "Error opening %s: %s\n", filepath, std::strerror(errno));
-		std::exit(34);
+		// std::exit(34);
+		return "";
 	}
 
 	return contents;
@@ -156,7 +158,7 @@ void get_info_for_pid(const char * pid) {
 
 	if (!dir)
 	{
-		std::cout << "Couldn't open dir " << dirname << ": " << strerror(errno) << "\n";
+		// std::cout << "Couldn't open dir " << dirname << ": " << strerror(errno) << "\n";
 		return;
 	}
 
@@ -194,7 +196,8 @@ void reread_mapping () {
 
 	if (proc == 0) {
         std::cerr << "Error reading /proc, needed to get inode-to-pid-maping\n";
-		exit(1);
+		// exit(1);
+		return ;
 	}
 
 	dirent * entry;

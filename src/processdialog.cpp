@@ -409,7 +409,7 @@ void ProcessDialog::refreshProcessList()
     }
 
     pid_list = glibtop_get_proclist(&proclist, which, arg);
-    qDebug()<<__FUNCTION__<<"scan process list info:param:"<<which<<"|"<<arg<<",size:"<<proclist.number;
+    
     // FIXME: not sure if glibtop always returns a sorted list of pid
     // but it is important otherwise refresh_list won't find the parent
     std::sort(pid_list, pid_list + proclist.number);

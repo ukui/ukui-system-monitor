@@ -78,7 +78,11 @@ ProcessTableModel::ProcessTableModel(QObject *parent)
 QString ProcessTableModel::getProcessState(pid_t pid) const
 {
     if (m_procIdList.contains(pid)) {
-        return ProcessMonitor::instance()->processList()->getProcessById(pid).getProcStatus();
+        sysmonitor::process::Process proInfo = ProcessMonitor::instance()->processList()->getProcessById(pid);
+        if (proInfo.isValid()) {
+            return proInfo.getProcStatus();
+        }
+        return "";
     }
 
     return "";
@@ -87,7 +91,11 @@ QString ProcessTableModel::getProcessState(pid_t pid) const
 int ProcessTableModel::getProcessNice(pid_t pid) const
 {
     if (m_procIdList.contains(pid)) {
-        return ProcessMonitor::instance()->processList()->getProcessById(pid).getNice();
+        sysmonitor::process::Process proInfo = ProcessMonitor::instance()->processList()->getProcessById(pid);
+        if (proInfo.isValid()) {
+            return proInfo.getNice();
+        }
+        return InvalidPriority;
     }
 
     return InvalidPriority;
@@ -342,8 +350,11 @@ ProcessPriority ProcessTableModel::getProcessPriority(pid_t pid) const
 {
     int row = m_procIdList.indexOf(pid);
     if (row >= 0) {
-        int prio = ProcessMonitor::instance()->processList()->getProcessById(pid).getNice();
-        return getProcessPriorityStub(prio);
+        sysmonitor::process::Process procInfo = ProcessMonitor::instance()->processList()->getProcessById(pid);
+        if (procInfo.isValid()) {
+            return getProcessPriorityStub(procInfo.getNice());
+        }
+        return InvalidPriority;
     }
 
     return InvalidPriority;

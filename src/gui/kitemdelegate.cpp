@@ -34,6 +34,13 @@ KItemDelegate::KItemDelegate(QObject *parent)
 {
 }
 
+// editor for editing item data, not used here
+QWidget *KItemDelegate::createEditor(QWidget *, const QStyleOptionViewItem &,
+                                        const QModelIndex &) const
+{
+    return nullptr;
+}
+
 // size hint for this delegate
 QSize KItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
 {

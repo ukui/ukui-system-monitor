@@ -650,6 +650,10 @@ void ProcessList::scanProcess()
         arg = getuid();
     }
 
+    if (m_isScanStoped) {
+        return ;
+    }
+
     pid_list = glibtop_get_proclist(&proclist, which, arg);
     //qDebug()<<__FUNCTION__<<"scan process list info:param:"<<which<<"|"<<arg<<",size:"<<proclist.number;
     // FIXME: not sure if glibtop always returns a sorted list of pid
@@ -677,6 +681,9 @@ void ProcessList::scanProcess()
     {
         pid_t pidCur = pid_list[i];
         Process proc(pidCur);
+        if (m_isScanStoped) {
+            break;
+        }
         proc.setValid(true);
         proc.UpdateProcInfo();
 
@@ -708,10 +715,11 @@ void ProcessList::scanProcess()
         glibtop_get_proc_mem(&procmem, pidCur);
 
         // check cpu time
-        if (containsById(pidCur)) {
-            if (proctime.rtime >= getProcessById(pidCur).getProcCpuTime()) {
-                proc.setProcCpuTime(getProcessById(pidCur).getProcCpuTime());
-            }   
+        Process oldProcInfo = getProcessById(pidCur);
+        if (containsById(pidCur) && !m_isScanStoped) {
+            if (oldProcInfo.isValid() && proctime.rtime >= oldProcInfo.getProcCpuTime()) {
+                proc.setProcCpuTime(oldProcInfo.getProcCpuTime());
+            }
         }
 
         proc.setMemeryUsed(procmem.resident - procmem.share);
@@ -758,6 +766,10 @@ void ProcessList::scanProcess()
 
         proc.setProcStatus(formatProcessState(proc.getStatus()));
 
+        if (m_isScanStoped) {
+            break;
+        }
+
         std::string desktopFile;
         desktopFile = getDesktopFileAccordProcNameApp(proc.getProcName(), "");
 //        QString q_str = QString::fromStdString(desktopFile);   // this is the way that convert from std::string to QString
@@ -765,10 +777,10 @@ void ProcessList::scanProcess()
         {
             desktopFile = getDesktopFileAccordProcName(proc.getProcName(), "");
         }
-
-        if (!m_set.contains(proc.pid())) {
+        
+        if (!oldProcInfo.isValid()) {
             QPixmap icon_pixmap;
-            int iconSize = 20 * qApp->devicePixelRatio();
+            int iconSize = 24;// * qApp->devicePixelRatio();
 
             QIcon defaultExecutableIcon = QIcon::fromTheme("application-x-executable");//gnome-mine-application-x-executable
             if (defaultExecutableIcon.isNull()) {
@@ -780,18 +792,22 @@ void ProcessList::scanProcess()
     //        QPixmap defaultPixmap = QIcon::fromTheme("application-x-executable").pixmap(iconSize, iconSize);
             if (desktopFile.size() == 0) {
                 icon_pixmap = defaultPixmap;
-                icon_pixmap.setDevicePixelRatio(qApp->devicePixelRatio());
+                // icon_pixmap.setDevicePixelRatio(qApp->devicePixelRatio());
             } else {
-                icon_pixmap = getAppIconFromDesktopFile(desktopFile, 20);
+                icon_pixmap = getAppIconFromDesktopFile(desktopFile, 24);
                 if (icon_pixmap.isNull()) {
                     icon_pixmap = defaultPixmap;
-                    icon_pixmap.setDevicePixelRatio(qApp->devicePixelRatio());
+                    // icon_pixmap.setDevicePixelRatio(qApp->devicePixelRatio());
                 }
                 //QPixmap pixmap = QPixmap::fromImage(img).scaled(iconSize, iconSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
             }
             proc.setIconPixmap(icon_pixmap);            
         } else {
-            proc.setIconPixmap(getProcessById(proc.pid()).getIconPixmap());  
+            proc.setIconPixmap(oldProcInfo.getIconPixmap());  
+        }
+
+        if (m_isScanStoped) {
+            break;
         }
 
         QString title = getDisplayNameAccordProcName(proc.getProcName(), desktopFile);
@@ -817,9 +833,15 @@ void ProcessList::scanProcess()
     g_free (pid_list);
 }
 
-const Process ProcessList::getProcessById(pid_t pid) const
+Process ProcessList::getProcessById(pid_t pid) const
 {
-    return m_set[pid];
+    if (m_set.contains(pid)) {
+        return m_set[pid];
+    } else {
+        Process procInfo(pid);
+        procInfo.setValid(false);
+        return procInfo;
+    }
 }
 
 QList<pid_t> ProcessList::getPIDList() const
@@ -867,6 +889,16 @@ void ProcessList::killProcess(pid_t pid)
 int ProcessList::setProcessPriority(pid_t pid, int priority)
 {
     return 0;
+}
+
+void ProcessList::stopScanProcess()
+{
+    m_isScanStoped = true;
+}
+
+void ProcessList::startScanProcess()
+{
+    m_isScanStoped = false;
 }
 
 void ProcessList::refreshLine(const QString &procname, quint64 rcv, quint64 sent, int pid, unsigned int uid, const QString &devname)

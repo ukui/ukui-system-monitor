@@ -67,8 +67,9 @@ void addtoconninode (char * buffer)
 		local_addr, &local_port, rem_addr, &rem_port, &inode);
 
 	if (matches != 5) {
-		fprintf(stderr,"Unexpected buffer: '%s'\n",buffer);
-		exit(0);
+		// fprintf(stderr,"Unexpected buffer: '%s'\n",buffer);
+		// exit(0);
+		return ;
 	}
 	
 	if (inode == 0) {
@@ -181,8 +182,9 @@ void refreshconninode ()
 
 	if (! addprocinfo ("/proc/net/tcp"))
 	{
-		std::cout << "Error: couldn't open /proc/net/tcp\n";
-		exit(0);
+		// std::cout << "Error: couldn't open /proc/net/tcp\n";
+		// exit(0);
+		return ;
 	}
 	addprocinfo ("/proc/net/tcp6");
 

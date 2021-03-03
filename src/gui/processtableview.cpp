@@ -67,7 +67,7 @@ ProcessTableView::ProcessTableView(QSettings* proSettings, QWidget *parent)
     bool settingsLoaded = loadSettings();
 
     // init first scanproc filter
-    ProcessMonitorThread::instance()->procMonitorInstance()->processList()->setScanFilter(m_strFilter);
+    ProcessMonitor::instance()->processList()->setScanFilter(m_strFilter);
 
     // initialize ui components & connections
     initUI(settingsLoaded);
@@ -80,6 +80,8 @@ ProcessTableView::ProcessTableView(QSettings* proSettings, QWidget *parent)
 // destructor
 ProcessTableView::~ProcessTableView()
 {
+    // start process monitor thread
+    ProcessMonitorThread::instance()->stop();
 }
 
 // event filter
@@ -231,11 +233,11 @@ void ProcessTableView::initUI(bool settingsLoaded)
 void ProcessTableView::initConnections(bool settingsLoaded)
 {
     connect(this,SIGNAL(changeRefreshFilter(QString)),
-        ProcessMonitorThread::instance()->procMonitorInstance(),SLOT(onChangeRefreshFilter(QString)));
+        ProcessMonitor::instance(),SLOT(onChangeRefreshFilter(QString)));
     connect(this,SIGNAL(startScanProcess()),
-        ProcessMonitorThread::instance()->procMonitorInstance(),SLOT(onStartScanProcess()));
+        ProcessMonitor::instance(),SLOT(onStartScanProcess()));
     connect(this,SIGNAL(stopScanProcess()),
-        ProcessMonitorThread::instance()->procMonitorInstance(),SLOT(onStopScanProcess()));
+        ProcessMonitor::instance(),SLOT(onStopScanProcess()));
 
     // table context menu
     connect(this, &ProcessTableView::customContextMenuRequested, this,
@@ -249,15 +251,15 @@ void ProcessTableView::initConnections(bool settingsLoaded)
     auto *killAction = new QAction(tr("Kill process"), this);
     connect(killAction, &QAction::triggered, this, &ProcessTableView::showKillProcessDialog);
 
-    auto *priorityGroup = new MyActionGroup(this);
-    auto *veryHighAction = new MyActionGroupItem(this, priorityGroup, "very_high_action", -20);
-    auto *highAction = new MyActionGroupItem(this, priorityGroup, "high_action", -5);
-    auto *normalAction = new MyActionGroupItem(this, priorityGroup, "normal_action", 0);
-    auto *lowAction = new MyActionGroupItem(this, priorityGroup, "low_action", 5);
-    auto *veryLowAction = new MyActionGroupItem(this, priorityGroup, "very_low_action", 19);
-    auto *customAction = new MyActionGroupItem(this, priorityGroup, "custom_action", 32);
+    m_priorityGroup = new MyActionGroup(this);
+    auto *veryHighAction = new MyActionGroupItem(this, m_priorityGroup, "very_high_action", -20);
+    auto *highAction = new MyActionGroupItem(this, m_priorityGroup, "high_action", -5);
+    auto *normalAction = new MyActionGroupItem(this, m_priorityGroup, "normal_action", 0);
+    auto *lowAction = new MyActionGroupItem(this, m_priorityGroup, "low_action", 5);
+    auto *veryLowAction = new MyActionGroupItem(this, m_priorityGroup, "very_low_action", 19);
+    auto *customAction = new MyActionGroupItem(this, m_priorityGroup, "custom_action", 32);
     {
-        QAction *sep = new QAction(priorityGroup);
+        QAction *sep = new QAction(m_priorityGroup);
         sep->setSeparator(true);
     }
     veryHighAction->change(tr("Very High"));
@@ -266,10 +268,10 @@ void ProcessTableView::initConnections(bool settingsLoaded)
     lowAction->change(tr("Low"));
     veryLowAction->change(tr("Very Low"));
     customAction->change(tr("Custom"));
-    connect(priorityGroup, SIGNAL(activated(int)), this, SLOT(changeProcPriority(int)));
+    connect(m_priorityGroup, SIGNAL(activated(int)), this, SLOT(changeProcPriority(int)));
     auto *priorityMenu = new QMenu();
     priorityMenu->setObjectName("MonitorMenu");
-    priorityMenu->addActions(priorityGroup->actions());
+    priorityMenu->addActions(m_priorityGroup->actions());
     priorityMenu->menuAction()->setText(tr("Change Priority"));
 
     auto *propertiyAction = new QAction(tr("Properties"), this);
@@ -387,11 +389,33 @@ void ProcessTableView::initConnections(bool settingsLoaded)
 // show process table view context menu on specified positon
 void ProcessTableView::displayProcessTableContextMenu(const QPoint &p)
 {
-    if (selectedIndexes().size() == 0)
+    if (selectedIndexes().size() == 0 || !m_selectedPID.isValid())
         return;
-
     QPoint point = mapToGlobal(p);
     point.setY(point.y() + header()->sizeHint().height());
+    pid_t selectPid = qvariant_cast<pid_t>(m_selectedPID);
+    if (selectPid > -1) {
+        sysmonitor::process::Process info = ProcessMonitor::instance()->processList()->getProcessById(selectPid);
+        if (!info.isValid()) {
+            m_priorityGroup->setActionsEnabled(false);
+        } else {
+            gint nice = info.getNice();
+            int priority;
+            if (nice < -7)
+                priority = -20;
+            else if (nice < -2)
+                priority = -5;
+            else if (nice < 3)
+                priority = 0;
+            else if (nice < 7)
+                priority = 5;
+            else
+                priority = 19;
+            m_priorityGroup->setChecked(priority);
+        }
+    } else {
+        m_priorityGroup->setActionsEnabled(false);
+    }
     m_contextMenu->popup(point);
 }
 
@@ -676,45 +700,44 @@ void ProcessTableView::changeProcPriority(int nice)
     if (nice == 32) {
         //show renice dialog
         if (selectPid > -1) {
-            if (ProcessMonitorThread::instance()->procMonitorInstance()->processList()->containsById(selectPid)) {
-                sysmonitor::process::Process info = ProcessMonitorThread::instance()->procMonitorInstance()->processList()->getProcessById(selectPid);
-                m_dlgRenice= new ReniceDialog(tr("Change Priority of Process %1 (PID: %2)").arg(info.getDisplayName()).arg(QString::number(selectPid)));
-                m_dlgRenice->loadData(info.getNice());
-                connect(m_dlgRenice, &ReniceDialog::resetReniceValue, [=] (int value) {
-                    this->changeProcPriority(value);
-                });
-                m_dlgRenice->exec();
+            sysmonitor::process::Process info = ProcessMonitor::instance()->processList()->getProcessById(selectPid);
+            if (!info.isValid()) {
+                return ;
             }
+            m_dlgRenice= new ReniceDialog(tr("Change Priority of Process %1 (PID: %2)").arg(info.getDisplayName()).arg(QString::number(selectPid)));
+            m_dlgRenice->loadData(info.getNice());
+            connect(m_dlgRenice, &ReniceDialog::resetReniceValue, [=] (int value) {
+                this->changeProcPriority(value);
+            });
+            m_dlgRenice->exec();
         }
     }
     else {
         //qDebug()<<"has entered";
         if (selectPid > -1) {
-            if (ProcessMonitorThread::instance()->procMonitorInstance()->processList()->containsById(selectPid)) {
-                sysmonitor::process::Process info = ProcessMonitorThread::instance()->procMonitorInstance()->processList()->getProcessById(selectPid);
-                if (info.getNice() == nice) {
-                    return;
-                }
-                /*
-                    * renice: sudo apt install bsdutils
-                    * Maybe: QProcess::startDetached(command)
-                    * QProcess::start()与QProcess::execute()都能完成启动外部程序的任务，区别在于start()是非阻塞的，而execute()是阻塞的: execute()=start()+waitforFinished()
-                */
-                if (QFileInfo("/usr/bin/pkexec").exists()) {//sudo apt install policykit-1
-                    QProcess process;
-                    process.execute(QString("pkexec --disable-internal-agent %1 %2 %3").arg("renice").arg(nice).arg(selectPid));
-                }
-                else if (QFileInfo("/usr/bin/gksudo").exists()) {//sudo apt install gksu
-                    QProcess process;
-                    process.execute(QString("gksudo \"%1 %2 %3\"").arg("renice").arg(nice).arg(selectPid));
-                }
-                else if (QFileInfo("/usr/bin/gksu").exists()) {//sudo apt install gksu
-                    QProcess process;
-                    process.execute(QString("gksu \"%1 %2 %3\"").arg("renice").arg(nice).arg(selectPid));
-                }
-                else {
-                    //
-                }
+            sysmonitor::process::Process info = ProcessMonitor::instance()->processList()->getProcessById(selectPid);
+            if (!info.isValid() || info.getNice() == nice) {
+                return;
+            }
+            /*
+                * renice: sudo apt install bsdutils
+                * Maybe: QProcess::startDetached(command)
+                * QProcess::start()与QProcess::execute()都能完成启动外部程序的任务，区别在于start()是非阻塞的，而execute()是阻塞的: execute()=start()+waitforFinished()
+            */
+            if (QFileInfo("/usr/bin/pkexec").exists()) {//sudo apt install policykit-1
+                QProcess process;
+                process.execute(QString("pkexec --disable-internal-agent %1 %2 %3").arg("renice").arg(nice).arg(selectPid));
+            }
+            else if (QFileInfo("/usr/bin/gksudo").exists()) {//sudo apt install gksu
+                QProcess process;
+                process.execute(QString("gksudo \"%1 %2 %3\"").arg("renice").arg(nice).arg(selectPid));
+            }
+            else if (QFileInfo("/usr/bin/gksu").exists()) {//sudo apt install gksu
+                QProcess process;
+                process.execute(QString("gksu \"%1 %2 %3\"").arg("renice").arg(nice).arg(selectPid));
+            }
+            else {
+                //
             }
         }
     }

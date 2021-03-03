@@ -220,6 +220,8 @@ private:
     // Sort & filter model build upon process model
     ProcessSortFilterProxyModel *m_proxyModel {};
 
+    // process priority group
+    MyActionGroup * m_priorityGroup;
     // Process table view context menu
     QMenu *m_contextMenu {};
     // Process table header view context menu

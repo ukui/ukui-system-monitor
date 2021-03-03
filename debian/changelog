@@ -1,3 +1,9 @@
+ukui-system-monitor (2.0.2-11) v101; urgency=medium
+
+  * 优化功能：优化搜索输入框文字显示
+
+ -- Yang Min <kylin@kylinos.cn>  Tue, 02 Mar 2021 19:05:47 +0800
+
 ukui-system-monitor (2.0.2-10) v101; urgency=medium
 
   * 修复bug：修复搜索输入框偶现文字不显示问题

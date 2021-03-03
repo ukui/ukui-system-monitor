@@ -194,8 +194,8 @@ void ProcPropertiesDlg::updateLabelFrameHeight()
 
 void ProcPropertiesDlg::initProcproperties()
 {
-    if (ProcessMonitorThread::instance()->procMonitorInstance()->processList()->containsById(pid)) {
-        sysmonitor::process::Process info = ProcessMonitorThread::instance()->procMonitorInstance()->processList()->getProcessById(pid);
+    sysmonitor::process::Process info = ProcessMonitor::instance()->processList()->getProcessById(pid);
+    if (info.isValid()) {
         QString username = info.getProcUser();
         QString name = info.getProcName();
 
@@ -207,7 +207,7 @@ void ProcPropertiesDlg::initProcproperties()
         }
 
         QPixmap icon_pixmap;
-        int iconSize = 48 * qApp->devicePixelRatio();
+        int iconSize = 48;// * qApp->devicePixelRatio();
 
         QIcon defaultExecutableIcon = QIcon::fromTheme("application-x-executable");//gnome-mine-application-x-executable
         if (defaultExecutableIcon.isNull()) {
@@ -218,12 +218,12 @@ void ProcPropertiesDlg::initProcproperties()
         QPixmap defaultPixmap = defaultExecutableIcon.pixmap(iconSize, iconSize);
         if (desktopFile.size() == 0) {
             icon_pixmap = defaultPixmap;
-            icon_pixmap.setDevicePixelRatio(qApp->devicePixelRatio());
+            //icon_pixmap.setDevicePixelRatio(qApp->devicePixelRatio());
         } else {
             icon_pixmap = getAppIconFromDesktopFile(desktopFile, 48);
             if (icon_pixmap.isNull()) {
                 icon_pixmap = defaultPixmap;
-                icon_pixmap.setDevicePixelRatio(qApp->devicePixelRatio());
+                //icon_pixmap.setDevicePixelRatio(qApp->devicePixelRatio());
             }
         }
         QString displayName = getDisplayNameAccordProcName(name, desktopFile);
@@ -247,8 +247,8 @@ void ProcPropertiesDlg::initProcproperties()
 
 void ProcPropertiesDlg::refreshProcproperties()
 {
-    if (ProcessMonitorThread::instance()->procMonitorInstance()->processList()->containsById(pid)) {
-        sysmonitor::process::Process info = ProcessMonitorThread::instance()->procMonitorInstance()->processList()->getProcessById(pid);
+    sysmonitor::process::Process info = ProcessMonitor::instance()->processList()->getProcessById(pid);
+    if (info.isValid()) {
         for (int i = 0; i < this->m_labelList.length(); ++i) {
             if (i == 3)
                 this->m_labelList.value(i)->setText(QFileInfo(QString("/proc/%1").arg(pid)).created().toString("yyyy-MM-dd hh:mm:ss"));

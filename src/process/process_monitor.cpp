@@ -45,6 +45,7 @@ ProcessMonitorThread::ProcessMonitorThread(QObject *parent)
     m_monitor->moveToThread(this);
     connect(this, &QThread::finished, this, &QObject::deleteLater);
     connect(this, &QThread::started, m_monitor, &ProcessMonitor::startMonitorJob);
+    connect(this,SIGNAL(requestMonitorInterrupt()),m_monitor,SLOT(onStopScanProcess()));
 }
 
 ProcessMonitorThread::~ProcessMonitorThread()
@@ -57,6 +58,11 @@ ProcessMonitorThread::~ProcessMonitorThread()
 ProcessMonitor *ProcessMonitorThread::procMonitorInstance() const
 {
     return m_monitor;
+}
+
+void ProcessMonitorThread::stop()
+{
+    emit requestMonitorInterrupt();
 }
 
 
@@ -88,8 +94,10 @@ ProcessList *ProcessMonitor::processList()
 
 void ProcessMonitor::startMonitorJob()
 {
+    processList()->stopScanProcess();
     m_basicTimer.stop();
     m_basicTimer.start(TIME_SCANPROCESS, Qt::PreciseTimer, this);
+    processList()->startScanProcess();
     updateProcMonitorInfo();
 }
 
@@ -103,6 +111,7 @@ void ProcessMonitor::timerEvent(QTimerEvent *event)
 
 void ProcessMonitor::requestInterrupt()
 {
+    processList()->stopScanProcess();
     m_basicTimer.stop();
 }
 
@@ -114,6 +123,7 @@ void ProcessMonitor::onChangeRefreshFilter(QString strFilter)
     processList()->onClearAllProcess();
     processList()->setScanFilter(strFilter);
     m_basicTimer.start(TIME_SCANPROCESS, Qt::PreciseTimer, this);
+    processList()->startScanProcess();
     updateProcMonitorInfo();
 }
 
@@ -131,7 +141,7 @@ void ProcessMonitor::onStopScanProcess()
 
 void ProcessMonitor::updateProcMonitorInfo()
 {
-    m_processList->refresh();
+    processList()->refresh();
 
     emit procInfoUpdated();
 }

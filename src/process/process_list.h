@@ -170,7 +170,7 @@ public:
     explicit ProcessList(QObject* parent = nullptr);
     virtual ~ProcessList();
 
-    const Process getProcessById(pid_t pid) const;
+    Process getProcessById(pid_t pid) const;
     bool containsById(pid_t pid);
     QList<pid_t> getPIDList() const;
     void removeProcess(pid_t pid);
@@ -180,6 +180,8 @@ public:
     void setScanFilter(QString strFilter);
     void connectNetStateRefresh();
     void disconnectNetStateRefresh();
+    void stopScanProcess();
+    void startScanProcess();
 
 public slots:
     void endProcess(pid_t pid);
@@ -221,6 +223,7 @@ private:
 
     long long int disk_io_bytes_total;
     QString m_strFilter = "all";
+    bool m_isScanStoped = false;
 };
 
 } // namespace process

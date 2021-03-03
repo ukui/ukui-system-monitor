@@ -40,6 +40,17 @@ public:
     explicit KItemDelegate(QObject *parent = nullptr);
 
     /**
+     * @brief createEditor Returns the editor to be used for editing the data item with the given index.
+     * @param parent Parent widget
+     * @param option Style option
+     * @param index Current index
+     * @return New editor instance
+     */
+    QWidget *createEditor(QWidget *parent,
+                          const QStyleOptionViewItem &option,
+                          const QModelIndex &index) const override;
+                          
+    /**
      * @brief sizeHint Size hint for this delegate
      * @param option Style option for this delegate
      * @param index Current index

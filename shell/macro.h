@@ -62,10 +62,10 @@
 
 
 //process setting
-#define namepadding 150
+#define namepadding 140
 #define userpadding 90
 #define diskpadding 80
-#define cpupadding 70
+#define cpupadding 80
 #define idpadding 80
 #define networkpadding 80
 #define memorypadding 120

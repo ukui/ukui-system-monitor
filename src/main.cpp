@@ -64,8 +64,6 @@ int main(int argc, char *argv[])
         }
 
         SystemMonitor monitor;
-        //monitor.setAttribute(Qt::WA_DeleteOnClose);
-        app.setActivationWindow(&monitor);
 
         MotifWmHints hints;
         hints.flags = MWM_HINTS_FUNCTIONS|MWM_HINTS_DECORATIONS;
@@ -73,13 +71,9 @@ int main(int argc, char *argv[])
         hints.decorations = MWM_DECOR_BORDER;
         XAtomHelper::getInstance()->setWindowMotifHint(monitor.winId(), hints);
 
+        app.setActivationWindow(&monitor);
         QObject::connect(&app, SIGNAL(messageReceived(const QString&)),&monitor, SLOT(sltMessageReceived(const QString&)));
-
         monitor.show();
-//         qDebug()<<qAppName()<<"app name";
-//        FramelessHandle * pHandle = new FramelessHandle(monitor);
-//        pHandle->activateOn(monitor);
-        //app.exec();
         return app.exec();
     }
 }

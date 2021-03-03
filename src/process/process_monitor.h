@@ -43,11 +43,15 @@ class ProcessMonitorThread : public QThread
 public:
     explicit ProcessMonitorThread(QObject *parent = nullptr);
     ~ProcessMonitorThread();
+    void stop();
 
 public:
     static ProcessMonitorThread *instance();
     
     ProcessMonitor *procMonitorInstance() const;
+
+signals:
+    void requestMonitorInterrupt();
 
 private:
     ProcessMonitor *m_monitor;
@@ -56,10 +60,6 @@ private:
 class ProcessMonitor : public QObject
 {
     Q_OBJECT
-
-signals:
-    void procInfoUpdated();
-    void clearProcessList();
 
 public:
     explicit ProcessMonitor(QObject *parent = nullptr);
@@ -78,6 +78,10 @@ public slots:
     void onChangeRefreshFilter(QString strFilter);
     void onStartScanProcess();
     void onStopScanProcess();
+
+signals:
+    void procInfoUpdated();
+    void clearProcessList();
 
 protected:
     void timerEvent(QTimerEvent *event);

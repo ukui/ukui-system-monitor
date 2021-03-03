@@ -48,12 +48,6 @@ extern void qt_blurImage(QImage &blurImage, qreal radius, bool quality, int tran
 
 void  SystemMonitor::sltMessageReceived(const QString &msg)
 {
-    Qt::WindowFlags flags = windowFlags();
-    flags |= Qt::WindowStaysOnTopHint;
-    setWindowFlags(flags);
-//    show();
-    flags &= ~Qt::WindowStaysOnTopHint;
-    setWindowFlags(flags);
     showNormal();
 }
 
