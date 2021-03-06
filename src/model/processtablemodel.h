@@ -154,6 +154,7 @@ private Q_SLOTS:
 private:
     QList<pid_t> m_procIdList; // pid list
     QList<sysmonitor::process::Process> m_processList; // pid list
+    QMap<QString,QPixmap> m_procIconMap; // icon map
 };
 
 #endif  // __PROCESS_TABLE_MODEL_H__

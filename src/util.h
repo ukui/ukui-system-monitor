@@ -41,6 +41,7 @@ std::string getDesktopFileAccordProcName(QString procName, QString cmdline);
 std::string getDesktopFileAccordProcNameApp(QString procName, QString cmdline);
 QPixmap getAppIconFromDesktopFile(std::string desktopFile, int iconSize = 24);
 QString getDisplayNameAccordProcName(QString procName, std::string desktopFile);
+QString getAppIconPathFromDesktopFile(std::string desktopFile);
 std::string make_string(char *c_str);
 QString formatProcessState(guint state);
 QString getNiceLevel(int nice);

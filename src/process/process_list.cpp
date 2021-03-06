@@ -198,39 +198,41 @@ void Process::setDiskIODesc(QString strDiskIO)
     }
 }
 
-qulonglong Process::getFlowNet() const
+qint64 Process::getFlowNet() const
 {
     return d->m_numFlowNet;
 }
 
-void Process::setFlowNet(qulonglong llFlowNet)
+void Process::setFlowNet(qint64 llFlowNet)
 {
     if (d) {
+        llFlowNet = llFlowNet < 0 ? 0 : llFlowNet;
         d->m_numFlowNet = llFlowNet;
     }
 }
 
-qulonglong Process::getDiskIO() const
+qint64 Process::getDiskIO() const
 {
     return d->m_numDiskIo;
 }
 
-void Process::setDiskIO(qulonglong llDiskIO)
+void Process::setDiskIO(qint64 llDiskIO)
 {
     if (d) {
+        llDiskIO = llDiskIO < 0 ? 0 : llDiskIO;
         d->m_numDiskIo = llDiskIO;
     }
 }
 
-QPixmap Process::getIconPixmap() const
+QString Process::getIconPath() const
 {
-    return d->iconPixmap;
+    return d->strIconPath;
 }
 
-void Process::setIconPixmap(QPixmap pixmapIcon)
+void Process::setIconPath(QString iconPath)
 {
     if (d) {
-        d->iconPixmap = pixmapIcon;
+        d->strIconPath = iconPath;
     }
 }
 
@@ -444,6 +446,118 @@ void Process::setProcArgments(QString strArgments)
     }
 }
 
+QDateTime Process::getPreDiskIoTime() const
+{
+    return d->m_preDiskIoTime;
+}
+
+void Process::setPreDiskIoTime(QDateTime dt)
+{
+    if (d) {
+        d->m_preDiskIoTime = dt;
+    }
+}
+
+qint64 Process::getPreDiskIoCount() const
+{
+    return d->m_preDiskIoCount;
+}
+
+void Process::setPreDiskIoCount(qint64 nCount)
+{
+    if (d) {
+        nCount = nCount < 0 ? 0 : nCount;
+        d->m_preDiskIoCount = nCount;
+    }
+}
+
+QDateTime Process::getPreFlownetTime() const
+{
+    return d->m_preFlownetTime;
+}
+
+void Process::setPreFlownetTime(QDateTime dt)
+{
+    if (d) {
+        d->m_preFlownetTime = dt;
+    }
+}
+
+qint64 Process::getPreFlownetCount() const
+{
+    return d->m_preFlownetCount;
+}
+
+void Process::setPreFlownetCount(qint64 nCount)
+{
+    if (d) {
+        nCount = nCount < 0 ? 0 : nCount;
+        d->m_preFlownetCount = nCount;
+    }
+}
+
+QString Process::calcDiskIoPerSec(qint64 nNewCount)
+{
+    qint64 bandwith = nNewCount - getPreDiskIoCount();
+    QDateTime now = QDateTime::currentDateTime();
+    quint64 ms_lapse = d->m_preDiskIoTime.msecsTo(now);
+    QString speedPerSec = "";
+
+    if (ms_lapse < 1000) ms_lapse = 1000; // prevent division by 0 ;-)
+    qint64 speed = bandwith * 1000 / ms_lapse;
+
+    if (speed == 0 || speed < 0) {
+        speedPerSec = "0 KB/S"; }
+    else if (speed < 1900) {
+        speedPerSec.setNum(speed);
+        speedPerSec.append(" B/s"); }
+    else if (speed < 1900000) {
+        speedPerSec.setNum(speed/1024);
+        speedPerSec.append(" kB/s"); }
+    else if (speed < 1900000000) {
+        speedPerSec.setNum(speed/(1024*1024));
+        speedPerSec.append(" MB/s"); }
+    else {
+        speedPerSec.setNum(speed/(1024*1024*1024));
+        speedPerSec.append(" GB/s");
+    }
+
+    d->m_preDiskIoTime.swap(now);
+    setPreDiskIoCount(nNewCount);
+    return speedPerSec;
+}
+
+QString Process::calcFlownetPerSec(qint64 nNewCount)
+{
+    qint64 bandwith = nNewCount - getPreFlownetCount();
+    QDateTime now = QDateTime::currentDateTime();
+    quint64 ms_lapse = d->m_preFlownetTime.msecsTo(now);
+    QString speedPerSec = "";
+
+    if (ms_lapse < 1000) ms_lapse = 1000; // prevent division by 0 ;-)
+    qint64 speed = bandwith * 1000 / ms_lapse;
+
+    if (speed == 0 || speed < 0) {
+        speedPerSec = "0 KB/S"; }
+    else if (speed < 1900) {
+        speedPerSec.setNum(speed);
+        speedPerSec.append(" B/s"); }
+    else if (speed < 1900000) {
+        speedPerSec.setNum(speed/1024);
+        speedPerSec.append(" kB/s"); }
+    else if (speed < 1900000000) {
+        speedPerSec.setNum(speed/(1024*1024));
+        speedPerSec.append(" MB/s"); }
+    else {
+        speedPerSec.setNum(speed/(1024*1024*1024));
+        speedPerSec.append(" GB/s");
+    }
+
+    d->m_preFlownetTime.swap(now);
+    setPreFlownetCount(nNewCount);
+    return speedPerSec;
+}
+
 void Process::updateProcUser(unsigned uUid)
 {
     if (!d || d->m_uid == uUid)
@@ -607,19 +721,27 @@ void ProcessList::disconnectNetStateRefresh()
 
 bool ProcessList::containsById(pid_t pid)
 {
-    return m_set.contains(pid);
+    bool bContainsObj = false;
+    m_lockReadWrite.lockForRead();
+    bContainsObj = m_set.contains(pid);
+    m_lockReadWrite.unlock();
+    return bContainsObj;
 }
 
 void ProcessList::setScanFilter(QString strFilter)
 {
+    m_lockReadWrite.lockForWrite();
     if (!strFilter.isEmpty()) {
         m_strFilter = strFilter;
     }
+    m_lockReadWrite.unlock();
 }
 
 void ProcessList::onClearAllProcess()
 {
+    m_lockReadWrite.lockForWrite();
     m_set.clear();
+    m_lockReadWrite.unlock();
 }
 
 void ProcessList::refresh()
@@ -634,6 +756,7 @@ void ProcessList::scanProcess()
     int which = 0;
     int arg = 0;
 
+    m_lockReadWrite.lockForRead();
     if (m_strFilter == "all")
     {
         which = GLIBTOP_KERN_PROC_ALL;
@@ -649,10 +772,12 @@ void ProcessList::scanProcess()
         which = GLIBTOP_KERN_PROC_UID;
         arg = getuid();
     }
-
+    
     if (m_isScanStoped) {
+        m_lockReadWrite.unlock();
         return ;
     }
+    m_lockReadWrite.unlock();
 
     pid_list = glibtop_get_proclist(&proclist, which, arg);
     //qDebug()<<__FUNCTION__<<"scan process list info:param:"<<which<<"|"<<arg<<",size:"<<proclist.number;
@@ -661,6 +786,7 @@ void ProcessList::scanProcess()
     std::sort(pid_list, pid_list + proclist.number);
 
     // remove not exist
+    m_lockReadWrite.lockForWrite();
     QMutableMapIterator<pid_t, Process> itSet(m_set);
     while (itSet.hasNext()) {
         itSet.next();
@@ -675,27 +801,39 @@ void ProcessList::scanProcess()
             itSet.remove();
         }
     }
+    m_lockReadWrite.unlock();
 
     guint i;
     for(i = 0; i < proclist.number; ++i)
     {
         pid_t pidCur = pid_list[i];
+        Process oldProcInfo = getProcessById(pidCur);
+        m_lockReadWrite.lockForWrite();
         Process proc(pidCur);
         if (m_isScanStoped) {
+            m_lockReadWrite.unlock();
             break;
         }
         proc.setValid(true);
         proc.UpdateProcInfo();
 
-        if (pidMap.contains(pidCur)) {
-            proc.setFlowNetDesc(pidMap[pidCur]);
-        } else {
-            proc.setFlowNetDesc("0 KB/S");
-        }
+        // flownet
+        qint64 curProcFlownet = 0;
         if (numAddFlowNetPerSec.contains(pidCur)) {
-            proc.setFlowNet(numAddFlowNetPerSec[pidCur]);
+            curProcFlownet = numAddFlowNetPerSec[pidCur];
+        }
+        if (!oldProcInfo.isValid()) {   // 新进程
+            proc.setPreFlownetTime(QDateTime::currentDateTime());
+            proc.setPreFlownetCount(curProcFlownet);
+            proc.setFlowNet(curProcFlownet-proc.getPreFlownetCount());
+            QString addFlownetPerSec = proc.calcFlownetPerSec(curProcFlownet);
+            proc.setFlowNetDesc(addFlownetPerSec);
         } else {
-            proc.setFlowNet(0);
+            proc.setPreFlownetTime(oldProcInfo.getPreFlownetTime());
+            proc.setPreFlownetCount(oldProcInfo.getPreFlownetCount());
+            proc.setFlowNet(curProcFlownet-proc.getPreFlownetCount());
+            QString addFlownetPerSec = proc.calcFlownetPerSec(curProcFlownet);
+            proc.setFlowNetDesc(addFlownetPerSec);
         }
 
         //当进程对象存在时，更新该进程对象的相关数据信息
@@ -715,8 +853,7 @@ void ProcessList::scanProcess()
         glibtop_get_proc_mem(&procmem, pidCur);
 
         // check cpu time
-        Process oldProcInfo = getProcessById(pidCur);
-        if (containsById(pidCur) && !m_isScanStoped) {
+        if (!m_isScanStoped) {
             if (oldProcInfo.isValid() && proctime.rtime >= oldProcInfo.getProcCpuTime()) {
                 proc.setProcCpuTime(oldProcInfo.getProcCpuTime());
             }
@@ -748,25 +885,27 @@ void ProcessList::scanProcess()
         proc.setFrequency(cpu.frequency);
         proc.setProcCpuTime(proctime.utime + proctime.stime + proctime.cutime + proctime.cstime);
         proc.setNice(procuid.nice);
-        if(!calDiskIoMap.contains(pidCur))
-        {
-            calDiskIoMap[pidCur] = 0;
-        }
 
-        lineBandwith speedLineBandDiskIo(pidCur);
-
+        // disk io
         disk_io_bytes_total = procio.disk_wbytes+procio.disk_rbytes;
-
-        QString addDiskIoPerSec = speedLineBandDiskIo.new_count(disk_io_bytes_total-calDiskIoMap[pidCur],pidCur);
-
-        proc.setDiskIODesc(addDiskIoPerSec);
-        proc.setDiskIO(disk_io_bytes_total-calDiskIoMap[pidCur]);
-        
-        calDiskIoMap[pidCur] = disk_io_bytes_total;
+        if (!oldProcInfo.isValid()) {   // 新进程
+            proc.setPreDiskIoTime(QDateTime::currentDateTime());
+            proc.setPreDiskIoCount(disk_io_bytes_total);
+            proc.setDiskIO(disk_io_bytes_total-proc.getPreDiskIoCount());
+            QString addDiskIoPerSec = proc.calcDiskIoPerSec(disk_io_bytes_total);
+            proc.setDiskIODesc(addDiskIoPerSec);
+        } else {
+            proc.setPreDiskIoTime(oldProcInfo.getPreDiskIoTime());
+            proc.setPreDiskIoCount(oldProcInfo.getPreDiskIoCount());
+            proc.setDiskIO(disk_io_bytes_total-proc.getPreDiskIoCount());
+            QString addDiskIoPerSec = proc.calcDiskIoPerSec(disk_io_bytes_total);
+            proc.setDiskIODesc(addDiskIoPerSec);
+        }
 
         proc.setProcStatus(formatProcessState(proc.getStatus()));
 
         if (m_isScanStoped) {
+            m_lockReadWrite.unlock();
             break;
         }
 
@@ -777,36 +916,15 @@ void ProcessList::scanProcess()
         {
             desktopFile = getDesktopFileAccordProcName(proc.getProcName(), "");
         }
-        
         if (!oldProcInfo.isValid()) {
-            QPixmap icon_pixmap;
-            int iconSize = 24;// * qApp->devicePixelRatio();
-
-            QIcon defaultExecutableIcon = QIcon::fromTheme("application-x-executable");//gnome-mine-application-x-executable
-            if (defaultExecutableIcon.isNull()) {
-                defaultExecutableIcon = QIcon("/usr/share/icons/kylin-icon-theme/48x48/mimetypes/application-x-executable.png");
-                if (defaultExecutableIcon.isNull())
-                    defaultExecutableIcon = QIcon(":/res/autostart-default.png");
-            }
-            QPixmap defaultPixmap = defaultExecutableIcon.pixmap(iconSize, iconSize);
-    //        QPixmap defaultPixmap = QIcon::fromTheme("application-x-executable").pixmap(iconSize, iconSize);
-            if (desktopFile.size() == 0) {
-                icon_pixmap = defaultPixmap;
-                // icon_pixmap.setDevicePixelRatio(qApp->devicePixelRatio());
-            } else {
-                icon_pixmap = getAppIconFromDesktopFile(desktopFile, 24);
-                if (icon_pixmap.isNull()) {
-                    icon_pixmap = defaultPixmap;
-                    // icon_pixmap.setDevicePixelRatio(qApp->devicePixelRatio());
-                }
-                //QPixmap pixmap = QPixmap::fromImage(img).scaled(iconSize, iconSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-            }
-            proc.setIconPixmap(icon_pixmap);            
+            QString strIconPath = getAppIconPathFromDesktopFile(desktopFile);
+            proc.setIconPath(strIconPath);            
         } else {
-            proc.setIconPixmap(oldProcInfo.getIconPixmap());  
+            proc.setIconPath(oldProcInfo.getIconPath());
         }
 
         if (m_isScanStoped) {
+            m_lockReadWrite.unlock();
             break;
         }
 
@@ -824,100 +942,87 @@ void ProcessList::scanProcess()
         proc.setProcStatus(formatProcessState(proc.getStatus()));
         if (proc.getStatus() == GLIBTOP_PROCESS_ZOMBIE) {
             if (m_set.contains(proc.pid())) {
+                m_lockReadWrite.unlock();
                 removeProcess(proc.pid());
+                m_lockReadWrite.lockForWrite();
             }
         } else {
             m_set[proc.pid()] = proc;
         }
+        m_lockReadWrite.unlock();
     }
     g_free (pid_list);
 }
 
-Process ProcessList::getProcessById(pid_t pid) const
+Process ProcessList::getProcessById(pid_t pid)
 {
+    Process procInfo(pid);
+    m_lockReadWrite.lockForRead();
     if (m_set.contains(pid)) {
-        return m_set[pid];
-    } else {
-        Process procInfo(pid);
-        procInfo.setValid(false);
-        return procInfo;
+        procInfo = m_set[pid];
     }
+    m_lockReadWrite.unlock();
+    return procInfo;
 }
 
-QList<pid_t> ProcessList::getPIDList() const
+QList<pid_t> ProcessList::getPIDList()
 {
-    return m_set.keys();
+    QList<pid_t> pidList;
+    m_lockReadWrite.lockForRead();
+    pidList = m_set.keys();
+    m_lockReadWrite.unlock();
+    return pidList;
 }
 
 void ProcessList::removeProcess(pid_t pid)
 {
+    m_lockReadWrite.lockForWrite();
     m_set.remove(pid);
+    m_lockReadWrite.unlock();
 }
 
 void ProcessList::updateProcessState(pid_t pid, QString& state)
 {
+    m_lockReadWrite.lockForWrite();
     if (m_set.contains(pid))
         m_set[pid].setProcStatus(state);
+    m_lockReadWrite.unlock();
 }
 
 void ProcessList::updateProcessPriority(pid_t pid, qulonglong priority)
 {
+    m_lockReadWrite.lockForWrite();
     if (m_set.contains(pid))
         m_set[pid].setNice(priority);
-}
-
-void ProcessList::endProcess(pid_t pid)
-{
-    //sendSignalToProcess(pid, SIGTERM);
-}
-
-void ProcessList::pauseProcess(pid_t pid)
-{
-    //sendSignalToProcess(pid, SIGSTOP);
-}
-
-void ProcessList::resumeProcess(pid_t pid)
-{
-    //sendSignalToProcess(pid, SIGCONT);
-}
-
-void ProcessList::killProcess(pid_t pid)
-{
-    //sendSignalToProcess(pid, SIGKILL);
-}
-
-int ProcessList::setProcessPriority(pid_t pid, int priority)
-{
-    return 0;
+    m_lockReadWrite.unlock();
 }
 
 void ProcessList::stopScanProcess()
 {
+    m_lockReadWrite.lockForWrite();
     m_isScanStoped = true;
+    m_lockReadWrite.unlock();
 }
 
 void ProcessList::startScanProcess()
 {
+    m_lockReadWrite.lockForWrite();
     m_isScanStoped = false;
+    m_lockReadWrite.unlock();
 }
 
 void ProcessList::refreshLine(const QString &procname, quint64 rcv, quint64 sent, int pid, unsigned int uid, const QString &devname)
 {
-    lineBandwith speedLineBandFlowNet(pid);
-
+    // record process flownet
     qint64 tmptotalFlowNetPerSec = rcv + sent;
+    m_lockReadWrite.lockForWrite();
     if(!flowNetPrevMap.contains(pid))
     {
         flowNetPrevMap[pid] = 0;//save prev data
     }
 
-    numAddFlowNetPerSec[pid] = tmptotalFlowNetPerSec - flowNetPrevMap[pid];
-
-    QString addFlowNetPerSec = speedLineBandFlowNet.new_count(tmptotalFlowNetPerSec - flowNetPrevMap[pid],pid);
-
     flowNetPrevMap[pid] = tmptotalFlowNetPerSec;
-
-    pidMap[pid] = addFlowNetPerSec;
+    m_lockReadWrite.unlock();
 }
 
 } // namespace process

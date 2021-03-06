@@ -25,6 +25,7 @@
 #include <QDebug>
 #include <QTimer>
 #include <QApplication>
+#include <QFileInfo>
 
 using namespace sysmonitor::process;
 
@@ -73,6 +74,8 @@ ProcessTableModel::ProcessTableModel(QObject *parent)
     //update process's priority in model's cache on process priority changed signal
     connect(monitor->processList(), &ProcessList::processPriorityChanged, this,
             &ProcessTableModel::updateProcessPriority);
+
+    m_procIconMap.clear();
 }
 
 QString ProcessTableModel::getProcessState(pid_t pid) const
@@ -127,6 +130,35 @@ void ProcessTableModel::updateProcessListDelay()
         if (row >= 0) {
             // update
             m_processList[row] = processList->getProcessById(pid);
+            QString strIconPath = m_processList[row].getIconPath();
+            QPixmap iconPixmap;
+            QIcon icon;
+            if (!strIconPath.isEmpty()) {
+                if (strIconPath.contains("/")) {
+                    QFileInfo fileInfo(strIconPath);
+                    if (fileInfo.exists()) {
+                        icon = QIcon(strIconPath);
+                    }
+                }
+                else {
+                    icon = QIcon::fromTheme(strIconPath, icon);
+                }
+            }
+            if (icon.isNull()) {
+                icon = QIcon::fromTheme("application-x-executable");//gnome-mine-application-x-executable
+                strIconPath = "application-x-executable";
+                if (icon.isNull()) {
+                    icon = QIcon("/usr/share/icons/kylin-icon-theme/48x48/mimetypes/application-x-executable.png");
+                    strIconPath = "/usr/share/icons/kylin-icon-theme/48x48/mimetypes/application-x-executable.png";
+                    if (icon.isNull()) {
+                        icon = QIcon(":/res/autostart-default.png");
+                        strIconPath = ":/res/autostart-default.png";
+                    }
+                }
+            }
+            iconPixmap = icon.pixmap(24, 24);
+            m_processList[row].setIconPath(strIconPath);
+            m_procIconMap[strIconPath] = iconPixmap;
             Q_EMIT dataChanged(index(row, 0), index(row, columnCount() - 1));
         } else {
             // insert
@@ -134,6 +166,35 @@ void ProcessTableModel::updateProcessListDelay()
             beginInsertRows({}, row, row);
             m_procIdList << pid;
             m_processList << processList->getProcessById(pid);
+            QString strIconPath = m_processList[row].getIconPath();
+            QPixmap iconPixmap;
+            QIcon icon;
+            if (!strIconPath.isEmpty()) {
+                if (strIconPath.contains("/")) {
+                    QFileInfo fileInfo(strIconPath);
+                    if (fileInfo.exists()) {
+                        icon = QIcon(strIconPath);
+                    }
+                }
+                else {
+                    icon = QIcon::fromTheme(strIconPath, icon);
+                }
+            }
+            if (icon.isNull()) {
+                icon = QIcon::fromTheme("application-x-executable");//gnome-mine-application-x-executable
+                strIconPath = "application-x-executable";
+                if (icon.isNull()) {
+                    icon = QIcon("/usr/share/icons/kylin-icon-theme/48x48/mimetypes/application-x-executable.png");
+                    strIconPath = "/usr/share/icons/kylin-icon-theme/48x48/mimetypes/application-x-executable.png";
+                    if (icon.isNull()) {
+                        icon = QIcon(":/res/autostart-default.png");
+                        strIconPath = ":/res/autostart-default.png";
+                    }
+                }
+            }
+            iconPixmap = icon.pixmap(24, 24);
+            m_processList[row].setIconPath(strIconPath);
+            m_procIconMap[strIconPath] = iconPixmap;
             endInsertRows();
         }
     }
@@ -267,8 +328,13 @@ QVariant ProcessTableModel::data(const QModelIndex &index, int role) const
     } else if (role == Qt::DecorationRole) {
         switch (index.column()) {
         case ProcessNameColumn:
+        {
             // process icon
-            return proc.getIconPixmap();
+            if (m_procIconMap.contains(proc.getIconPath())) {
+                return m_procIconMap[proc.getIconPath()];
+            }
+            break;
+        }
         default:
             return {};
         }

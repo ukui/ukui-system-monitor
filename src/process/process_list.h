@@ -29,6 +29,7 @@
 #include <QMap>
 #include <QIcon>
 #include <QPixmap>
+#include <QReadWriteLock>
 #include <dirent.h>
 
 namespace sysmonitor {
@@ -90,14 +91,14 @@ public:
     QString getDiskIODesc() const;
     void setDiskIODesc(QString strDiskIO);
 
-    qulonglong getFlowNet() const;
-    void setFlowNet(qulonglong llFlowNet);
+    qint64 getFlowNet() const;
+    void setFlowNet(qint64 llFlowNet);
 
-    qulonglong getDiskIO() const;
-    void setDiskIO(qulonglong llDiskIO);
+    qint64 getDiskIO() const;
+    void setDiskIO(qint64 llDiskIO);
 
-    QPixmap getIconPixmap() const;
-    void setIconPixmap(QPixmap pixmapIcon);
+    QString getIconPath() const;
+    void setIconPath(QString iconPath);
 
     QString getProcName() const;
     void setProcName(QString strProcName);
@@ -151,9 +152,23 @@ public:
     QString getProcArgments() const;
     void setProcArgments(QString strArgments);
 
+    QDateTime getPreDiskIoTime() const;
+    void setPreDiskIoTime(QDateTime dt);
+
+    qint64 getPreDiskIoCount() const;
+    void setPreDiskIoCount(qint64 nCount);
+
+    QDateTime getPreFlownetTime() const;
+    void setPreFlownetTime(QDateTime dt);
+
+    qint64 getPreFlownetCount() const;
+    void setPreFlownetCount(qint64 nCount);
+
     void updateProcUser(unsigned uUid);
 
     void UpdateProcInfo();
+    QString calcDiskIoPerSec(qint64 nNewCount);
+    QString calcFlownetPerSec(qint64 nNewCount);
 
 private:
     void get_process_name(const gchar *cmd, const GStrv args);
@@ -170,9 +185,9 @@ public:
     explicit ProcessList(QObject* parent = nullptr);
     virtual ~ProcessList();
 
-    Process getProcessById(pid_t pid) const;
+    Process getProcessById(pid_t pid);
     bool containsById(pid_t pid);
-    QList<pid_t> getPIDList() const;
+    QList<pid_t> getPIDList();
     void removeProcess(pid_t pid);
     void updateProcessState(pid_t pid, QString& state);
     void updateProcessPriority(pid_t pid, qulonglong priority);
@@ -184,11 +199,6 @@ public:
     void startScanProcess();
 
 public slots:
-    void endProcess(pid_t pid);
-    void pauseProcess(pid_t pid);
-    void resumeProcess(pid_t pid);
-    void killProcess(pid_t pid);
-    int setProcessPriority(pid_t pid, int priority);
     void refreshLine(const QString& procname, quint64 rcv, quint64 sent, int pid, unsigned int uid, const QString& devname);
     void onClearAllProcess();
 
@@ -218,12 +228,12 @@ private:
     guint64 process_total_time_last = 0;
     QMap<int,QString> pidMap;
     QMap<long long int,long long int> flowNetPrevMap;
-    QMap<long long int,long long int> calDiskIoMap;
     QMap<long long int,long long int> numAddFlowNetPerSec;
 
     long long int disk_io_bytes_total;
     QString m_strFilter = "all";
     bool m_isScanStoped = false;
+    QReadWriteLock m_lockReadWrite;
 };
 
 } // namespace process

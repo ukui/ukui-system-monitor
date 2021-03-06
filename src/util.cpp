@@ -241,32 +241,37 @@ QPixmap getAppIconFromDesktopFile(std::string desktopFile, int iconSize)
 
     QIcon icon;
     QString iconName;
-    QFile file(QString::fromStdString(desktopFile));
-    if(file.open(QIODevice::ReadOnly | QIODevice::Text))
-    {
-        QTextStream stream(&file);
-        while(!stream.atEnd())
+    QString strDesktopFile = QString::fromStdString(desktopFile);
+    if (!strDesktopFile.isEmpty()) {
+        QFile file(strDesktopFile);
+        if(file.open(QIODevice::ReadOnly | QIODevice::Text))
         {
-            iconName = stream.readLine();
+            QTextStream stream(&file);
+            while(!stream.atEnd())
+            {
+                iconName = stream.readLine();
 
-            if (iconName.startsWith("Icon=")) {
-                iconName.remove(0,5);
-            }
-            else {
-                continue;
-            }
+                if (iconName.startsWith("Icon=")) {
+                    iconName.remove(0,5);
+                }
+                else {
+                    continue;
+                }
 
-            if (iconName.contains("/")) {
-                QFileInfo fileInfo(iconName);
-                if (fileInfo.exists())
-                    icon = QIcon(iconName);
+                if (iconName.contains("/")) {
+                    QFileInfo fileInfo(iconName);
+                    if (fileInfo.exists()) {
+                        icon = QIcon(iconName);
+                        break;
+                    }
+                }
+                else {
+                    icon = QIcon::fromTheme(iconName, defaultExecutableIcon);
+                    break;
+                }
             }
-            else {
-                icon = QIcon::fromTheme(iconName, defaultExecutableIcon);
-                break;
-            }
+            file.close();
         }
-        file.close();
     }
 
     qreal devicePixelRatio = 1;//qApp->devicePixelRatio();
@@ -274,6 +279,35 @@ QPixmap getAppIconFromDesktopFile(std::string desktopFile, int iconSize)
     // pixmap.setDevicePixelRatio(devicePixelRatio);
 
     return pixmap;
+}
+
+QString getAppIconPathFromDesktopFile(std::string desktopFile)
+{
+    QString strIconPath = "";
+    QString iconName;
+    QString strDesktopFile = QString::fromStdString(desktopFile);
+    if (!strDesktopFile.isEmpty()) {
+        QFile file(strDesktopFile);
+        if(file.open(QIODevice::ReadOnly | QIODevice::Text))
+        {
+            QTextStream stream(&file);
+            while(!stream.atEnd())
+            {
+                iconName = stream.readLine();
+
+                if (iconName.startsWith("Icon=")) {
+                    iconName.remove(0,5);
+                    strIconPath = iconName;
+                    break;
+                }
+                else {
+                    continue;
+                }
+            }
+            file.close();
+        }
+    }
+    return strIconPath;
 }
 
 QString getDisplayNameAccordProcName(QString procName, std::string desktopFile)

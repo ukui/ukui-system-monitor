@@ -29,6 +29,7 @@
 #include <iostream>
 #include <QString>
 #include <QPainter>
+#include <QDateTime>
 
 using std::string;
 #include "process_list.h"
@@ -52,7 +53,7 @@ public:
         , m_diskio("")
         , m_numFlowNet(0)
         , m_numDiskIo(0)
-        , iconPixmap{}
+        , strIconPath("")
         , processName("")
         , displayName("")
         , path("")
@@ -71,6 +72,8 @@ public:
         , m_unit("")
         , m_seat("")
         , m_frequency(1)
+        , m_preDiskIoCount(0)
+        , m_preFlownetCount(0)
     {     
     }
     ProcessData(const ProcessData &other)
@@ -84,7 +87,7 @@ public:
         , m_diskio(other.m_diskio)
         , m_numFlowNet(other.m_numFlowNet)
         , m_numDiskIo(other.m_numDiskIo)
-        , iconPixmap(other.iconPixmap)
+        , strIconPath(other.strIconPath)
         , processName(other.processName)
         , displayName(other.displayName)
         , path(other.path)
@@ -103,6 +106,8 @@ public:
         , m_unit(other.m_unit)
         , m_seat(other.m_seat)
         , m_frequency(other.m_frequency)
+        , m_preDiskIoCount(other.m_preDiskIoCount)
+        , m_preFlownetCount(other.m_preFlownetCount)
     {
     }
     ~ProcessData() {}
@@ -122,7 +127,7 @@ private:
     QString m_diskio;
     qulonglong m_numFlowNet;
     qulonglong m_numDiskIo;
-    QPixmap iconPixmap;
+    QString strIconPath;
     QString processName;
     QString displayName;
 //    QString commandLine;
@@ -143,6 +148,10 @@ private:
     QString m_unit;
     QString m_seat;
     unsigned m_frequency;
+    QDateTime m_preDiskIoTime;
+    QDateTime m_preFlownetTime;
+    qint64 m_preDiskIoCount;
+    qint64 m_preFlownetCount;
 
     friend class Process;
 };

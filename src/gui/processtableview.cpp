@@ -462,7 +462,6 @@ int ProcessTableView::sizeHintForColumn(int column) const
 {
     QStyleOptionHeader option;
     option.initFrom(this);
-    QStyle *style = dynamic_cast<QStyle *>(QApplication::style());
     int margin = 10;
     return std::max(header()->sizeHintForColumn(column) + margin * 2,
                     QTreeView::sizeHintForColumn(column) + margin * 2);
