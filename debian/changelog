@@ -1,20 +1,16 @@
-ukui-system-monitor (2.0.2-11) v101; urgency=medium
-
-  * 优化功能：优化搜索输入框文字显示
-
- -- Yang Min <kylin@kylinos.cn>  Tue, 02 Mar 2021 19:05:47 +0800
-
 ukui-system-monitor (2.0.2-10) v101; urgency=medium
 
-  * 修复bug：修复搜索输入框偶现文字不显示问题
+  * 优化功能：1、进程列表信息增加锁保护；2、进程列表的icon对象放到ui线程中处理
+  * 修复bug：修复关于界面邮箱链接不可点击问题
 
- -- Yang Min <kylin@kylinos.cn>  Tue, 02 Mar 2021 18:44:32 +0800
+ -- Yang Min <yangmin@kylinos.cn>  Sat, 06 Mar 2021 16:48:06 +0800
 
 ukui-system-monitor (2.0.2-9) v101; urgency=medium
 
-  * 优化功能：调优进程信息列表显示
+  * 优化功能：优化进程列表显示
+  * 修复bug：1、修复搜索输入框偶现不显示内容问题；2、修复触摸屏无法触摸点击问题
 
- -- Yang Min <kylin@kylinos.cn>  Tue, 02 Mar 2021 16:57:00 +0800
+ -- Yang Min <yangmin@kylinos.cn>  Tue, 03 Mar 2021 17:44:18 +0800
 
 ukui-system-monitor (2.0.2-7) v101; urgency=medium
 
