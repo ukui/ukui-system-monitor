@@ -20,6 +20,7 @@
 
 #include "mydialog.h"
 #include "mytristatebutton.h"
+#include "../shell/xatom-helper.h"
 
 #include <QLabel>
 #include <QDebug>
@@ -36,7 +37,12 @@ MyDialog::MyDialog(const QString &title, const QString &message, QWidget *parent
     QDialog(parent)
    , mousePressed(false)
 {
-    this->setWindowFlags(this->windowFlags() | Qt::FramelessWindowHint  | Qt::WindowCloseButtonHint);
+    MotifWmHints hints;
+    hints.flags = MWM_HINTS_FUNCTIONS|MWM_HINTS_DECORATIONS;
+    hints.functions = MWM_FUNC_ALL;
+    hints.decorations = MWM_DECOR_BORDER;
+    XAtomHelper::getInstance()->setWindowMotifHint(this->winId(), hints);
+    this->setWindowFlags(this->windowFlags() | Qt::FramelessWindowHint | Qt::Tool | Qt::WindowCloseButtonHint);
 //    this->setWindowFlags(Qt::Window | Qt::FramelessWindowHint | Qt::WindowMinimizeButtonHint);//Attention: Qt::WindowCloseButtonHint make showMinimized() valid
 
     this->setAttribute(Qt::WA_TranslucentBackground);

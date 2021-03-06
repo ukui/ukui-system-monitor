@@ -22,6 +22,7 @@
 #include "../process/process_list.h"
 #include "../process/process_monitor.h"
 #include "../util.h"
+#include "../shell/xatom-helper.h"
 
 #include <QApplication>
 #include <QDateTime>
@@ -42,7 +43,12 @@ using namespace sysmonitor::process;
 ProcPropertiesDlg::ProcPropertiesDlg(pid_t processId, QWidget *parent) : QDialog(parent)
   , mousePressed(false)
 {
-    this->setWindowFlags(this->windowFlags() | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
+    MotifWmHints hints;
+    hints.flags = MWM_HINTS_FUNCTIONS|MWM_HINTS_DECORATIONS;
+    hints.functions = MWM_FUNC_ALL;
+    hints.decorations = MWM_DECOR_BORDER;
+    XAtomHelper::getInstance()->setWindowMotifHint(this->winId(), hints);
+    this->setWindowFlags(this->windowFlags() | Qt::FramelessWindowHint | Qt::Tool);
 
     this->setAttribute(Qt::WA_TranslucentBackground);
     this->setAttribute(Qt::WA_Resized, false);

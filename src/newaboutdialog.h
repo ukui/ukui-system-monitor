@@ -40,6 +40,10 @@ public:
     void initContentWidget();
     void initIntroduceWidget();
     void setFontSize(QLabel *label,int fontSize);
+
+private Q_SLOTS:
+    void openMailTo(QString strMailAddr);
+
 protected:
 //    void paintEvent(QPaintEvent *event);
 private:

@@ -2709,7 +2709,11 @@ Are you sure to continue?</source>
     </message>
     <message>
         <source>Service and support team: support@kylinos.cn</source>
-        <translation type="unfinished">服务与支持团队: support@kylinos.cn</translation>
+        <translation type="obsolete">服务与支持团队: support@kylinos.cn</translation>
+    </message>
+    <message>
+        <source>Service and support team:</source>
+        <translation>服务与支持团队:</translation>
     </message>
 </context>
 </TS>

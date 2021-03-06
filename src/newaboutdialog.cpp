@@ -25,6 +25,7 @@
 #include <QTextEdit>
 #include <QDir>
 #include <QStyleOption>
+#include <QProcess>
 
 newaboutdialog::newaboutdialog(QWidget *parent) : QDialog(parent)
 {
@@ -33,7 +34,7 @@ newaboutdialog::newaboutdialog(QWidget *parent) : QDialog(parent)
     hints.functions = MWM_FUNC_ALL;
     hints.decorations = MWM_DECOR_BORDER;
     XAtomHelper::getInstance()->setWindowMotifHint(this->winId(), hints);
-    this->setWindowFlags(this->windowFlags() /*| Qt::FramelessWindowHint*/ | Qt::WindowStaysOnTopHint);
+    this->setWindowFlags(this->windowFlags() /*| Qt::FramelessWindowHint*/ | Qt::Tool);
 //    this->setWindowFlags(Qt::Dialog |  Qt::CustomizeWindowHint); this can make dialog be moveable and be showable too
     this->setFixedHeight(450);
     this->setFixedWidth(420);
@@ -176,8 +177,9 @@ void newaboutdialog::initIntroduceWidget()
     introduce_H_Boxlayout->setContentsMargins(32,0,32,0);
 
     QLabel *supporLabel = new QLabel();
-    supporLabel->setText(tr("Service and support team: support@kylinos.cn"));
+    supporLabel->setText(QString("%1 <a href='support@kylinos.cn'>support@kylinos.cn</a>").arg(tr("Service and support team:")));
     supporLabel->setPalette(pe);
+    connect(supporLabel,SIGNAL(linkActivated(QString)),this,SLOT(openMailTo(QString))); 
     setFontSize(supporLabel,FontSize);
     support_H_Boxlayout = new QHBoxLayout();
     support_H_Boxlayout->addWidget(supporLabel);
@@ -221,4 +223,11 @@ void newaboutdialog::setFontSize(QLabel *label,int fontSize)
     QFont font;
     font.setPointSize(fontSize);
     label->setFont(font);
+}
+
+void newaboutdialog::openMailTo(QString strMailAddr)
+{
+    QProcess *process =new QProcess(this);
+    process->startDetached(QString("claws-mail mailto://%1").arg(strMailAddr));
+    process->deleteLater();
 }
