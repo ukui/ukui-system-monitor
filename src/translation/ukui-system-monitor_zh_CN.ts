@@ -1153,7 +1153,7 @@ Kylin Team &lt;ubuntukylin-members@list.launchpad.net&gt;</source>
     <name>MonitorTitleWidget</name>
     <message>
         <source>Active Processes</source>
-        <translation type="unfinished">活动的进程</translation>
+        <translation type="unfinished">活动进程</translation>
     </message>
     <message>
         <source>My Processes</source>
@@ -1417,7 +1417,7 @@ Kylin Team &lt;ubuntukylin-members@list.launchpad.net&gt;</source>
     <name>ProcessCategory</name>
     <message>
         <source>Active Processes</source>
-        <translation>活动的进程</translation>
+        <translation>活动进程</translation>
     </message>
     <message>
         <source>My Processes</source>

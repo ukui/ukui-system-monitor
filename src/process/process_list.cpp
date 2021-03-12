@@ -666,8 +666,7 @@ void Process::UpdateProcInfo()
     }
     g_strfreev(args);
 
-    guint64 cpu_time = proctime.utime + proctime.stime + proctime.cutime + proctime.cstime;
-    setProcCpuTime(cpu_time);
+    setProcCpuTime(proctime.rtime);
     setProcStartTime(proctime.start_time);
 
 //    get_process_selinux_context (info);
@@ -780,7 +779,14 @@ void ProcessList::scanProcess()
     m_lockReadWrite.unlock();
 
     pid_list = glibtop_get_proclist(&proclist, which, arg);
-    //qDebug()<<__FUNCTION__<<"scan process list info:param:"<<which<<"|"<<arg<<",size:"<<proclist.number;
+    
+    /* FIXME: total cpu time elapsed should be calculated on an individual basis here
+        ** should probably have a total_time_last gint in the ProcInfo structure */
+    glibtop_cpu cpu;
+    glibtop_get_cpu(&cpu);
+    this->cpu_total_time = MAX(cpu.total - this->cpu_total_time_last, 1);
+    this->cpu_total_time_last = cpu.total;
+
     // FIXME: not sure if glibtop always returns a sorted list of pid
     // but it is important otherwise refresh_list won't find the parent
     std::sort(pid_list, pid_list + proclist.number);
@@ -854,7 +860,7 @@ void ProcessList::scanProcess()
 
         // check cpu time
         if (!m_isScanStoped) {
-            if (oldProcInfo.isValid() && proctime.rtime >= oldProcInfo.getProcCpuTime()) {
+            if (oldProcInfo.isValid() && proc.getProcCpuTime() >= oldProcInfo.getProcCpuTime()) {
                 proc.setProcCpuTime(oldProcInfo.getProcCpuTime());
             }
         }
@@ -863,27 +869,17 @@ void ProcessList::scanProcess()
 
         proc.updateProcUser(procstate.uid);
 
-        /* FIXME: total cpu time elapsed should be calculated on an individual basis here
-        ** should probably have a total_time_last gint in the ProcInfo structure */
-        glibtop_cpu cpu;
-        glibtop_get_cpu(&cpu);
-
-        this->cpu_total_time = cpu.total;
-        this->process_total_time = proctime.rtime;
-
-        this->cpu_total_time = MAX(cpu.total - this->cpu_total_time_last, 1);
-        this->cpu_total_time_last = cpu.total;
-        guint64 difference = proctime.utime + proctime.stime + proctime.cutime + proctime.cstime - proc.getProcCpuTime();
+        guint64 difference = proctime.rtime - proc.getProcCpuTime();
         if (difference > 0)
             proc.setStatus(GLIBTOP_PROCESS_RUNNING);
-        double sPcpu = difference / this->cpu_total_time;
-        sPcpu = MIN(sPcpu/2, 100);
-        sPcpu *= this->num_cpus /10.0;
+        guint cpu_scale = 100 * this->num_cpus;
+        double sPcpu = (gdouble)difference * cpu_scale / this->cpu_total_time;
+        sPcpu = MIN(sPcpu, cpu_scale);
         proc.setCpuPercent(sPcpu);
 
 //        CPU 百分比使用 Solaris 模式，工作在“Solaris 模式”，其中任务的 CPU 使用量将被除以总的 CPU 数目。否则它将工作在“Irix 模式”。
         proc.setFrequency(cpu.frequency);
-        proc.setProcCpuTime(proctime.utime + proctime.stime + proctime.cutime + proctime.cstime);
+        proc.setProcCpuTime(proctime.rtime);
         proc.setNice(procuid.nice);
 
         // disk io

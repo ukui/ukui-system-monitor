@@ -30,7 +30,7 @@
 namespace sysmonitor {
 namespace process {
 
-#define TIME_SCANPROCESS    1500
+#define TIME_SCANPROCESS    3000
 
 Q_GLOBAL_STATIC(ProcessMonitorThread, theInstance)
 ProcessMonitorThread *ProcessMonitorThread::instance()
@@ -42,7 +42,7 @@ ProcessMonitorThread::ProcessMonitorThread(QObject *parent)
     : QThread(parent)
     , m_monitor(new ProcessMonitor())
 {
-    m_monitor->moveToThread(this);
+    //m_monitor->moveToThread(this);
     connect(this, &QThread::finished, this, &QObject::deleteLater);
     connect(this, &QThread::started, m_monitor, &ProcessMonitor::startMonitorJob);
     connect(this,SIGNAL(requestMonitorInterrupt()),m_monitor,SLOT(onStopScanProcess()));

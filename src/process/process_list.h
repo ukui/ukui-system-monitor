@@ -224,8 +224,6 @@ private:
 
     guint64 cpu_total_time = 0;
     guint64 cpu_total_time_last = 0;
-    guint64 process_total_time = 0;
-    guint64 process_total_time_last = 0;
     QMap<int,QString> pidMap;
     QMap<long long int,long long int> flowNetPrevMap;
     QMap<long long int,long long int> numAddFlowNetPerSec;
