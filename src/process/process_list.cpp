@@ -513,7 +513,7 @@ QString Process::calcDiskIoPerSec(qint64 nNewCount)
         speedPerSec.append(" B/s"); }
     else if (speed < 1900000) {
         speedPerSec.setNum(speed/1024);
-        speedPerSec.append(" kB/s"); }
+        speedPerSec.append(" KB/s"); }
     else if (speed < 1900000000) {
         speedPerSec.setNum(speed/(1024*1024));
         speedPerSec.append(" MB/s"); }
