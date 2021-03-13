@@ -44,9 +44,9 @@
 /*
  * about the size of every single control
  */
-#define NORMALHEIGHT 30
+#define NORMALHEIGHT 32
 #define SPECIALWIDTH 200
-#define NORMALWIDTH 100
+#define NORMALWIDTH 115
 #define MAINWINDOWHEIGHT 650
 #define MAINWINDOWWIDTH 760
 #define SEARCHBUTTON 16

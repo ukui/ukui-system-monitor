@@ -186,6 +186,7 @@ void MonitorTitleWidget::initFontSize()
         if("systemFont" == key || "systemFontSize" == key)
         {
             fontSize = fontSettings->get(FONT_SIZE).toString().toFloat();
+            this->onThemeFontChange(fontSize);
         }
 //        QFont font;
 //        font.setPointSize(fontSize);
@@ -594,28 +595,25 @@ void MonitorTitleWidget::initToolbarLeftContent()
     w->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     m_toolLeftLayout = new QHBoxLayout(w);
     m_toolLeftLayout->setContentsMargins(0, 0, 0, 0);
-    QPushButton *processButton = new QPushButton();
-    processButton->setText(tr("Processes"));
-    processButton->setCheckable(true);
-    processButton->setAutoExclusive(true);
-    processButton->setChecked(true);
-    processButton->setFixedSize(NORMALWIDTH,NORMALHEIGHT+2);
+    m_processButton = new QPushButton();
+    m_processButton->setCheckable(true);
+    m_processButton->setAutoExclusive(true);
+    m_processButton->setChecked(true);
+    m_processButton->setFixedSize(NORMALWIDTH,NORMALHEIGHT+2);
 
-    QPushButton *resourcesButton = new QPushButton();
-    resourcesButton->setText(tr("Resources"));
-    resourcesButton->setChecked(false);
-    resourcesButton->setCheckable(true);
-    resourcesButton->setAutoExclusive(true);
-    resourcesButton->setFixedSize(NORMALWIDTH,NORMALHEIGHT+2);
+    m_resourceButton = new QPushButton();
+    m_resourceButton->setChecked(false);
+    m_resourceButton->setCheckable(true);
+    m_resourceButton->setAutoExclusive(true);
+    m_resourceButton->setFixedSize(NORMALWIDTH,NORMALHEIGHT+2);
 
-    QPushButton *disksButton = new QPushButton();
-    disksButton->setText(tr("File Systems"));
-    disksButton->setChecked(false);
-    disksButton->setCheckable(true);
-    disksButton->setAutoExclusive(true);
-    disksButton->setFixedSize(NORMALWIDTH,NORMALHEIGHT+2);
+    m_filesystemButton = new QPushButton();
+    m_filesystemButton->setChecked(false);
+    m_filesystemButton->setCheckable(true);
+    m_filesystemButton->setAutoExclusive(true);
+    m_filesystemButton->setFixedSize(NORMALWIDTH,NORMALHEIGHT+2);
 
-    connect(processButton, &QPushButton::clicked, this, [=] {
+    connect(m_processButton, &QPushButton::clicked, this, [=] {
         emit this->changePage(0);
 //        if (!m_searchEdit->isVisible())
 //            m_searchEdit->setVisible(true);
@@ -624,7 +622,7 @@ void MonitorTitleWidget::initToolbarLeftContent()
         if (!m_searchEditNew->isVisible())
             m_searchEditNew->setVisible(true);
     });
-    connect(resourcesButton, &QPushButton::clicked, this, [=] {
+    connect(m_resourceButton, &QPushButton::clicked, this, [=] {
         emit this->changePage(1);
 //        if (m_searchEdit->isVisible())
 //            m_searchEdit->setVisible(false);
@@ -636,7 +634,7 @@ void MonitorTitleWidget::initToolbarLeftContent()
         m_searchEditNew->clear();
         emit canelSearchEditFocus();
     });
-    connect(disksButton, &QPushButton::clicked, this, [=] {
+    connect(m_filesystemButton, &QPushButton::clicked, this, [=] {
         emit this->changePage(2);
 //        if (m_searchEdit->isVisible())
 //            m_searchEdit->setVisible(false);
@@ -649,16 +647,61 @@ void MonitorTitleWidget::initToolbarLeftContent()
         emit canelSearchEditFocus();
     });
     emptyWidget = new QWidget();
+    // adjust text show
+    onThemeFontChange(fontSize);
 
-    processButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-    resourcesButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-    disksButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    m_processButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    m_resourceButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    m_filesystemButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     emptyWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
 
-    m_bottomLayout->addWidget(processButton);
-    m_bottomLayout->addWidget(resourcesButton);
-    m_bottomLayout->addWidget(disksButton);
+    m_bottomLayout->addWidget(m_processButton);
+    m_bottomLayout->addWidget(m_resourceButton);
+    m_bottomLayout->addWidget(m_filesystemButton);
     m_bottomLayout->addWidget(emptyWidget, 3);
+}
+
+void MonitorTitleWidget::onThemeFontChange(unsigned uFontSize)
+{
+    if (m_processButton) {
+        QString strContent = tr("Processes");
+        if (!strContent.isEmpty()) {
+            QString ShowValue = getElidedText(m_processButton->font(), strContent, m_processButton->width()-4);
+            m_processButton->setText(ShowValue);
+            if (ShowValue != strContent) {
+                m_processButton->setToolTip(strContent);
+            } else {
+                m_processButton->setToolTip("");
+            }
+        }
+    }
+    if (m_resourceButton) {
+        QString strContent = tr("Resources");
+        if (!strContent.isEmpty()) {
+            QString ShowValue = getElidedText(m_resourceButton->font(), strContent, m_resourceButton->width()-4);
+            m_resourceButton->setText(ShowValue);
+            if (ShowValue != strContent) {
+                m_resourceButton->setToolTip(strContent);
+            } else {
+                m_resourceButton->setToolTip("");
+            }
+        }
+    }
+    if (m_filesystemButton) {
+        QString strContent = tr("File Systems");
+        if (!strContent.isEmpty()) {
+            QString ShowValue = getElidedText(m_filesystemButton->font(), strContent, m_filesystemButton->width()-4);
+            m_filesystemButton->setText(ShowValue);
+            if (ShowValue != strContent) {
+                m_filesystemButton->setToolTip(strContent);
+            } else {
+                m_filesystemButton->setToolTip("");
+            }
+        }
+    }
+    if (m_queryText) {
+        m_queryText->update();
+    }
 }
 
 void MonitorTitleWidget::initToolbarRightContent()
