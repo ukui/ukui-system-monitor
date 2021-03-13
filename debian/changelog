@@ -1,3 +1,10 @@
+ukui-system-monitor (2.0.2-11) v101; urgency=medium
+
+  * 修复bug：1、系统字体调16时大部分文本显示不全#42396/#42379
+  * 2、进程cpu占比与top信息相差较大#42394
+
+ -- Yang Min <yangmin@kylinos.cn>  Sat, 13 Mar 2021 10:34:02 +0800
+
 ukui-system-monitor (2.0.2-10) v101; urgency=medium
 
   * 优化功能：1、进程列表信息增加锁保护；2、进程列表的icon对象放到ui线程中处理
