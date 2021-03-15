@@ -925,13 +925,10 @@ void ProcessList::scanProcess()
         }
 
         QString title = getDisplayNameAccordProcName(proc.getProcName(), desktopFile);
-        QLocale locale;
-        if( locale.language() == QLocale::English )  //获取系统语言环境
+        if( title.isEmpty() )
         {
             proc.setDisplayName(proc.getProcName()); //进程名称
-        }
-        else if( locale.language() == QLocale::Chinese )
-        {
+        } else {
             proc.setDisplayName(title);
         }
         proc.setProcCpuDurationTime(formatDurationForDisplay(100 * proc.getProcCpuTime() / proc.getFrequency()));

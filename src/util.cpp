@@ -214,6 +214,11 @@ std::string getDesktopFileAccordProcNameApp(QString procName, QString cmdline)
 {
     QDirIterator dir("/usr/share/applications", QDirIterator::Subdirectories);
     std::string desktopFile;
+    // 去掉程序名称后缀
+    int nIndex = procName.lastIndexOf(".");
+    if (nIndex != -1) {
+        procName.truncate(nIndex);
+    }
     QString procname = procName.toLower();
     procname.replace("_", "-");
     QString processFilename = procname + ".desktop";
