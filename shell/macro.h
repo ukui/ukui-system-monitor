@@ -44,7 +44,7 @@
 /*
  * about the size of every single control
  */
-#define NORMALHEIGHT 32
+#define NORMALHEIGHT 34
 #define SPECIALWIDTH 200
 #define NORMALWIDTH 115
 #define MAINWINDOWHEIGHT 650

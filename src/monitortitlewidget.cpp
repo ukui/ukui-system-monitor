@@ -81,7 +81,7 @@ MonitorTitleWidget::MonitorTitleWidget(QSettings *settings, QWidget *parent)
     }
     
     m_changeBox = new QComboBox();
-    m_changeBox->setFixedSize(NORMALWIDTH,NORMALHEIGHT+2);
+    m_changeBox->setFixedSize(NORMALWIDTH,NORMALHEIGHT);
     m_changeBox->addItem(tr("Active Processes"));
     m_changeBox->addItem(tr("My Processes"));
     m_changeBox->addItem(tr("All Process"));
@@ -599,19 +599,19 @@ void MonitorTitleWidget::initToolbarLeftContent()
     m_processButton->setCheckable(true);
     m_processButton->setAutoExclusive(true);
     m_processButton->setChecked(true);
-    m_processButton->setFixedSize(NORMALWIDTH,NORMALHEIGHT+2);
+    m_processButton->setFixedSize(NORMALWIDTH,NORMALHEIGHT);
 
     m_resourceButton = new QPushButton();
     m_resourceButton->setChecked(false);
     m_resourceButton->setCheckable(true);
     m_resourceButton->setAutoExclusive(true);
-    m_resourceButton->setFixedSize(NORMALWIDTH,NORMALHEIGHT+2);
+    m_resourceButton->setFixedSize(NORMALWIDTH,NORMALHEIGHT);
 
     m_filesystemButton = new QPushButton();
     m_filesystemButton->setChecked(false);
     m_filesystemButton->setCheckable(true);
     m_filesystemButton->setAutoExclusive(true);
-    m_filesystemButton->setFixedSize(NORMALWIDTH,NORMALHEIGHT+2);
+    m_filesystemButton->setFixedSize(NORMALWIDTH,NORMALHEIGHT);
 
     connect(m_processButton, &QPushButton::clicked, this, [=] {
         emit this->changePage(0);
@@ -647,8 +647,6 @@ void MonitorTitleWidget::initToolbarLeftContent()
         emit canelSearchEditFocus();
     });
     emptyWidget = new QWidget();
-    // adjust text show
-    onThemeFontChange(fontSize);
 
     m_processButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     m_resourceButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
@@ -674,6 +672,7 @@ void MonitorTitleWidget::onThemeFontChange(unsigned uFontSize)
                 m_processButton->setToolTip("");
             }
         }
+        m_processButton->setFixedSize(NORMALWIDTH, NORMALHEIGHT+(uFontSize-DEFAULT_FONT_SIZE)*1);
     }
     if (m_resourceButton) {
         QString strContent = tr("Resources");
@@ -686,6 +685,7 @@ void MonitorTitleWidget::onThemeFontChange(unsigned uFontSize)
                 m_resourceButton->setToolTip("");
             }
         }
+        m_resourceButton->setFixedSize(NORMALWIDTH, NORMALHEIGHT+(uFontSize-DEFAULT_FONT_SIZE)*1);
     }
     if (m_filesystemButton) {
         QString strContent = tr("File Systems");
@@ -697,6 +697,19 @@ void MonitorTitleWidget::onThemeFontChange(unsigned uFontSize)
             } else {
                 m_filesystemButton->setToolTip("");
             }
+        }
+        m_filesystemButton->setFixedSize(NORMALWIDTH, NORMALHEIGHT+(uFontSize-DEFAULT_FONT_SIZE)*1);
+    }
+    if (m_searchEditNew) {
+        QFont eFont = m_searchEditNew->font();
+        if (uFontSize >= 14) {
+            eFont.setPointSize(14);
+            m_searchEditNew->setFont(eFont);
+            m_searchEditNew->setFixedSize(SPECIALWIDTH, NORMALHEIGHT+6);
+        } else {
+            eFont.setPointSize(12);
+            m_searchEditNew->setFont(eFont);
+            m_searchEditNew->setFixedSize(SPECIALWIDTH, NORMALHEIGHT+3);
         }
     }
     if (m_queryText) {
@@ -720,7 +733,7 @@ void MonitorTitleWidget::initWidgets()
 {
 //新的搜索框设置
     m_searchEditNew = new QLineEdit();
-    m_searchEditNew->setFixedSize(SPECIALWIDTH, NORMALHEIGHT +2);
+    m_searchEditNew->setFixedSize(SPECIALWIDTH, NORMALHEIGHT);
     m_searchEditNew->installEventFilter(this);
     m_searchEditNew->setContextMenuPolicy(Qt::NoContextMenu);
     QFont ft;
@@ -732,7 +745,7 @@ void MonitorTitleWidget::initWidgets()
     m_queryWid->setFocusPolicy(Qt::NoFocus);
 
     QHBoxLayout* queryWidLayout = new QHBoxLayout;
-    queryWidLayout->setContentsMargins(4,6,0,0);
+    queryWidLayout->setContentsMargins(4,4,0,0);
     queryWidLayout->setAlignment(Qt::AlignJustify);
     queryWidLayout->setSpacing(0);
     m_queryWid->setLayout(queryWidLayout);
@@ -775,6 +788,9 @@ void MonitorTitleWidget::initWidgets()
     initTitlebarRightContent();
     initToolbarLeftContent();
     initToolbarRightContent();
+
+    // adjust text show
+    onThemeFontChange(fontSize);
 }
 
 void MonitorTitleWidget::animationFinishedSlot()
