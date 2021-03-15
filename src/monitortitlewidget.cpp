@@ -81,7 +81,7 @@ MonitorTitleWidget::MonitorTitleWidget(QSettings *settings, QWidget *parent)
     }
     
     m_changeBox = new QComboBox();
-    m_changeBox->setFixedSize(NORMALWIDTH,NORMALHEIGHT);
+    m_changeBox->setFixedSize(NORMALWIDTH+20,NORMALHEIGHT);
     m_changeBox->addItem(tr("Active Processes"));
     m_changeBox->addItem(tr("My Processes"));
     m_changeBox->addItem(tr("All Process"));

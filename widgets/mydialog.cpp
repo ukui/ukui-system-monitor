@@ -187,7 +187,7 @@ int MyDialog::addButton(const QString &text, bool isDefault)
     button->setFocusPolicy(Qt::NoFocus);
 //    button->setStyleSheet("QPushButton{font-size:12px;background-color:transparent;border:1px solid #bebebe;color:#000000;}QPushButton:hover{background-color:#ffffff;border:1px solid #3f96e4;color:#000000;}QPushButton:pressed{background-color:#ffffff;border:1px solid #3f96e4;color:#000000;}");
     button->setAttribute(Qt::WA_NoMousePropagation);
-    button->setFixedSize(91, 25);
+    button->setFixedSize(124, 34);
 
     this->m_buttonLayout->insertWidget(index+1, button);
     this->buttonList << button;

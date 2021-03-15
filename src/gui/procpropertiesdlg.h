@@ -28,6 +28,7 @@
 #include <QDialog>
 #include <QPoint>
 #include <QTimer>
+#include <QGSettings>
 
 class QMouseEvent;
 
@@ -49,12 +50,16 @@ public:
 
 public slots:
     void refreshProcproperties();
+    void onThemeFontChange(unsigned uFontSize);
 
 protected:
     void mouseMoveEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
     void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
     void mouseReleaseEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
     void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
+
+private:
+    void initFontSize();
 
 private:
     QPushButton *closeButton = nullptr;
@@ -76,6 +81,12 @@ private:
 
     QFrame *m_infoFrame = nullptr;
     QList<QLabel *> m_labelList;
+    QList<QLabel *> m_labelTitleList;
+    QStringList m_listValue;
+    QStringList m_listTitleValue;
+    QString m_strTitleName;
+    float fontSize;
+    QGSettings *fontSettings;
 };
 
 #endif // PROPERTIESSDIALOG_H

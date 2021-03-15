@@ -23,6 +23,7 @@
 #include "../process/process_monitor.h"
 #include "../util.h"
 #include "../shell/xatom-helper.h"
+#include "../shell/macro.h"
 
 #include <QApplication>
 #include <QDateTime>
@@ -37,11 +38,18 @@
 #include <QIcon>
 #include <QLineEdit>
 
-const int spacing = 8;
+#define PROC_GRIDITEM_SPACING   6
+#define PROC_GRIDLAYOUT_WIDTH   340
+#define PROC_GRIDITEM_BOARD     2
+#define PROC_GRIDITEM_TITLE_WIDTH  140
+#define PROC_GRIDITEM_CONTENT_WIDTH  190
+#define PROC_DIALOGTITLE_WIDTH  240
+
 using namespace sysmonitor::process;
 
 ProcPropertiesDlg::ProcPropertiesDlg(pid_t processId, QWidget *parent) : QDialog(parent)
   , mousePressed(false)
+  , fontSettings(nullptr)
 {
     MotifWmHints hints;
     hints.flags = MWM_HINTS_FUNCTIONS|MWM_HINTS_DECORATIONS;
@@ -54,6 +62,14 @@ ProcPropertiesDlg::ProcPropertiesDlg(pid_t processId, QWidget *parent) : QDialog
     this->setAttribute(Qt::WA_Resized, false);
 
     this->setFixedWidth(380);
+
+    const QByteArray id(THEME_QT_SCHEMA);
+    if(QGSettings::isSchemaInstalled(id))
+    {
+        fontSettings = new QGSettings(id);
+    }
+
+    initFontSize();
 
     pid = processId;
 
@@ -94,7 +110,7 @@ ProcPropertiesDlg::ProcPropertiesDlg(pid_t processId, QWidget *parent) : QDialog
     m_iconLabel->setContentsMargins(0, 0, 0, 0);
 
     m_titleLabel = new QLabel();
-    m_titleLabel->setFixedWidth(230);
+    m_titleLabel->setFixedWidth(PROC_DIALOGTITLE_WIDTH);
     m_titleLabel->setWordWrap(true);
 
     m_topLeftLayout->addWidget(m_iconLabel, 0, Qt::AlignLeft | Qt::AlignVCenter);
@@ -111,14 +127,14 @@ ProcPropertiesDlg::ProcPropertiesDlg(pid_t processId, QWidget *parent) : QDialog
     bottomSplit->setFixedSize(320, 1);
 
     m_infoFrame = new QFrame;
-    m_infoFrame->setMaximumWidth(320);
+    m_infoFrame->setMaximumWidth(PROC_GRIDLAYOUT_WIDTH);
     m_infoFrame->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
     m_bottomLayout = new QHBoxLayout;
     m_bottomLayout->setContentsMargins(0,0,20,0);
     m_bottomLayout->setSpacing(0);
     m_okBtn = new QPushButton;
-    m_okBtn->setFixedSize(91, 25);
+    m_okBtn->setFixedSize(91, 30);
     m_okBtn->setObjectName("blackButton");
     m_okBtn->setFocusPolicy(Qt::NoFocus);
     m_okBtn->setText(tr("OK"));
@@ -141,25 +157,26 @@ ProcPropertiesDlg::ProcPropertiesDlg(pid_t processId, QWidget *parent) : QDialog
 
     QGridLayout *infoGrid = new QGridLayout(m_infoFrame);
     infoGrid->setMargin(0);
-    infoGrid->setHorizontalSpacing(spacing);
-    infoGrid->setVerticalSpacing(spacing);
+    infoGrid->setHorizontalSpacing(PROC_GRIDITEM_SPACING);
+    infoGrid->setVerticalSpacing(PROC_GRIDITEM_SPACING);
     infoGrid->setColumnStretch(0, 10);
     infoGrid->setColumnStretch(1, 100);
 
-    QStringList titleList;
-    titleList << QObject::tr("User name:") << QObject::tr("Process name:") << QObject::tr("Command line:") << QObject::tr("Started Time:") << QObject::tr("CPU Time:");
-    for (int i = 0; i < titleList.length(); ++i) {
-        QLabel *titleLabel = new QLabel(titleList.value(i));
+    m_listTitleValue << QObject::tr("User name:") << QObject::tr("Process name:") << QObject::tr("Command line:") << QObject::tr("Started Time:") << QObject::tr("CPU Time:");
+    for (int i = 0; i < m_listTitleValue.length(); ++i) {
+        QLabel *titleLabel = new QLabel();
         titleLabel->setMinimumHeight(20);
+        titleLabel->setMaximumWidth(PROC_GRIDITEM_TITLE_WIDTH);
+        QString ShowValue = getElidedText(titleLabel->font(), m_listTitleValue.value(i), PROC_GRIDITEM_TITLE_WIDTH-PROC_GRIDITEM_BOARD);
+        titleLabel->setText(ShowValue);
+        if (ShowValue != m_listTitleValue.value(i))
+            titleLabel->setToolTip(m_listTitleValue.value(i));
+        m_labelTitleList << titleLabel;
 
         QLabel *infoLabel = new QLabel();
-        infoLabel->setFixedWidth(100);
-        infoLabel->setWordWrap(true);
         infoLabel->setMinimumHeight(28);
-        infoLabel->setMinimumWidth(220);
-        infoLabel->setMaximumWidth(240);
+        infoLabel->setMaximumWidth(PROC_GRIDITEM_CONTENT_WIDTH);
         infoLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-        infoLabel->adjustSize();
         m_labelList << infoLabel;
         infoGrid->addWidget(titleLabel);
         infoGrid->addWidget(infoLabel);
@@ -184,6 +201,60 @@ ProcPropertiesDlg::~ProcPropertiesDlg()
     }
 
     m_labelList.clear();
+    m_labelTitleList.clear();
+
+    if (fontSettings) {
+        delete fontSettings;
+        fontSettings = nullptr;
+    }
+}
+
+void ProcPropertiesDlg::initFontSize()
+{
+    if (!fontSettings) {
+        fontSize = DEFAULT_FONT_SIZE;
+        return;
+    }
+    connect(fontSettings,&QGSettings::changed,[=](QString key)
+    {
+        if("systemFont" == key || "systemFontSize" == key)
+        {
+            fontSize = fontSettings->get(FONT_SIZE).toString().toFloat();
+            this->onThemeFontChange(fontSize);
+        }
+    });
+    fontSize = fontSettings->get(FONT_SIZE).toString().toFloat();
+}
+
+void ProcPropertiesDlg::onThemeFontChange(unsigned uFontSize)
+{
+    for (int i = 0; i < this->m_listTitleValue.length(); ++i) {
+        QString ShowValue = getElidedText(m_labelTitleList.value(i)->font(), m_listTitleValue.value(i), PROC_GRIDITEM_TITLE_WIDTH-PROC_GRIDITEM_BOARD);
+        this->m_labelTitleList.value(i)->setText(ShowValue);
+        if (ShowValue != m_listTitleValue.value(i)) {
+            this->m_labelTitleList.value(i)->setToolTip(m_listTitleValue.value(i));
+        } else {
+            this->m_labelTitleList.value(i)->setToolTip("");
+        }
+    }
+    for (int i = 0; i < this->m_labelList.length(); ++i) {
+        QString ShowValue = getElidedText(m_labelList.value(i)->font(), m_listValue.value(i), PROC_GRIDITEM_CONTENT_WIDTH-PROC_GRIDITEM_BOARD);
+        this->m_labelList.value(i)->setText(ShowValue);
+        if (ShowValue != m_listValue.value(i)) {
+            this->m_labelList.value(i)->setToolTip(m_listValue.value(i));
+        } else {
+            this->m_labelList.value(i)->setToolTip("");
+        }
+    }
+    if (m_titleLabel) {
+        QString titleName = getElidedText(m_titleLabel->font(), m_strTitleName, PROC_DIALOGTITLE_WIDTH-PROC_GRIDITEM_BOARD);
+        m_titleLabel->setText(titleName);
+        if (titleName != m_strTitleName) {
+            m_titleLabel->setToolTip(m_strTitleName);
+        } else {
+            m_titleLabel->setToolTip("");
+        }
+    }
 }
 
 void ProcPropertiesDlg::updateLabelFrameHeight()
@@ -191,7 +262,7 @@ void ProcPropertiesDlg::updateLabelFrameHeight()
     int labelTotalHeight = 0;
     foreach (QLabel *label, m_labelList) {
         label->adjustSize();
-        labelTotalHeight += label->size().height() + spacing;
+        labelTotalHeight += label->size().height() + PROC_GRIDITEM_SPACING;
     }
     m_infoFrame->setFixedHeight(labelTotalHeight);
     m_infoFrame->adjustSize();
@@ -232,20 +303,29 @@ void ProcPropertiesDlg::initProcproperties()
                 //icon_pixmap.setDevicePixelRatio(qApp->devicePixelRatio());
             }
         }
-        QString displayName = getDisplayNameAccordProcName(name, desktopFile);
+        m_strTitleName = getDisplayNameAccordProcName(name, desktopFile);
         m_iconLabel->setPixmap(icon_pixmap);
-        m_titleLabel->setText(displayName);
+        QString titleName = getElidedText(m_titleLabel->font(), m_strTitleName, PROC_DIALOGTITLE_WIDTH-PROC_GRIDITEM_BOARD);
+        m_titleLabel->setText(titleName);
+        if (titleName != m_strTitleName) {
+            m_titleLabel->setToolTip(m_strTitleName);
+        } else {
+            m_titleLabel->setToolTip("");
+        }        
 
-        QStringList valueList;
-        valueList << username << QString(info.getProcName()) << QString(info.getProcArgments())
+        m_listValue << username << QString(info.getProcName()) << QString(info.getProcArgments())
                    << QFileInfo(QString("/proc/%1").arg(pid)).created().toString("yyyy-MM-dd hh:mm:ss")
                    << formatDurationForDisplay(100 * info.getProcCpuTime() / info.getFrequency());
+        
 
         for (int i = 0; i < this->m_labelList.length(); ++i) {
-            QString ShowValue = getElidedText(m_labelList.value(i)->font(), valueList.value(i), 200);
+            QString ShowValue = getElidedText(this->m_labelList.value(i)->font(), m_listValue.value(i), PROC_GRIDITEM_CONTENT_WIDTH-PROC_GRIDITEM_BOARD);
             this->m_labelList.value(i)->setText(ShowValue);
-            if (ShowValue != valueList.value(i))
-                this->m_labelList.value(i)->setToolTip(valueList.value(i));
+            if (ShowValue != m_listValue.value(i)) {
+                this->m_labelList.value(i)->setToolTip(m_listValue.value(i));
+            } else {
+                this->m_labelList.value(i)->setToolTip("");
+            }
         }
     }
     this->updateLabelFrameHeight();
@@ -256,10 +336,27 @@ void ProcPropertiesDlg::refreshProcproperties()
     sysmonitor::process::Process info = ProcessMonitor::instance()->processList()->getProcessById(pid);
     if (info.isValid()) {
         for (int i = 0; i < this->m_labelList.length(); ++i) {
-            if (i == 3)
+            if (i == 3) {
                 this->m_labelList.value(i)->setText(QFileInfo(QString("/proc/%1").arg(pid)).created().toString("yyyy-MM-dd hh:mm:ss"));
-            if (i == 4)
+                m_listValue[i] = this->m_labelList.value(i)->text();
+                QString ShowValue = getElidedText(this->m_labelList.value(i)->font(), m_listValue.value(i), PROC_GRIDITEM_CONTENT_WIDTH-PROC_GRIDITEM_BOARD);
+                this->m_labelList.value(i)->setText(ShowValue);
+                if (ShowValue != m_listValue.value(i)) {
+                    this->m_labelList.value(i)->setToolTip(m_listValue.value(i));
+                } else {
+                    this->m_labelList.value(i)->setToolTip("");
+                }                    
+            } else if (i == 4) {
                 this->m_labelList.value(i)->setText(formatDurationForDisplay(100 * info.getProcCpuTime() / info.getFrequency()));
+                m_listValue[i] = this->m_labelList.value(i)->text();
+                QString ShowValue = getElidedText(this->m_labelList.value(i)->font(), m_listValue.value(i), PROC_GRIDITEM_CONTENT_WIDTH-PROC_GRIDITEM_BOARD);
+                this->m_labelList.value(i)->setText(ShowValue);
+                if (ShowValue != m_listValue.value(i)) {
+                    this->m_labelList.value(i)->setToolTip(m_listValue.value(i));
+                } else {
+                    this->m_labelList.value(i)->setToolTip("");
+                }
+            }
         }
     }
 }
