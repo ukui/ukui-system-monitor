@@ -24,30 +24,29 @@
 #include "../shell/macro.h"
 #include "smoothlinegenerator.h"
 
+#define CPUHIS_POINT_COUNT_MAX      100
+
 CpuHistoryChart::CpuHistoryChart(QWidget *parent):QWidget(parent)
   ,m_outsideBorderColor("transparent")
   ,m_cpuHistoryColor(QColor("#F64F61"))
 {
-    this->setMinimumSize(680,90);
+    this->setMinimumSize(660,90);
     this->setSizePolicy(QSizePolicy::MinimumExpanding,QSizePolicy::Expanding);
-    m_pointsCount = int((this->width()) /10);
-    m_cpuMaxHeight = 50;
-    m_CpuHistoryList = new QList<double>();
+    m_pointsCount = CPUHIS_POINT_COUNT_MAX;
+    m_CpuHistoryList.clear();
 }
 
 CpuHistoryChart::~CpuHistoryChart()
 {
-    if(m_CpuHistoryList)
-    {
-        delete m_CpuHistoryList;
-    }
+    m_CpuHistoryList.clear();
 }
 
-
+// 绘制cpu历史占比背景及前景线
 void CpuHistoryChart::paintEvent(QPaintEvent *event)
 {
 ///*****************************原来的折线图绘制法**********************************
-    m_pointsCount = rect().width() / POINTSPACE;
+    qreal lfPointSpace = (qreal)width()/m_pointsCount;
+    qreal lfPointYP = (qreal)height()/100;
     QPainter painter(this);
     painter.save();
 
@@ -75,84 +74,44 @@ void CpuHistoryChart::paintEvent(QPaintEvent *event)
 //draw Cpu history line
     painter.save();
     painter.translate(rect().right(),rect().bottom());
-    painter.scale(-1, -1);//将横坐标扩大1倍,将纵坐标缩小1倍
+    painter.rotate(180);//将横纵坐标顺时针旋转180°
 
-//    painter.translate((rect().width() - m_pointsCount * POINTSPACE - 2) / 2 + 6, 89);//将坐标的原点移动到该点
     QPen pen(this->m_cpuHistoryColor,2);
+    QList<QPointF> cpuHistoryPoints;
+    for (int i = 0; i < m_CpuHistoryList.size(); i++)
+    {
+        cpuHistoryPoints.append(QPointF((m_CpuHistoryList.size()-i-1) * lfPointSpace, m_CpuHistoryList[i]*lfPointYP));
+    }
+    QPainterPath pathPoint;
+    if (!cpuHistoryPoints.isEmpty()) {
+        pathPoint.moveTo(cpuHistoryPoints[0]);
+        for (int n = 1; n < cpuHistoryPoints.size(); n++) {
+            #if 1
+            QPointF ctlPoint[2];
+            ctlPoint[0].setX((cpuHistoryPoints[n-1].x()+cpuHistoryPoints[n].x())/2);
+            ctlPoint[0].setY(cpuHistoryPoints[n-1].y());
+            ctlPoint[1].setX((cpuHistoryPoints[n-1].x()+cpuHistoryPoints[n].x())/2);
+            ctlPoint[1].setY(cpuHistoryPoints[n].y());
+            pathPoint.cubicTo(ctlPoint[0], ctlPoint[1], cpuHistoryPoints[n]);
+            #else
+            pathPoint.lineTo(cpuHistoryPoints[n]);
+            #endif
+        }
+    }
     painter.setPen(pen);
     painter.setRenderHint(QPainter::Antialiasing, true);
-    painter.drawPath(m_cpuHistoryPath);//绘制前面创建的path:m_downloadPath
+    painter.drawPath(pathPoint);
     painter.restore();
-//    update();
     QWidget::paintEvent(event);
-
-//    **********************************现在的折线图写法********************************/
-
-   /* QPainter painter(this);
-    painter.setOpacity(0.08);
-    QPainterPath framePath;
-    QStyleOption opt;
-    opt.init(this);
-    m_bgColor = (QColor("#131414"));
-
-    framePath.addRoundedRect(QRectF(this->rect().x(), this->rect().y(), this->rect().width(), this->rect().height()),4,4);
-    painter.fillPath(framePath, this->m_bgColor);//painter.drawPath(framePath);
-
-    QPainter p(this);
-    p.save();
-    p.setRenderHint(QPainter::Antialiasing, true);  //设置折线反锯齿
-    p.scale(1,1);
-    QColor colorCpuHistory = QColor("#F64F61");
-    QPen pen(colorCpuHistory,1);
-    pen.setWidth(2);
-    p.setPen(pen);
-    for(int j = 2; j<i-1; j++)
-    {
-        point.setX(xList[j+1]);
-        point.setY(yDrawList[j+1]);
-        p.drawLine(QPointF(xList[j],yDrawList[j]),point);
-    } */
 }
 
+// 记录cpu历史占比
 void CpuHistoryChart::refreshCpuHistoryData(double cpu)
 {
-    m_Cpu = cpu  / 90 * rect().height();
-    QList<QPointF> cpuHistoryPoints;
-    m_CpuHistoryList->append(cpu);
-    while (m_CpuHistoryList->size() > m_pointsCount)    {
-        m_CpuHistoryList->pop_front();
+    m_CpuHistoryList.append(cpu);
+    while (m_CpuHistoryList.size() > m_pointsCount)    {
+        m_CpuHistoryList.pop_front();
     }
-
-    //计算出Cpu历史占用率的最大的值
-    double cpuHistoryMaxHeight = 0.0;
-    for (int i = 0; i < m_CpuHistoryList->size(); i++)
-    {
-        if (m_CpuHistoryList->at(i) > cpuHistoryMaxHeight)
-        {
-            cpuHistoryMaxHeight = m_CpuHistoryList->at(i);
-        }
-    }
-    for (int i = 0; i < m_CpuHistoryList->size(); i++)
-    {
-//        qDebug()<<"m_CpuHistoryList.size"<<m_CpuHistoryList->size();
-        if (cpuHistoryMaxHeight < m_cpuMaxHeight)
-        {
-            cpuHistoryPoints.append(QPointF((m_CpuHistoryList->size() - i -2) * POINTSPACE, m_CpuHistoryList->at(i)));
-        }
-        else
-        {
-            cpuHistoryPoints.append(QPointF((m_CpuHistoryList->size() - i -2) * POINTSPACE, m_CpuHistoryList->at(i) * m_cpuMaxHeight /cpuHistoryMaxHeight));
-        }
-    }
-    m_cpuHistoryPath = SmoothLineGenerator::generateSmoothCurve(cpuHistoryPoints);
-//    update();
-
-//    int x = int(m_pointsCount *i * 0.1 + 0.5);
-//    showValue = int(cpu) + 0.5;
-//    xList<< x;
-//    yDrawList << showValue;
-//    update();
-//    i++;
 }
 
 void CpuHistoryChart::onUpdateCpuPercent(double value)

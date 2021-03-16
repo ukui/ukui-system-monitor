@@ -50,8 +50,8 @@ private:
     float m_memoryData;
     float m_swapData;
 
-    QList<float> *m_memoryDataList;
-    QList<float> *m_swapDataList;
+    QList<float> m_memoryDataList;
+    QList<float> m_swapDataList;
 
     int m_pointsCount;
     int m_pointSpace;
@@ -65,9 +65,12 @@ private:
     QList<qreal> xList; //x数据链
     QList<qreal> yDrawList; //y数据链
     int showValue;
+    qreal m_curMaxMemSpace = 1;
 
 public slots:
     void onUpdateMemoryAndSwapData(float,double,float,double);
+signals:
+    void spaceToDynamicMax(qreal lfMaxSpace);
 };
 
 #endif //#define _SWAPANDMEMORYCHART_H

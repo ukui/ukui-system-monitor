@@ -74,16 +74,16 @@ public:
 private:
 
     //cpu
-    unsigned long long m_prevCpuTotalTime;
-    unsigned long long m_prevCpuWorkTime;
-    unsigned long long m_cpuTotalTime;
-    unsigned long long m_cpuworkTime;
+    unsigned long long m_prevCpuTotalTime = 0;
+    unsigned long long m_prevCpuWorkTime = 0;
+    unsigned long long m_cpuTotalTime = 0;
+    unsigned long long m_cpuworkTime = 0;
 
     //network
-    unsigned long long int m_totalRecvBytes;
-    unsigned long long int m_totalSentBytes;
-    unsigned long long int m_rateRecvBytes;
-    unsigned long long int m_rateSentBytes;
+    unsigned long long int m_totalRecvBytes = 0;
+    unsigned long long int m_totalSentBytes = 0;
+    unsigned long long int m_rateRecvBytes = 0;
+    unsigned long long int m_rateSentBytes = 0;
 
     QTimer *updateStatusTimer = nullptr;
     QHBoxLayout *m_hlayout = nullptr;

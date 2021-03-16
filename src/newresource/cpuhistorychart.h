@@ -33,6 +33,7 @@ public:
     CpuHistoryChart(QWidget *parent = 0);
     ~CpuHistoryChart();
     void refreshCpuHistoryData(double cpu);
+    void redrawCpuHistoryPath();
 
 protected:
     void paintEvent(QPaintEvent *event);
@@ -43,7 +44,7 @@ private:
     QColor m_cpuHistoryColor;
 
     QPainterPath m_cpuHistoryPath;
-    QList<double> *m_CpuHistoryList;
+    QList<double> m_CpuHistoryList;
     QList<qreal> xList; //x数据链
     QList<qreal> yDrawList; //y数据链
 

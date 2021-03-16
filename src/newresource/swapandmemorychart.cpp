@@ -21,6 +21,7 @@
 #include "swapandmemorychart.h"
 #include "../shell/macro.h"
 #include <QPainter>
+#include <math.h>
 
 inline double formatMemory(double size)
 {
@@ -49,108 +50,62 @@ inline double formatMemory(double size)
     return size/(double)factor;
 }
 
+#define MEMHIS_POINT_COUNT_MAX      100
+
 SwapAndMemoryChart::SwapAndMemoryChart(QWidget *parent):QWidget(parent)
   ,m_outsideBorderColor("transparent")
   ,m_memoryColor(QColor("#cc72ff"))
   ,m_swapColor(QColor("#26c3a1"))
 {
-    this->setMinimumSize(680,90);
+    this->setMinimumSize(660,90);
     this->setSizePolicy(QSizePolicy::MinimumExpanding,QSizePolicy::Expanding);
-    m_pointsCount = int(this->width() / POINTSPACE);
-    m_memoryDataList = new QList<float>();
-    m_swapDataList = new QList<float>();
-    m_memoryMaxHeight = this->width()/2;
-    m_swapMaxHeight = this->width()/2;
+    m_pointsCount = MEMHIS_POINT_COUNT_MAX;
+    m_memoryDataList.clear();
+    m_swapDataList.clear();
 }
 
 SwapAndMemoryChart::~SwapAndMemoryChart()
 {
-    if(m_memoryDataList)
-    {
-        delete m_memoryDataList;
-    }
-    if(m_swapDataList)
-    {
-        delete m_swapDataList;
-    }
 }
 
-void SwapAndMemoryChart::onUpdateMemoryAndSwapData(float memoryData,double memoryPercent,float swapData,double swapPercent)
+void SwapAndMemoryChart::onUpdateMemoryAndSwapData(float memoryUsed,double memoryTotal,float swapUsed,double swapTotal)
 {
-    refreshMemoryAndSwapData(memoryData,memoryPercent,swapData,swapPercent);
+    refreshMemoryAndSwapData(memoryUsed,memoryTotal,swapUsed,swapTotal);
 }
 
-void SwapAndMemoryChart::refreshMemoryAndSwapData(float memoryData, double memoryPercent, float swapData, double swapPercent)
+inline qreal getMemMaxSpace(qreal lfRealTotal)
 {
-    m_memoryData = formatMemory(memoryData) * (this->height()/10) *(rect().height() / this->height());
-    m_swapData = formatMemory(swapData) * (this->height()/10) *(rect().height() / this->height());
+    qreal lfMemTotalG = ceil(lfRealTotal / 1024 / 1024);
+    // 向2的n次方取整
+    int nPow = ceil(log(lfMemTotalG)/log(2.0));
+    lfMemTotalG = pow(2.0, nPow);
+    return (lfMemTotalG*1024*1024);
+}
 
-    if(m_memoryData >= 100)
-    {
-        m_memoryData /= 4;
+void SwapAndMemoryChart::refreshMemoryAndSwapData(float memoryUsed, double memoryTotal, float swapUsed, double swapTotal)
+{
+    m_memoryDataList.append(memoryUsed);
+    while (m_memoryDataList.size() > m_pointsCount) {
+        m_memoryDataList.pop_front();
     }
-
-    QList<QPointF> memoryPoints;
-    m_memoryDataList->append(m_memoryData);
-    while (m_memoryDataList->size() > m_pointsCount) {
-        m_memoryDataList->pop_front();
-    }
-
-    //计算出Cpu历史占用率的最大的值
-    double memoryMaxHeight = 0.0;
-    for (int i = 0; i < m_memoryDataList->size(); i++)
-    {
-        if (m_memoryDataList->at(i) > memoryMaxHeight)
-        {
-            memoryMaxHeight = m_memoryDataList->at(i);
-        }
-    }
-    for (int i = 0; i < m_memoryDataList->size(); i++)
-    {
-//        qDebug() << "m_CpuHistoryList.size" << m_memoryDataList->size();
-        if (memoryMaxHeight < m_memoryMaxHeight)
-        {
-            memoryPoints.append(QPointF((m_memoryDataList->size() - i -2) * POINTSPACE, m_memoryDataList->at(i)));
-        }
-        else
-        {
-            memoryPoints.append(QPointF((m_memoryDataList->size() - i -2) * POINTSPACE, m_memoryDataList->at(i) * m_memoryMaxHeight /memoryMaxHeight));
-        }
-    }
-    m_memoryPath = SmoothLineGenerator::generateSmoothCurve(memoryPoints);
-
-    QList<QPointF> swapPoints;
-    m_swapDataList->append(m_swapData);
-    while (m_swapDataList->size() > m_pointsCount)
-    {
-        m_swapDataList->pop_front();
+    m_swapDataList.append(swapUsed);
+    while (m_swapDataList.size() > m_pointsCount) {
+        m_swapDataList.pop_front();
     }
 
-    double swapMaxHeight = 0.0;
-    for (int i = 0; i < m_swapDataList->size(); i++)
-    {
-        if (m_swapDataList->at(i) > swapMaxHeight)
-        {
-            swapMaxHeight = m_swapDataList->at(i);
-        }
+    if (memoryTotal > m_curMaxMemSpace) {
+        m_curMaxMemSpace = memoryTotal;
     }
-    for (int i = 0; i < m_swapDataList->size(); i++)
-    {
-        if (swapMaxHeight < m_swapMaxHeight)
-        {
-            swapPoints.append(QPointF((m_swapDataList->size() - i -2) * POINTSPACE, m_swapDataList->at(i)));
-        }
-        else
-        {
-            swapPoints.append(QPointF((m_swapDataList->size() - i -2) * POINTSPACE, m_swapDataList->at(i) * m_swapMaxHeight /swapMaxHeight));
-        }
+    if (swapTotal > m_curMaxMemSpace) {
+        m_curMaxMemSpace = swapTotal;
     }
-    m_swapPath = SmoothLineGenerator::generateSmoothCurve(swapPoints);
+    m_curMaxMemSpace = getMemMaxSpace(m_curMaxMemSpace);
+    emit this->spaceToDynamicMax(m_curMaxMemSpace);
 }
 
 void SwapAndMemoryChart::resizeEvent(QResizeEvent *event)
 {
-    m_pointsCount = int(this->width() / POINTSPACE);
+    QWidget::resizeEvent(event);
 }
 
 void SwapAndMemoryChart::paintEvent(QPaintEvent *event)
@@ -178,75 +133,67 @@ void SwapAndMemoryChart::paintEvent(QPaintEvent *event)
     painter.drawLine(rect().x(), rect().y() + distance * 3, rect().right(), rect().y() + distance * 3);
     painter.restore();
 
-    //draw memory line
-    /*************************  old draw memory line ************************
-    painter.save();
-    painter.setOpacity(1);
-    painter.translate((rect().width() - m_pointsCount * POINTSPACE - 2) / 2 + 6, 89);//将坐标的原点移动到该点
-    painter.scale(1, -1);//将横坐标扩大1倍,将纵坐标缩小1倍
-    QPen pen(this->m_memoryColor,1);
-    pen.setWidth(5);
-    painter.setPen(pen);
-    painter.setBrush(QBrush());//painter.setBrush(QBrush(QColor("#f4f2f4")));
-    painter.setRenderHint(QPainter::Antialiasing, true);
-    painter.drawPath(m_memoryPath);//绘制前面创建的path:m_downloadPath
-    painter.restore();
-    ////////////////////////////old tu
-    painter.save();
-    painter.translate(rect().right(),rect().bottom() - 1);
-    painter.setRenderHint(QPainter::Antialiasing, true);  //设置折线反锯齿
-    painter.scale(-1,-1);
-    QPen pen(m_memoryColor,1);
-    pen.setWidth(3);
-    painter.setPen(pen);
-    for(int i = 0; i < m_pointsCount - 1; i++)
+// calculate memory path
+    qreal lfPointSpace = (qreal)width()/m_pointsCount;
+    qreal lfPointYP = (qreal)height()/100;
+    QList<QPointF> memoryPoints;
+    for (int i = 0; i < m_memoryDataList.size(); i++)
     {
-        qDebug()<<"m_pointsCount---"<<m_pointsCount;
-        QPoint point;
-        point.setX((i+1) * POINTSPACE);
-        point.setY(m_memoryDataList->at(i+1));
-        painter.drawLine(QPointF(i*POINTSPACE,m_memoryDataList->at(i)),point);
+        memoryPoints.append(QPointF((m_memoryDataList.size()-i-1) * lfPointSpace, m_memoryDataList[i]*100*lfPointYP/m_curMaxMemSpace));
     }
-    painter.restore();
-   ******************************** old draw memory line *****************/
+    if (!memoryPoints.isEmpty()) {
+        QPainterPath pathTmp;
+        m_memoryPath.swap(pathTmp);
+        m_memoryPath.moveTo(memoryPoints[0]);
+        for (int n = 1; n < memoryPoints.size(); n++) {
+            #if 1
+            QPointF ctlPoint[2];
+            ctlPoint[0].setX((memoryPoints[n-1].x()+memoryPoints[n].x())/2);
+            ctlPoint[0].setY(memoryPoints[n-1].y());
+            ctlPoint[1].setX((memoryPoints[n-1].x()+memoryPoints[n].x())/2);
+            ctlPoint[1].setY(memoryPoints[n].y());
+            m_memoryPath.cubicTo(ctlPoint[0], ctlPoint[1], memoryPoints[n]);
+            #else
+            m_memoryPath.lineTo(memoryPoints[n]);
+            #endif
+        }
+    }
+// calculate swap path
+    QList<QPointF> swapPoints;
+    for (int i = 0; i < m_swapDataList.size(); i++)
+    {
+        swapPoints.append(QPointF((m_swapDataList.size()-i-1) * lfPointSpace, m_swapDataList[i]*100*lfPointYP/m_curMaxMemSpace));
+    }
+    if (!swapPoints.isEmpty()) {
+        QPainterPath pathTmp;
+        m_swapPath.swap(pathTmp);
+        m_swapPath.moveTo(swapPoints[0]);
+        for (int n = 1; n < swapPoints.size(); n++) {
+            #if 1
+            QPointF ctlPoint[2];
+            ctlPoint[0].setX((swapPoints[n-1].x()+swapPoints[n].x())/2);
+            ctlPoint[0].setY(swapPoints[n-1].y());
+            ctlPoint[1].setX((swapPoints[n-1].x()+swapPoints[n].x())/2);
+            ctlPoint[1].setY(swapPoints[n].y());
+            m_swapPath.cubicTo(ctlPoint[0], ctlPoint[1], swapPoints[n]);
+            #else
+            m_swapPath.lineTo(swapPoints[n]);
+            #endif
+        }
+    }
+//draw memory line
     painter.save();
-    painter.translate(rect().right(),rect().bottom());
-    painter.scale(-1, -1);//将横坐标扩大1倍,将纵坐标缩小1倍
-
-//    painter.translate((rect().width() - m_pointsCount * POINTSPACE - 2) / 2 + 6, 89);//将坐标的原点移动到该点
-
+    painter.translate(rect().right(),rect().bottom()-1);//将坐标的原点移动到该点
+    painter.rotate(180);//将横纵坐标顺时针旋转180°
     QPen pen(this->m_memoryColor,2);
     painter.setPen(pen);
-    painter.setBrush(QBrush());//painter.setBrush(QBrush(QColor("#f4f2f4")));
+    painter.setBrush(QBrush());
     painter.setRenderHint(QPainter::Antialiasing, true);
     painter.drawPath(m_memoryPath);//绘制前面创建的path:m_downloadPath
-    painter.restore();
 //draw swap line
-/***********   old draw swap line ***************
-    painter.save();
-    painter.translate(0,rect().bottom() - 3);
-    painter.setRenderHint(QPainter::Antialiasing, true);  //设置折线反锯齿
-    painter.scale(1,-1);
-    QPen penSwap(m_swapColor,1);
-    penSwap.setWidth(3);
-    painter.setPen(penSwap);
-    for(int i = 0; i < m_pointsCount - 1; i++)
-    {
-        qDebug()<<"m_pointsCount---"<<m_pointsCount;
-        QPoint point;
-        point.setX((i+1) * POINTSPACE);
-        point.setY(m_swapDataList->at(i+1));
-        painter.drawLine(QPointF(i*POINTSPACE,m_swapDataList->at(i)),point);
-    }
-    painter.restore();
-   ********************  old draw swap line**************/
-    painter.save();
-    painter.translate(rect().right(),rect().bottom());
-    painter.scale(-1, -1);//将横坐标扩大1倍,将纵坐标缩小1倍
+    painter.translate(0,-1);
     QPen penSwap(this->m_swapColor,2);
     painter.setPen(penSwap);
-    painter.setBrush(QBrush());//painter.setBrush(QBrush(QColor("#f4f2f4")));
-    painter.setRenderHint(QPainter::Antialiasing, true);
     painter.drawPath(m_swapPath);//绘制前面创建的path:m_downloadPath
     painter.restore();
     QWidget::paintEvent(event);

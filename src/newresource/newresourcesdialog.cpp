@@ -120,7 +120,7 @@ void NewResouresDialog::onUpdateMemoryAndSwapStatus()
     const QString infoMemory = QString("%1/%2").arg(formatMemory(mi.user)).arg(formatMemory(mi.total));
     const QString infoSwap = QString("%1/%2").arg(formatMemory(mi.swapused)).arg(formatMemory(mi.swaptotal));
     emit rebackMemoryAndSwapInfo(infoMemory, mi.percent,infoSwap,mi.swappercent);
-    emit rebackMemoryAndSwapData(mi.user,mi.percent,mi.swapused,mi.swappercent);
+    emit rebackMemoryAndSwapData(mi.user,mi.total,mi.swapused,mi.swaptotal);
 //    emit rebackSwapInfo(infoSwap,mi.swappercent);
     repaint();//this->update();
 }
@@ -141,7 +141,7 @@ inline void getNetworkBytesData(unsigned long long int &receiveBytes, unsigned l
     guint32 i;
     guint64 in = 0, out = 0;
     GTimeVal time;
-    guint64 din, dout;
+    guint64 din = 0, dout = 0;
     ifnames = glibtop_get_netlist(&netlist);
 
     for (i = 0; i < netlist.number; ++i) {
@@ -273,8 +273,8 @@ NewResouresDialog::NewResouresDialog(QWidget *parent)
     netrecvUnitDataLabel = new QLabel;
     netsentUnitDataLabel = new QLabel;
     initThemeMode();
-    initWidget();
     initFontSize();
+    initWidget();
     setChangeNetSpeedLabel();
     tosetFontSize();
 
@@ -329,6 +329,14 @@ void NewResouresDialog::setChangeNetSpeedLabel()
         theSecondSpeedLabel->setText("250"+tr("KiB"));
         theFirtSpeedLabel->setText("0"+tr("KiB"));
     });
+
+    connect(networkChart,&NetWorkChart::speedToDynamicMax,this,[=](qreal lfMaxSpeed){
+        theFifthSpeedLabel->setText(formatNetworkBrandWidth(lfMaxSpeed,true));
+        theFourthSpeedLabel->setText(formatNetworkBrandWidth(lfMaxSpeed*3/4,true));
+        theThirdSpeedLabel->setText(formatNetworkBrandWidth(lfMaxSpeed*2/4,true));
+        theSecondSpeedLabel->setText(formatNetworkBrandWidth(lfMaxSpeed*1/4,true));
+        theFirtSpeedLabel->setText(formatNetworkBrandWidth(0,true));
+    });
 }
 
 void NewResouresDialog::cpuHistoySetText(double value)
@@ -382,7 +390,7 @@ void NewResouresDialog::initWidget()
     main_V_BoxLayout->addLayout(netWorkTitle_H_BoxLayout);
     main_V_BoxLayout->addLayout(networkUnit_H_BoxLayout);
     main_V_BoxLayout->addLayout(networkChart_H_BoxLayout);
-    main_V_BoxLayout->addSpacing(15);
+    main_V_BoxLayout->addSpacing(10);
 
     this->setLayout(main_V_BoxLayout);
 
@@ -445,7 +453,7 @@ void NewResouresDialog::initCpuHistory()
     cpupercent_V_BoxLayout->addWidget(nullLabel,1,Qt::AlignRight);
     cpuWidget->setLayout(cpupercent_V_BoxLayout);
     cpuChart_H_BoxLayout->addWidget(cpuWidget);
-    cpuChart_H_BoxLayout->addSpacing(10);
+    cpuChart_H_BoxLayout->addSpacing(5);
     cpuChart_H_BoxLayout->addWidget(histoyChart);
     cpuChart_H_BoxLayout->setSpacing(0);
 }
@@ -512,8 +520,16 @@ void NewResouresDialog::initSwapMeomoryHistory()
         nullGibLabel->setPalette(pe);
         swapmemoryWiget->setLayout(swapmemory_V_BoxLayout);
         memoryswapChart_H_BoxLayout->addWidget(swapmemoryWiget);
-        memoryswapChart_H_BoxLayout->addSpacing(10);
+        memoryswapChart_H_BoxLayout->addSpacing(5);
         memoryswapChart_H_BoxLayout->addWidget(swapandmemoryChart);
+
+        connect(swapandmemoryChart,&SwapAndMemoryChart::spaceToDynamicMax,this,[=](qreal lfMaxSpace){
+            tenGibLabel->setText(formatMemory(lfMaxSpace));
+            sevenpointFiveGibLabel->setText(formatMemory(lfMaxSpace*3/4));
+            fiveGibLabel->setText(formatMemory(lfMaxSpace*2/4));
+            twopointfiveGibLabel->setText(formatMemory(lfMaxSpace*1/4));
+            nullGibLabel->setText("0.0"+tr("GiB"));
+        });
 }
 
 void NewResouresDialog::initNetSpeedHistory()
@@ -572,7 +588,7 @@ void NewResouresDialog::initNetSpeedHistory()
         networkWidget->setLayout(netspeed_V_BoxLayout);
         networkChart = new NetWorkChart();
         networkChart_H_BoxLayout->addWidget(networkWidget);
-        networkChart_H_BoxLayout->addSpacing(10);
+        networkChart_H_BoxLayout->addSpacing(5);
         networkChart_H_BoxLayout->addWidget(networkChart);
 }
 
@@ -580,7 +596,7 @@ void NewResouresDialog::tosetFontSize()
 {
 //context font
     QFont fontTitle;
-    fontTitle.setPointSize(fontSize*1.5);
+    fontTitle.setPointSize(fontSize*1.3);
     cpuHistoryLabel->setFont(fontTitle);
     memoryAndSwapLabel->setFont(fontTitle);
     netWorkFlowLabel->setFont(fontTitle);
@@ -601,7 +617,7 @@ void NewResouresDialog::tosetFontSize()
     }
     else if(leftUnit >14 && leftUnit <= 16)
     {
-        leftUnit = 13;
+        leftUnit = 12;
     }
     else
     {
@@ -695,7 +711,6 @@ void NewResouresDialog::initFontSize()
         tosetFontSize();
     });
     fontSize = fontSettings->get(FONT_SIZE).toInt();
-    tosetFontSize();
 }
 
 void NewResouresDialog::updateResourceStatus()

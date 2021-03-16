@@ -24,35 +24,27 @@
 #include <QPainter>
 #include <QDebug>
 
+#define NETHIS_POINT_COUNT_MAX      100
+
 NetWorkChart::NetWorkChart(QWidget *parent):QWidget(parent)
   ,m_outsideBorderColor("transparent")
   ,m_downLoadColor(QColor("#42b1eb"))
   ,m_upLoadColor(QColor("#f1bf48"))
 {
-    this->setMinimumSize(680,90);
+    this->setMinimumSize(660,90);
     this->setSizePolicy(QSizePolicy::MinimumExpanding,QSizePolicy::MinimumExpanding);
-    m_pointsCount = int((this->width()) /10);
-    m_downLoadMaxHeight = int(this->width()/2);
-    m_downLoadList = new QList<double>();
-    m_upLoadMaxHeight = int(this->width()/2);
-    m_upLoadList = new QList<double>();
+    m_pointsCount = NETHIS_POINT_COUNT_MAX;
+    m_downLoadList.clear();
+    m_upLoadList.clear();
+    m_curMaxLoadSpeed = 20 * 1024;
 }
 
 NetWorkChart::~NetWorkChart()
 {
-    if(m_downLoadList)
-    {
-        delete m_downLoadList;
-    }
-    if(m_upLoadList)
-    {
-        delete m_upLoadList;
-    }
 }
 
 void NetWorkChart::paintEvent(QPaintEvent *event)
 {
-
     QPainter painter(this);
     painter.save();
     painter.setOpacity(0.08);
@@ -75,135 +67,115 @@ void NetWorkChart::paintEvent(QPaintEvent *event)
     painter.drawLine(rect().x(), rect().y() + distance * 3, rect().right(), rect().y() + distance * 3);
     painter.restore();
 
-//draw download line
-    painter.save();
-//    painter.translate((rect().width() - m_pointsCount * POINTSPACE - 2) / 2 + 6, 89);//将坐标的原点移动到该点
-    painter.translate(rect().right(),rect().bottom() - 2);
-    painter.scale(-1, -1);//将横坐标扩大1倍,将纵坐标缩小1倍
-    QPen pen(this->m_downLoadColor,2);
-    painter.setPen(pen);
-    painter.setBrush(QBrush());//painter.setBrush(QBrush(QColor("#f4f2f4")));
-    painter.setRenderHint(QPainter::Antialiasing, true);
-    painter.drawPath(m_downLoadPath);//绘制前面创建的path:m_downloadPath
-    painter.restore();
-
-//draw upload line
+// calculate download path
+    qreal lfPointSpace = (qreal)width()/m_pointsCount;
+    qreal lfPointYP = (qreal)height()/100;
+    QList<QPointF> downloadPoints;
+    for (int i = 0; i < m_downLoadList.size(); i++)
+    {
+        downloadPoints.append(QPointF((m_downLoadList.size()-i-1) * lfPointSpace, m_downLoadList[i]*100*lfPointYP/m_curMaxLoadSpeed));
+    }
+    if (!downloadPoints.isEmpty()) {
+        QPainterPath pathTmp;
+        m_downLoadPath.swap(pathTmp);
+        m_downLoadPath.moveTo(downloadPoints[0]);
+        for (int n = 1; n < downloadPoints.size(); n++) {
+            #if 1
+            QPointF ctlPoint[2];
+            ctlPoint[0].setX((downloadPoints[n-1].x()+downloadPoints[n].x())/2);
+            ctlPoint[0].setY(downloadPoints[n-1].y());
+            ctlPoint[1].setX((downloadPoints[n-1].x()+downloadPoints[n].x())/2);
+            ctlPoint[1].setY(downloadPoints[n].y());
+            m_downLoadPath.cubicTo(ctlPoint[0], ctlPoint[1], downloadPoints[n]);
+            #else
+            m_downLoadPath.lineTo(downloadPoints[n]);
+            #endif
+        }
+    }
+// calculate upload path
+    QList<QPointF> uploadPoints;
+    for (int i = 0; i < m_upLoadList.size(); i++)
+    {
+        uploadPoints.append(QPointF((m_upLoadList.size()-i-1) * lfPointSpace, m_upLoadList[i]*100*lfPointYP/m_curMaxLoadSpeed));
+    }
+    if (!uploadPoints.isEmpty()) {
+        QPainterPath pathTmp;
+        m_upLoadPath.swap(pathTmp);
+        m_upLoadPath.moveTo(uploadPoints[0]);
+        for (int n = 1; n < uploadPoints.size(); n++) {
+            #if 1
+            QPointF ctlPoint[2];
+            ctlPoint[0].setX((uploadPoints[n-1].x()+uploadPoints[n].x())/2);
+            ctlPoint[0].setY(uploadPoints[n-1].y());
+            ctlPoint[1].setX((uploadPoints[n-1].x()+uploadPoints[n].x())/2);
+            ctlPoint[1].setY(uploadPoints[n].y());
+            m_upLoadPath.cubicTo(ctlPoint[0], ctlPoint[1], uploadPoints[n]);
+            #else
+            m_upLoadPath.lineTo(uploadPoints[n]);
+            #endif
+        }
+    }
+//draw download/upload line
     painter.save();
     painter.setOpacity(1);
-    painter.translate(rect().right(),rect().bottom());//将坐标的原点移动到该点
-    painter.scale(-1, -1);//将横坐标扩大1倍,将纵坐标缩小1倍
+    painter.translate(rect().right(),rect().bottom()-1);//将坐标的原点移动到该点
+    painter.rotate(180);//将横纵坐标顺时针旋转180°
+    QPen pen(this->m_downLoadColor,2);
+    painter.setPen(pen);
+    painter.setBrush(QBrush());
+    painter.setRenderHint(QPainter::Antialiasing, true);
+    painter.drawPath(m_downLoadPath);
+
+    painter.translate(0,-1);//将坐标的原点移动到该点
     QPen penUpload(this->m_upLoadColor,2);
     painter.setPen(penUpload);
-    painter.setBrush(QBrush());//painter.setBrush(QBrush(QColor("#f4f2f4")));
-    painter.setRenderHint(QPainter::Antialiasing, true);
-    painter.drawPath(m_upLoadPath);//绘制前面创建的path:m_downloadPath
+    painter.drawPath(m_upLoadPath);
     painter.restore();
     QWidget::paintEvent(event);
 }
 
 void NetWorkChart::onUpdateDownloadAndUploadData(long recvTotalBytes, long sentTotalBytes, long recvRateBytes, long sentRateBytes)
 {
-//    qDebug()<<"recvRateBytes"<<recvRateBytes;
-//    qDebug()<<"sentRateBytes"<<sentRateBytes;
-//    if(recvRateBytes + sentRateBytes >= 1024 * 1024)
-//    {
-//        emit this->speedToMib();
-//    }
-    if( recvRateBytes + sentRateBytes <= 20 * 1024)
-    {
-        emit this->speedToLowKib();
+    double lfMaxNetSpeed = 0;
+    m_downLoadList.append(recvRateBytes);
+    while (m_downLoadList.size() > m_pointsCount) {
+        m_downLoadList.pop_front();
+    }
+    m_upLoadList.append(sentRateBytes);
+    while(m_upLoadList.size() > m_pointsCount) {
+        m_upLoadList.pop_front();
     }
 
-//    if(recvRateBytes + sentRateBytes > 20 *1024 && recvRateBytes + sentRateBytes <= 100 * 1024)
-//    {
-//        emit this->speedToMiddleKib();
-//    }
-    if(recvRateBytes + sentRateBytes > 100 *1024 && recvRateBytes + sentRateBytes <= 1000 * 1024)
-    {
-        emit this->speedToHighKib();
-    }
-
-    if(recvRateBytes+sentRateBytes < 1024 * 1024 *100)
-    {
-        if(recvRateBytes+sentRateBytes < 20 * 1024)
-        {
-            m_downLoadSpeed = (recvRateBytes/1024) * (this->height()/20);
-            if(m_upLoadSpeed < 1024)
-            {
-                m_upLoadSpeed = 0;
-            }
-            if(m_upLoadSpeed > 1024 && m_upLoadSpeed < 20 * 1024)
-            {
-                m_upLoadSpeed = (sentRateBytes/1024) * this->height()/20;
-            }
+    for (int n = 0; n < m_downLoadList.size(); n++) {
+        if (lfMaxNetSpeed<m_downLoadList[n]) {
+            lfMaxNetSpeed = m_downLoadList[n];
         }
-        else
-        {
-            m_downLoadSpeed = (recvRateBytes/1000) * this->height()/1000;
-            m_upLoadSpeed = (sentRateBytes/1024) * this->height()/1000;
+        if (lfMaxNetSpeed<m_upLoadList[n]) {
+            lfMaxNetSpeed = m_upLoadList[n];
         }
     }
 
-//    m_downLoadSpeed = (recvRateBytes/1024) * this->height()/1000;
-    QList<QPointF> downLoadPoints;
-    m_downLoadList->append(m_downLoadSpeed);
-    while (m_downLoadList->size() > m_pointsCount)
-    {
-        m_downLoadList->pop_front();
+    if (lfMaxNetSpeed < 20 * 1024) {
+        m_curMaxLoadSpeed = 20 * 1024;
+    } else if (lfMaxNetSpeed >= 20 *1024 && lfMaxNetSpeed < 100 * 1024) {
+        m_curMaxLoadSpeed = 100 * 1024;
+    } else if (lfMaxNetSpeed >= 100 *1024 && lfMaxNetSpeed < 500 * 1024) {
+        m_curMaxLoadSpeed = 500 * 1024;
+    } else if (lfMaxNetSpeed >= 500 *1024 && lfMaxNetSpeed < 1 * 1024 * 1024) {
+        m_curMaxLoadSpeed = 1 * 1024 * 1024;
+    } else if (lfMaxNetSpeed >= 1 * 1024 * 1024 && lfMaxNetSpeed < 2 * 1024 * 1024) {
+        m_curMaxLoadSpeed = 2 * 1024 * 1024;
+    } else if (lfMaxNetSpeed >= 2 * 1024 * 1024 && lfMaxNetSpeed < 4 * 1024 * 1024) {
+        m_curMaxLoadSpeed = 4 * 1024 * 1024;
+    } else if (lfMaxNetSpeed >= 4 * 1024 * 1024 && lfMaxNetSpeed < 8 * 1024 * 1024) {
+        m_curMaxLoadSpeed = 8 * 1024 * 1024;
+    } else {
+        m_curMaxLoadSpeed = 16 * 1024 * 1024;
     }
-
-    QList<QPointF> upLoadPoints;
-    m_upLoadList->append(m_upLoadSpeed);
-    while(m_upLoadList->size() > m_pointsCount)
-    {
-        m_upLoadList->pop_front();
-    }
-
-    double downLoadMaxHeight = 0.0;
-    for (int i = 0; i < m_downLoadList->size(); i++)
-    {
-        if (m_downLoadList->at(i) > downLoadMaxHeight)
-        {
-            downLoadMaxHeight = m_downLoadList->at(i);
-        }
-    }
-
-    for (int i = 0; i < m_downLoadList->size(); i++)
-    {
-//        if (downLoadMaxHeight < m_downLoadMaxHeight)
-//        {
-            downLoadPoints.append(QPointF((m_downLoadList->size() - i -2) * POINTSPACE, m_downLoadList->at(i)));
-//        }
-//        else
-//        {
-//            downLoadPoints.append(QPointF((m_downLoadList->size() - i -2) * POINTSPACE, m_downLoadList->at(i) * m_downLoadMaxHeight /downLoadMaxHeight));
-//        }
-    }
-    m_downLoadPath = SmoothLineGenerator::generateSmoothCurve(downLoadPoints);
-
-    double upLoadMaxHeight = 0.0;
-    for (int i = 0; i < m_upLoadList->size(); i++)
-    {
-        if (m_upLoadList->at(i) > upLoadMaxHeight)
-        {
-            upLoadMaxHeight = m_upLoadList->at(i);
-        }
-    }
-    for (int i = 0; i < m_upLoadList->size(); i++)
-    {
-        if (upLoadMaxHeight < m_upLoadMaxHeight)
-        {
-            upLoadPoints.append(QPointF((m_upLoadList->size() - i -2) * POINTSPACE, m_upLoadList->at(i)));
-        }
-        else
-        {
-            upLoadPoints.append(QPointF((m_upLoadList->size() - i -2) * POINTSPACE, m_upLoadList->at(i) * m_upLoadMaxHeight /upLoadMaxHeight));
-        }
-    }
-    m_upLoadPath = SmoothLineGenerator::generateSmoothCurve(upLoadPoints);
+    emit this->speedToDynamicMax(m_curMaxLoadSpeed);
 }
 
 void NetWorkChart::resizeEvent(QResizeEvent *event)
 {
-    m_pointsCount = int(this->width() / POINTSPACE);
+    QWidget::resizeEvent(event);
 }
