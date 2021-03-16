@@ -22,13 +22,13 @@
 #define SYSTEMMONITOR_H
 
 #include "monitortitlewidget.h"
-#include "processdialog.h"
 #include "newresource/newresourcesdialog.h"
 //#include "newresourcesdialog.h"
 #include "filesystemdialog.h"
 #include "shell/customstyle.h"
 #include "../shell/macro.h"
 #include "gui/processtableview.h"
+#include "../component/utils.h"
 
 #include <QFrame>
 #include <QStackedWidget>
@@ -90,7 +90,6 @@ private:
     QStackedWidget  *m_sysMonitorStack = nullptr;
     MonitorTitleWidget  *m_titleWidget = nullptr;
 //    ToolBar *m_toolBar = nullptr;
-    ProcessDialog *process_dialog = nullptr;
     NewResouresDialog *resources_dialog = nullptr;
     FileSystemDialog *filesystem_dialog = nullptr;
     ProcessTableView *newProcessDialog = nullptr;

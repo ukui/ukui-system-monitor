@@ -59,28 +59,6 @@ namespace process {
 static bool init = false;
 static bool is_running = false;
 
-QString getPriorityName(int prio)
-{
-    const static QMap<ProcessPriority, QString> priorityMap = {
-        {VeryHighPriority, QApplication::translate("ProcessDialog", "Very High")},
-        {HighPriority, QApplication::translate("ProcessDialog", "High")},
-        {NormalPriority, QApplication::translate("ProcessDialog", "Normal")},
-        {LowPriority, QApplication::translate("ProcessDialog", "Low")},
-        {VeryLowPriority, QApplication::translate("ProcessDialog", "Very low")},
-        {CustomPriority, QApplication::translate("ProcessDialog", "Custom")},
-        {InvalidPriority, QApplication::translate("ProcessDialog", "Invalid")}
-    };
-
-    ProcessPriority p = InvalidPriority;
-    if (prio == VeryHighPriority || prio == HighPriority || prio == NormalPriority || prio == LowPriority || prio == VeryLowPriority) {
-        p = ProcessPriority(prio);
-    } else if (prio >= VeryHighPriorityMax && prio <= VeryLowPriorityMin) {
-        p = CustomPriority;
-    }
-
-    return priorityMap[p];
-}
-
 ProcessPriority getProcessPriorityStub(int prio)
 {
     if (prio == 0) {

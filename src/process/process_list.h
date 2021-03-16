@@ -59,7 +59,6 @@ static const int LowPriorityMin = 10;
 static const int VeryLowPriorityMax = 11;
 static const int VeryLowPriorityMin = 19;
 
-QString getPriorityName(int prio);
 ProcessPriority getProcessPriorityStub(int prio);
 
 class Process

@@ -72,11 +72,6 @@ HEADERS += \
     ../shell/macro.h \
     ../shell/xatom-helper.h \
     systemmonitor.h \
-    processmanager.h \
-    processdialog.h \
-    processlistwidget.h \
-    processlistitem.h \
-    processworker.h \
     linebandwith.h \
     util.h \
     ../component/utils.h \
@@ -84,7 +79,6 @@ HEADERS += \
     ../widgets/mytristatebutton.h \
     ../widgets/myunderlinebutton.h \
     ../widgets/myhoverbutton.h \
-    propertiesdialog.h \
     processcategory.h \
     processdata.h \
     ../widgets/myactiongroup.h \
@@ -137,18 +131,12 @@ SOURCES += \
     ../shell/xatom-helper.cpp \
     main.cpp \
     systemmonitor.cpp \
-    processmanager.cpp \
-    processdialog.cpp \
-    processlistwidget.cpp \
-    processlistitem.cpp \
-    processworker.cpp \
     linebandwith.cpp \
     util.cpp \
     ../widgets/mydialog.cpp \
     ../widgets/mytristatebutton.cpp \
     ../widgets/myunderlinebutton.cpp \
     ../widgets/myhoverbutton.cpp \
-    propertiesdialog.cpp \
     processcategory.cpp \
     ../widgets/myactiongroup.cpp \
     ../widgets/myactiongroupitem.cpp \

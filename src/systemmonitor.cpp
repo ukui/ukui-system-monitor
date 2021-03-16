@@ -82,11 +82,6 @@ SystemMonitor::SystemMonitor(QWidget *parent)
     this->initTitleWidget();
     this->initPanelStack();
     this->initConnections();
-    //connect(m_titleWidget,SIGNAL(changeProcessItemDialog(int)),process_dialog,SLOT(onActiveWhoseProcess(int)));  //配置文件中为whoseprocess赋值
-    // connect(m_titleWidget,SIGNAL(SearchFocusIn()),process_dialog,SLOT(onSearchFocusIn()));
-    // connect(m_titleWidget,SIGNAL(SearchFocusOut()),process_dialog,SLOT(onSearchFocusOut()));
-    // connect(m_titleWidget,SIGNAL(SearchFocusIn()),process_dialog,SIGNAL(changeProcessNetRefresh()));
-    // connect(m_titleWidget,SIGNAL(SearchFocusOut()),process_dialog,SIGNAL(recoverProcessNetRefresh()));
     connect(m_titleWidget,SIGNAL(changeProcessItemDialog(int)),newProcessDialog,SLOT(onChangeProcessFilter(int)));  //配置文件中为whoseprocess赋值
     connect(m_titleWidget,SIGNAL(SearchFocusIn()),newProcessDialog,SLOT(onSearchFocusIn()));
     connect(m_titleWidget,SIGNAL(SearchFocusOut()),newProcessDialog,SLOT(onSearchFocusOut()));
@@ -335,10 +330,6 @@ void SystemMonitor::initPanelStack()
 //    m_sysMonitorStack->move(1, TITLE_WIDGET_HEIGHT);
     m_sysMonitorStack->installEventFilter(this);
 
-    // process_dialog = new ProcessDialog(getReadyDisplayProcessColumns(), getCurrentSortColumnIndex(), isSortOrNot(), proSettings);
-    // process_dialog->getProcessView()->installEventFilter(this);
-    // connect(process_dialog, &ProcessDialog::changeColumnVisible, this, &SystemMonitor::recordProcessVisibleColumn);
-    // connect(process_dialog, &ProcessDialog::changeSortStatus, this, &SystemMonitor::recordSortStatus);
     newProcessDialog = new ProcessTableView(proSettings);
     newProcessDialog->installEventFilter(this);
 
@@ -348,12 +339,10 @@ void SystemMonitor::initPanelStack()
     filesystem_dialog->getFileSysView()->installEventFilter(this);
     connect(filesystem_dialog, SIGNAL(changeColumnVisible(int,bool,QList<bool>)), this, SLOT(recordFileSysVisibleColumn(int,bool,QList<bool>)));
 
-    // m_sysMonitorStack->addWidget(process_dialog);
     m_sysMonitorStack->addWidget(newProcessDialog);
     m_sysMonitorStack->addWidget(resources_dialog);
     m_sysMonitorStack->addWidget(filesystem_dialog);
 
-    // m_sysMonitorStack->setCurrentWidget(process_dialog);
     m_sysMonitorStack->setCurrentWidget(newProcessDialog);
 }
 
@@ -384,8 +373,6 @@ void SystemMonitor::onMinimizeWindow()
 void SystemMonitor::initConnections()
 {
     connect(m_titleWidget, SIGNAL(changePage(int)), this, SLOT(onChangePage(int)));
-    // connect(m_titleWidget, SIGNAL(canelSearchEditFocus()), process_dialog, SLOT(focusProcessView()));
-    // connect(m_titleWidget, SIGNAL(searchSignal(QString)), process_dialog, SLOT(onSearch(QString)), Qt::QueuedConnection);
     connect(m_titleWidget, SIGNAL(canelSearchEditFocus()), newProcessDialog, SLOT(focusProcessView()));
     connect(m_titleWidget, SIGNAL(searchSignal(QString)), newProcessDialog, SLOT(onSearch(QString)), Qt::QueuedConnection);
 }
