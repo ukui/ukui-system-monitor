@@ -232,30 +232,30 @@ QVariant ProcessTableModel::headerData(int section, Qt::Orientation orientation,
         switch (section) {
         case ProcessNameColumn: {
             // name column display text
-            return QApplication::translate("ProcessListWidget", "Process Name");
+            return tr("Process Name");
         }
         case ProcessUserColumn: {
             // user column display text
-            return QApplication::translate("ProcessListWidget", "User");
+            return tr("User");
         }
         case ProcessDiskIoColumn:
             // diskio column display text
-            return QApplication::translate("ProcessListWidget", "Disk");
+            return tr("Disk");
         case ProcessCpuColumn:
             // cpu column display text
-            return QApplication::translate("ProcessListWidget", "CPU");
+            return tr("CPU");
         case ProcessIdColumn:
             // id column display text
-            return QApplication::translate("ProcessListWidget", "ID");
+            return tr("ID");
         case ProcessFlowNetColumn:
             // flownet column display text
-            return QApplication::translate("ProcessListWidget", "Flownet Persec");
+            return tr("Flownet Persec");
         case ProcessMemoryColumn:
             // memory column display text
-            return QApplication::translate("ProcessListWidget", "Memory");
+            return tr("Memory");
         case ProcessNiceColumn:
             // priority column display text
-            return QApplication::translate("ProcessListWidget", "Priority");
+            return tr("Priority");
         default:
             break;
         }

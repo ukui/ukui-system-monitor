@@ -24,7 +24,7 @@
 #include "monitortitlewidget.h"
 #include "newresource/newresourcesdialog.h"
 //#include "newresourcesdialog.h"
-#include "filesystemdialog.h"
+#include "gui/filesystemtableview.h"
 #include "shell/customstyle.h"
 #include "../shell/macro.h"
 #include "gui/processtableview.h"
@@ -91,7 +91,7 @@ private:
     MonitorTitleWidget  *m_titleWidget = nullptr;
 //    ToolBar *m_toolBar = nullptr;
     NewResouresDialog *resources_dialog = nullptr;
-    FileSystemDialog *filesystem_dialog = nullptr;
+    FileSystemTableView *filesystemView = nullptr;
     ProcessTableView *newProcessDialog = nullptr;
     QPoint dragPosition;
     bool mousePressed;

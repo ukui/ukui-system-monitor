@@ -38,6 +38,9 @@
 // process table view backup setting key
 #define SETTINGSOPTION_PROCESSTABLEHEADERSTATE "process_table_header_state"
 
+// filesystem table view backup setting key
+#define SETTINGSOPTION_FILESYSTEMTABLEHEADERSTATE "filesystem_table_header_state"
+
 /* QT图标主题 */
 #define ICON_QT_KEY "icon-theme-name"
 
@@ -74,6 +77,7 @@
 
 //file system setting
 #define devicepadding 120
+#define mounturiadding 150
 #define typepadding 80
 #define totalcapacitypadding 100
 #define idlepadding 100

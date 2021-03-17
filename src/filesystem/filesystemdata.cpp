@@ -70,12 +70,34 @@ const QString FileSystemData::usedCapactiy() const
     return m_usedCapactiy;
 }
 
-int FileSystemData::usedPercentage()
+int FileSystemData::usedPercentage() const
 {
     return m_percentage;
 }
 
-void FileSystemData::updateDiskInfo(QString mountDir, QString diskType, QString totalCapacity, QString freeCapacity, QString availCapacity, QString usedCapactiy, int percentage)
+qreal FileSystemData::totalCapacityValue() const
+{
+    return m_lfTotalCapcity;
+}
+
+qreal FileSystemData::freeCapacityValue() const
+{
+    return m_lfFreeCapcity;
+}
+
+qreal FileSystemData::avalidCapacityValue() const
+{
+    return m_lfAvalidCapcity;
+}
+
+qreal FileSystemData::usedCapacityValue() const
+{
+    return m_lfUsedCapcity;
+}
+
+void FileSystemData::updateDiskInfo(QString mountDir, QString diskType, QString totalCapacity, QString freeCapacity, 
+        QString availCapacity, QString usedCapactiy, int percentage, qreal lfTotalCapcity, qreal lfFreeCapcity, 
+        qreal lfAvalidCapcity, qreal lfUsedCapcity)
 {
     if (mountDir != m_mountDir)
         m_mountDir = mountDir;
@@ -91,4 +113,8 @@ void FileSystemData::updateDiskInfo(QString mountDir, QString diskType, QString 
         m_usedCapactiy = usedCapactiy;
     if (percentage != m_percentage)
         m_percentage = percentage;
+    m_lfTotalCapcity = lfTotalCapcity;
+    m_lfFreeCapcity = lfFreeCapcity;
+    m_lfAvalidCapcity = lfAvalidCapcity;
+    m_lfUsedCapcity = lfUsedCapcity;
 }

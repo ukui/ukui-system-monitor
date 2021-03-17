@@ -40,9 +40,15 @@ public:
     const QString freeCapacity() const;
     const QString availCapacity() const;
     const QString usedCapactiy() const;
-    int usedPercentage();
+    int usedPercentage() const;
+    qreal totalCapacityValue() const;
+    qreal freeCapacityValue() const;
+    qreal avalidCapacityValue() const;
+    qreal usedCapacityValue() const;
 
-    void updateDiskInfo(QString mountDir, QString diskType, QString totalCapacity, QString freeCapacity, QString availCapacity, QString usedCapactiy, int percentage);
+    void updateDiskInfo(QString mountDir, QString diskType, QString totalCapacity, QString freeCapacity, 
+        QString availCapacity, QString usedCapactiy, int percentage, qreal lfTotalCapcity, qreal lfFreeCapcity, 
+        qreal lfAvalidCapcity, qreal lfUsedCapcity);
 
 private:
     QString m_devName;
@@ -52,7 +58,11 @@ private:
     QString m_freeCapacity;
     QString m_availCapacity;
     QString m_usedCapactiy;
-    int m_percentage;
+    int m_percentage = 0;
+    qreal m_lfTotalCapcity = 0;
+    qreal m_lfFreeCapcity = 0; 
+    qreal m_lfAvalidCapcity = 0; 
+    qreal m_lfUsedCapcity = 0; 
 };
 
 #endif // FILESYSTEMDATA_H

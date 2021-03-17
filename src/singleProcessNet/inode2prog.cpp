@@ -170,8 +170,8 @@ void get_info_for_pid(const char * pid) {
 		//std::cout << "Looking at: " << entry->d_name << std::endl;
 
 		size_t fromlen = dirlen + strlen(entry->d_name) + 1;
-		char fromname[10 + MAX_PID_LENGTH + 1 + MAX_FDLINK];
-		snprintf (fromname, fromlen, "%s/%s", dirname, entry->d_name);
+		char fromname[10 + MAX_PID_LENGTH + 1 + 256] = {0};
+		snprintf (fromname, fromlen, "%20s/%255s", dirname, entry->d_name);
 
 		//std::cout << "Linking from: " << fromname << std::endl;
 

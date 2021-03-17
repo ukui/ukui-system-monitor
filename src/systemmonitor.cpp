@@ -335,13 +335,12 @@ void SystemMonitor::initPanelStack()
 
     resources_dialog = new NewResouresDialog;
 
-    filesystem_dialog = new FileSystemDialog(getReadyDisplayFileSysColumns(), proSettings);
-    filesystem_dialog->getFileSysView()->installEventFilter(this);
-    connect(filesystem_dialog, SIGNAL(changeColumnVisible(int,bool,QList<bool>)), this, SLOT(recordFileSysVisibleColumn(int,bool,QList<bool>)));
+    filesystemView = new FileSystemTableView(proSettings);
+    filesystemView->installEventFilter(this);
 
     m_sysMonitorStack->addWidget(newProcessDialog);
     m_sysMonitorStack->addWidget(resources_dialog);
-    m_sysMonitorStack->addWidget(filesystem_dialog);
+    m_sysMonitorStack->addWidget(filesystemView);
 
     m_sysMonitorStack->setCurrentWidget(newProcessDialog);
 }

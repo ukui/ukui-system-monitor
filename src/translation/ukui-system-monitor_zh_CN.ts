@@ -484,6 +484,68 @@ Kylin Team &lt;ubuntukylin-members@list.launchpad.net&gt;</source>
     </message>
 </context>
 <context>
+    <name>FileSystemModel</name>
+    <message>
+        <source>Device</source>
+        <translation>设备</translation>
+    </message>
+    <message>
+        <source>Directory</source>
+        <translation>路径</translation>
+    </message>
+    <message>
+        <source>Type</source>
+        <translation>类型</translation>
+    </message>
+    <message>
+        <source>Total</source>
+        <translation>总容量</translation>
+    </message>
+    <message>
+        <source>Free</source>
+        <translation>空闲</translation>
+    </message>
+    <message>
+        <source>Available</source>
+        <translation>可用</translation>
+    </message>
+    <message>
+        <source>Used</source>
+        <translation>已用</translation>
+    </message>
+</context>
+<context>
+    <name>FileSystemTableView</name>
+    <message>
+        <source>Refresh</source>
+        <translation>刷新</translation>
+    </message>
+    <message>
+        <source>Directory</source>
+        <translation>路径</translation>
+    </message>
+    <message>
+        <source>Type</source>
+        <translation>类型</translation>
+    </message>
+    <message>
+        <source>Total</source>
+        <translation>总容量</translation>
+    </message>
+    <message>
+        <source>Free</source>
+        <translation>空闲</translation>
+    </message>
+    <message>
+        <source>Available</source>
+        <translation>可用</translation>
+    </message>
+    <message>
+        <source>Used</source>
+        <translation>已用</translation>
+    </message>
+</context>
+<context>
     <name>FontWidget</name>
     <message>
         <source>Click here to change font</source>
@@ -1417,109 +1479,170 @@ Kylin Team &lt;ubuntukylin-members@list.launchpad.net&gt;</source>
     <name>ProcessCategory</name>
     <message>
         <source>Active Processes</source>
-        <translation>活动进程</translation>
+        <translation type="vanished">活动进程</translation>
     </message>
     <message>
         <source>My Processes</source>
-        <translation>我的进程</translation>
+        <translation type="vanished">我的进程</translation>
     </message>
     <message>
         <source>All Processes</source>
-        <translation>全部进程</translation>
+        <translation type="vanished">全部进程</translation>
     </message>
 </context>
 <context>
     <name>ProcessDialog</name>
     <message>
         <source>End process</source>
-        <translation>结束进程</translation>
+        <translation type="vanished">结束进程</translation>
     </message>
     <message>
         <source>Ending a process may destroy data, break the session or introduce a security risk. Only unresponsive processes should be ended.
 Are you sure to continue?</source>
-        <translation>结束进程可能导致数据损坏，中断会话或带来安全风险。您应该只结束无响应的进程。
+        <translation type="vanished">结束进程可能导致数据损坏，中断会话或带来安全风险。您应该只结束无响应的进程。
 您确定要继续该操作？</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation>取消</translation>
+        <translation type="vanished">取消</translation>
     </message>
     <message>
         <source>Kill process</source>
-        <translation>杀死进程</translation>
+        <translation type="vanished">杀死进程</translation>
     </message>
     <message>
         <source>Killing a process may destroy data, break the session or introduce a security risk. Only unresponsive processes should be killed.
 Are you sure to continue?</source>
-        <translation>杀死进程可能导致数据损坏，中断会话或带来安全风险。您应该只杀死无响应的进程。
+        <translation type="vanished">杀死进程可能导致数据损坏，中断会话或带来安全风险。您应该只杀死无响应的进程。
 您确定要继续该操作？</translation>
     </message>
     <message>
         <source>Stop process</source>
-        <translation>停止进程</translation>
+        <translation type="vanished">停止进程</translation>
     </message>
     <message>
         <source>Continue process</source>
-        <translation>继续进程</translation>
+        <translation type="vanished">继续进程</translation>
     </message>
     <message>
         <source>Very High</source>
-        <translation>非常高</translation>
+        <translation type="vanished">非常高</translation>
     </message>
     <message>
         <source>High</source>
-        <translation>高</translation>
+        <translation type="vanished">高</translation>
     </message>
     <message>
         <source>Normal</source>
-        <translation>普通</translation>
+        <translation type="vanished">普通</translation>
     </message>
     <message>
         <source>Low</source>
-        <translation>低</translation>
+        <translation type="vanished">低</translation>
     </message>
     <message>
         <source>Very Low</source>
-        <translation>非常低</translation>
+        <translation type="vanished">非常低</translation>
     </message>
     <message>
         <source>Custom</source>
-        <translation>自定义</translation>
+        <translation type="vanished">自定义</translation>
     </message>
     <message>
         <source>Change Priority</source>
-        <translation>改变优先级</translation>
+        <translation type="vanished">改变优先级</translation>
     </message>
     <message>
         <source>Properties</source>
-        <translation>属性</translation>
+        <translation type="vanished">属性</translation>
     </message>
     <message>
         <source>Change Priority of Process %1 (PID: %2)</source>
-        <translation>更改进程“%1”(PID：%2)的优先级</translation>
-    </message>
-    <message>
-        <source>Very low</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Invalid</source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">更改进程“%1”(PID：%2)的优先级</translation>
     </message>
 </context>
 <context>
     <name>ProcessListItem</name>
     <message>
         <source>Stopped</source>
-        <translation>已停止</translation>
+        <translation type="vanished">已停止</translation>
     </message>
     <message>
         <source>Suspend</source>
-        <translation>停止</translation>
+        <translation type="vanished">停止</translation>
     </message>
     <message>
         <source>Zombie</source>
-        <translation>僵死</translation>
+        <translation type="vanished">僵死</translation>
+    </message>
+    <message>
+        <source>No response</source>
+        <translation type="vanished">无反应</translation>
+    </message>
+    <message>
+        <source>Uninterruptible</source>
+        <translation type="vanished">不可中断</translation>
+    </message>
+</context>
+<context>
+    <name>ProcessListWidget</name>
+    <message>
+        <source>Process Name</source>
+        <translation type="obsolete">进程名称</translation>
+    </message>
+    <message>
+        <source>User</source>
+        <translation type="obsolete">用户名</translation>
+    </message>
+    <message>
+        <source>Status</source>
+        <translation type="vanished">状态</translation>
+    </message>
+    <message>
+        <source>CPU</source>
+        <translation type="obsolete">%CPU</translation>
+    </message>
+    <message>
+        <source>ID</source>
+        <translation type="vanished">ID</translation>
+    </message>
+    <message>
+        <source>Flownet Persec</source>
+        <translation type="vanished">网络</translation>
+    </message>
+    <message>
+        <source>Memory</source>
+        <translation type="vanished">内存</translation>
+    </message>
+    <message>
+        <source>Disk</source>
+        <translation type="vanished">磁盘</translation>
+    </message>
+    <message>
+        <source>Priority</source>
+        <translation type="vanished">优先级</translation>
+    </message>
+    <message>
+        <source>No search result</source>
+        <translation type="vanished">无搜索结果</translation>
+    </message>
+</context>
+<context>
+    <name>ProcessManager</name>
+    <message>
+        <source>System Monitor</source>
+        <translation type="vanished">系统监视器</translation>
+    </message>
+    <message>
+        <source>Help user to kill process</source>
+        <translation type="vanished">帮助用户管理进程</translation>
+    </message>
+</context>
+<context>
+    <name>ProcessTableModel</name>
+    <message>
+        <source>Suspend</source>
+        <translation>停止</translation>
     </message>
     <message>
         <source>No response</source>
@@ -1529,24 +1652,21 @@ Are you sure to continue?</source>
         <source>Uninterruptible</source>
         <translation>不可中断</translation>
     </message>
-</context>
-<context>
-    <name>ProcessListWidget</name>
     <message>
         <source>Process Name</source>
-        <translation type="unfinished">进程名称</translation>
+        <translation>进程名称</translation>
     </message>
     <message>
         <source>User</source>
-        <translation type="unfinished">用户名</translation>
+        <translation>用户名</translation>
     </message>
     <message>
-        <source>Status</source>
-        <translation type="vanished">状态</translation>
+        <source>Disk</source>
+        <translation>磁盘</translation>
     </message>
     <message>
         <source>CPU</source>
-        <translation type="unfinished">%CPU</translation>
+        <translation></translation>
     </message>
     <message>
         <source>ID</source>
@@ -1561,42 +1681,8 @@ Are you sure to continue?</source>
         <translation>内存</translation>
     </message>
     <message>
-        <source>Disk</source>
-        <translation>磁盘</translation>
-    </message>
-    <message>
         <source>Priority</source>
         <translation>优先级</translation>
-    </message>
-    <message>
-        <source>No search result</source>
-        <translation>无搜索结果</translation>
-    </message>
-</context>
-<context>
-    <name>ProcessManager</name>
-    <message>
-        <source>System Monitor</source>
-        <translation>系统监视器</translation>
-    </message>
-    <message>
-        <source>Help user to kill process</source>
-        <translation>帮助用户管理进程</translation>
-    </message>
-</context>
-<context>
-    <name>ProcessTableModel</name>
-    <message>
-        <source>Suspend</source>
-        <translation type="unfinished">停止</translation>
-    </message>
-    <message>
-        <source>No response</source>
-        <translation type="unfinished">无反应</translation>
-    </message>
-    <message>
-        <source>Uninterruptible</source>
-        <translation type="unfinished">不可中断</translation>
     </message>
 </context>
 <context>
@@ -1706,7 +1792,7 @@ Are you sure to continue?</source>
     <name>PropertiesDialog</name>
     <message>
         <source>OK</source>
-        <translation>确定</translation>
+        <translation type="vanished">确定</translation>
     </message>
 </context>
 <context>

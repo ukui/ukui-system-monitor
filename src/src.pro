@@ -79,19 +79,15 @@ HEADERS += \
     ../widgets/mytristatebutton.h \
     ../widgets/myunderlinebutton.h \
     ../widgets/myhoverbutton.h \
-    processcategory.h \
     processdata.h \
     ../widgets/myactiongroup.h \
     ../widgets/myactiongroupitem.h \
     ../widgets/myaction.h \
     monitortitlewidget.h \
-    filesystemdialog.h \
-    filesystemworker.h \
-    filesystemdata.h \
+    filesystem/filesystemworker.h \
+    filesystem/filesystemdata.h \
     ../widgets/mysearchedit.h \
-    filesystemlistwidget.h \
-    filesystemlistitem.h \
-    filesystemwatcher.h \
+    filesystem/filesystemwatcher.h \
     renicedialog.h \
     ../component/mytitlebar.h \
     framelessExtended/cursorposcalculator.h \
@@ -121,11 +117,14 @@ HEADERS += \
     gui/ktableview.h \
     gui/processtableview.h \
     gui/procpropertiesdlg.h \
+    gui/filesystemtableview.h \
     process/process_data.h \
     process/process_list.h \
     process/process_monitor.h \
     model/processtablemodel.h \
-    model/processsortfilterproxymodel.h 
+    model/processsortfilterproxymodel.h \
+    model/filesystemmodel.h \
+    model/filesystemsortfilterproxymodel.h 
 
 SOURCES += \
     ../shell/xatom-helper.cpp \
@@ -137,18 +136,14 @@ SOURCES += \
     ../widgets/mytristatebutton.cpp \
     ../widgets/myunderlinebutton.cpp \
     ../widgets/myhoverbutton.cpp \
-    processcategory.cpp \
     ../widgets/myactiongroup.cpp \
     ../widgets/myactiongroupitem.cpp \
     ../widgets/myaction.cpp \
     monitortitlewidget.cpp \
-    filesystemdialog.cpp \
-    filesystemworker.cpp \
-    filesystemdata.cpp \
+    filesystem/filesystemworker.cpp \
+    filesystem/filesystemdata.cpp \
     ../widgets/mysearchedit.cpp \
-    filesystemlistwidget.cpp \
-    filesystemlistitem.cpp \
-    filesystemwatcher.cpp \
+    filesystem/filesystemwatcher.cpp \
     renicedialog.cpp \
     ../component/mytitlebar.cpp \
     framelessExtended/cursorposcalculator.cpp \
@@ -176,10 +171,13 @@ SOURCES += \
     gui/ktableview.cpp \
     gui/processtableview.cpp \
     gui/procpropertiesdlg.cpp \
+    gui/filesystemtableview.cpp \
     process/process_list.cpp \
     process/process_monitor.cpp \
     model/processtablemodel.cpp \
-    model/processsortfilterproxymodel.cpp 
+    model/processsortfilterproxymodel.cpp \
+    model/filesystemmodel.cpp \
+    model/filesystemsortfilterproxymodel.cpp 
 
 OTHER_FILES += \
     systemmonitor.json
