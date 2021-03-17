@@ -26,6 +26,7 @@
 #include <QDir>
 #include <QStyleOption>
 #include <QProcess>
+#include <QDesktopServices>
 
 newaboutdialog::newaboutdialog(QWidget *parent) : QDialog(parent)
 {
@@ -227,7 +228,6 @@ void newaboutdialog::setFontSize(QLabel *label,int fontSize)
 
 void newaboutdialog::openMailTo(QString strMailAddr)
 {
-    QProcess *process =new QProcess(this);
-    process->startDetached(QString("claws-mail mailto://%1").arg(strMailAddr));
-    process->deleteLater();
+    QString targetPath = QString("mailto://%1").arg(strMailAddr);
+    QDesktopServices::openUrl(QUrl(targetPath));//xdg-open
 }
