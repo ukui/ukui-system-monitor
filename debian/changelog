@@ -1,3 +1,15 @@
+ukui-system-monitor (2.0.2-13) v101; urgency=medium
+
+  * 修复bug：1、修复资源界面cpu总比文本为“CPU”bug#43447；2、修复部分进程显示名称匹配错误问题bug#43682
+
+ -- Yang Min <kylin@kylinos.cn>  Fri, 19 Mar 2021 18:09:40 +0800
+
+ukui-system-monitor (2.0.2-12) v101; urgency=medium
+
+  * 优化界面显示：优化文件系统界面、资源界面显示，解决bug#31357、#43136、#31438
+
+ -- Yang Min <kylin@kylinos.cn>  Wed, 17 Mar 2021 15:33:32 +0800
+
 ukui-system-monitor (2.0.2-11) v101; urgency=medium
 
   * 修复bug：1、系统字体调16时大部分文本显示不全#42396/#42379

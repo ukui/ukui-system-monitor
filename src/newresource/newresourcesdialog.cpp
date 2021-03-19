@@ -343,7 +343,7 @@ void NewResouresDialog::cpuHistoySetText(double value)
 {
     QString showValue;
     showValue = QString::number(value,10,0);
-    QString s = "Cpu: "+ showValue +"%";
+    QString s = "CPU: "+ showValue +"%";
     cpuUnitDataLabel->setText(s);
 //    qDebug() << "cpu value: " << value;
 }

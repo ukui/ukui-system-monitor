@@ -124,23 +124,22 @@ void newaboutdialog::initContentWidget()
     setFontSize(appLabel,FontSize);
 
     QString versionText;
-    QString tmpPath = "/tmp/ukui-system-monitor-" + QDir::home().dirName();
-    QString cmd = "dpkg -l |grep ukui-system-monitor >" + tmpPath;
-    //qDebug()<<"what is cmd"<<cmd;
-    system(cmd.toUtf8().data());
-    QFile file(tmpPath);
-    if(file.open(QIODevice::ReadOnly | QIODevice::Text))
-    {
-        QTextStream stream(&file);
-        QString line;
-        while(!stream.atEnd())
-        {
-            line = stream.readLine();
-            QStringList fileList = line.split(" ");
-            fileList.removeAll("");
-            versionText = fileList[2];
+    QProcess proc;
+    QStringList options;
+    options << "-l" << "|" << "grep" << "ukui-system-monitor";
+    proc.start("dpkg", options);
+    proc.waitForFinished();
+    QString dpkgInfo = proc.readAll();
+    QStringList infoList = dpkgInfo.split("\n");
+    for (int n = 0; n < infoList.size(); n++) {
+        QString strInfoLine = infoList[n];
+        if (strInfoLine.contains("ukui-system-monitor")) {
+            QStringList lineInfoList = strInfoLine.split(QRegExp("[\\s]+"));
+            if (lineInfoList.size() >= 3) {
+                versionText = lineInfoList[2];
+            }
+            break;
         }
-        file.close();
     }
     versionLabel->setText(tr("version: ") + versionText);  //此处需要获取的是当前版本系统监视器的版本号
     versionLabel->setPalette(pe);
