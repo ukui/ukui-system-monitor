@@ -445,42 +445,42 @@ Kylin Team &lt;ubuntukylin-members@list.launchpad.net&gt;</source>
     <name>FileSystemDialog</name>
     <message>
         <source>Refresh</source>
-        <translation>刷新</translation>
+        <translation type="vanished">刷新</translation>
     </message>
 </context>
 <context>
     <name>FileSystemListWidget</name>
     <message>
         <source>Device</source>
-        <translation>设备</translation>
+        <translation type="vanished">设备</translation>
     </message>
     <message>
         <source>Directory</source>
-        <translation>路径</translation>
+        <translation type="vanished">路径</translation>
     </message>
     <message>
         <source>Type</source>
-        <translation>类型</translation>
+        <translation type="vanished">类型</translation>
     </message>
     <message>
         <source>Total</source>
-        <translation type="unfinished">总容量</translation>
+        <translation type="obsolete">总容量</translation>
     </message>
     <message>
         <source>Free</source>
-        <translation>空闲</translation>
+        <translation type="vanished">空闲</translation>
     </message>
     <message>
         <source>Available</source>
-        <translation>可用</translation>
+        <translation type="vanished">可用</translation>
     </message>
     <message>
         <source>Used</source>
-        <translation>已用</translation>
+        <translation type="vanished">已用</translation>
     </message>
     <message>
         <source>No File System Info</source>
-        <translation>没有发现文件系统信息</translation>
+        <translation type="vanished">没有发现文件系统信息</translation>
     </message>
 </context>
 <context>
@@ -1785,7 +1785,7 @@ Are you sure to continue?</source>
     </message>
     <message>
         <source>Change Priority of Process %1 (PID: %2)</source>
-        <translation type="unfinished">更改进程“%1”(PID：%2)的优先级</translation>
+        <translation type="obsolete">更改进程“%1”(PID：%2)的优先级</translation>
     </message>
 </context>
 <context>
@@ -2531,6 +2531,10 @@ Are you sure to continue?</source>
     <message>
         <source>Change Priority</source>
         <translation>改变优先级</translation>
+    </message>
+    <message>
+        <source>Change Priority of Process %1 (PID: %2)</source>
+        <translation type="unfinished">更改进程“%1”(PID：%2)的优先级</translation>
     </message>
 </context>
 <context>

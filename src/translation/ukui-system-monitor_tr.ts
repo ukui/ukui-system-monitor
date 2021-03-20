@@ -99,55 +99,43 @@
 <context>
     <name>FileSystemDialog</name>
     <message>
-        <location filename="../filesystemdialog.cpp" line="61"/>
         <source>Refresh</source>
-        <translation>Yenile</translation>
+        <translation type="vanished">Yenile</translation>
     </message>
 </context>
 <context>
     <name>FileSystemListWidget</name>
     <message>
-        <location filename="../filesystemlistwidget.cpp" line="70"/>
-        <location filename="../filesystemlistwidget.cpp" line="440"/>
         <source>Device</source>
-        <translation>Aygıt</translation>
+        <translation type="vanished">Aygıt</translation>
     </message>
     <message>
-        <location filename="../filesystemlistwidget.cpp" line="70"/>
-        <location filename="../filesystemlistwidget.cpp" line="440"/>
         <source>Directory</source>
-        <translation>Dizin</translation>
+        <translation type="vanished">Dizin</translation>
     </message>
     <message>
-        <location filename="../filesystemlistwidget.cpp" line="70"/>
         <source>Type</source>
-        <translation>Tür</translation>
+        <translation type="vanished">Tür</translation>
     </message>
     <message>
-        <location filename="../filesystemlistwidget.cpp" line="70"/>
         <source>Total</source>
-        <translation>Toplam</translation>
+        <translation type="vanished">Toplam</translation>
     </message>
     <message>
-        <location filename="../filesystemlistwidget.cpp" line="70"/>
         <source>Free</source>
-        <translation>Boş</translation>
+        <translation type="vanished">Boş</translation>
     </message>
     <message>
-        <location filename="../filesystemlistwidget.cpp" line="70"/>
         <source>Available</source>
-        <translation>Mevcut</translation>
+        <translation type="vanished">Mevcut</translation>
     </message>
     <message>
-        <location filename="../filesystemlistwidget.cpp" line="70"/>
-        <location filename="../filesystemlistwidget.cpp" line="440"/>
         <source>Used</source>
-        <translation>Kullanılan</translation>
+        <translation type="vanished">Kullanılan</translation>
     </message>
     <message>
-        <location filename="../filesystemlistwidget.cpp" line="515"/>
         <source>No File System Info</source>
-        <translation>Dosya Sistemi Bilgisi Yok</translation>
+        <translation type="vanished">Dosya Sistemi Bilgisi Yok</translation>
     </message>
 </context>
 <context>
@@ -191,37 +179,37 @@
 <context>
     <name>FileSystemTableView</name>
     <message>
-        <location filename="../gui/filesystemstableview.cpp" line="157"/>
+        <location filename="../gui/filesystemtableview.cpp" line="160"/>
         <source>Refresh</source>
         <translation type="unfinished">Yenile</translation>
     </message>
     <message>
-        <location filename="../gui/filesystemstableview.cpp" line="170"/>
+        <location filename="../gui/filesystemtableview.cpp" line="173"/>
         <source>Directory</source>
         <translation type="unfinished">Dizin</translation>
     </message>
     <message>
-        <location filename="../gui/filesystemstableview.cpp" line="177"/>
+        <location filename="../gui/filesystemtableview.cpp" line="180"/>
         <source>Type</source>
         <translation type="unfinished">Tür</translation>
     </message>
     <message>
-        <location filename="../gui/filesystemstableview.cpp" line="184"/>
+        <location filename="../gui/filesystemtableview.cpp" line="187"/>
         <source>Total</source>
         <translation type="unfinished">Toplam</translation>
     </message>
     <message>
-        <location filename="../gui/filesystemstableview.cpp" line="191"/>
+        <location filename="../gui/filesystemtableview.cpp" line="194"/>
         <source>Free</source>
         <translation type="unfinished">Boş</translation>
     </message>
     <message>
-        <location filename="../gui/filesystemstableview.cpp" line="198"/>
+        <location filename="../gui/filesystemtableview.cpp" line="201"/>
         <source>Available</source>
         <translation type="unfinished">Mevcut</translation>
     </message>
     <message>
-        <location filename="../gui/filesystemstableview.cpp" line="205"/>
+        <location filename="../gui/filesystemtableview.cpp" line="208"/>
         <source>Used</source>
         <translation type="unfinished">Kullanılan</translation>
     </message>
@@ -561,7 +549,7 @@
 <context>
     <name>ProcPropertiesDlg</name>
     <message>
-        <location filename="../gui/procpropertiesdlg.cpp" line="140"/>
+        <location filename="../gui/procpropertiesdlg.cpp" line="141"/>
         <source>OK</source>
         <translation type="unfinished">Tamam</translation>
     </message>
@@ -910,9 +898,8 @@ Are you sure to continue?</source>
 Devam etmek istediğinizden emin misiniz?</translation>
     </message>
     <message>
-        <location filename="../gui/processtableview.cpp" line="706"/>
         <source>Change Priority of Process %1 (PID: %2)</source>
-        <translation type="unfinished">%1 Sürecinin Önceliğini Değiştir (PID:%2)</translation>
+        <translation type="obsolete">%1 Sürecinin Önceliğini Değiştir (PID:%2)</translation>
     </message>
 </context>
 <context>
@@ -925,83 +912,83 @@ Devam etmek istediğinizden emin misiniz?</translation>
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../util.cpp" line="365"/>
+        <location filename="../util.cpp" line="388"/>
         <source>Running</source>
         <translation>Yürütülüyor</translation>
     </message>
     <message>
         <location filename="../model/processtablemodel.cpp" line="291"/>
         <location filename="../model/processtablemodel.cpp" line="379"/>
-        <location filename="../util.cpp" line="369"/>
+        <location filename="../util.cpp" line="392"/>
         <source>Stopped</source>
         <translation>Durduruldu</translation>
     </message>
     <message>
         <location filename="../model/processtablemodel.cpp" line="294"/>
         <location filename="../model/processtablemodel.cpp" line="382"/>
-        <location filename="../util.cpp" line="373"/>
+        <location filename="../util.cpp" line="396"/>
         <source>Zombie</source>
         <translation>Ölü</translation>
     </message>
     <message>
         <location filename="../model/processtablemodel.cpp" line="297"/>
         <location filename="../model/processtablemodel.cpp" line="385"/>
-        <location filename="../util.cpp" line="377"/>
+        <location filename="../util.cpp" line="400"/>
         <source>Uninterruptible</source>
         <translation>Kesintisiz</translation>
     </message>
     <message>
-        <location filename="../util.cpp" line="381"/>
+        <location filename="../util.cpp" line="404"/>
         <source>Sleeping</source>
         <translation>Uyuyor</translation>
     </message>
     <message>
-        <location filename="../util.cpp" line="391"/>
+        <location filename="../util.cpp" line="414"/>
         <source>Very High</source>
         <translation>Çok Yüksek</translation>
     </message>
     <message>
-        <location filename="../util.cpp" line="393"/>
+        <location filename="../util.cpp" line="416"/>
         <source>High</source>
         <translation>Yüksek</translation>
     </message>
     <message>
-        <location filename="../util.cpp" line="395"/>
+        <location filename="../util.cpp" line="418"/>
         <source>Normal</source>
         <translation>Normal</translation>
     </message>
     <message>
-        <location filename="../util.cpp" line="397"/>
+        <location filename="../util.cpp" line="420"/>
         <source>Low</source>
         <translation>Düşük</translation>
     </message>
     <message>
-        <location filename="../util.cpp" line="399"/>
+        <location filename="../util.cpp" line="422"/>
         <source>Very Low</source>
         <translation>Çok Düşük</translation>
     </message>
     <message>
-        <location filename="../util.cpp" line="405"/>
+        <location filename="../util.cpp" line="428"/>
         <source>Very High Priority</source>
         <translation>Çok Yüksek Öncelik</translation>
     </message>
     <message>
-        <location filename="../util.cpp" line="407"/>
+        <location filename="../util.cpp" line="430"/>
         <source>High Priority</source>
         <translation>Yüksek Öncelik</translation>
     </message>
     <message>
-        <location filename="../util.cpp" line="409"/>
+        <location filename="../util.cpp" line="432"/>
         <source>Normal Priority</source>
         <translation>Normal Öncelik</translation>
     </message>
     <message>
-        <location filename="../util.cpp" line="411"/>
+        <location filename="../util.cpp" line="434"/>
         <source>Low Priority</source>
         <translation>Düşük Öncelik</translation>
     </message>
     <message>
-        <location filename="../util.cpp" line="413"/>
+        <location filename="../util.cpp" line="436"/>
         <source>Very Low Priority</source>
         <translation>Çok Düşük Öncelik</translation>
     </message>
@@ -1123,27 +1110,27 @@ Devam etmek istediğinizden emin misiniz?</translation>
         <translation type="vanished">%1 gün</translation>
     </message>
     <message>
-        <location filename="../gui/procpropertiesdlg.cpp" line="165"/>
+        <location filename="../gui/procpropertiesdlg.cpp" line="166"/>
         <source>User name:</source>
         <translation>Kullanıcı Adı:</translation>
     </message>
     <message>
-        <location filename="../gui/procpropertiesdlg.cpp" line="165"/>
+        <location filename="../gui/procpropertiesdlg.cpp" line="166"/>
         <source>Process name:</source>
         <translation>İşlem Adı:</translation>
     </message>
     <message>
-        <location filename="../gui/procpropertiesdlg.cpp" line="165"/>
+        <location filename="../gui/procpropertiesdlg.cpp" line="166"/>
         <source>Command line:</source>
         <translation>Komut Satırı:</translation>
     </message>
     <message>
-        <location filename="../gui/procpropertiesdlg.cpp" line="165"/>
+        <location filename="../gui/procpropertiesdlg.cpp" line="166"/>
         <source>CPU Time:</source>
         <translation>CPU Zamanı:</translation>
     </message>
     <message>
-        <location filename="../gui/procpropertiesdlg.cpp" line="165"/>
+        <location filename="../gui/procpropertiesdlg.cpp" line="166"/>
         <source>Started Time:</source>
         <translation>Başlama Zamanı:</translation>
     </message>
@@ -1156,27 +1143,35 @@ Devam etmek istediğinizden emin misiniz?</translation>
 <context>
     <name>ReniceDialog</name>
     <message>
-        <location filename="../renicedialog.cpp" line="72"/>
+        <location filename="../renicedialog.cpp" line="70"/>
+        <location filename="../renicedialog.cpp" line="321"/>
+        <source>Change Priority of Process %1 (PID: %2)</source>
+        <translation type="unfinished">%1 Sürecinin Önceliğini Değiştir (PID:%2)</translation>
+    </message>
+    <message>
+        <location filename="../renicedialog.cpp" line="90"/>
         <source>Nice value:</source>
         <translation>Güzel değer:</translation>
     </message>
     <message>
-        <location filename="../renicedialog.cpp" line="94"/>
+        <location filename="../renicedialog.cpp" line="112"/>
         <source>Note:</source>
         <translation>Not:</translation>
     </message>
     <message>
-        <location filename="../renicedialog.cpp" line="98"/>
+        <location filename="../renicedialog.cpp" line="116"/>
         <source>The priority of a process is given by its nice value. A lower nice value corresponds to a higher priority.</source>
         <translation>Bir sürecin önceliği hoş değeri ile verilir. Daha düşük bir hoş değer daha yüksek bir önceliğe karşılık gelir.</translation>
     </message>
     <message>
-        <location filename="../renicedialog.cpp" line="110"/>
+        <location filename="../renicedialog.cpp" line="128"/>
+        <location filename="../renicedialog.cpp" line="331"/>
         <source>Cancel</source>
         <translation>İptal</translation>
     </message>
     <message>
-        <location filename="../renicedialog.cpp" line="115"/>
+        <location filename="../renicedialog.cpp" line="133"/>
+        <location filename="../renicedialog.cpp" line="341"/>
         <source>Change Priority</source>
         <translation>Önceliği Değiştir</translation>
     </message>
@@ -1236,18 +1231,18 @@ Devam etmek istediğinizden emin misiniz?</translation>
 <context>
     <name>newaboutdialog</name>
     <message>
-        <location filename="../newaboutdialog.cpp" line="44"/>
-        <location filename="../newaboutdialog.cpp" line="83"/>
+        <location filename="../newaboutdialog.cpp" line="45"/>
+        <location filename="../newaboutdialog.cpp" line="84"/>
         <source>Kylin System Monitor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../newaboutdialog.cpp" line="93"/>
+        <location filename="../newaboutdialog.cpp" line="94"/>
         <source>close</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../newaboutdialog.cpp" line="122"/>
+        <location filename="../newaboutdialog.cpp" line="123"/>
         <source>kylin system monitor</source>
         <translation type="unfinished"></translation>
     </message>

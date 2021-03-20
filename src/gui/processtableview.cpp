@@ -703,12 +703,12 @@ void ProcessTableView::changeProcPriority(int nice)
             if (!info.isValid()) {
                 return ;
             }
-            m_dlgRenice= new ReniceDialog(tr("Change Priority of Process %1 (PID: %2)").arg(info.getDisplayName()).arg(QString::number(selectPid)));
+            m_dlgRenice= new ReniceDialog(info.getDisplayName(), QString::number(selectPid));
             m_dlgRenice->loadData(info.getNice());
             connect(m_dlgRenice, &ReniceDialog::resetReniceValue, [=] (int value) {
                 this->changeProcPriority(value);
             });
-            m_dlgRenice->exec();
+            m_dlgRenice->show();
         }
     }
     else {

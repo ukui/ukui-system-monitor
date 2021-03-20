@@ -45,9 +45,35 @@ DesktopFileInfo::~DesktopFileInfo()
 QString DesktopFileInfo::getDesktopFileNameByExec(QString strExec)
 {
     QMap<QString, DTFileInfo>::iterator itDesktopFileInfo = m_mapDesktopInfoList.begin();
+    QStringList execParamList = strExec.split(QRegExp("\\s+"));
     for (; itDesktopFileInfo != m_mapDesktopInfoList.end(); itDesktopFileInfo ++) {
         if (itDesktopFileInfo.value().strExec == strExec || itDesktopFileInfo.value().strSimpleExec == strExec) {
-            return itDesktopFileInfo.key();
+            if (itDesktopFileInfo.value().strExecParam.size() <= 1 && execParamList.size() <= 1) {
+                return itDesktopFileInfo.key();
+            } else if (itDesktopFileInfo.value().strExecParam.size() > 1 
+                && execParamList.size() <= itDesktopFileInfo.value().strExecParam.size()) { // 实际进程命令参数长度要比预定的相同或更短
+                bool isSameProc = true;
+                for (int n = 1; n < itDesktopFileInfo.value().strExecParam.size(); n++) {
+                    if (!itDesktopFileInfo.value().strExecParam[n].isEmpty()) {
+                        if (itDesktopFileInfo.value().strExecParam[n].at(0) != '%') {   // 必传参数
+                            if (execParamList.size() <= n) { // 缺少必传参数，进程不匹配
+                                isSameProc = false;
+                                break;
+                            } else if (execParamList[n] != itDesktopFileInfo.value().strExecParam[n]) {  // 参数不必配，进程不匹配
+                                isSameProc = false;
+                                break;
+                            }
+                        } else {
+                            break;
+                        }
+                    } else {
+                        break;
+                    }
+                }
+                if (isSameProc) {
+                    return itDesktopFileInfo.key();
+                }
+            }
         }
     }
     return "";
@@ -56,12 +82,42 @@ QString DesktopFileInfo::getDesktopFileNameByExec(QString strExec)
 QString DesktopFileInfo::getNameByExec(QString strExec)
 {
     QMap<QString, DTFileInfo>::iterator itDesktopFileInfo = m_mapDesktopInfoList.begin();
+    QStringList execParamList = strExec.split(QRegExp("\\s+"));
     for (; itDesktopFileInfo != m_mapDesktopInfoList.end(); itDesktopFileInfo ++) {
         if (itDesktopFileInfo.value().strExec == strExec || itDesktopFileInfo.value().strSimpleExec == strExec) {
-            if (itDesktopFileInfo.value().strName.isEmpty()) {
-                return itDesktopFileInfo.value().strGenericName;
-            } else {
-                return itDesktopFileInfo.value().strName;
+            if (itDesktopFileInfo.value().strExecParam.size() <= 1 && execParamList.size() <= 1) {
+                if (itDesktopFileInfo.value().strName.isEmpty()) {
+                    return itDesktopFileInfo.value().strGenericName;
+                } else {
+                    return itDesktopFileInfo.value().strName;
+                }
+            } else if (itDesktopFileInfo.value().strExecParam.size() > 1 
+                && execParamList.size() <= itDesktopFileInfo.value().strExecParam.size()) { // 实际进程命令参数长度要比预定的相同或更短
+                bool isSameProc = true;
+                for (int n = 1; n < itDesktopFileInfo.value().strExecParam.size(); n++) {
+                    if (!itDesktopFileInfo.value().strExecParam[n].isEmpty()) {
+                        if (itDesktopFileInfo.value().strExecParam[n].at(0) != '%') {   // 必传参数
+                            if (execParamList.size() <= n) { // 缺少必传参数，进程不匹配
+                                isSameProc = false;
+                                break;
+                            } else if (execParamList[n] != itDesktopFileInfo.value().strExecParam[n]) {  // 参数不必配，进程不匹配
+                                isSameProc = false;
+                                break;
+                            }
+                        } else {
+                            break;
+                        }
+                    } else {
+                        break;
+                    }
+                }
+                if (isSameProc) {
+                    if (itDesktopFileInfo.value().strName.isEmpty()) {
+                        return itDesktopFileInfo.value().strGenericName;
+                    } else {
+                        return itDesktopFileInfo.value().strName;
+                    }
+                }
             }
         }
     }
@@ -71,9 +127,35 @@ QString DesktopFileInfo::getNameByExec(QString strExec)
 QString DesktopFileInfo::getIconByExec(QString strExec)
 {
     QMap<QString, DTFileInfo>::iterator itDesktopFileInfo = m_mapDesktopInfoList.begin();
+    QStringList execParamList = strExec.split(QRegExp("\\s+"));
     for (; itDesktopFileInfo != m_mapDesktopInfoList.end(); itDesktopFileInfo ++) {
         if (itDesktopFileInfo.value().strExec == strExec || itDesktopFileInfo.value().strSimpleExec == strExec) {
-            return itDesktopFileInfo.value().strIcon;
+            if (itDesktopFileInfo.value().strExecParam.size() <= 1 && execParamList.size() <= 1) {
+                return itDesktopFileInfo.value().strIcon;
+            } else if (itDesktopFileInfo.value().strExecParam.size() > 1 
+                && execParamList.size() <= itDesktopFileInfo.value().strExecParam.size()) { // 实际进程命令参数长度要比预定的相同或更短
+                bool isSameProc = true;
+                for (int n = 1; n < itDesktopFileInfo.value().strExecParam.size(); n++) {
+                    if (!itDesktopFileInfo.value().strExecParam[n].isEmpty()) {
+                        if (itDesktopFileInfo.value().strExecParam[n].at(0) != '%') {   // 必传参数
+                            if (execParamList.size() <= n) { // 缺少必传参数，进程不匹配
+                                isSameProc = false;
+                                break;
+                            } else if (execParamList[n] != itDesktopFileInfo.value().strExecParam[n]) {  // 参数不必配，进程不匹配
+                                isSameProc = false;
+                                break;
+                            }
+                        } else {
+                            break;
+                        }
+                    } else {
+                        break;
+                    }
+                }
+                if (isSameProc) {
+                    return itDesktopFileInfo.value().strIcon;
+                }
+            }
         }
     }
     return "";
@@ -113,9 +195,9 @@ void DesktopFileInfo::readAllDesktopFileInfo()
                 DTFileInfo dtFileInfo;
                 desktopFile->setIniCodec("utf-8");
                 dtFileInfo.strExec = desktopFile->value(QString("Desktop Entry/Exec")).toString();
-                QStringList execList = dtFileInfo.strExec.split(" ");
-                if (execList.size() > 0) {
-                    QStringList simpleExecList = execList[0].split("/");
+                dtFileInfo.strExecParam = dtFileInfo.strExec.split(QRegExp("\\s+"));
+                if (dtFileInfo.strExecParam.size() > 0) {
+                    QStringList simpleExecList = dtFileInfo.strExecParam[0].split("/");
                     if (simpleExecList.size() > 0) {
                         dtFileInfo.strSimpleExec = simpleExecList[simpleExecList.size()-1];
                     }
@@ -140,9 +222,9 @@ void DesktopFileInfo::readAllDesktopFileInfo()
                 DTFileInfo dtFileInfo;
                 desktopFile->setIniCodec("utf-8");
                 dtFileInfo.strExec = desktopFile->value(QString("Desktop Entry/Exec")).toString();
-                QStringList execList = dtFileInfo.strExec.split(" ");
-                if (execList.size() > 0) {
-                    QStringList simpleExecList = execList[0].split("/");
+                dtFileInfo.strExecParam = dtFileInfo.strExec.split(" ");
+                if (dtFileInfo.strExecParam.size() > 0) {
+                    QStringList simpleExecList = dtFileInfo.strExecParam[0].split("/");
                     if (simpleExecList.size() > 0) {
                         dtFileInfo.strSimpleExec = simpleExecList[simpleExecList.size()-1];
                     }

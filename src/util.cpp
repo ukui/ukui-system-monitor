@@ -137,6 +137,28 @@ QString getElidedText(QFont font, QString str, int MaxWidth)
     return str;
 }
 
+QString getMiddleElidedText(QFont font, QString str, int MaxWidth)
+{
+    if (str.isEmpty())
+    {
+        return "";
+    }
+
+    QFontMetrics fontWidth(font);
+
+    //计算字符串宽度
+    int width = fontWidth.width(str);
+
+    //当字符串宽度大于最大宽度时进行转换
+    if (width >= MaxWidth)
+    {
+        //右部显示省略号
+        str = fontWidth.elidedText(str, Qt::ElideMiddle, MaxWidth);
+    }
+    //返回处理后的字符串
+    return str;
+}
+
 QString formatDurationForDisplay(unsigned centiseconds)
 {
     unsigned weeks = 0, days = 0, hours = 0, minutes = 0, seconds = 0;

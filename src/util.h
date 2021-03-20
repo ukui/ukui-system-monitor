@@ -53,6 +53,7 @@ QString formatDurationForDisplay(unsigned centiseconds);
 QString getDeviceMountedPointPath(const QString &line);
 QString getFileContent(const QString &filePath);
 QString getElidedText(QFont font, QString str, int MaxWidth);
+QString getMiddleElidedText(QFont font, QString str, int MaxWidth);
 QSet<QString> getFileContentsLineByLine(const QString &filePath);
 
 const QPixmap loadSvg(const QString &fileName, const int size);

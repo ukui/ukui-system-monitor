@@ -24,6 +24,7 @@
 #include <QDialog>
 #include <QVBoxLayout>
 #include <QMouseEvent>
+#include <QGSettings>
 
 class QLabel;
 class QSlider;
@@ -35,7 +36,7 @@ class ReniceDialog : public QDialog
 {
     Q_OBJECT
 public:
-    ReniceDialog(const QString &title = "", QWidget *parent = 0);
+    ReniceDialog(const QString &procName = "", const QString &procId = "", QWidget *parent = 0);
     ~ReniceDialog();
 
     void loadData(int nice);
@@ -43,6 +44,7 @@ public:
 
 public slots:
     void onClose();
+    void onThemeFontChange(qreal lfFontSize);
 
 signals:
     void resetReniceValue(int value);
@@ -52,6 +54,9 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
     void paintEvent(QPaintEvent *event);
+
+private:private:
+    void initFontSize();
 
 private:
     QVBoxLayout *m_mainLayout = nullptr;
@@ -66,6 +71,11 @@ private:
     QLabel *m_valueStrLabel = nullptr;
     QLabel *m_tipTitle = nullptr;
     QLabel *m_tipLabel = nullptr;
+    QLabel *m_dlgTitleLable = nullptr;
+    QString m_strProcName;
+    QString m_strProcId;
+    qreal fontSize;
+    QGSettings *fontSettings;
 
     QPushButton *m_cancelbtn = nullptr;
     QPushButton *m_changeBtn = nullptr;

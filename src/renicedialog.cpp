@@ -21,6 +21,8 @@
 #include "renicedialog.h"
 #include "../component/utils.h"
 #include "util.h"
+#include "../shell/macro.h"
+#include "../shell/xatom-helper.h"
 
 #include <QApplication>
 #include <QDesktopWidget>
@@ -30,17 +32,30 @@
 #include <QPushButton>
 #include <QIcon>
 
-ReniceDialog::ReniceDialog(const QString &title, QWidget *parent)
+ReniceDialog::ReniceDialog(const QString &procName, const QString &procId, QWidget *parent)
     : QDialog(parent)
     , m_mousePressed(false)
 {
-    this->setWindowFlags(Qt::FramelessWindowHint);
-    this->setFixedSize(464, 240);
-    this->setFixedSize(464+SHADOW_LEFT_TOP_PADDING+SHADOW_LEFT_TOP_PADDING, 300+SHADOW_RIGHT_BOTTOM_PADDING+SHADOW_RIGHT_BOTTOM_PADDING);
+    MotifWmHints hints;
+    hints.flags = MWM_HINTS_FUNCTIONS|MWM_HINTS_DECORATIONS;
+    hints.functions = MWM_FUNC_ALL;
+    hints.decorations = MWM_DECOR_BORDER;
+    XAtomHelper::getInstance()->setWindowMotifHint(this->winId(), hints);
+    this->setWindowFlags(this->windowFlags() | Qt::FramelessWindowHint | Qt::Tool);
+    this->setFixedSize(480, 240);
+    this->setFixedSize(480+SHADOW_LEFT_TOP_PADDING+SHADOW_LEFT_TOP_PADDING, 340+SHADOW_RIGHT_BOTTOM_PADDING+SHADOW_RIGHT_BOTTOM_PADDING);
 //    this->setContentsMargins(SHADOW_LEFT_TOP_PADDING,SHADOW_LEFT_TOP_PADDING,SHADOW_RIGHT_BOTTOM_PADDING,SHADOW_RIGHT_BOTTOM_PADDING);
 //    this->setStyleSheet("QDialog{border: 1px solid white;border-radius:1px;background-color: #ffffff;}");
     this->setWindowIcon(QIcon(":/res/ukui-system-monitor.png"));
     this->setAttribute(Qt::WA_DeleteOnClose);
+
+    const QByteArray id(THEME_QT_SCHEMA);
+    if(QGSettings::isSchemaInstalled(id))
+    {
+        fontSettings = new QGSettings(id);
+    }
+
+    initFontSize();
 
     QWidget *containerWidget = new QWidget(this);
 //    containerWidget->setContentsMargins(SHADOW_LEFT_TOP_PADDING,SHADOW_LEFT_TOP_PADDING,SHADOW_RIGHT_BOTTOM_PADDING,SHADOW_RIGHT_BOTTOM_PADDING);
@@ -49,8 +64,11 @@ ReniceDialog::ReniceDialog(const QString &title, QWidget *parent)
     m_mainLayout->setSpacing(20);
     m_mainLayout->setMargin(0);
 //    m_titleBar = new MyTitleBar(title, false, this);
-    QLabel *titleLabel = new QLabel;
-    titleLabel->setText(title);
+    m_dlgTitleLable = new QLabel;
+    m_strProcName = procName;
+    m_strProcId = procId;
+    m_dlgTitleLable->setText(tr("Change Priority of Process %1 (PID: %2)").arg(m_strProcName).arg(m_strProcId));
+    m_dlgTitleLable->setFixedWidth(400);
     QPushButton *closeButton = new QPushButton(this);
     closeButton->setFlat(true);
     closeButton->setIcon(QIcon::fromTheme("window-close-symbolic"));
@@ -61,14 +79,14 @@ ReniceDialog::ReniceDialog(const QString &title, QWidget *parent)
     QHBoxLayout *closeBtn_H_BoxLayout = new QHBoxLayout();
     title_H_BoxLayout->setContentsMargins(0,0,0,0);
     title_H_BoxLayout->setSpacing(0);
-    title_H_BoxLayout->addSpacing(15);
-    title_H_BoxLayout->addWidget(titleLabel);
+    title_H_BoxLayout->addSpacing(5);
+    title_H_BoxLayout->addWidget(m_dlgTitleLable);
     closeBtn_H_BoxLayout->addWidget(closeButton,1,Qt::AlignRight);
-    closeBtn_H_BoxLayout->setContentsMargins(0,8,17,0);
+    closeBtn_H_BoxLayout->setContentsMargins(0,4,17,0);
 //    m_titleBar->setFixedSize(this->width(), TITLE_BAR_HEIGHT);
 
     m_titleLabel = new QLabel();
-    m_titleLabel->setFixedWidth(80);
+    m_titleLabel->setFixedWidth(90);
     m_titleLabel->setText(tr("Nice value:"));
     m_valueLabel = new QLabel();
     m_slider = new QSlider(Qt::Horizontal);
@@ -94,7 +112,7 @@ ReniceDialog::ReniceDialog(const QString &title, QWidget *parent)
     m_tipTitle->setText(tr("Note:"));
     m_tipLabel = new QLabel;
     m_tipLabel->setWordWrap(true);//QLabel自动换行
-    m_tipLabel->setFixedWidth(388);
+    m_tipLabel->setFixedSize(388, 90);
     m_tipLabel->setText(tr("The priority of a process is given by its nice value. A lower nice value corresponds to a higher priority."));
     tip_layout = new QHBoxLayout();
     tip_layout->setSpacing(5);
@@ -104,12 +122,12 @@ ReniceDialog::ReniceDialog(const QString &title, QWidget *parent)
     tip_layout->addWidget(m_tipLabel);
 
     m_cancelbtn = new QPushButton;
-    m_cancelbtn->setFixedSize(91, 25);
+    m_cancelbtn->setFixedSize(120, 36);
     m_cancelbtn->setObjectName("blackButton");
     m_cancelbtn->setFocusPolicy(Qt::NoFocus);
     m_cancelbtn->setText(tr("Cancel"));
     m_changeBtn = new QPushButton;
-    m_changeBtn->setFixedSize(91, 25);
+    m_changeBtn->setFixedSize(120, 36);
     m_changeBtn->setObjectName("blackButton");
     m_changeBtn->setFocusPolicy(Qt::NoFocus);
     m_changeBtn->setText(tr("Change Priority"));
@@ -161,6 +179,7 @@ ReniceDialog::ReniceDialog(const QString &title, QWidget *parent)
 
     QDesktopWidget* desktop = QApplication::desktop();
     this->move((desktop->width() - this->width())/2, (desktop->height() - this->height())/3);
+    onThemeFontChange(fontSize);
 }
 
 ReniceDialog::~ReniceDialog()
@@ -186,6 +205,10 @@ ReniceDialog::~ReniceDialog()
     }
 
     delete m_mainLayout;
+    if (fontSettings) {
+        delete fontSettings;
+        fontSettings = nullptr;
+    }
 }
 
 void ReniceDialog::onClose()
@@ -272,4 +295,66 @@ void ReniceDialog::paintEvent(QPaintEvent *event)
 //    painter.fillPath(path, QColor("#ffffff"));
 
     QDialog::paintEvent(event);
+}
+
+void ReniceDialog::initFontSize()
+{
+    if (!fontSettings) {
+        fontSize = DEFAULT_FONT_SIZE;
+        return;
+    }
+    connect(fontSettings,&QGSettings::changed,[=](QString key)
+    {
+        if("systemFont" == key || "systemFontSize" == key)
+        {
+            fontSize = fontSettings->get(FONT_SIZE).toString().toFloat();
+            this->onThemeFontChange(fontSize);
+        }
+    });
+    fontSize = fontSettings->get(FONT_SIZE).toString().toFloat();
+}
+
+void ReniceDialog::onThemeFontChange(qreal lfFontSize)
+{
+    if (m_dlgTitleLable) {
+        QString strProcName = getMiddleElidedText(m_dlgTitleLable->font(), m_strProcName, 200);
+        QString strOrigTitle = tr("Change Priority of Process %1 (PID: %2)").arg(strProcName).arg(m_strProcId);
+        QString strTitle = getElidedText(m_dlgTitleLable->font(), strOrigTitle, m_dlgTitleLable->width()-2);
+        m_dlgTitleLable->setText(strTitle);
+        if (strTitle != strOrigTitle) {
+            m_dlgTitleLable->setToolTip(strOrigTitle);
+        } else {
+            m_dlgTitleLable->setToolTip("");
+        }
+    }
+    if (m_cancelbtn) {
+        QString strOrigCancel = tr("Cancel");
+        QString strCancel = getElidedText(m_cancelbtn->font(), strOrigCancel, m_cancelbtn->width()-2);
+        m_cancelbtn->setText(strCancel);
+        if (strCancel != strOrigCancel) {
+            m_cancelbtn->setToolTip(strOrigCancel);
+        } else {
+            m_cancelbtn->setToolTip("");
+        }
+    }
+    if (m_changeBtn) {
+        QString strOrigChange = tr("Change Priority");
+        QString strChange = getElidedText(m_changeBtn->font(), strOrigChange, m_changeBtn->width()-2);
+        m_changeBtn->setText(strChange);
+        if (strChange != strOrigChange) {
+            m_changeBtn->setToolTip(strOrigChange);
+        } else {
+            m_changeBtn->setToolTip("");
+        }
+    }
+    if (m_titleLabel) {
+        QString strOrigNice = tr("Nice value:");
+        QString strNice = getElidedText(m_titleLabel->font(), strOrigNice, m_titleLabel->width()-2);
+        m_titleLabel->setText(strNice);
+        if (strNice != strOrigNice) {
+            m_titleLabel->setToolTip(strOrigNice);
+        } else {
+            m_titleLabel->setToolTip("");
+        }
+    }
 }

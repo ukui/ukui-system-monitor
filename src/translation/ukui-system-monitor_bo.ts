@@ -2,60 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="bo_CN">
 <context>
-    <name>FileSystemDialog</name>
-    <message>
-        <location filename="../filesystemdialog.cpp" line="61"/>
-        <source>Refresh</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>FileSystemListWidget</name>
-    <message>
-        <location filename="../filesystemlistwidget.cpp" line="70"/>
-        <location filename="../filesystemlistwidget.cpp" line="440"/>
-        <source>Device</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../filesystemlistwidget.cpp" line="70"/>
-        <location filename="../filesystemlistwidget.cpp" line="440"/>
-        <source>Directory</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../filesystemlistwidget.cpp" line="70"/>
-        <source>Type</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../filesystemlistwidget.cpp" line="70"/>
-        <source>Total</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../filesystemlistwidget.cpp" line="70"/>
-        <source>Free</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../filesystemlistwidget.cpp" line="70"/>
-        <source>Available</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../filesystemlistwidget.cpp" line="70"/>
-        <location filename="../filesystemlistwidget.cpp" line="440"/>
-        <source>Used</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../filesystemlistwidget.cpp" line="515"/>
-        <source>No File System Info</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>FileSystemModel</name>
     <message>
         <location filename="../model/filesystemmodel.cpp" line="118"/>
@@ -96,37 +42,37 @@
 <context>
     <name>FileSystemTableView</name>
     <message>
-        <location filename="../gui/filesystemstableview.cpp" line="157"/>
+        <location filename="../gui/filesystemtableview.cpp" line="160"/>
         <source>Refresh</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gui/filesystemstableview.cpp" line="170"/>
+        <location filename="../gui/filesystemtableview.cpp" line="173"/>
         <source>Directory</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gui/filesystemstableview.cpp" line="177"/>
+        <location filename="../gui/filesystemtableview.cpp" line="180"/>
         <source>Type</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gui/filesystemstableview.cpp" line="184"/>
+        <location filename="../gui/filesystemtableview.cpp" line="187"/>
         <source>Total</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gui/filesystemstableview.cpp" line="191"/>
+        <location filename="../gui/filesystemtableview.cpp" line="194"/>
         <source>Free</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gui/filesystemstableview.cpp" line="198"/>
+        <location filename="../gui/filesystemtableview.cpp" line="201"/>
         <source>Available</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gui/filesystemstableview.cpp" line="205"/>
+        <location filename="../gui/filesystemtableview.cpp" line="208"/>
         <source>Used</source>
         <translation type="unfinished"></translation>
     </message>
@@ -297,7 +243,7 @@
 <context>
     <name>ProcPropertiesDlg</name>
     <message>
-        <location filename="../gui/procpropertiesdlg.cpp" line="140"/>
+        <location filename="../gui/procpropertiesdlg.cpp" line="141"/>
         <source>OK</source>
         <translation type="unfinished"></translation>
     </message>
@@ -484,11 +430,6 @@ Are you sure to continue?</source>
 Are you sure to continue?</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <location filename="../gui/processtableview.cpp" line="706"/>
-        <source>Change Priority of Process %1 (PID: %2)</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>QObject</name>
@@ -538,108 +479,108 @@ Are you sure to continue?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gui/procpropertiesdlg.cpp" line="165"/>
+        <location filename="../gui/procpropertiesdlg.cpp" line="166"/>
         <source>User name:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gui/procpropertiesdlg.cpp" line="165"/>
+        <location filename="../gui/procpropertiesdlg.cpp" line="166"/>
         <source>Process name:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gui/procpropertiesdlg.cpp" line="165"/>
+        <location filename="../gui/procpropertiesdlg.cpp" line="166"/>
         <source>Command line:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gui/procpropertiesdlg.cpp" line="165"/>
+        <location filename="../gui/procpropertiesdlg.cpp" line="166"/>
         <source>CPU Time:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gui/procpropertiesdlg.cpp" line="165"/>
+        <location filename="../gui/procpropertiesdlg.cpp" line="166"/>
         <source>Started Time:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../util.cpp" line="365"/>
+        <location filename="../util.cpp" line="388"/>
         <source>Running</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../model/processtablemodel.cpp" line="291"/>
         <location filename="../model/processtablemodel.cpp" line="379"/>
-        <location filename="../util.cpp" line="369"/>
+        <location filename="../util.cpp" line="392"/>
         <source>Stopped</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../model/processtablemodel.cpp" line="294"/>
         <location filename="../model/processtablemodel.cpp" line="382"/>
-        <location filename="../util.cpp" line="373"/>
+        <location filename="../util.cpp" line="396"/>
         <source>Zombie</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../model/processtablemodel.cpp" line="297"/>
         <location filename="../model/processtablemodel.cpp" line="385"/>
-        <location filename="../util.cpp" line="377"/>
+        <location filename="../util.cpp" line="400"/>
         <source>Uninterruptible</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../util.cpp" line="381"/>
+        <location filename="../util.cpp" line="404"/>
         <source>Sleeping</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../util.cpp" line="391"/>
+        <location filename="../util.cpp" line="414"/>
         <source>Very High</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../util.cpp" line="393"/>
+        <location filename="../util.cpp" line="416"/>
         <source>High</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../util.cpp" line="395"/>
+        <location filename="../util.cpp" line="418"/>
         <source>Normal</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../util.cpp" line="397"/>
+        <location filename="../util.cpp" line="420"/>
         <source>Low</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../util.cpp" line="399"/>
+        <location filename="../util.cpp" line="422"/>
         <source>Very Low</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../util.cpp" line="405"/>
+        <location filename="../util.cpp" line="428"/>
         <source>Very High Priority</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../util.cpp" line="407"/>
+        <location filename="../util.cpp" line="430"/>
         <source>High Priority</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../util.cpp" line="409"/>
+        <location filename="../util.cpp" line="432"/>
         <source>Normal Priority</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../util.cpp" line="411"/>
+        <location filename="../util.cpp" line="434"/>
         <source>Low Priority</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../util.cpp" line="413"/>
+        <location filename="../util.cpp" line="436"/>
         <source>Very Low Priority</source>
         <translation type="unfinished"></translation>
     </message>
@@ -652,27 +593,35 @@ Are you sure to continue?</source>
 <context>
     <name>ReniceDialog</name>
     <message>
-        <location filename="../renicedialog.cpp" line="72"/>
+        <location filename="../renicedialog.cpp" line="70"/>
+        <location filename="../renicedialog.cpp" line="321"/>
+        <source>Change Priority of Process %1 (PID: %2)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../renicedialog.cpp" line="90"/>
         <source>Nice value:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../renicedialog.cpp" line="94"/>
+        <location filename="../renicedialog.cpp" line="112"/>
         <source>Note:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../renicedialog.cpp" line="98"/>
+        <location filename="../renicedialog.cpp" line="116"/>
         <source>The priority of a process is given by its nice value. A lower nice value corresponds to a higher priority.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../renicedialog.cpp" line="110"/>
+        <location filename="../renicedialog.cpp" line="128"/>
+        <location filename="../renicedialog.cpp" line="331"/>
         <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../renicedialog.cpp" line="115"/>
+        <location filename="../renicedialog.cpp" line="133"/>
+        <location filename="../renicedialog.cpp" line="341"/>
         <source>Change Priority</source>
         <translation type="unfinished"></translation>
     </message>
@@ -688,18 +637,18 @@ Are you sure to continue?</source>
 <context>
     <name>newaboutdialog</name>
     <message>
-        <location filename="../newaboutdialog.cpp" line="44"/>
-        <location filename="../newaboutdialog.cpp" line="83"/>
+        <location filename="../newaboutdialog.cpp" line="45"/>
+        <location filename="../newaboutdialog.cpp" line="84"/>
         <source>Kylin System Monitor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../newaboutdialog.cpp" line="93"/>
+        <location filename="../newaboutdialog.cpp" line="94"/>
         <source>close</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../newaboutdialog.cpp" line="122"/>
+        <location filename="../newaboutdialog.cpp" line="123"/>
         <source>kylin system monitor</source>
         <translation type="unfinished"></translation>
     </message>

@@ -23,10 +23,12 @@
 
 #include <QMap>
 #include <QObject>
+#include <QStringList>
 
 typedef struct _DTFileInfo_s {
     QString strExec = "";
     QString strSimpleExec = "";
+    QStringList strExecParam;
     QString strName = "";
     QString strGenericName = "";
     QString strIcon = "";

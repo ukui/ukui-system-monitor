@@ -1,3 +1,9 @@
+ukui-system-monitor (2.0.2-14) v101; urgency=medium
+
+  * 修复bug：修复自定义优先级界面显示错乱问题bug#43846
+
+ -- Yang Min <yangmin@kylinos.cn>  Sat, 20 Mar 2021 19:51:32 +0800
+
 ukui-system-monitor (2.0.2-13) v101; urgency=medium
 
   * 修复bug：1、修复资源界面cpu总比文本为“CPU”bug#43447；2、修复部分进程显示名称匹配错误问题bug#43682
