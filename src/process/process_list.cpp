@@ -21,6 +21,7 @@
 #include "process_list.h"
 #include "../util.h"
 #include "../linebandwith.h"
+#include "../desktopfileinfo.h"
 
 #include <QDebug>
 #include <QApplication>
@@ -657,6 +658,7 @@ ProcessList::ProcessList(QObject* parent)
     : QObject(parent), m_set {}
 {
     glibtop_init();
+    DesktopFileInfo::instance()->readAllDesktopFileInfo();
     this->num_cpus = glibtop_get_sysinfo()->ncpu;
     scanThread = new ScanThread(this);
     scanThread->start(QThread::TimeCriticalPriority);
@@ -882,17 +884,10 @@ void ProcessList::scanProcess()
             m_lockReadWrite.unlock();
             break;
         }
-
-        std::string desktopFile;
-        desktopFile = getDesktopFileAccordProcNameApp(proc.getProcName(), "");
-//        QString q_str = QString::fromStdString(desktopFile);   // this is the way that convert from std::string to QString
-        if(desktopFile.empty())  //this is the way to detect that if the std::string is null or not.
-        {
-            desktopFile = getDesktopFileAccordProcName(proc.getProcName(), "");
-        }
+        
         if (!oldProcInfo.isValid()) {
-            QString strIconPath = getAppIconPathFromDesktopFile(desktopFile);
-            proc.setIconPath(strIconPath);            
+            QString strIconPath = DesktopFileInfo::instance()->getIconByExec(proc.getProcName());
+            proc.setIconPath(strIconPath);         
         } else {
             proc.setIconPath(oldProcInfo.getIconPath());
         }
@@ -902,9 +897,8 @@ void ProcessList::scanProcess()
             break;
         }
 
-        QString title = getDisplayNameAccordProcName(proc.getProcName(), desktopFile);
-        if( title.isEmpty() )
-        {
+        QString title = DesktopFileInfo::instance()->getNameByExec(proc.getProcName());
+        if (title.isEmpty()) {
             proc.setDisplayName(proc.getProcName()); //进程名称
         } else {
             proc.setDisplayName(title);

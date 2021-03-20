@@ -24,6 +24,7 @@
 #include "../util.h"
 #include "../shell/xatom-helper.h"
 #include "../shell/macro.h"
+#include "../desktopfileinfo.h"
 
 #include <QApplication>
 #include <QDateTime>
@@ -276,12 +277,7 @@ void ProcPropertiesDlg::initProcproperties()
         QString username = info.getProcUser();
         QString name = info.getProcName();
 
-        std::string desktopFile;
-        desktopFile = getDesktopFileAccordProcNameApp(name, "");
-        if(desktopFile.empty())  //this is the way to detect that if the std::string is null or not.
-        {
-            desktopFile = getDesktopFileAccordProcName(name, "");
-        }
+        QString iconPath = DesktopFileInfo::instance()->getIconByExec(name);
 
         QPixmap icon_pixmap;
         int iconSize = 48;// * qApp->devicePixelRatio();
@@ -293,17 +289,28 @@ void ProcPropertiesDlg::initProcproperties()
                 defaultExecutableIcon = QIcon(":/res/autostart-default.png");
         }
         QPixmap defaultPixmap = defaultExecutableIcon.pixmap(iconSize, iconSize);
-        if (desktopFile.size() == 0) {
+        if (iconPath.isEmpty()) {
             icon_pixmap = defaultPixmap;
             //icon_pixmap.setDevicePixelRatio(qApp->devicePixelRatio());
         } else {
-            icon_pixmap = getAppIconFromDesktopFile(desktopFile, 48);
+            QIcon icon;
+            if (iconPath.contains("/")) {
+                QFileInfo fileInfo(iconPath);
+                if (fileInfo.exists()) {
+                    icon = QIcon(iconPath);
+                }
+            } else {
+                icon = QIcon::fromTheme(iconPath, defaultExecutableIcon);
+            }
+            icon_pixmap = icon.pixmap(iconSize, iconSize);
             if (icon_pixmap.isNull()) {
                 icon_pixmap = defaultPixmap;
-                //icon_pixmap.setDevicePixelRatio(qApp->devicePixelRatio());
             }
         }
-        m_strTitleName = getDisplayNameAccordProcName(name, desktopFile);
+        m_strTitleName = DesktopFileInfo::instance()->getNameByExec(name);
+        if (m_strTitleName.isEmpty()) {
+            m_strTitleName = name;
+        }
         m_iconLabel->setPixmap(icon_pixmap);
         QString titleName = getElidedText(m_titleLabel->font(), m_strTitleName, PROC_DIALOGTITLE_WIDTH-PROC_GRIDITEM_BOARD);
         m_titleLabel->setText(titleName);

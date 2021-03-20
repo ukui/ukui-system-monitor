@@ -124,7 +124,8 @@ HEADERS += \
     model/processtablemodel.h \
     model/processsortfilterproxymodel.h \
     model/filesystemmodel.h \
-    model/filesystemsortfilterproxymodel.h 
+    model/filesystemsortfilterproxymodel.h \
+    desktopfileinfo.h
 
 SOURCES += \
     ../shell/xatom-helper.cpp \
@@ -177,7 +178,8 @@ SOURCES += \
     model/processtablemodel.cpp \
     model/processsortfilterproxymodel.cpp \
     model/filesystemmodel.cpp \
-    model/filesystemsortfilterproxymodel.cpp 
+    model/filesystemsortfilterproxymodel.cpp \
+    desktopfileinfo.cpp
 
 OTHER_FILES += \
     systemmonitor.json
