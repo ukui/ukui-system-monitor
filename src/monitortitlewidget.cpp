@@ -243,16 +243,40 @@ MonitorTitleWidget::~MonitorTitleWidget()
     }
 }
 
+void MonitorTitleWidget::showSearchFocusAnimation(bool bIn)
+{
+    static bool bInFocus = false;
+    if (bInFocus == bIn) {
+        return ;
+    }
+    bInFocus = bIn;
+    if (bIn) {
+        m_animation->stop();
+        m_animation->setStartValue(m_rectSeachAnimationBegin);
+        m_animation->setEndValue(m_rectSeachAnimationEnd);
+        QRectF rect = m_animation->endValue().toRectF();
+        m_animation->setEasingCurve(QEasingCurve::OutQuad);
+        m_animation->start();
+    } else {
+        m_queryText->adjustSize();
+        m_animation->setStartValue(m_rectSeachAnimationEnd);
+        m_animation->setEndValue(m_rectSeachAnimationBegin);
+        QRectF rect = m_animation->endValue().toRectF();
+        m_animation->setEasingCurve(QEasingCurve::InQuad);
+        m_animation->start();
+    }
+}
+
 bool MonitorTitleWidget::eventFilter(QObject *obj, QEvent *event)    //set the esc and tab pressbutton effect
 {
     if (event->type() == QEvent::KeyPress) {
         if (obj == this) {
-            m_isSearching = false;
             QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
             if (keyEvent->key() == Qt::Key_Escape || keyEvent->key() == Qt::Key_Tab) {
 //                m_searchEdit->clearEdit();
                 m_searchEditNew->clear();
                 emit canelSearchEditFocus();
+                showSearchFocusAnimation(false);
             }
         }
         else if (obj == m_searchEditNew) {
@@ -261,6 +285,7 @@ bool MonitorTitleWidget::eventFilter(QObject *obj, QEvent *event)    //set the e
 //                m_searchEdit->clearEdit();
                 m_searchEditNew->clear();
                 emit canelSearchEditFocus();
+                showSearchFocusAnimation(false);
             }
         }
     }
@@ -272,16 +297,8 @@ bool MonitorTitleWidget::eventFilter(QObject *obj, QEvent *event)    //set the e
             emit SearchFocusIn();
             if(m_searchEditNew->text().isEmpty())
             {
-                //qDebug()<<"it is real";
-                m_animation->stop();
-                m_animation->setStartValue(QRectF((m_searchEditNew->width() - (m_queryIcon->width()+m_queryText->width()+10))/2,0,
-                                                 m_queryIcon->width()+m_queryText->width()+30,(m_searchEditNew->height() + 30)/2));
-                m_animation->setEndValue(QRectF(0,0,
-                                               m_queryIcon->width()+5,(m_searchEditNew->height()+20)/2));
-                m_animation->setEasingCurve(QEasingCurve::OutQuad);
-                m_animation->start();
+                showSearchFocusAnimation(true);
             }
-            //qDebug()<<"what is m_isSearching"<<m_isSearching;
         }
         else if(event->type() == QEvent::FocusOut && m_isSearching == false)
         {
@@ -290,13 +307,7 @@ bool MonitorTitleWidget::eventFilter(QObject *obj, QEvent *event)    //set the e
             m_searchEditNew->clearFocus();
             if(m_searchEditNew->text().isEmpty())
             {
-                m_queryText->adjustSize();
-                m_animation->setStartValue(QRectF(0,0,
-                                                 m_queryIcon->width()+5,(m_searchEditNew->height()+20)/2));
-                m_animation->setEndValue(QRectF((m_searchEditNew->width() - (m_queryIcon->width()+m_queryText->width()+10))/2,0,
-                                               m_queryIcon->width()+m_queryText->width()+15,(m_searchEditNew->height()+30)/2));
-                m_animation->setEasingCurve(QEasingCurve::InQuad);
-                m_animation->start();
+                showSearchFocusAnimation(false);
             }
             m_isSearching=false;
         }
@@ -615,8 +626,6 @@ void MonitorTitleWidget::initToolbarLeftContent()
 
     connect(m_processButton, &QPushButton::clicked, this, [=] {
         emit this->changePage(0);
-//        if (!m_searchEdit->isVisible())
-//            m_searchEdit->setVisible(true);
         if (!m_changeBox->isVisible())
             m_changeBox->setVisible(true);
         if (!m_searchEditNew->isVisible())
@@ -624,27 +633,23 @@ void MonitorTitleWidget::initToolbarLeftContent()
     });
     connect(m_resourceButton, &QPushButton::clicked, this, [=] {
         emit this->changePage(1);
-//        if (m_searchEdit->isVisible())
-//            m_searchEdit->setVisible(false);
         if (m_changeBox->isVisible())
             m_changeBox->setVisible(false);
         if (m_searchEditNew->isVisible())
             m_searchEditNew->setVisible(false);
-//        m_searchEdit->clearEdit();
         m_searchEditNew->clear();
         emit canelSearchEditFocus();
+        showSearchFocusAnimation(false);
     });
     connect(m_filesystemButton, &QPushButton::clicked, this, [=] {
         emit this->changePage(2);
-//        if (m_searchEdit->isVisible())
-//            m_searchEdit->setVisible(false);
         if (m_changeBox->isVisible())
             m_changeBox->setVisible(false);
         if (m_searchEditNew->isVisible())
             m_searchEditNew->setVisible(false);
-//        m_searchEdit->clearEdit();
         m_searchEditNew->clear();
         emit canelSearchEditFocus();
+        showSearchFocusAnimation(false);
     });
     emptyWidget = new QWidget();
 
@@ -750,14 +755,23 @@ void MonitorTitleWidget::initWidgets()
     queryWidLayout->setSpacing(0);
     m_queryWid->setLayout(queryWidLayout);
 
+    m_queryIcon->setFixedWidth(pixmap.width());
     queryWidLayout->addWidget(m_queryIcon);
     queryWidLayout->addWidget(m_queryText);
 
     queryWidLayout->setAlignment(m_queryIcon,Qt::AlignVCenter);
     queryWidLayout->setAlignment(m_queryText,Qt::AlignVCenter);
-
-    m_queryWid->setGeometry(QRect((m_searchEditNew->width() - (m_queryIcon->width()+m_queryText->width()+10))/2,0,
-                                        m_queryIcon->width()+m_queryText->width()+10,(m_searchEditNew->height() + 30)/2));   //设置显示label的区域
+    
+    m_rectSeachAnimationBegin.setX((m_searchEditNew->width() - (m_queryIcon->width()+m_queryText->width()+10))/2);
+    m_rectSeachAnimationBegin.setY(0);
+    m_rectSeachAnimationBegin.setWidth(m_queryIcon->width()+m_queryText->width()+10);
+    m_rectSeachAnimationBegin.setHeight((m_searchEditNew->height() + 30)/2);
+    m_rectSeachAnimationEnd.setX(0);
+    m_rectSeachAnimationEnd.setY(0);
+    m_rectSeachAnimationEnd.setWidth(m_queryIcon->width()+5);
+    m_rectSeachAnimationEnd.setHeight((m_searchEditNew->height()+20)/2);
+    m_queryWid->setGeometry(m_rectSeachAnimationBegin.x(), m_rectSeachAnimationBegin.y(), 
+        m_rectSeachAnimationBegin.width(), m_rectSeachAnimationBegin.height());   //设置显示label的区域
 
     m_animation= new QPropertyAnimation(m_queryWid, "geometry");
     m_animation->setDuration(50);

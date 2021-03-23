@@ -75,6 +75,7 @@ private:
     int daemonIsNotRunning();
     void showGuide(QString appName);
     void setMyComBoxTootip(int index);
+    void showSearchFocusAnimation(bool bIn);
 signals:
     void updateMaxBtn();
     void changePage(int index);
@@ -124,6 +125,8 @@ private:
     QLabel *titleLabel;
     QWidget *emptyWidget = nullptr;
     QWidget *emptyWidget2 = nullptr;
+    QRectF m_rectSeachAnimationBegin;
+    QRectF m_rectSeachAnimationEnd;
 
     float fontSize;
 
