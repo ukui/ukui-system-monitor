@@ -54,7 +54,7 @@ signals:
     void requestMonitorInterrupt();
 
 private:
-    ProcessMonitor *m_monitor;
+    ProcessMonitor *m_monitor = nullptr;
 };
 
 class ProcessMonitor : public QObject

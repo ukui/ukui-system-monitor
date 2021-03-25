@@ -79,7 +79,6 @@ HEADERS += \
     ../widgets/mytristatebutton.h \
     ../widgets/myunderlinebutton.h \
     ../widgets/myhoverbutton.h \
-    processdata.h \
     ../widgets/myactiongroup.h \
     ../widgets/myactiongroupitem.h \
     ../widgets/myaction.h \

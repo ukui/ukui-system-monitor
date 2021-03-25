@@ -528,9 +528,6 @@ int MonitorTitleWidget::daemonIsNotRunning()
 
 void MonitorTitleWidget::showGuide(QString appName)
 {
-
-    //() << Q_FUNC_INFO << appName;
-
     QString service_name = "com.kylinUserGuide.hotel_" + QString::number(getuid());
 
     QDBusInterface *interface = new QDBusInterface(service_name,
@@ -540,6 +537,10 @@ void MonitorTitleWidget::showGuide(QString appName)
                                                        this);
 
     QDBusMessage msg = interface->call(QStringLiteral("showGuide"),"kylin-system-monitor");
+    if (interface) {
+        delete interface;
+        interface = nullptr;
+    }
 }
 
 void MonitorTitleWidget::setMyComBoxTootip(int index)

@@ -50,7 +50,10 @@ ProcessMonitorThread::ProcessMonitorThread(QObject *parent)
 
 ProcessMonitorThread::~ProcessMonitorThread()
 {
-    m_monitor->deleteLater();
+    if (m_monitor) {
+        delete m_monitor;
+        m_monitor = nullptr;
+    }
     quit();
     wait();
 }

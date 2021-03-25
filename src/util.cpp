@@ -29,9 +29,9 @@
 #include <fstream>
 #include <sstream>
 #include <QSvgRenderer>
-const QPixmap loadSvg(const QString &fileName, const int size)
+const bool loadSvg(const QString &fileName, const int size, QPixmap& pixmap)
 {
-    QPixmap pixmap(size, size);
+    pixmap = pixmap.scaled(size, size);
     QSvgRenderer renderer(fileName);
     pixmap.fill(Qt::transparent);
 
@@ -40,7 +40,7 @@ const QPixmap loadSvg(const QString &fileName, const int size)
     renderer.render(&painter);
     painter.end();
 
-    return pixmap;
+    return true;
 }
 
 QPixmap drawSymbolicColoredPixmap(const QPixmap &source)

@@ -56,7 +56,7 @@ QString getElidedText(QFont font, QString str, int MaxWidth);
 QString getMiddleElidedText(QFont font, QString str, int MaxWidth);
 QSet<QString> getFileContentsLineByLine(const QString &filePath);
 
-const QPixmap loadSvg(const QString &fileName, const int size);
+const bool loadSvg(const QString &fileName, const int size, QPixmap& pixmap);
 
 //图片反白
 QPixmap drawSymbolicColoredPixmap(const QPixmap &source);
