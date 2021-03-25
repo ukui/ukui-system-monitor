@@ -53,7 +53,6 @@ MonitorTitleWidget::MonitorTitleWidget(QSettings *settings, QWidget *parent)
     QIcon queryIcon;
     queryIcon = QIcon::fromTheme("preferences-system-search-symbolic");
     pixmap = queryIcon.pixmap(QSize(16, 16));
-    whichBox = new QList<int>();
     const QByteArray idd(THEME_QT_SCHEMA);
 
     if(QGSettings::isSchemaInstalled(idd))
@@ -130,7 +129,7 @@ void MonitorTitleWidget::getTransparentData()
         }
         repaint();
     });
-
+    
     QStringList keys = opacitySettings->keys();
     if(keys.contains("transparency"))
     {
@@ -602,10 +601,6 @@ void MonitorTitleWidget::onUpdateMaxBtnStatusChanged()
 
 void MonitorTitleWidget::initToolbarLeftContent()
 {
-    QWidget *w = new QWidget;
-    w->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    m_toolLeftLayout = new QHBoxLayout(w);
-    m_toolLeftLayout->setContentsMargins(0, 0, 0, 0);
     m_processButton = new QPushButton();
     m_processButton->setCheckable(true);
     m_processButton->setAutoExclusive(true);

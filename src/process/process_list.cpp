@@ -486,7 +486,7 @@ QString Process::calcDiskIoPerSec(qint64 nNewCount)
     qint64 speed = bandwith * 1000 / ms_lapse;
 
     if (speed == 0 || speed < 0) {
-        speedPerSec = "0 KB/S"; }
+        speedPerSec = "0 KB/s"; }
     else if (speed < 1900) {
         speedPerSec.setNum(speed);
         speedPerSec.append(" B/s"); }
@@ -517,13 +517,13 @@ QString Process::calcFlownetPerSec(qint64 nNewCount)
     qint64 speed = bandwith * 1000 / ms_lapse;
 
     if (speed == 0 || speed < 0) {
-        speedPerSec = "0 KB/S"; }
+        speedPerSec = "0 KB/s"; }
     else if (speed < 1900) {
         speedPerSec.setNum(speed);
         speedPerSec.append(" B/s"); }
     else if (speed < 1900000) {
         speedPerSec.setNum(speed/1024);
-        speedPerSec.append(" kB/s"); }
+        speedPerSec.append(" KB/s"); }
     else if (speed < 1900000000) {
         speedPerSec.setNum(speed/(1024*1024));
         speedPerSec.append(" MB/s"); }
@@ -805,8 +805,8 @@ void ProcessList::scanProcess()
 
         // flownet
         qint64 curProcFlownet = 0;
-        if (numAddFlowNetPerSec.contains(pidCur)) {
-            curProcFlownet = numAddFlowNetPerSec[pidCur];
+        if (flowNetPrevMap.contains(pidCur)) {
+            curProcFlownet = flowNetPrevMap[pidCur];
         }
         if (!oldProcInfo.isValid()) {   // 新进程
             proc.setPreFlownetTime(QDateTime::currentDateTime());

@@ -137,7 +137,6 @@ private:
     QString currentThemeMode;
     double m_transparency;
 
-    QList<int> *whichBox;
     int whichNum;
     int i=0;
     QPixmap pixmap;

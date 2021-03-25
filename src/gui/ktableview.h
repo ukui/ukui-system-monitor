@@ -45,6 +45,11 @@ public:
     explicit KTableView(QWidget *parent = nullptr);
 
     /**
+     * @brief unconstructor
+     */
+    virtual ~KTableView();
+
+    /**
      * @brief setModel Sets the model for the view to present (overloaded)
      * @param model Item model to be set
      */

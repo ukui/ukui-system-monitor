@@ -96,6 +96,11 @@ KTableView::KTableView(QWidget *parent)
     QScroller::grabGesture(viewport(), QScroller::TouchGesture);
 }
 
+KTableView::~KTableView()
+{
+    QScroller::ungrabGesture(viewport());
+}
+
 // set view model
 void KTableView::setModel(QAbstractItemModel *model)
 {
