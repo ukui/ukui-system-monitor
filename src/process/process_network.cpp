@@ -556,7 +556,7 @@ void ProcessNetwork::refreshProcNetInfo()
         DIR * dir = opendir(dirname);
         if (!dir)
         {
-            return;
+            continue;
         }
 
         /* walk through /proc/%s/fd/... */
