@@ -22,8 +22,7 @@
 #define __PROCESS_LIST_H__
 
 #include "process_data.h"
-#include "../singleProcessNet/scanthread.h"
-#include "../singleProcessNet/refreshthread.h"
+#include "process_network.h"
 
 #include <glib.h>
 #include <QMap>
@@ -218,8 +217,7 @@ private:
 private:
     QMap<pid_t, Process> m_set;
     gint num_cpus;
-    ScanThread *scanThread = nullptr;
-    RefreshThread *refreshThread = nullptr;
+    ProcessNetwork *procNetThread = nullptr;
 
     guint64 cpu_total_time = 0;
     guint64 cpu_total_time_last = 0;

@@ -296,8 +296,8 @@ void dp_pcap_callback (u_char * u_handle, const struct pcap_pkthdr * header, con
 	struct dp_header;
 
 	/* make a copy of the userdata for every packet */
-	u_char * userdata_copy = (u_char *) malloc (handle->userdata_size);
-	memcpy (userdata_copy, handle->userdata, handle->userdata_size);
+	//u_char * userdata_copy = (u_char *) malloc (handle->userdata_size);
+	//memcpy (userdata_copy, handle->userdata, handle->userdata_size);
 
 	switch (handle->linktype) {
 		case (DLT_EN10MB):
@@ -318,7 +318,7 @@ void dp_pcap_callback (u_char * u_handle, const struct pcap_pkthdr * header, con
 			fprintf(stdout, "Unknown linktype %d", handle->linktype);
 			break;
 	}
-	free (userdata_copy);
+	//free (userdata_copy);
 }
 
 int dp_dispatch (struct dp_handle * handle, int count, u_char *user, int size) {

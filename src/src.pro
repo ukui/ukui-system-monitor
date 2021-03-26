@@ -93,15 +93,15 @@ HEADERS += \
     framelessExtended/framelesshandle.h \
     framelessExtended/framelesshandleprivate.h \
     framelessExtended/widgethandlerealize.h \
-    singleProcessNet/devices.h \
-    singleProcessNet/scanthread.h \
-    singleProcessNet/packet.h \
-    singleProcessNet/kylinsystemnethogs.h \
-    singleProcessNet/process.h \
-    singleProcessNet/connection.h \
-    singleProcessNet/conninode.h \
-    singleProcessNet/inode2prog.h \
-    singleProcessNet/refreshthread.h \
+#    singleProcessNet/devices.h \
+#    singleProcessNet/scanthread.h \
+#    singleProcessNet/packet.h \
+#    singleProcessNet/kylinsystemnethogs.h \
+#    singleProcessNet/process.h \
+#    singleProcessNet/connection.h \
+#    singleProcessNet/conninode.h \
+#    singleProcessNet/inode2prog.h \
+#    singleProcessNet/refreshthread.h \
     singleProcessNet/decpcap.h \
     smoothlinegenerator.h \
     newresource/sigcheck.h \
@@ -120,6 +120,7 @@ HEADERS += \
     process/process_data.h \
     process/process_list.h \
     process/process_monitor.h \
+    process/process_network.h \
     model/processtablemodel.h \
     model/processsortfilterproxymodel.h \
     model/filesystemmodel.h \
@@ -149,14 +150,14 @@ SOURCES += \
     framelessExtended/cursorposcalculator.cpp \
     framelessExtended/framelesshandle.cpp \
     framelessExtended/widgethandlerealize.cpp \
-    singleProcessNet/devices.cpp \
-    singleProcessNet/scanthread.cpp \
-    singleProcessNet/packet.cpp \
-    singleProcessNet/process.cpp \
-    singleProcessNet/connection.cpp \
-    singleProcessNet/conninode.cpp \
-    singleProcessNet/inode2prog.cpp \
-    singleProcessNet/refreshthread.cpp \
+ #   singleProcessNet/devices.cpp \
+ #   singleProcessNet/scanthread.cpp \
+ #   singleProcessNet/packet.cpp \
+ #   singleProcessNet/process.cpp \
+ #   singleProcessNet/connection.cpp \
+ #   singleProcessNet/conninode.cpp \
+ #   singleProcessNet/inode2prog.cpp \
+ #   singleProcessNet/refreshthread.cpp \
     singleProcessNet/decpcap.c \
     smoothlinegenerator.cpp \
     newresource/newresourcesdialog.cpp \
@@ -174,6 +175,7 @@ SOURCES += \
     gui/filesystemtableview.cpp \
     process/process_list.cpp \
     process/process_monitor.cpp \
+    process/process_network.cpp \
     model/processtablemodel.cpp \
     model/processsortfilterproxymodel.cpp \
     model/filesystemmodel.cpp \

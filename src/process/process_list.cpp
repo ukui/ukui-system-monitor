@@ -660,42 +660,34 @@ ProcessList::ProcessList(QObject* parent)
     glibtop_init();
     DesktopFileInfo::instance()->readAllDesktopFileInfo();
     this->num_cpus = glibtop_get_sysinfo()->ncpu;
-    scanThread = new ScanThread(this);
-    scanThread->start(QThread::TimeCriticalPriority);
+    procNetThread = new ProcessNetwork(this);
+    procNetThread->start(QThread::TimeCriticalPriority);
 
-    refreshThread = new RefreshThread(this);
-    refreshThread->start(QThread::HighPriority);
-
-    connect(refreshThread, SIGNAL(procDetected(const QString &, quint64 , quint64 , int , unsigned int , const QString&)),
-            this, SLOT(refreshLine(const QString &, quint64 , quint64 , int, unsigned int , const QString&)));
+    connect(procNetThread, SIGNAL(procDetected(const QString &, quint64 , quint64 , int , unsigned int , const QString&)),
+             this, SLOT(refreshLine(const QString &, quint64 , quint64 , int, unsigned int , const QString&)));
 }
 
 ProcessList::~ProcessList()
 {
-    if(scanThread)
+    if(procNetThread)
     {
-        scanThread->stop();
-        scanThread->wait();
+        procNetThread->stop();
+        procNetThread->wait();
     }
-
-    if(refreshThread)
-    {
-        refreshThread->stop();
-        refreshThread->wait();
-    }
+    
     glibtop_close();
 }
 
 void ProcessList::connectNetStateRefresh()
 {
-    connect(refreshThread, SIGNAL(procDetected(const QString &, quint64 , quint64 , int , unsigned int , const QString&)),
-            this, SLOT(refreshLine(const QString &, quint64 , quint64 , int, unsigned int , const QString&)));
+    connect(procNetThread, SIGNAL(procDetected(const QString &, quint64 , quint64 , int , unsigned int , const QString&)),
+             this, SLOT(refreshLine(const QString &, quint64 , quint64 , int, unsigned int , const QString&)));
 }
 
 void ProcessList::disconnectNetStateRefresh()
 {
-    disconnect(refreshThread, SIGNAL(procDetected(const QString &, quint64 , quint64 , int , unsigned int , const QString&)),
-            this, SLOT(refreshLine(const QString &, quint64 , quint64 , int, unsigned int , const QString&)));
+    disconnect(procNetThread, SIGNAL(procDetected(const QString &, quint64 , quint64 , int , unsigned int , const QString&)),
+             this, SLOT(refreshLine(const QString &, quint64 , quint64 , int, unsigned int , const QString&)));
 }
 
 bool ProcessList::containsById(pid_t pid)
