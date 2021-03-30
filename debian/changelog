@@ -1,3 +1,9 @@
+ukui-system-monitor (2.0.3) v101; urgency=medium
+
+  * 修复bug：修复单进程网络流信息不刷新问题bug#44016
+
+ -- Yang Min <yangmin@kylinos.cn>  Fri, 26 Mar 2021 18:27:55 +0800
+
 ukui-system-monitor (2.0.2-14) v101; urgency=medium
 
   * 修复bug：修复自定义优先级界面显示错乱问题bug#43846
