@@ -42,6 +42,7 @@ public:
     QList<FileSystemData> diskInfoList() const;
     QList<QString> diskDevNameList() const;
     void addDiskInfo(const QString &devname, FileSystemData& info);
+    void updateDiskInfo(QString devname, FileSystemData& info);
     void removeDiskInfo(const QString &devname);
     bool isDeviceContains(const QString &devname);
 

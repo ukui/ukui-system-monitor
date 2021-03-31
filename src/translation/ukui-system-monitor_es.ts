@@ -80,100 +80,100 @@
 <context>
     <name>MonitorTitleWidget</name>
     <message>
-        <location filename="../monitortitlewidget.cpp" line="85"/>
-        <location filename="../monitortitlewidget.cpp" line="539"/>
+        <location filename="../monitortitlewidget.cpp" line="84"/>
+        <location filename="../monitortitlewidget.cpp" line="550"/>
         <source>Active Processes</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../monitortitlewidget.cpp" line="86"/>
-        <location filename="../monitortitlewidget.cpp" line="543"/>
+        <location filename="../monitortitlewidget.cpp" line="85"/>
+        <location filename="../monitortitlewidget.cpp" line="554"/>
         <source>My Processes</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../monitortitlewidget.cpp" line="87"/>
-        <location filename="../monitortitlewidget.cpp" line="547"/>
+        <location filename="../monitortitlewidget.cpp" line="86"/>
+        <location filename="../monitortitlewidget.cpp" line="558"/>
         <source>All Process</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../monitortitlewidget.cpp" line="382"/>
+        <location filename="../monitortitlewidget.cpp" line="392"/>
         <source>Kylin System Monitor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../monitortitlewidget.cpp" line="418"/>
+        <location filename="../monitortitlewidget.cpp" line="428"/>
         <source>menu</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../monitortitlewidget.cpp" line="426"/>
+        <location filename="../monitortitlewidget.cpp" line="436"/>
         <source>theme</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../monitortitlewidget.cpp" line="427"/>
+        <location filename="../monitortitlewidget.cpp" line="437"/>
         <source>help</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../monitortitlewidget.cpp" line="428"/>
+        <location filename="../monitortitlewidget.cpp" line="438"/>
         <source>about</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../monitortitlewidget.cpp" line="429"/>
+        <location filename="../monitortitlewidget.cpp" line="439"/>
         <source>quit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../monitortitlewidget.cpp" line="437"/>
+        <location filename="../monitortitlewidget.cpp" line="447"/>
         <source>following theme</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../monitortitlewidget.cpp" line="438"/>
+        <location filename="../monitortitlewidget.cpp" line="448"/>
         <source>dark theme</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../monitortitlewidget.cpp" line="439"/>
+        <location filename="../monitortitlewidget.cpp" line="449"/>
         <source>light theme</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../monitortitlewidget.cpp" line="467"/>
+        <location filename="../monitortitlewidget.cpp" line="477"/>
         <source>minimize</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../monitortitlewidget.cpp" line="476"/>
+        <location filename="../monitortitlewidget.cpp" line="486"/>
         <source>maximize/restore</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../monitortitlewidget.cpp" line="484"/>
+        <location filename="../monitortitlewidget.cpp" line="494"/>
         <source>close</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../monitortitlewidget.cpp" line="743"/>
+        <location filename="../monitortitlewidget.cpp" line="744"/>
         <source>Search</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../monitortitlewidget.cpp" line="665"/>
+        <location filename="../monitortitlewidget.cpp" line="666"/>
         <source>Processes</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../monitortitlewidget.cpp" line="678"/>
+        <location filename="../monitortitlewidget.cpp" line="679"/>
         <source>Resources</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../monitortitlewidget.cpp" line="691"/>
+        <location filename="../monitortitlewidget.cpp" line="692"/>
         <source>File Systems</source>
         <translation type="unfinished"></translation>
     </message>
@@ -309,123 +309,131 @@
 <context>
     <name>ProcessTableView</name>
     <message>
-        <location filename="../gui/processtableview.cpp" line="161"/>
+        <location filename="../gui/processtableview.cpp" line="162"/>
         <source>No search result</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gui/processtableview.cpp" line="245"/>
+        <location filename="../gui/processtableview.cpp" line="246"/>
         <source>Stop process</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gui/processtableview.cpp" line="247"/>
+        <location filename="../gui/processtableview.cpp" line="248"/>
         <source>Continue process</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gui/processtableview.cpp" line="249"/>
-        <location filename="../gui/processtableview.cpp" line="650"/>
-        <location filename="../gui/processtableview.cpp" line="653"/>
+        <location filename="../gui/processtableview.cpp" line="250"/>
+        <location filename="../gui/processtableview.cpp" line="666"/>
         <source>End process</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gui/processtableview.cpp" line="251"/>
-        <location filename="../gui/processtableview.cpp" line="663"/>
-        <location filename="../gui/processtableview.cpp" line="666"/>
+        <location filename="../gui/processtableview.cpp" line="252"/>
+        <location filename="../gui/processtableview.cpp" line="691"/>
         <source>Kill process</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gui/processtableview.cpp" line="265"/>
+        <location filename="../gui/processtableview.cpp" line="266"/>
         <source>Very High</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gui/processtableview.cpp" line="266"/>
+        <location filename="../gui/processtableview.cpp" line="267"/>
         <source>High</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gui/processtableview.cpp" line="267"/>
+        <location filename="../gui/processtableview.cpp" line="268"/>
         <source>Normal</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gui/processtableview.cpp" line="268"/>
+        <location filename="../gui/processtableview.cpp" line="269"/>
         <source>Low</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gui/processtableview.cpp" line="269"/>
+        <location filename="../gui/processtableview.cpp" line="270"/>
         <source>Very Low</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gui/processtableview.cpp" line="270"/>
+        <location filename="../gui/processtableview.cpp" line="271"/>
         <source>Custom</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gui/processtableview.cpp" line="275"/>
+        <location filename="../gui/processtableview.cpp" line="276"/>
         <source>Change Priority</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gui/processtableview.cpp" line="277"/>
+        <location filename="../gui/processtableview.cpp" line="278"/>
         <source>Properties</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gui/processtableview.cpp" line="298"/>
+        <location filename="../gui/processtableview.cpp" line="299"/>
         <source>User</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gui/processtableview.cpp" line="305"/>
+        <location filename="../gui/processtableview.cpp" line="306"/>
         <source>Disk</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gui/processtableview.cpp" line="312"/>
+        <location filename="../gui/processtableview.cpp" line="313"/>
         <source>CPU</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gui/processtableview.cpp" line="319"/>
+        <location filename="../gui/processtableview.cpp" line="320"/>
         <source>ID</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gui/processtableview.cpp" line="326"/>
+        <location filename="../gui/processtableview.cpp" line="327"/>
         <source>Flownet Persec</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gui/processtableview.cpp" line="333"/>
+        <location filename="../gui/processtableview.cpp" line="334"/>
         <source>Memory</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gui/processtableview.cpp" line="340"/>
+        <location filename="../gui/processtableview.cpp" line="341"/>
         <source>Priority</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gui/processtableview.cpp" line="650"/>
+        <location filename="../gui/processtableview.cpp" line="661"/>
+        <source>End the selected process &quot;%1&quot;(PID:%2)?</source>
+        <translation type="unfinished">End the selected process &quot;%1&quot;(PID:%2)?</translation>
+    </message>
+    <message>
+        <location filename="../gui/processtableview.cpp" line="662"/>
         <source>Ending a process may destroy data, break the session or introduce a security risk. Only unresponsive processes should be ended.
 Are you sure to continue?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gui/processtableview.cpp" line="652"/>
         <location filename="../gui/processtableview.cpp" line="665"/>
+        <location filename="../gui/processtableview.cpp" line="690"/>
         <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gui/processtableview.cpp" line="663"/>
+        <location filename="../gui/processtableview.cpp" line="686"/>
+        <source>Kill the selected process &quot;%1&quot;(PID:%2)?</source>
+        <translation type="unfinished">Kill the selected process &quot;%1&quot;(PID:%2)?</translation>
+    </message>
+    <message>
+        <location filename="../gui/processtableview.cpp" line="687"/>
         <source>Killing a process may destroy data, break the session or introduce a security risk. Only unresponsive processes should be killed.
 Are you sure to continue?</source>
         <translation type="unfinished"></translation>
@@ -585,7 +593,7 @@ Are you sure to continue?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="45"/>
+        <location filename="../main.cpp" line="47"/>
         <source>ukui-system-monitor is already running!</source>
         <translation type="unfinished"></translation>
     </message>
@@ -593,35 +601,36 @@ Are you sure to continue?</source>
 <context>
     <name>ReniceDialog</name>
     <message>
-        <location filename="../renicedialog.cpp" line="70"/>
-        <location filename="../renicedialog.cpp" line="321"/>
+        <location filename="../renicedialog.cpp" line="66"/>
+        <location filename="../renicedialog.cpp" line="313"/>
         <source>Change Priority of Process %1 (PID: %2)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../renicedialog.cpp" line="90"/>
+        <location filename="../renicedialog.cpp" line="83"/>
+        <location filename="../renicedialog.cpp" line="343"/>
         <source>Nice value:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../renicedialog.cpp" line="112"/>
+        <location filename="../renicedialog.cpp" line="105"/>
         <source>Note:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../renicedialog.cpp" line="116"/>
+        <location filename="../renicedialog.cpp" line="109"/>
         <source>The priority of a process is given by its nice value. A lower nice value corresponds to a higher priority.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../renicedialog.cpp" line="128"/>
-        <location filename="../renicedialog.cpp" line="331"/>
+        <location filename="../renicedialog.cpp" line="121"/>
+        <location filename="../renicedialog.cpp" line="323"/>
         <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../renicedialog.cpp" line="133"/>
-        <location filename="../renicedialog.cpp" line="341"/>
+        <location filename="../renicedialog.cpp" line="126"/>
+        <location filename="../renicedialog.cpp" line="333"/>
         <source>Change Priority</source>
         <translation type="unfinished"></translation>
     </message>

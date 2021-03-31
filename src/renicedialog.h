@@ -55,7 +55,7 @@ protected:
     void mouseMoveEvent(QMouseEvent *event);
     void paintEvent(QPaintEvent *event);
 
-private:private:
+private:
     void initFontSize();
 
 private:

@@ -198,7 +198,7 @@ void FileSystemWorker::onFileSystemListChanged()
                     g_free(freeSize);
                     g_free(availSize);
                     g_free(usedSize);
-//                    info.updateDiskInfo(QString(QLatin1String(disk.mountdir)), QString(QLatin1String(disk.type)), QString(QLatin1String(g_format_size_full(disk.btotal, G_FORMAT_SIZE_DEFAULT))), QString(QLatin1String(g_format_size_full(disk.bfree, G_FORMAT_SIZE_DEFAULT))), QString(QLatin1String(g_format_size_full(disk.bavail, G_FORMAT_SIZE_DEFAULT))), QString(QLatin1String(g_format_size_full(disk.bused, G_FORMAT_SIZE_DEFAULT))), disk.percentage/*QString::number(disk.percentage).append("%")*/);
+                    this->updateDiskInfo(dev_name, info);
                 }
             }
         }
@@ -245,6 +245,13 @@ QList<QString> FileSystemWorker::diskDevNameList() const
 void FileSystemWorker::addDiskInfo(const QString &devname, FileSystemData& info)
 {
     if (!m_diskInfoList.contains(devname)) {
+        m_diskInfoList[devname] = info;
+    }
+}
+
+void FileSystemWorker::updateDiskInfo(QString devname, FileSystemData& info)
+{
+    if (m_diskInfoList.contains(devname)) {
         m_diskInfoList[devname] = info;
     }
 }

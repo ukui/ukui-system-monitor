@@ -25,6 +25,7 @@
 #include <QDialog>
 #include <QPointer>
 #include <QAbstractButton>
+#include <QGSettings>
 
 class QAbstractButton;
 class QButtonGroup;
@@ -73,8 +74,13 @@ protected:
     void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
 
 private:
+    void initFontSize();
+    void onThemeFontChange(qreal lfFontSize);
+
+private:
     QLabel *m_messageLabel = nullptr;
     QLabel *m_titleLabel = nullptr;
+    QLabel *m_titleIcon = nullptr;
     QPushButton *closeButton = nullptr;
 //    QVBoxLayout *contentLayout = nullptr;
     QHBoxLayout *m_buttonLayout = nullptr;
@@ -86,7 +92,10 @@ private:
     int clickedButtonIndex;
 
     QString m_title;
+    int m_titleWidth;
     QString m_message;
+    qreal fontSize;
+    QGSettings *fontSettings;
 
     QPoint dragPosition;
     bool mousePressed;

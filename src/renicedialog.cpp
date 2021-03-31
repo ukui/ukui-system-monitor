@@ -41,12 +41,8 @@ ReniceDialog::ReniceDialog(const QString &procName, const QString &procId, QWidg
     hints.functions = MWM_FUNC_ALL;
     hints.decorations = MWM_DECOR_BORDER;
     XAtomHelper::getInstance()->setWindowMotifHint(this->winId(), hints);
-    this->setWindowFlags(this->windowFlags() | Qt::FramelessWindowHint | Qt::Tool);
-    this->setFixedSize(480, 240);
-    this->setFixedSize(480+SHADOW_LEFT_TOP_PADDING+SHADOW_LEFT_TOP_PADDING, 340+SHADOW_RIGHT_BOTTOM_PADDING+SHADOW_RIGHT_BOTTOM_PADDING);
-//    this->setContentsMargins(SHADOW_LEFT_TOP_PADDING,SHADOW_LEFT_TOP_PADDING,SHADOW_RIGHT_BOTTOM_PADDING,SHADOW_RIGHT_BOTTOM_PADDING);
-//    this->setStyleSheet("QDialog{border: 1px solid white;border-radius:1px;background-color: #ffffff;}");
-    this->setWindowIcon(QIcon(":/res/ukui-system-monitor.png"));
+    //this->setWindowFlags(this->windowFlags() | Qt::FramelessWindowHint | Qt::Tool);
+    this->setFixedSize(480+SHADOW_LEFT_TOP_PADDING+SHADOW_LEFT_TOP_PADDING, 300+SHADOW_RIGHT_BOTTOM_PADDING+SHADOW_RIGHT_BOTTOM_PADDING);
     this->setAttribute(Qt::WA_DeleteOnClose);
 
     const QByteArray id(THEME_QT_SCHEMA);
@@ -57,13 +53,13 @@ ReniceDialog::ReniceDialog(const QString &procName, const QString &procId, QWidg
 
     initFontSize();
 
-    QWidget *containerWidget = new QWidget(this);
-//    containerWidget->setContentsMargins(SHADOW_LEFT_TOP_PADDING,SHADOW_LEFT_TOP_PADDING,SHADOW_RIGHT_BOTTOM_PADDING,SHADOW_RIGHT_BOTTOM_PADDING);
-    m_mainLayout = new QVBoxLayout(containerWidget);
+    m_mainLayout = new QVBoxLayout(this);
     m_mainLayout->setContentsMargins(0,0,0,0);
     m_mainLayout->setSpacing(20);
     m_mainLayout->setMargin(0);
-//    m_titleBar = new MyTitleBar(title, false, this);
+    QLabel *picTitleIcon = new QLabel;
+    QPixmap pixmap("/usr/share/icons/hicolor/png/1-24*24/ukui-system-monitor.png");
+    picTitleIcon->setPixmap(pixmap);
     m_dlgTitleLable = new QLabel;
     m_strProcName = procName;
     m_strProcId = procId;
@@ -76,14 +72,11 @@ ReniceDialog::ReniceDialog(const QString &procName, const QString &procId, QWidg
     closeButton->setProperty("useIconHighlightEffect", 0x8);
 
     QHBoxLayout *title_H_BoxLayout = new QHBoxLayout();
-    QHBoxLayout *closeBtn_H_BoxLayout = new QHBoxLayout();
-    title_H_BoxLayout->setContentsMargins(0,0,0,0);
-    title_H_BoxLayout->setSpacing(0);
-    title_H_BoxLayout->addSpacing(5);
-    title_H_BoxLayout->addWidget(m_dlgTitleLable);
-    closeBtn_H_BoxLayout->addWidget(closeButton,1,Qt::AlignRight);
-    closeBtn_H_BoxLayout->setContentsMargins(0,4,17,0);
-//    m_titleBar->setFixedSize(this->width(), TITLE_BAR_HEIGHT);
+    title_H_BoxLayout->setContentsMargins(5,5,5,0);
+    title_H_BoxLayout->setSpacing(10);
+    title_H_BoxLayout->addWidget(picTitleIcon,0,Qt::AlignLeft);
+    title_H_BoxLayout->addWidget(m_dlgTitleLable,0,Qt::AlignLeft);
+    title_H_BoxLayout->addWidget(closeButton,0,Qt::AlignRight);
 
     m_titleLabel = new QLabel();
     m_titleLabel->setFixedWidth(90);
@@ -97,7 +90,7 @@ ReniceDialog::ReniceDialog(const QString &procName, const QString &procId, QWidg
     h_layout = new QHBoxLayout();
     h_layout->setSpacing(10);
     h_layout->setMargin(0);
-    h_layout->setContentsMargins(20,0,20,0);
+    h_layout->setContentsMargins(20,10,20,0);
     h_layout->addWidget(m_titleLabel);
     h_layout->addWidget(m_slider);
     h_layout->addWidget(m_valueLabel);
@@ -122,12 +115,12 @@ ReniceDialog::ReniceDialog(const QString &procName, const QString &procId, QWidg
     tip_layout->addWidget(m_tipLabel);
 
     m_cancelbtn = new QPushButton;
-    m_cancelbtn->setFixedSize(120, 36);
+    m_cancelbtn->setFixedSize(124, 36);
     m_cancelbtn->setObjectName("blackButton");
     m_cancelbtn->setFocusPolicy(Qt::NoFocus);
     m_cancelbtn->setText(tr("Cancel"));
     m_changeBtn = new QPushButton;
-    m_changeBtn->setFixedSize(120, 36);
+    m_changeBtn->setFixedSize(124, 36);
     m_changeBtn->setObjectName("blackButton");
     m_changeBtn->setFocusPolicy(Qt::NoFocus);
     m_changeBtn->setText(tr("Change Priority"));
@@ -135,7 +128,7 @@ ReniceDialog::ReniceDialog(const QString &procName, const QString &procId, QWidg
     btn_layout = new QHBoxLayout();
     btn_layout->setMargin(0);
     btn_layout->setSpacing(10);
-    btn_layout->setContentsMargins(0,0,20,0);
+    btn_layout->setContentsMargins(0,0,20,10);
     btn_layout->addStretch();
     btn_layout->addWidget(m_cancelbtn);
     btn_layout->addWidget(m_changeBtn);
@@ -145,12 +138,11 @@ ReniceDialog::ReniceDialog(const QString &procName, const QString &procId, QWidg
     v_layout->setMargin(0);
     v_layout->setSpacing(15);
     v_layout->setContentsMargins(0,0,0,0);
-    v_layout->addLayout(h_layout);
+    v_layout->addLayout(h_layout, 0);
     v_layout->addWidget(m_valueStrLabel, 0, Qt::AlignHCenter);
-    v_layout->addLayout(tip_layout);
-    v_layout->addLayout(btn_layout);
+    v_layout->addLayout(tip_layout, 0);
+    v_layout->addLayout(btn_layout, 0);
 
-    m_mainLayout->addLayout(closeBtn_H_BoxLayout);
     m_mainLayout->addLayout(title_H_BoxLayout);
     m_mainLayout->addLayout(v_layout);
 
@@ -177,8 +169,8 @@ ReniceDialog::ReniceDialog(const QString &procName, const QString &procId, QWidg
 
 //    this->moveCenter();
 
-    QDesktopWidget* desktop = QApplication::desktop();
-    this->move((desktop->width() - this->width())/2, (desktop->height() - this->height())/3);
+    //QDesktopWidget* desktop = QApplication::desktop();
+    //this->move((desktop->width() - this->width())/2, (desktop->height() - this->height())/3);
     onThemeFontChange(fontSize);
 }
 
@@ -329,7 +321,7 @@ void ReniceDialog::onThemeFontChange(qreal lfFontSize)
     }
     if (m_cancelbtn) {
         QString strOrigCancel = tr("Cancel");
-        QString strCancel = getElidedText(m_cancelbtn->font(), strOrigCancel, m_cancelbtn->width()-2);
+        QString strCancel = getElidedText(m_cancelbtn->font(), strOrigCancel, m_cancelbtn->width()-4);
         m_cancelbtn->setText(strCancel);
         if (strCancel != strOrigCancel) {
             m_cancelbtn->setToolTip(strOrigCancel);
@@ -339,7 +331,7 @@ void ReniceDialog::onThemeFontChange(qreal lfFontSize)
     }
     if (m_changeBtn) {
         QString strOrigChange = tr("Change Priority");
-        QString strChange = getElidedText(m_changeBtn->font(), strOrigChange, m_changeBtn->width()-2);
+        QString strChange = getElidedText(m_changeBtn->font(), strOrigChange, m_changeBtn->width()-4);
         m_changeBtn->setText(strChange);
         if (strChange != strOrigChange) {
             m_changeBtn->setToolTip(strOrigChange);
@@ -349,7 +341,7 @@ void ReniceDialog::onThemeFontChange(qreal lfFontSize)
     }
     if (m_titleLabel) {
         QString strOrigNice = tr("Nice value:");
-        QString strNice = getElidedText(m_titleLabel->font(), strOrigNice, m_titleLabel->width()-2);
+        QString strNice = getElidedText(m_titleLabel->font(), strOrigNice, m_titleLabel->width()-4);
         m_titleLabel->setText(strNice);
         if (strNice != strOrigNice) {
             m_titleLabel->setToolTip(strOrigNice);

@@ -57,12 +57,12 @@ ProcPropertiesDlg::ProcPropertiesDlg(pid_t processId, QWidget *parent) : QDialog
     hints.functions = MWM_FUNC_ALL;
     hints.decorations = MWM_DECOR_BORDER;
     XAtomHelper::getInstance()->setWindowMotifHint(this->winId(), hints);
-    this->setWindowFlags(this->windowFlags() | Qt::FramelessWindowHint | Qt::Tool);
+    //this->setWindowFlags(this->windowFlags() | Qt::FramelessWindowHint | Qt::Tool);
 
     this->setAttribute(Qt::WA_TranslucentBackground);
     this->setAttribute(Qt::WA_Resized, false);
 
-    this->setFixedWidth(380);
+    this->setFixedSize(380, 360);
 
     const QByteArray id(THEME_QT_SCHEMA);
     if(QGSettings::isSchemaInstalled(id))
@@ -119,7 +119,7 @@ ProcPropertiesDlg::ProcPropertiesDlg(pid_t processId, QWidget *parent) : QDialog
 
     m_topRightLayout->addWidget(m_logoLabel, 0, Qt::AlignTop | Qt::AlignRight);
     m_topRightLayout->addWidget(closeButton, 0, Qt::AlignTop | Qt::AlignRight);
-    m_topRightLayout->setContentsMargins(0,8,8,0);
+    m_topRightLayout->setContentsMargins(0,5,5,0);
 
     QLabel *topSplit = new QLabel();
     topSplit->setFixedSize(320, 1);
@@ -135,7 +135,7 @@ ProcPropertiesDlg::ProcPropertiesDlg(pid_t processId, QWidget *parent) : QDialog
     m_bottomLayout->setContentsMargins(0,0,20,0);
     m_bottomLayout->setSpacing(0);
     m_okBtn = new QPushButton;
-    m_okBtn->setFixedSize(91, 30);
+    m_okBtn->setFixedSize(124, 36);
     m_okBtn->setObjectName("blackButton");
     m_okBtn->setFocusPolicy(Qt::NoFocus);
     m_okBtn->setText(tr("OK"));
@@ -154,7 +154,7 @@ ProcPropertiesDlg::ProcPropertiesDlg(pid_t processId, QWidget *parent) : QDialog
     m_layout->addSpacing(5);
     m_layout->addLayout(m_bottomLayout);
     m_layout->addSpacing(10);
-    m_layout->addStretch();
+    //m_layout->addStretch();
 
     QGridLayout *infoGrid = new QGridLayout(m_infoFrame);
     infoGrid->setMargin(0);
@@ -183,7 +183,7 @@ ProcPropertiesDlg::ProcPropertiesDlg(pid_t processId, QWidget *parent) : QDialog
         infoGrid->addWidget(infoLabel);
     }
 
-    this->moveToCenter();
+    //this->moveToCenter();
 
     this->initProcproperties();
 
@@ -434,7 +434,7 @@ void ProcPropertiesDlg::paintEvent(QPaintEvent *event)
     painter.setRenderHint(QPainter::Antialiasing, true);
     painter.setOpacity(1);
     QRectF r(0 / 2.0, 0 / 2.0, width() - 0, height() - 0);//左边 上边 右边 下边
-    painter.drawRoundedRect(r, 6, 6);
+    painter.drawRoundedRect(r, 4, 4);
 
     QDialog::paintEvent(event);
 }

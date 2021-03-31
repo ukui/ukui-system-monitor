@@ -1787,6 +1787,14 @@ Are you sure to continue?</source>
         <source>Change Priority of Process %1 (PID: %2)</source>
         <translation type="obsolete">更改进程“%1”(PID：%2)的优先级</translation>
     </message>
+    <message>
+        <source>End the selected process &quot;%1&quot;(PID:%2)?</source>
+        <translation type="unfinished">结束所选进程 &quot;%1&quot;(PID:%2)?</translation>
+    </message>
+    <message>
+        <source>Kill the selected process &quot;%1&quot;(PID:%2)?</source>
+        <translation type="unfinished">杀死所选进程 &quot;%1&quot;(PID:%2)?</translation>
+    </message>
 </context>
 <context>
     <name>PropertiesDialog</name>

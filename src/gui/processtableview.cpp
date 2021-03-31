@@ -25,6 +25,7 @@
 #include "process/process_list.h"
 #include "process/process_monitor.h"
 #include "../shell/macro.h"
+#include "../util.h"
 #include "procpropertiesdlg.h"
 
 #include <sys/types.h>
@@ -647,7 +648,19 @@ void ProcessTableView::showPropertiesDialog()
 // show end proc dialog
 void ProcessTableView::showEndProcessDialog()
 {
-    MyDialog* endProcessDialog = new MyDialog(QString(tr("End process")), QString(tr("Ending a process may destroy data, break the session or introduce a security risk. Only unresponsive processes should be ended.\nAre you sure to continue?")));
+    if (!m_selectedPID.isValid()) {
+        return ;
+    }
+    pid_t selectPid = qvariant_cast<pid_t>(m_selectedPID);
+    sysmonitor::process::Process info = ProcessMonitor::instance()->processList()->getProcessById(selectPid);
+    if (!info.isValid()) {
+        return;
+    }
+    QString strProcName = info.getDisplayName().isEmpty()?info.getProcName():info.getDisplayName();
+    strProcName = getMiddleElidedText(this->font(), strProcName, 200);
+    MyDialog* endProcessDialog = new MyDialog(QString(tr("End the selected process \"%1\"(PID:%2)?")).arg(strProcName).arg(selectPid), 
+        QString(tr("Ending a process may destroy data, break the session or introduce a security risk. "
+            "Only unresponsive processes should be ended.\nAre you sure to continue?")), this);
 //    endProcessDialog->setWindowFlags(endProcessDialog->windowFlags() | Qt::WindowStaysOnTopHint);
     endProcessDialog->addButton(QString(tr("Cancel")), false);
     endProcessDialog->addButton(QString(tr("End process")), true);
@@ -660,7 +673,19 @@ void ProcessTableView::showEndProcessDialog()
 // show kill proc dialog
 void ProcessTableView::showKillProcessDialog()
 {
-    MyDialog* killProcessDialog = new MyDialog(QString(tr("Kill process")), QString(tr("Killing a process may destroy data, break the session or introduce a security risk. Only unresponsive processes should be killed.\nAre you sure to continue?")));
+    if (!m_selectedPID.isValid()) {
+        return ;
+    }
+    pid_t selectPid = qvariant_cast<pid_t>(m_selectedPID);
+    sysmonitor::process::Process info = ProcessMonitor::instance()->processList()->getProcessById(selectPid);
+    if (!info.isValid()) {
+        return;
+    }
+    QString strProcName = info.getDisplayName().isEmpty()?info.getProcName():info.getDisplayName();
+    strProcName = getMiddleElidedText(this->font(), strProcName, 200);
+    MyDialog* killProcessDialog = new MyDialog(QString(tr("Kill the selected process \"%1\"(PID:%2)?")).arg(strProcName).arg(selectPid), 
+        QString(tr("Killing a process may destroy data, break the session or introduce a security risk. "
+        "Only unresponsive processes should be killed.\nAre you sure to continue?")), this);
 //    killProcessDialog->setWindowFlags(killProcessDialog->windowFlags() | Qt::WindowStaysOnTopHint);
     killProcessDialog->addButton(QString(tr("Cancel")), false);
     killProcessDialog->addButton(QString(tr("Kill process")), true);
@@ -703,7 +728,7 @@ void ProcessTableView::changeProcPriority(int nice)
             if (!info.isValid()) {
                 return ;
             }
-            m_dlgRenice= new ReniceDialog(info.getDisplayName(), QString::number(selectPid));
+            m_dlgRenice= new ReniceDialog(info.getDisplayName(), QString::number(selectPid), this);
             m_dlgRenice->loadData(info.getNice());
             connect(m_dlgRenice, &ReniceDialog::resetReniceValue, [=] (int value) {
                 this->changeProcPriority(value);

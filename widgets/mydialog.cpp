@@ -21,6 +21,8 @@
 #include "mydialog.h"
 #include "mytristatebutton.h"
 #include "../shell/xatom-helper.h"
+#include "../shell/macro.h"
+#include "../util.h"
 
 #include <QLabel>
 #include <QDebug>
@@ -35,58 +37,73 @@
 
 MyDialog::MyDialog(const QString &title, const QString &message, QWidget *parent) :
     QDialog(parent)
-   , mousePressed(false)
+    , m_titleWidth(0)
+    , mousePressed(false)
 {
     MotifWmHints hints;
     hints.flags = MWM_HINTS_FUNCTIONS|MWM_HINTS_DECORATIONS;
     hints.functions = MWM_FUNC_ALL;
     hints.decorations = MWM_DECOR_BORDER;
     XAtomHelper::getInstance()->setWindowMotifHint(this->winId(), hints);
-    this->setWindowFlags(this->windowFlags() | Qt::FramelessWindowHint | Qt::Tool | Qt::WindowCloseButtonHint);
-//    this->setWindowFlags(Qt::Window | Qt::FramelessWindowHint | Qt::WindowMinimizeButtonHint);//Attention: Qt::WindowCloseButtonHint make showMinimized() valid
+    //this->setWindowFlags(this->windowFlags() | Qt::Tool | Qt::WindowCloseButtonHint);
 
     this->setAttribute(Qt::WA_TranslucentBackground);
-//    this->setAttribute(Qt::WA_DeleteOnClose, false);
     this->setAttribute(Qt::WA_Resized, false);
+    this->setFixedSize(660, 240);
+
+    const QByteArray id(THEME_QT_SCHEMA);
+    if(QGSettings::isSchemaInstalled(id))
+    {
+        fontSettings = new QGSettings(id);
+    }
+
+    initFontSize();
+
+    m_titleIcon = new QLabel;
+    QPixmap pixmap("/usr/share/icons/hicolor/png/1-24*24/ukui-system-monitor.png");
+    m_titleIcon->setPixmap(pixmap);
+    m_titleIcon->setFixedWidth(30);
+
+    QHBoxLayout* titleLayout = new QHBoxLayout();
+    titleLayout->setContentsMargins(5, 5, 5, 0);
+    titleLayout->setSpacing(10);
 
     m_topLayout = new QHBoxLayout;
     m_topLayout->setContentsMargins(20, 14, 20, 14);
     m_topLayout->setSpacing(20);
 
     m_titleLabel = new QLabel;
-//    m_titleLabel->setStyleSheet("QLabel{padding-top:3px;padding-bottom:3px;font-size:18px;color:#000000;}");
     m_titleLabel->hide();
-//    m_titleLabel->setAttribute(Qt::WA_TransparentForMouseEvents);
+    titleLayout->addWidget(m_titleIcon, 0, Qt::AlignLeft);
+    titleLayout->addWidget(m_titleLabel, 0, Qt::AlignLeft);
 
     m_messageLabel = new QLabel;
-//    m_messageLabel->setStyleSheet("QLabel{padding-top:3px;padding-bottom:3px;font-size:12px;color:#000000;}");
     m_messageLabel->hide();
     m_messageLabel->setAttribute(Qt::WA_TransparentForMouseEvents);
+    m_messageLabel->setWordWrap(true);//QLabel自动换行
+    m_messageLabel->setFixedSize(620, 120);
 
     QVBoxLayout *textLayout = new QVBoxLayout;
     textLayout->setContentsMargins(0, 0, 0, 0);
     textLayout->setSpacing(5);
-    textLayout->addWidget(m_titleLabel, 0, Qt::AlignLeft);
     textLayout->addWidget(m_messageLabel, 0, Qt::AlignLeft);
-    textLayout->addStretch();
+    //textLayout->addStretch();
 
     m_topLayout->addLayout(textLayout);
 
     closeButton = new QPushButton();
     closeButton->setObjectName("CloseButton");
     closeButton->setFlat(true);
-//    connect(closeButton, SIGNAL(clicked()), this, SLOT(close()));
     connect(closeButton,&QPushButton::clicked,this,[=](){
        this->deleteLater();
        this->close();
     });
     closeButton->setIcon(QIcon::fromTheme("window-close-symbolic"));
-//    connect(closeButton, &MyTristateButton::clicked, this, [=] {
-//        this->close();
-//    });
     closeButton->setAttribute(Qt::WA_NoMousePropagation);
     closeButton->setProperty("isWindowButton", 0x2);
     closeButton->setProperty("useIconHighlightEffect", 0x8);
+    closeButton->setFixedWidth(36);
+    titleLayout->addWidget(closeButton, 0, Qt::AlignTop | Qt::AlignRight);
 
     m_buttonLayout = new QHBoxLayout;
     m_buttonLayout->setMargin(0);
@@ -97,8 +114,7 @@ MyDialog::MyDialog(const QString &title, const QString &message, QWidget *parent
     mainLayout->setContentsMargins(0, 0, 0, 0);
     mainLayout->setSpacing(10);
 
-    mainLayout->setContentsMargins(0,8,8,0);
-    mainLayout->addWidget(closeButton, 0, Qt::AlignTop | Qt::AlignRight);
+    mainLayout->addLayout(titleLayout);
     mainLayout->addLayout(m_topLayout);
     mainLayout->addLayout(m_buttonLayout);
 
@@ -115,14 +131,13 @@ MyDialog::MyDialog(const QString &title, const QString &message, QWidget *parent
     setTitle(title);
     setMessage(message);
     //this->moveToCenter();
+    this->m_titleLabel->setFixedWidth(this->width()-this->m_titleIcon->width()-this->closeButton->width()-20);
+    this->m_titleWidth = this->m_titleLabel->width();
+    onThemeFontChange(fontSize);
 }
 
 MyDialog::~MyDialog()
 {
-    delete m_messageLabel;
-    delete m_titleLabel;
-    delete closeButton;
-
     QLayoutItem *child;
     while ((child = m_topLayout->takeAt(0)) != 0) {
         if (child->widget())
@@ -141,6 +156,41 @@ MyDialog::~MyDialog()
 //        item->widget()->deleteLater();
 //        delete item;
 //    }
+    if (fontSettings) {
+        delete fontSettings;
+        fontSettings = nullptr;
+    }
+}
+
+void MyDialog::initFontSize()
+{
+    if (!fontSettings) {
+        fontSize = DEFAULT_FONT_SIZE;
+        return;
+    }
+    connect(fontSettings,&QGSettings::changed,[=](QString key)
+    {
+        if("systemFont" == key || "systemFontSize" == key)
+        {
+            fontSize = fontSettings->get(FONT_SIZE).toString().toFloat();
+            this->onThemeFontChange(fontSize);
+        }
+    });
+    fontSize = fontSettings->get(FONT_SIZE).toString().toFloat();
+}
+
+void MyDialog::onThemeFontChange(qreal lfFontSize)
+{
+    if (m_titleLabel && this->m_titleWidth > 0) {
+        qDebug()<<"width:"<<this->m_titleWidth;
+        QString strTitle = getElidedText(m_titleLabel->font(), m_title, this->m_titleWidth-2);
+        m_titleLabel->setText(strTitle);
+        if (strTitle != m_title) {
+            m_titleLabel->setToolTip(m_title);
+        } else {
+            m_titleLabel->setToolTip("");
+        }
+    }
 }
 
 void MyDialog::updateSize()
@@ -187,7 +237,7 @@ int MyDialog::addButton(const QString &text, bool isDefault)
     button->setFocusPolicy(Qt::NoFocus);
 //    button->setStyleSheet("QPushButton{font-size:12px;background-color:transparent;border:1px solid #bebebe;color:#000000;}QPushButton:hover{background-color:#ffffff;border:1px solid #3f96e4;color:#000000;}QPushButton:pressed{background-color:#ffffff;border:1px solid #3f96e4;color:#000000;}");
     button->setAttribute(Qt::WA_NoMousePropagation);
-    button->setFixedSize(124, 34);
+    button->setFixedSize(124, 36);
 
     this->m_buttonLayout->insertWidget(index+1, button);
     this->buttonList << button;
@@ -235,7 +285,7 @@ void MyDialog::showEvent(QShowEvent *event)
 {
     QDialog::showEvent(event);
     setAttribute(Qt::WA_Resized, false);
-    this->updateSize();
+    //this->updateSize();
 }
 
 void MyDialog::hideEvent(QHideEvent *event)
@@ -326,22 +376,4 @@ void MyDialog::paintEvent(QPaintEvent *event)
 void MyDialog::resizeEvent(QResizeEvent *event)
 {
     QDialog::resizeEvent(event);
-
-    this->m_titleLabel->setWordWrap(false);
-    int labelMaxWidth = maximumWidth() - this->closeButton->width() - this->m_titleLabel->x();
-
-    if (this->m_titleLabel->sizeHint().width() > labelMaxWidth) {
-        this->m_titleLabel->setFixedWidth(labelMaxWidth);
-        this->m_titleLabel->setWordWrap(true);
-        this->m_titleLabel->setFixedHeight(this->m_titleLabel->sizeHint().height());
-    }
-
-    this->m_messageLabel->setWordWrap(false);
-    labelMaxWidth = maximumWidth() - this->closeButton->width() - this->m_messageLabel->x();
-
-    if (this->m_messageLabel->sizeHint().width() > labelMaxWidth) {
-        this->m_messageLabel->setFixedWidth(labelMaxWidth);
-        this->m_messageLabel->setWordWrap(true);
-        this->m_messageLabel->setFixedHeight(this->m_messageLabel->sizeHint().height());
-    }
 }
