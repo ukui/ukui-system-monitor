@@ -21,12 +21,12 @@
     <message>
         <location filename="../cpuratewidget.cpp" line="357"/>
         <source>The running time of system</source>
-        <translation type="unfinished"></translation>
+        <translation>Время работы системы</translation>
     </message>
     <message>
         <location filename="../cpuratewidget.cpp" line="363"/>
         <source>The idle time of system</source>
-        <translation type="unfinished"></translation>
+        <translation>Простой системы</translation>
     </message>
 </context>
 <context>
@@ -34,7 +34,7 @@
     <message>
         <location filename="../filesystemdialog.cpp" line="61"/>
         <source>Refresh</source>
-        <translation type="unfinished"></translation>
+        <translation>Обновить</translation>
     </message>
 </context>
 <context>
@@ -43,44 +43,44 @@
         <location filename="../filesystemlistwidget.cpp" line="67"/>
         <location filename="../filesystemlistwidget.cpp" line="436"/>
         <source>Device</source>
-        <translation type="unfinished"></translation>
+        <translation>Устройство</translation>
     </message>
     <message>
         <location filename="../filesystemlistwidget.cpp" line="67"/>
         <location filename="../filesystemlistwidget.cpp" line="436"/>
         <source>Directory</source>
-        <translation type="unfinished"></translation>
+        <translation>Каталог</translation>
     </message>
     <message>
         <location filename="../filesystemlistwidget.cpp" line="67"/>
         <source>Type</source>
-        <translation type="unfinished"></translation>
+        <translation>Тип</translation>
     </message>
     <message>
         <location filename="../filesystemlistwidget.cpp" line="67"/>
         <source>Total</source>
-        <translation type="unfinished"></translation>
+        <translation>Всего</translation>
     </message>
     <message>
         <location filename="../filesystemlistwidget.cpp" line="67"/>
         <source>Free</source>
-        <translation type="unfinished"></translation>
+        <translation>Свободно</translation>
     </message>
     <message>
         <location filename="../filesystemlistwidget.cpp" line="67"/>
         <source>Available</source>
-        <translation type="unfinished"></translation>
+        <translation>Доступно</translation>
     </message>
     <message>
         <location filename="../filesystemlistwidget.cpp" line="67"/>
         <location filename="../filesystemlistwidget.cpp" line="436"/>
         <source>Used</source>
-        <translation type="unfinished"></translation>
+        <translation>Использовано</translation>
     </message>
     <message>
         <location filename="../filesystemlistwidget.cpp" line="516"/>
         <source>No File System Info</source>
-        <translation type="unfinished"></translation>
+        <translation>Нет информации о файловой системе</translation>
     </message>
 </context>
 <context>
@@ -88,7 +88,7 @@
     <message>
         <location filename="../memorycircle.cpp" line="194"/>
         <source>Memory</source>
-        <translation type="unfinished"></translation>
+        <translation>Память</translation>
     </message>
     <message>
         <location filename="../memorycircle.cpp" line="195"/>
