@@ -6,7 +6,7 @@
     <message>
         <location filename="../cpuratewidget.cpp" line="339"/>
         <source>CPU</source>
-        <translation type="unfinished"></translation>
+        <translation>ЦП</translation>
     </message>
     <message>
         <location filename="../cpuratewidget.cpp" line="345"/>
@@ -93,7 +93,7 @@
     <message>
         <location filename="../memorycircle.cpp" line="195"/>
         <source>Swap</source>
-        <translation type="unfinished"></translation>
+        <translation>Подкачка</translation>
     </message>
     <message>
         <location filename="../memorycircle.cpp" line="203"/>
