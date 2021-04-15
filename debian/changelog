@@ -1,3 +1,19 @@
+ukui-system-monitor (2.0.5) v101; urgency=medium
+
+  * 修复bug：1、修复进程网络流速数据与实际差异较大问题bug#46902
+  *          2、修复界面显示适配"ukui"主题问题
+
+ -- Yang Min <yangmin@kylinos.cn>  Thu, 15 Apr 2021 20:28:54 +0800
+
+ukui-system-monitor (2.0.4) v101; urgency=medium
+
+  * 修复bug：1、修复dialog窗口风格不统一bug#45833；
+  *          2、修复自定优先级窗口关闭按钮显示异常bug#45850；
+  *          3、修复dialog子窗口未显示在主窗口中部bug#45821；
+  *          4、修复文件系统磁盘使用空间刷新无作用bug#45900
+
+ -- Yang Min <yangmin@kylinos.cn>  Wed, 31 Mar 2021 19:35:00 +0800
+
 ukui-system-monitor (2.0.3) v101; urgency=medium
 
   * 修复bug：修复单进程网络流信息不刷新问题bug#44016
