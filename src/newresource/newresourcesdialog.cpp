@@ -690,7 +690,7 @@ void NewResouresDialog::initThemeMode()
         }
     });
     currentThemeMode = qtSettings->get(MODE_QT_KEY).toString();
-    if( currentThemeMode == "ukui-default")
+    if( currentThemeMode == "ukui-default" || currentThemeMode == "ukui" )
     {
         pe.setColor(QPalette::WindowText,QColor(13,14,13,130));
     }

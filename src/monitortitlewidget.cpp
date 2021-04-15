@@ -53,6 +53,8 @@ MonitorTitleWidget::MonitorTitleWidget(QSettings *settings, QWidget *parent)
     QIcon queryIcon;
     queryIcon = QIcon::fromTheme("preferences-system-search-symbolic");
     pixmap = queryIcon.pixmap(QSize(16, 16));
+    m_queryIcon->setPixmap(pixmap);
+    m_queryIcon->setProperty("useIconHighlightEffect", 0x2);
     const QByteArray idd(THEME_QT_SCHEMA);
 
     if(QGSettings::isSchemaInstalled(idd))
@@ -149,13 +151,13 @@ void MonitorTitleWidget::initThemeMode()
             {
                 //qDebug() << "The theme change to white";
                 this->setObjectName("MonitorTitle");
-                m_queryIcon->setPixmap(drawSymbolicBlackColoredPixmap(pixmap));
+                // m_queryIcon->setPixmap(drawSymbolicBlackColoredPixmap(pixmap));
             }
 
             else/*(currentThemeMode == "ukui-dark" || currentThemeMode == "ukui-black")*/
             {
                 this->setObjectName("MonitorTitle");
-                m_queryIcon->setPixmap(drawSymbolicColoredPixmap(pixmap));
+                // m_queryIcon->setPixmap(drawSymbolicColoredPixmap(pixmap));
             }
         }
     });
@@ -164,13 +166,13 @@ void MonitorTitleWidget::initThemeMode()
     if (currentThemeMode == "ukui-light" || currentThemeMode == "ukui-default" || currentThemeMode == "ukui-white")
     {
         this->setObjectName("MonitorTitle");
-        m_queryIcon->setPixmap(drawSymbolicBlackColoredPixmap(pixmap));
+        // m_queryIcon->setPixmap(drawSymbolicBlackColoredPixmap(pixmap));
     }
 
     if (currentThemeMode == "ukui-dark" || currentThemeMode == "ukui-black")
     {
         this->setObjectName("MonitorTitle");
-        m_queryIcon->setPixmap(drawSymbolicColoredPixmap(pixmap));
+        // m_queryIcon->setPixmap(drawSymbolicColoredPixmap(pixmap));
     }
 }
 
