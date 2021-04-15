@@ -24,6 +24,7 @@
 #include <QDebug>
 #include <unistd.h>
 #include <net/if.h>
+#include <netinet/in.h>
 #include <ifaddrs.h>
 #include <sys/socket.h>
 #include <sys/ioctl.h>
@@ -139,6 +140,7 @@ static int process_tcp (u_char * userdata, const dp_header * header, const u_cha
 
     /* get info from userdata, then call attachPacketToProcess */
     ProcessNetPacket sProcNetPacket = args->m_tempNetPacket;
+    sProcNetPacket.uIpProtocol = IPPROTO_TCP;
     switch (sProcNetPacket.sa_family)
     {
     case (AF_INET):
@@ -163,6 +165,7 @@ static int process_udp (u_char * userdata, const dp_header * header, const u_cha
     struct udphdr * udp = (struct udphdr *) m_packet;
 
     ProcessNetPacket sProcNetPacket = args->m_tempNetPacket;
+    sProcNetPacket.uIpProtocol = IPPROTO_UDP;
     switch (sProcNetPacket.sa_family)
     {
     case (AF_INET):
@@ -251,24 +254,50 @@ bool ProcessNetwork::deinitNetDevPcapHandle()
     return true;
 }
 
+bool ProcessNetwork::attachPacketToProcess(unsigned long luInode, ProcessNetPacket& procNetPacket)
+{
+    map<pid_t, ProcessNetInfo>::iterator itProcNetInfo = m_mapProcNetInfo.begin();
+    bool bMatchPro = false;
+    for (; itProcNetInfo != m_mapProcNetInfo.end(); itProcNetInfo++) {
+        if (find(itProcNetInfo->second.procINodes.begin(), itProcNetInfo->second.procINodes.end(),
+            luInode) != itProcNetInfo->second.procINodes.end()) {
+            if (isPacketOutgoing(procNetPacket)) {
+                itProcNetInfo->second.lluSendCount += procNetPacket.len;
+            } else {
+                itProcNetInfo->second.lluRecvCount += procNetPacket.len;
+            }
+            itProcNetInfo->second.lastTickCount = QDateTime::currentDateTime().toMSecsSinceEpoch();
+            // qDebug()<<"attachPacketToProcess:"<<QString::fromStdString(packetHashKey)<<"|pid:"<<itProcNetInfo->first<<"|"
+            //     <<itProcNetInfo->second.lluSendCount<<"|"<<itProcNetInfo->second.lluRecvCount<<"|ts:"<<itProcNetInfo->second.lastTickCount;
+            bMatchPro = true;
+        }
+    }
+    return bMatchPro;
+}
+
 bool ProcessNetwork::attachPacketToProcess(ProcessNetPacket& procNetPacket)
 {
     string packetHashKey = getPacketHashkey(procNetPacket);
     map<string, unsigned long>::iterator itConnINode = m_mapConnectionINode.find(packetHashKey);
     if (itConnINode != m_mapConnectionINode.end()) {
-        map<pid_t, ProcessNetInfo>::iterator itProcNetInfo = m_mapProcNetInfo.begin();
-        for (; itProcNetInfo != m_mapProcNetInfo.end(); itProcNetInfo++) {
-            if (find(itProcNetInfo->second.procINodes.begin(), itProcNetInfo->second.procINodes.end(),
-                itConnINode->second) != itProcNetInfo->second.procINodes.end()) {
-                if (isPacketOutgoing(procNetPacket)) {
-                    itProcNetInfo->second.lluSendCount += procNetPacket.len;
-                } else {
-                    itProcNetInfo->second.lluRecvCount += procNetPacket.len;
-                }
-                itProcNetInfo->second.lastTickCount = QDateTime::currentDateTime().toMSecsSinceEpoch();
-                // qDebug()<<"attachPacketToProcess:"<<QString::fromStdString(packetHashKey)<<"|pid:"<<itProcNetInfo->first<<"|"
-                //     <<itProcNetInfo->second.lluSendCount<<"|"<<itProcNetInfo->second.lluRecvCount<<"|ts:"<<itProcNetInfo->second.lastTickCount;
+        if (!attachPacketToProcess(itConnINode->second, procNetPacket)) {
+            refreshProcNetInfo();
+            if (!attachPacketToProcess(itConnINode->second, procNetPacket)) {
+                return false;                
             }
+        }
+    } else {
+        refreshConnINodes();
+        map<string, unsigned long>::iterator itConnINode = m_mapConnectionINode.find(packetHashKey);
+        if (itConnINode != m_mapConnectionINode.end()) {
+            if (!attachPacketToProcess(itConnINode->second, procNetPacket)) {
+                refreshProcNetInfo();
+                if (!attachPacketToProcess(itConnINode->second, procNetPacket)) {
+                    return false;                
+                }
+            }
+        } else {
+            return false; 
         }
     }
     return true;
@@ -349,8 +378,147 @@ bool ProcessNetwork::localAddrContains(const struct in6_addr & n_addr)
 void ProcessNetwork::refreshConnINodes()
 {
     m_mapConnectionINode.clear();
+    #if 0
     searchConnINodes("/proc/net/tcp");
     searchConnINodes("/proc/net/tcp6");
+    searchConnINodes("/proc/net/udp");
+    searchConnINodes("/proc/net/udp6");
+    #else 
+    searchConnINodes(AF_INET, IPPROTO_TCP, "/proc/net/tcp");
+    searchConnINodes(AF_INET, IPPROTO_UDP, "/proc/net/udp");
+    searchConnINodes(AF_INET6, IPPROTO_TCP, "/proc/net/tcp6");
+    searchConnINodes(AF_INET6, IPPROTO_UDP, "/proc/net/udp6");
+    #endif
+}
+
+int ProcessNetwork::searchConnINodes(int family, int proto, string strConnFile)
+{
+    FILE *fp {};
+    const size_t BLEN = 4096;
+    QByteArray buffer {BLEN, 0};
+    int nr {};
+    ino_t ino {};
+    char s_addr[128] {}, d_addr[128] {};
+    QByteArray fmtbuf {};
+    QString patternA {}, patternB {};
+
+    if (!(fp = fopen(strConnFile.c_str(), "r")))
+    {
+        return -2;
+    }
+
+    while (fgets(buffer.data(), BLEN, fp))
+    {
+        in6_addr in6_src {};
+        in6_addr in6_des {};
+        in_addr in4_src {};
+        in_addr in4_des {};
+        short int sa_family {};
+        unsigned src_port = 0;
+        unsigned des_port = 0;
+        uid_t uid = 0;
+        char saddr_str[INET_ADDRSTRLEN + 1] {}, daddr_str[INET_ADDRSTRLEN + 1] {};
+        
+        //*****************************************************************
+        nr = sscanf(buffer.data(), "%*s %64[0-9A-Fa-f]:%x %64[0-9A-Fa-f]:%x %*x %*s %*s %*s %u %*u %ld",
+                    s_addr,
+                    &src_port,
+                    d_addr,
+                    &des_port,
+                    &uid,
+                    &ino);
+
+        // ignore first line
+        if (nr == 0)
+            continue;
+
+        // socket still in waiting state
+        if (ino == 0) {
+            continue;
+        }
+
+        sa_family = family;
+
+        // saddr & daddr
+        if (family == AF_INET6) {
+            sscanf(s_addr, "%08x%08x%08x%08x",
+                    &in6_src.s6_addr32[0],
+                    &in6_src.s6_addr32[1],
+                    &in6_src.s6_addr32[2],
+                    &in6_src.s6_addr32[3]);
+            sscanf(d_addr, "%08x%08x%08x%08x",
+                    &in6_des.s6_addr32[0],
+                    &in6_des.s6_addr32[1],
+                    &in6_des.s6_addr32[2],
+                    &in6_des.s6_addr32[3]);
+            // convert ipv4 mapped ipv6 address to ipv4
+            if (in6_src.s6_addr32[0] == 0x0 &&
+                    in6_src.s6_addr32[1] == 0x0 &&
+                    in6_src.s6_addr32[2] == 0xffff0000) {
+                sa_family = AF_INET;
+                in4_src.s_addr = in6_src.s6_addr32[3];
+                in4_des.s_addr = in6_des.s6_addr32[3];
+            }
+        } else {
+            sscanf(s_addr, "%x", &in4_src.s_addr);
+            sscanf(d_addr, "%x", &in4_des.s_addr);
+        }
+
+        if (sa_family == AF_INET) {
+            inet_ntop(AF_INET, &in4_src, saddr_str, INET_ADDRSTRLEN);
+            inet_ntop(AF_INET, &in4_des, daddr_str, INET_ADDRSTRLEN);
+            patternA = QString("%1:%2-%3:%4").arg(saddr_str).arg(src_port).arg(daddr_str).arg(des_port);
+            if (proto == IPPROTO_TCP) {
+                patternB = QString("%1:%2-%3:%4").arg(daddr_str).arg(des_port).arg(saddr_str).arg(src_port);
+            }
+        } else if (sa_family == AF_INET6) {
+            inet_ntop(AF_INET6, &in6_src, saddr_str, INET6_ADDRSTRLEN);
+            inet_ntop(AF_INET6, &in6_des, daddr_str, INET6_ADDRSTRLEN);
+
+            patternA = QString("%1:%2-%3:%4").arg(saddr_str).arg(src_port).arg(daddr_str).arg(des_port);
+            if (proto == IPPROTO_TCP) {
+                patternB = QString("%1:%2-%3:%4").arg(daddr_str).arg(des_port).arg(saddr_str).arg(src_port);
+            }
+        } else {
+            // unexpected here
+        }
+
+        fmtbuf = patternA.toLocal8Bit();
+        m_mapConnectionINode[fmtbuf.toStdString()] = ino;
+
+        /* workaround: sometimes, when a connection is actually from 172.16.3.1 to
+        * 172.16.3.3, packages arrive from 195.169.216.157 to 172.16.3.3, where
+        * 172.16.3.1 and 195.169.216.157 are the local addresses of different 
+        * interfaces */
+        vector<LocalAddr>::iterator itLocalAddr = m_listLocalAddr.begin();
+        for (; itLocalAddr != m_listLocalAddr.end(); itLocalAddr++) {
+            /* TODO maybe only add the ones with the same sa_family */
+            QString patternC = QString("%1:%2-%3:%4").arg(itLocalAddr->str_ipinfo.c_str()).arg(src_port).arg(daddr_str).arg(des_port);
+            fmtbuf = patternA.toLocal8Bit();
+            m_mapConnectionINode[fmtbuf.toStdString()] = ino;
+        }
+
+        // if it's TCP, we need add reverse mapping due to its bidirectional piping feature,
+        // otherwise we wont be able to get the inode
+        if (proto == IPPROTO_TCP) {
+            fmtbuf = patternB.toLocal8Bit();
+            m_mapConnectionINode[fmtbuf.toStdString()] = ino;
+            /* workaround: sometimes, when a connection is actually from 172.16.3.1 to
+            * 172.16.3.3, packages arrive from 195.169.216.157 to 172.16.3.3, where
+            * 172.16.3.1 and 195.169.216.157 are the local addresses of different 
+            * interfaces */
+            vector<LocalAddr>::iterator itLocalAddr = m_listLocalAddr.begin();
+            for (; itLocalAddr != m_listLocalAddr.end(); itLocalAddr++) {
+                /* TODO maybe only add the ones with the same sa_family */
+                QString patternD = QString("%1:%2-%3:%4").arg(daddr_str).arg(des_port).arg(itLocalAddr->str_ipinfo.c_str()).arg(src_port);
+                fmtbuf = patternA.toLocal8Bit();
+                m_mapConnectionINode[fmtbuf.toStdString()] = ino;
+            }
+        }
+    }
+    fclose(fp);
+
+    return 0;
 }
 
 int ProcessNetwork::searchConnINodes(string strConnFile)
@@ -384,7 +552,6 @@ int ProcessNetwork::searchConnINodes(string strConnFile)
 
             int matches = sscanf(buffer, "%*d: %64[0-9A-Fa-f]:%X %64[0-9A-Fa-f]:%X %*X %*X:%*X %*X:%*X %*X %*d %*d %ld %*512s\n",
                 local_addr, &local_port, rem_addr, &rem_port, &inode);
-
             if (matches != 5) {
                 continue;
             }
@@ -674,11 +841,11 @@ void ProcessNetwork::run()
     while (!m_isStoped && !m_mapNetDeviceHandle.empty()) { // main loop
         bool packets_read = false;
         quint64 curTickCount = QDateTime::currentDateTime().toMSecsSinceEpoch();
-        if (curTickCount-m_refreshProcNetInfoTick > 5000) {
+        if (curTickCount-m_refreshProcNetInfoTick > 2000) {
             m_refreshProcNetInfoTick = curTickCount;
             // fresh process net info
-            refreshConnINodes();
-            refreshProcNetInfo();
+            // refreshConnINodes();
+            // refreshProcNetInfo();
         }
         
         map<string, dp_handle*>::iterator itNetDevHandle = m_mapNetDeviceHandle.begin();
@@ -701,9 +868,9 @@ void ProcessNetwork::run()
 
         // If no packets were read at all this iteration, pause to prevent 100% CPU utilisation
         if (!packets_read) {
-            usleep(100);
+            usleep(500);
         }
-        if (curTickCount-m_updateProcNetInfoTick > 3000) {
+        if (curTickCount-m_updateProcNetInfoTick > 2000) {
             m_updateProcNetInfoTick = curTickCount;
             // check procnetinfo to update
             checkProcessInfo();

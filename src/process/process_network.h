@@ -107,6 +107,7 @@ typedef struct _ProcessNetPacket_s
     short int sa_family;
     string strHashKey;
     string strDevName;
+    uint8_t uIpProtocol;
 }ProcessNetPacket;
 
 class ProcessNetwork : public QThread
@@ -119,6 +120,7 @@ public:
     void deinitNetInfo();
 
     bool attachPacketToProcess(ProcessNetPacket& procNetPacket);
+    bool attachPacketToProcess(unsigned long luInode, ProcessNetPacket& procNetPacket);
 
     void run();
     void stop();
@@ -138,6 +140,7 @@ private:
     
     void refreshConnINodes();
     int searchConnINodes(string strConnFile);
+    int searchConnINodes(int family, int proto, string strConnFile);
 
     void refreshProcNetInfo();
     void checkProcessInfo();

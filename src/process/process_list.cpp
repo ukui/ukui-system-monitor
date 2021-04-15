@@ -661,7 +661,7 @@ ProcessList::ProcessList(QObject* parent)
     DesktopFileInfo::instance()->readAllDesktopFileInfo();
     this->num_cpus = glibtop_get_sysinfo()->ncpu;
     procNetThread = new ProcessNetwork(this);
-    procNetThread->start(QThread::TimeCriticalPriority);
+    procNetThread->start(QThread::LowPriority);
 
     connect(procNetThread, SIGNAL(procDetected(const QString &, quint64 , quint64 , int , unsigned int , const QString&)),
              this, SLOT(refreshLine(const QString &, quint64 , quint64 , int, unsigned int , const QString&)));
@@ -796,22 +796,17 @@ void ProcessList::scanProcess()
         proc.UpdateProcInfo();
 
         // flownet
-        qint64 curProcFlownet = 0;
-        if (flowNetPrevMap.contains(pidCur)) {
-            curProcFlownet = flowNetPrevMap[pidCur];
-        }
         if (!oldProcInfo.isValid()) {   // 新进程
             proc.setPreFlownetTime(QDateTime::currentDateTime());
-            proc.setPreFlownetCount(curProcFlownet);
-            proc.setFlowNet(curProcFlownet-proc.getPreFlownetCount());
-            QString addFlownetPerSec = proc.calcFlownetPerSec(curProcFlownet);
+            proc.setPreFlownetCount(0);
+            proc.setFlowNet(0);
+            QString addFlownetPerSec = proc.calcFlownetPerSec(0);
             proc.setFlowNetDesc(addFlownetPerSec);
         } else {
             proc.setPreFlownetTime(oldProcInfo.getPreFlownetTime());
             proc.setPreFlownetCount(oldProcInfo.getPreFlownetCount());
-            proc.setFlowNet(curProcFlownet-proc.getPreFlownetCount());
-            QString addFlownetPerSec = proc.calcFlownetPerSec(curProcFlownet);
-            proc.setFlowNetDesc(addFlownetPerSec);
+            proc.setFlowNet(oldProcInfo.getFlowNet());
+            proc.setFlowNetDesc(oldProcInfo.getFlowNetDesc());
         }
 
         //当进程对象存在时，更新该进程对象的相关数据信息
@@ -973,12 +968,11 @@ void ProcessList::refreshLine(const QString &procname, quint64 rcv, quint64 sent
     // record process flownet
     qint64 tmptotalFlowNetPerSec = rcv + sent;
     m_lockReadWrite.lockForWrite();
-    if(!flowNetPrevMap.contains(pid))
-    {
-        flowNetPrevMap[pid] = 0;//save prev data
+    if (m_set.contains(pid) && m_set[pid].isValid()) {
+        m_set[pid].setFlowNet(tmptotalFlowNetPerSec-m_set[pid].getPreFlownetCount());
+        QString addFlownetPerSec = m_set[pid].calcFlownetPerSec(tmptotalFlowNetPerSec);
+        m_set[pid].setFlowNetDesc(addFlownetPerSec);
     }
-
-    flowNetPrevMap[pid] = tmptotalFlowNetPerSec;
     m_lockReadWrite.unlock();
 }
 
