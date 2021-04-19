@@ -15,8 +15,9 @@ include(QtSingleApplication/qtsingleapplication.pri)
 TARGET = ukui-system-monitor
 TEMPLATE = app
 DESTDIR = ..
+DEFINES += QT_MESSAGELOGCONTEXT
 
-LIBS += -L/usr/lib/ -lX11 -lpcap -lm -lpthread
+LIBS += -L/usr/lib/ -lX11 -lpcap -lm -lpthread -lukui-log4qt
 
 CONFIG += link_pkgconfig \
                  c++11
