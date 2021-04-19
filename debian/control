@@ -16,7 +16,8 @@ Build-Depends: debhelper-compat (= 12),
                libsystemd-dev (>= 209) [linux-any],
                libgsettings-qt-dev,
                libqt5x11extras5-dev,
-               libpcap-dev
+               libpcap-dev,
+               libukui-log4qt-dev
 Standards-Version: 4.5.1
 Rules-Requires-Root: no
 Homepage: https://www.ukui.org
@@ -27,6 +28,7 @@ Package: ukui-system-monitor
 Architecture: any
 Depends: libcap2-bin,
          libglib2.0-bin,
+         libukui-log4qt0,
          ${misc:Depends},
          ${shlibs:Depends}
 Description: Monitor for UKUI desktop environment

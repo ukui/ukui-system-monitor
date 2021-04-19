@@ -1,3 +1,9 @@
+ukui-system-monitor (2.0.5-1) v101; urgency=medium
+
+  * 增加功能：接入日志sdk
+
+ -- Yang Min <yangmin@kylinos.cn>  Mon, 19 Apr 2021 10:55:55 +0800
+
 ukui-system-monitor (2.0.5) v101; urgency=medium
 
   * 修复bug：1、修复进程网络流速数据与实际差异较大问题bug#46902

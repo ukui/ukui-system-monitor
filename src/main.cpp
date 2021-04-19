@@ -23,6 +23,7 @@
 #include <QObject>
 #include <QDesktopWidget>
 #include <QtSingleApplication>
+#include <ukui-log4qt.h>
 
 #include "framelessExtended/framelesshandle.h"
 #include "systemmonitor.h"
@@ -34,6 +35,7 @@
 
 int main(int argc, char *argv[])
 {
+    initUkuiLog4qt("ukui-system-monitor");
     QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
 
