@@ -6,7 +6,7 @@
     <message>
         <location filename="../cpuratewidget.cpp" line="339"/>
         <source>CPU</source>
-        <translation type="unfinished"></translation>
+        <translation>ЦП</translation>
     </message>
     <message>
         <location filename="../cpuratewidget.cpp" line="345"/>
@@ -21,12 +21,12 @@
     <message>
         <location filename="../cpuratewidget.cpp" line="357"/>
         <source>The running time of system</source>
-        <translation type="unfinished"></translation>
+        <translation>Время работы системы</translation>
     </message>
     <message>
         <location filename="../cpuratewidget.cpp" line="363"/>
         <source>The idle time of system</source>
-        <translation type="unfinished"></translation>
+        <translation>Простой системы</translation>
     </message>
 </context>
 <context>
@@ -34,7 +34,7 @@
     <message>
         <location filename="../filesystemdialog.cpp" line="61"/>
         <source>Refresh</source>
-        <translation type="unfinished"></translation>
+        <translation>Обновить</translation>
     </message>
 </context>
 <context>
@@ -43,44 +43,44 @@
         <location filename="../filesystemlistwidget.cpp" line="67"/>
         <location filename="../filesystemlistwidget.cpp" line="436"/>
         <source>Device</source>
-        <translation type="unfinished"></translation>
+        <translation>Устройство</translation>
     </message>
     <message>
         <location filename="../filesystemlistwidget.cpp" line="67"/>
         <location filename="../filesystemlistwidget.cpp" line="436"/>
         <source>Directory</source>
-        <translation type="unfinished"></translation>
+        <translation>Каталог</translation>
     </message>
     <message>
         <location filename="../filesystemlistwidget.cpp" line="67"/>
         <source>Type</source>
-        <translation type="unfinished"></translation>
+        <translation>Тип</translation>
     </message>
     <message>
         <location filename="../filesystemlistwidget.cpp" line="67"/>
         <source>Total</source>
-        <translation type="unfinished"></translation>
+        <translation>Всего</translation>
     </message>
     <message>
         <location filename="../filesystemlistwidget.cpp" line="67"/>
         <source>Free</source>
-        <translation type="unfinished"></translation>
+        <translation>Свободно</translation>
     </message>
     <message>
         <location filename="../filesystemlistwidget.cpp" line="67"/>
         <source>Available</source>
-        <translation type="unfinished"></translation>
+        <translation>Доступно</translation>
     </message>
     <message>
         <location filename="../filesystemlistwidget.cpp" line="67"/>
         <location filename="../filesystemlistwidget.cpp" line="436"/>
         <source>Used</source>
-        <translation type="unfinished"></translation>
+        <translation>Использовано</translation>
     </message>
     <message>
         <location filename="../filesystemlistwidget.cpp" line="516"/>
         <source>No File System Info</source>
-        <translation type="unfinished"></translation>
+        <translation>Нет информации о файловой системе</translation>
     </message>
 </context>
 <context>
@@ -88,12 +88,12 @@
     <message>
         <location filename="../memorycircle.cpp" line="194"/>
         <source>Memory</source>
-        <translation type="unfinished"></translation>
+        <translation>Память</translation>
     </message>
     <message>
         <location filename="../memorycircle.cpp" line="195"/>
         <source>Swap</source>
-        <translation type="unfinished"></translation>
+        <translation>Подкачка</translation>
     </message>
     <message>
         <location filename="../memorycircle.cpp" line="203"/>
@@ -231,12 +231,12 @@
     <message>
         <location filename="../processcategory.cpp" line="41"/>
         <source>My Processes</source>
-        <translation type="unfinished"></translation>
+        <translation>Мои процессы</translation>
     </message>
     <message>
         <location filename="../processcategory.cpp" line="44"/>
         <source>All Processes</source>
-        <translation type="unfinished"></translation>
+        <translation>Все процессы</translation>
     </message>
 </context>
 <context>
@@ -246,7 +246,7 @@
         <location filename="../processdialog.cpp" line="163"/>
         <location filename="../processdialog.cpp" line="178"/>
         <source>End process</source>
-        <translation type="unfinished"></translation>
+        <translation>Завершить процесс</translation>
     </message>
     <message>
         <location filename="../processdialog.cpp" line="160"/>
@@ -258,35 +258,36 @@ Are you sure to continue?</source>
         <location filename="../processdialog.cpp" line="162"/>
         <location filename="../processdialog.cpp" line="168"/>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Отмена</translation>
     </message>
     <message>
         <location filename="../processdialog.cpp" line="166"/>
         <location filename="../processdialog.cpp" line="169"/>
         <location filename="../processdialog.cpp" line="180"/>
         <source>Kill process</source>
-        <translation type="unfinished"></translation>
+        <translation>Убить процесс</translation>
     </message>
     <message>
         <location filename="../processdialog.cpp" line="166"/>
         <source>Killing a process may destroy data, break the session or introduce a security risk. Only unresponsive processes should be killed.
 Are you sure to continue?</source>
-        <translation type="unfinished"></translation>
+        <translation>Убийство процесса может привести к уничтожению данных, прерыванию сеанса или возникновению угрозы безопасности. Убивать следует только неотвечающие процессы.
+Вы уверены, что хотите продолжить?</translation>
     </message>
     <message>
         <location filename="../processdialog.cpp" line="174"/>
         <source>Stop process</source>
-        <translation type="unfinished"></translation>
+        <translation>Остановить процесс</translation>
     </message>
     <message>
         <location filename="../processdialog.cpp" line="176"/>
         <source>Continue process</source>
-        <translation type="unfinished"></translation>
+        <translation>Возобновить процесс</translation>
     </message>
     <message>
         <location filename="../processdialog.cpp" line="194"/>
         <source>Very High</source>
-        <translation type="unfinished"></translation>
+        <translation>Высокий</translation>
     </message>
     <message>
         <location filename="../processdialog.cpp" line="195"/>
@@ -306,27 +307,27 @@ Are you sure to continue?</source>
     <message>
         <location filename="../processdialog.cpp" line="198"/>
         <source>Very Low</source>
-        <translation type="unfinished"></translation>
+        <translation>Очень низкий</translation>
     </message>
     <message>
         <location filename="../processdialog.cpp" line="199"/>
         <source>Custom</source>
-        <translation type="unfinished"></translation>
+        <translation>Произвольный</translation>
     </message>
     <message>
         <location filename="../processdialog.cpp" line="204"/>
         <source>Change Priority</source>
-        <translation type="unfinished"></translation>
+        <translation>Изменить приоритет</translation>
     </message>
     <message>
         <location filename="../processdialog.cpp" line="206"/>
         <source>Properties</source>
-        <translation type="unfinished"></translation>
+        <translation>Свойства</translation>
     </message>
     <message>
         <location filename="../processdialog.cpp" line="340"/>
         <source>Change Priority of Process %1 (PID: %2)</source>
-        <translation type="unfinished"></translation>
+        <translation>Изменить приоритет процесса %1 (PID: %2)</translation>
     </message>
 </context>
 <context>
@@ -334,28 +335,28 @@ Are you sure to continue?</source>
     <message>
         <location filename="../processlistitem.cpp" line="169"/>
         <source>Stopped</source>
-        <translation type="unfinished"></translation>
+        <translation>Остановлен</translation>
     </message>
     <message>
         <location filename="../processlistitem.cpp" line="171"/>
         <source>Suspend</source>
-        <translation type="unfinished"></translation>
+        <translation>Приостановить</translation>
     </message>
     <message>
         <location filename="../processlistitem.cpp" line="173"/>
         <source>Zombie</source>
-        <translation type="unfinished"></translation>
+        <translation>Зомби</translation>
     </message>
     <message>
         <location filename="../processlistitem.cpp" line="175"/>
         <source>No response</source>
-        <translation type="unfinished"></translation>
+        <translation>Не отвечает</translation>
     </message>
     <message>
         <location filename="../processlistitem.cpp" line="177"/>
         <location filename="../processlistitem.cpp" line="179"/>
         <source>Uninterruptible</source>
-        <translation type="unfinished"></translation>
+        <translation>Бесперебойный</translation>
     </message>
 </context>
 <context>
@@ -364,48 +365,48 @@ Are you sure to continue?</source>
         <location filename="../processlistwidget.cpp" line="86"/>
         <location filename="../processlistwidget.cpp" line="876"/>
         <source>Process Name</source>
-        <translation type="unfinished"></translation>
+        <translation>Имя процесса</translation>
     </message>
     <message>
         <location filename="../processlistwidget.cpp" line="86"/>
         <source>User</source>
-        <translation type="unfinished"></translation>
+        <translation>Пользователь</translation>
     </message>
     <message>
         <location filename="../processlistwidget.cpp" line="86"/>
         <source>Status</source>
-        <translation type="unfinished"></translation>
+        <translation>Статус</translation>
     </message>
     <message>
         <location filename="../processlistwidget.cpp" line="86"/>
         <source>CPU</source>
-        <translation type="unfinished"></translation>
+        <translation>ЦПУ</translation>
     </message>
     <message>
         <location filename="../processlistwidget.cpp" line="86"/>
         <source>ID</source>
-        <translation type="unfinished"></translation>
+        <translation>ИД</translation>
     </message>
     <message>
         <location filename="../processlistwidget.cpp" line="86"/>
         <location filename="../processlistwidget.cpp" line="876"/>
         <source>Command Line</source>
-        <translation type="unfinished"></translation>
+        <translation>Командная строка</translation>
     </message>
     <message>
         <location filename="../processlistwidget.cpp" line="86"/>
         <source>Memory</source>
-        <translation type="unfinished"></translation>
+        <translation>Память</translation>
     </message>
     <message>
         <location filename="../processlistwidget.cpp" line="86"/>
         <source>Priority</source>
-        <translation type="unfinished"></translation>
+        <translation>Приоритет</translation>
     </message>
     <message>
         <location filename="../processlistwidget.cpp" line="965"/>
         <source>No search result</source>
-        <translation type="unfinished"></translation>
+        <translation>Результатов поиска не найдено</translation>
     </message>
 </context>
 <context>
@@ -413,12 +414,12 @@ Are you sure to continue?</source>
     <message>
         <location filename="../processmanager.cpp" line="50"/>
         <source>System Monitor</source>
-        <translation type="unfinished"></translation>
+        <translation>Системный монитор</translation>
     </message>
     <message>
         <location filename="../processmanager.cpp" line="55"/>
         <source>Help user to kill process</source>
-        <translation type="unfinished"></translation>
+        <translation>Помогите пользователю убить процесс</translation>
     </message>
 </context>
 <context>
@@ -426,7 +427,7 @@ Are you sure to continue?</source>
     <message>
         <location filename="../propertiesdialog.cpp" line="129"/>
         <source>OK</source>
-        <translation type="unfinished"></translation>
+        <translation>Ок</translation>
     </message>
 </context>
 <context>
@@ -434,208 +435,208 @@ Are you sure to continue?</source>
     <message>
         <location filename="../util.cpp" line="208"/>
         <source>Running</source>
-        <translation type="unfinished"></translation>
+        <translation>Запущенные</translation>
     </message>
     <message>
         <location filename="../util.cpp" line="212"/>
         <source>Stopped</source>
-        <translation type="unfinished"></translation>
+        <translation>Остановлен</translation>
     </message>
     <message>
         <location filename="../util.cpp" line="216"/>
         <source>Zombie</source>
-        <translation type="unfinished"></translation>
+        <translation>Зомби</translation>
     </message>
     <message>
         <location filename="../util.cpp" line="220"/>
         <source>Uninterruptible</source>
-        <translation type="unfinished"></translation>
+        <translation>Бесперебойный</translation>
     </message>
     <message>
         <location filename="../util.cpp" line="224"/>
         <source>Sleeping</source>
-        <translation type="unfinished"></translation>
+        <translation>Спящий</translation>
     </message>
     <message>
         <location filename="../util.cpp" line="234"/>
         <source>Very High</source>
-        <translation type="unfinished"></translation>
+        <translation>Очень высокий</translation>
     </message>
     <message>
         <location filename="../util.cpp" line="236"/>
         <source>High</source>
-        <translation type="unfinished"></translation>
+        <translation>Высокий</translation>
     </message>
     <message>
         <location filename="../util.cpp" line="238"/>
         <source>Normal</source>
-        <translation type="unfinished"></translation>
+        <translation>Нормальный</translation>
     </message>
     <message>
         <location filename="../util.cpp" line="240"/>
         <source>Low</source>
-        <translation type="unfinished"></translation>
+        <translation>Низкий</translation>
     </message>
     <message>
         <location filename="../util.cpp" line="242"/>
         <source>Very Low</source>
-        <translation type="unfinished"></translation>
+        <translation>Очень низкий</translation>
     </message>
     <message>
         <location filename="../util.cpp" line="248"/>
         <source>Very High Priority</source>
-        <translation type="unfinished"></translation>
+        <translation>Очень высокий приоритет</translation>
     </message>
     <message>
         <location filename="../util.cpp" line="250"/>
         <source>High Priority</source>
-        <translation type="unfinished"></translation>
+        <translation>Высокий приоритет</translation>
     </message>
     <message>
         <location filename="../util.cpp" line="252"/>
         <source>Normal Priority</source>
-        <translation type="unfinished"></translation>
+        <translation>Нормальный приоритет</translation>
     </message>
     <message>
         <location filename="../util.cpp" line="254"/>
         <source>Low Priority</source>
-        <translation type="unfinished"></translation>
+        <translation>Низкий приоритет</translation>
     </message>
     <message>
         <location filename="../util.cpp" line="256"/>
         <source>Very Low Priority</source>
-        <translation type="unfinished"></translation>
+        <translation>Очень низкий приоритет</translation>
     </message>
     <message>
         <location filename="../memorycircle.cpp" line="44"/>
         <location filename="../networkflow.cpp" line="51"/>
         <source>byte</source>
-        <translation type="unfinished"></translation>
+        <translation>байт</translation>
     </message>
     <message>
         <location filename="../networkflow.cpp" line="53"/>
         <source>byte/s</source>
-        <translation type="unfinished"></translation>
+        <translation>байт/с</translation>
     </message>
     <message>
         <location filename="../memorycircle.cpp" line="47"/>
         <location filename="../networkflow.cpp" line="57"/>
         <source>bytes</source>
-        <translation type="unfinished"></translation>
+        <translation>байты</translation>
     </message>
     <message>
         <location filename="../networkflow.cpp" line="59"/>
         <source>bytes/s</source>
-        <translation type="unfinished"></translation>
+        <translation>байтов/с</translation>
     </message>
     <message>
         <location filename="../memorycircle.cpp" line="54"/>
         <location filename="../networkflow.cpp" line="67"/>
         <source>KiB</source>
-        <translation type="unfinished"></translation>
+        <translation>КиБ</translation>
     </message>
     <message>
         <location filename="../networkflow.cpp" line="69"/>
         <source>KiB/s</source>
-        <translation type="unfinished"></translation>
+        <translation>КиБ/с</translation>
     </message>
     <message>
         <location filename="../memorycircle.cpp" line="57"/>
         <location filename="../networkflow.cpp" line="73"/>
         <source>MiB</source>
-        <translation type="unfinished"></translation>
+        <translation>МиБ</translation>
     </message>
     <message>
         <location filename="../networkflow.cpp" line="75"/>
         <source>MiB/s</source>
-        <translation type="unfinished"></translation>
+        <translation>МиБ/с</translation>
     </message>
     <message>
         <location filename="../memorycircle.cpp" line="60"/>
         <location filename="../networkflow.cpp" line="79"/>
         <source>GiB</source>
-        <translation type="unfinished"></translation>
+        <translation>ГиБ</translation>
     </message>
     <message>
         <location filename="../networkflow.cpp" line="81"/>
         <source>GiB/s</source>
-        <translation type="unfinished"></translation>
+        <translation>ГиБ/с</translation>
     </message>
     <message>
         <location filename="../memorycircle.cpp" line="63"/>
         <location filename="../networkflow.cpp" line="85"/>
         <source>TiB</source>
-        <translation type="unfinished"></translation>
+        <translation>ТиБ</translation>
     </message>
     <message>
         <location filename="../networkflow.cpp" line="87"/>
         <source>TiB/s</source>
-        <translation type="unfinished"></translation>
+        <translation>ТиБ/с</translation>
     </message>
     <message>
         <location filename="../cpuratewidget.cpp" line="42"/>
         <source>%1hours</source>
-        <translation type="unfinished"></translation>
+        <translation>%1час</translation>
     </message>
     <message>
         <location filename="../cpuratewidget.cpp" line="44"/>
         <source>%1hour</source>
-        <translation type="unfinished"></translation>
+        <translation>%1час</translation>
     </message>
     <message>
         <location filename="../cpuratewidget.cpp" line="46"/>
         <source>%1minutes</source>
-        <translation type="unfinished"></translation>
+        <translation>%1минут</translation>
     </message>
     <message>
         <location filename="../cpuratewidget.cpp" line="48"/>
         <source>%1minute</source>
-        <translation type="unfinished"></translation>
+        <translation>%1минут</translation>
     </message>
     <message>
         <location filename="../cpuratewidget.cpp" line="50"/>
         <source>%1seconds</source>
-        <translation type="unfinished"></translation>
+        <translation>%1секунд</translation>
     </message>
     <message>
         <location filename="../cpuratewidget.cpp" line="52"/>
         <source>%1second</source>
-        <translation type="unfinished"></translation>
+        <translation>%1секунды</translation>
     </message>
     <message>
         <location filename="../cpuratewidget.cpp" line="57"/>
         <source>%1day</source>
-        <translation type="unfinished"></translation>
+        <translation>%1дней</translation>
     </message>
     <message>
         <location filename="../cpuratewidget.cpp" line="59"/>
         <source>%1days</source>
-        <translation type="unfinished"></translation>
+        <translation>%1дня</translation>
     </message>
     <message>
         <location filename="../propertiesdialog.cpp" line="155"/>
         <source>User name:</source>
-        <translation type="unfinished"></translation>
+        <translation>Имя пользователя:</translation>
     </message>
     <message>
         <location filename="../propertiesdialog.cpp" line="155"/>
         <source>Process name:</source>
-        <translation type="unfinished"></translation>
+        <translation>Имя процесса:</translation>
     </message>
     <message>
         <location filename="../propertiesdialog.cpp" line="155"/>
         <source>Command line:</source>
-        <translation type="unfinished"></translation>
+        <translation>Командная строка:</translation>
     </message>
     <message>
         <location filename="../propertiesdialog.cpp" line="155"/>
         <source>CPU Time:</source>
-        <translation type="unfinished"></translation>
+        <translation>Время ЦПУ:</translation>
     </message>
     <message>
         <location filename="../propertiesdialog.cpp" line="155"/>
         <source>Started Time:</source>
-        <translation type="unfinished"></translation>
+        <translation>Время работы:</translation>
     </message>
 </context>
 <context>
@@ -648,22 +649,22 @@ Are you sure to continue?</source>
     <message>
         <location filename="../renicedialog.cpp" line="78"/>
         <source>Note:</source>
-        <translation type="unfinished"></translation>
+        <translation>Заметка:</translation>
     </message>
     <message>
         <location filename="../renicedialog.cpp" line="82"/>
         <source>The priority of a process is given by its nice value. A lower nice value corresponds to a higher priority.</source>
-        <translation type="unfinished"></translation>
+        <translation>Приоритет процесса определяется его значением nice. Меньшее значение nice соответствует более высокому приоритету.</translation>
     </message>
     <message>
         <location filename="../renicedialog.cpp" line="94"/>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Отмена</translation>
     </message>
     <message>
         <location filename="../renicedialog.cpp" line="99"/>
         <source>Change Priority</source>
-        <translation type="unfinished"></translation>
+        <translation>Изменить приоритет</translation>
     </message>
 </context>
 <context>
@@ -671,17 +672,17 @@ Are you sure to continue?</source>
     <message>
         <location filename="../resourcescategory.cpp" line="39"/>
         <source>CPU</source>
-        <translation type="unfinished"></translation>
+        <translation>ЦПУ</translation>
     </message>
     <message>
         <location filename="../resourcescategory.cpp" line="41"/>
         <source>Memory</source>
-        <translation type="unfinished"></translation>
+        <translation>Память</translation>
     </message>
     <message>
         <location filename="../resourcescategory.cpp" line="43"/>
         <source>Network</source>
-        <translation type="unfinished"></translation>
+        <translation>Сеть</translation>
     </message>
 </context>
 <context>
@@ -689,7 +690,7 @@ Are you sure to continue?</source>
     <message>
         <location filename="../systemmonitor.cpp" line="79"/>
         <source>UKUI System Monitor</source>
-        <translation type="unfinished"></translation>
+        <translation>UKUI Системный монитор</translation>
     </message>
 </context>
 </TS>
