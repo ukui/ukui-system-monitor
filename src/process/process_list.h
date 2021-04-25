@@ -216,6 +216,7 @@ private:
 
 private:
     QMap<pid_t, Process> m_set;
+    QMap<pid_t, quint64> m_mapCpuTimes;
     gint num_cpus;
     ProcessNetwork *procNetThread = nullptr;
 

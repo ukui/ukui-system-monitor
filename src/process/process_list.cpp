@@ -726,6 +726,7 @@ void ProcessList::scanProcess()
     glibtop_proclist proclist;
     int which = 0;
     int arg = 0;
+    bool bFilterActive = false;
 
     m_lockReadWrite.lockForRead();
     if (m_strFilter == "all")
@@ -735,7 +736,8 @@ void ProcessList::scanProcess()
     }
     else if (m_strFilter == "active")
     {
-        which = GLIBTOP_KERN_PROC_ALL | GLIBTOP_EXCLUDE_IDLE;
+        which = GLIBTOP_KERN_PROC_ALL /*| GLIBTOP_EXCLUDE_IDLE*/;
+        bFilterActive = true;
         arg = 0;
     }
     else if (m_strFilter == "user")
@@ -827,8 +829,14 @@ void ProcessList::scanProcess()
 
         // check cpu time
         if (!m_isScanStoped) {
-            if (oldProcInfo.isValid() && proc.getProcCpuTime() >= oldProcInfo.getProcCpuTime()) {
+            if (oldProcInfo.isValid()) {
                 proc.setProcCpuTime(oldProcInfo.getProcCpuTime());
+            } else {
+                if (m_mapCpuTimes.contains(pidCur) && proctime.rtime >= m_mapCpuTimes[pidCur]) {
+                    proc.setProcCpuTime(m_mapCpuTimes[pidCur]);
+                } else {
+                    proc.setProcCpuTime(proctime.rtime);
+                }
             }
         }
 
@@ -847,6 +855,7 @@ void ProcessList::scanProcess()
 //        CPU 百分比使用 Solaris 模式，工作在“Solaris 模式”，其中任务的 CPU 使用量将被除以总的 CPU 数目。否则它将工作在“Irix 模式”。
         proc.setFrequency(cpu.frequency);
         proc.setProcCpuTime(proctime.rtime);
+        m_mapCpuTimes[pidCur] = proctime.rtime;
         proc.setNice(procuid.nice);
 
         // disk io
@@ -893,6 +902,12 @@ void ProcessList::scanProcess()
         proc.setProcCpuDurationTime(formatDurationForDisplay(100 * proc.getProcCpuTime() / proc.getFrequency()));
         proc.setProcStatus(formatProcessState(proc.getStatus()));
         if (proc.getStatus() == GLIBTOP_PROCESS_ZOMBIE) {
+            if (m_set.contains(proc.pid())) {
+                m_lockReadWrite.unlock();
+                removeProcess(proc.pid());
+                m_lockReadWrite.lockForWrite();
+            }
+        } else if (bFilterActive && proc.getStatus() != GLIBTOP_PROCESS_RUNNING) {
             if (m_set.contains(proc.pid())) {
                 m_lockReadWrite.unlock();
                 removeProcess(proc.pid());
