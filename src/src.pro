@@ -77,19 +77,14 @@ HEADERS += \
     util.h \
     ../component/utils.h \
     ../widgets/mydialog.h \
-    ../widgets/mytristatebutton.h \
-    ../widgets/myunderlinebutton.h \
-    ../widgets/myhoverbutton.h \
     ../widgets/myactiongroup.h \
     ../widgets/myactiongroupitem.h \
     ../widgets/myaction.h \
     monitortitlewidget.h \
     filesystem/filesystemworker.h \
     filesystem/filesystemdata.h \
-    ../widgets/mysearchedit.h \
     filesystem/filesystemwatcher.h \
     renicedialog.h \
-    ../component/mytitlebar.h \
     framelessExtended/cursorposcalculator.h \
     framelessExtended/framelesshandle.h \
     framelessExtended/framelesshandleprivate.h \
@@ -135,19 +130,14 @@ SOURCES += \
     linebandwith.cpp \
     util.cpp \
     ../widgets/mydialog.cpp \
-    ../widgets/mytristatebutton.cpp \
-    ../widgets/myunderlinebutton.cpp \
-    ../widgets/myhoverbutton.cpp \
     ../widgets/myactiongroup.cpp \
     ../widgets/myactiongroupitem.cpp \
     ../widgets/myaction.cpp \
     monitortitlewidget.cpp \
     filesystem/filesystemworker.cpp \
     filesystem/filesystemdata.cpp \
-    ../widgets/mysearchedit.cpp \
     filesystem/filesystemwatcher.cpp \
     renicedialog.cpp \
-    ../component/mytitlebar.cpp \
     framelessExtended/cursorposcalculator.cpp \
     framelessExtended/framelesshandle.cpp \
     framelessExtended/widgethandlerealize.cpp \

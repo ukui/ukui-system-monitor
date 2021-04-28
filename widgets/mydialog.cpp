@@ -19,7 +19,6 @@
  */
 
 #include "mydialog.h"
-#include "mytristatebutton.h"
 #include "../shell/xatom-helper.h"
 #include "../shell/macro.h"
 #include "../util.h"
@@ -235,7 +234,6 @@ int MyDialog::addButton(const QString &text, bool isDefault)
     int index = buttonCount();
     QAbstractButton *button = new QPushButton(text);
     button->setFocusPolicy(Qt::NoFocus);
-//    button->setStyleSheet("QPushButton{font-size:12px;background-color:transparent;border:1px solid #bebebe;color:#000000;}QPushButton:hover{background-color:#ffffff;border:1px solid #3f96e4;color:#000000;}QPushButton:pressed{background-color:#ffffff;border:1px solid #3f96e4;color:#000000;}");
     button->setAttribute(Qt::WA_NoMousePropagation);
     button->setFixedSize(124, 36);
 

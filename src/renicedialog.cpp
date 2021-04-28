@@ -96,12 +96,10 @@ ReniceDialog::ReniceDialog(const QString &procName, const QString &procId, QWidg
     h_layout->addWidget(m_valueLabel);
 
     m_valueStrLabel = new QLabel;
-//    m_valueStrLabel->setStyleSheet("QLabel{background-color:transparent;color:#000000;font-size:13px;font-weight:bold;}");
     m_valueStrLabel->setAlignment(Qt::AlignCenter);
     m_valueStrLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 
     m_tipTitle = new QLabel;
-//    m_tipTitle->setStyleSheet("QLabel{background-color:transparent;color:#000000;font-size:12px;font-weight:bold;}");
     m_tipTitle->setText(tr("Note:"));
     m_tipLabel = new QLabel;
     m_tipLabel->setWordWrap(true);//QLabel自动换行

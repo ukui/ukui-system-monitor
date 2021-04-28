@@ -32,7 +32,6 @@ class QButtonGroup;
 class QLabel;
 class QCloseEvent;
 class QVBoxLayout;
-class MyTristateButton;
 
 #include <QBoxLayout>
 
