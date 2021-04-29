@@ -35,6 +35,9 @@ ICON.path = /usr/share/icons/hicolor/
 desktop.files += ../ukui-system-monitor.desktop
 desktop.path = /usr/share/applications/
 
+config.files += ../ukui-system-monitor.conf
+config.path = /usr/share/ukui/
+
 target.source += $$TARGET
 target.path = /usr/bin
 
@@ -61,7 +64,8 @@ INSTALLS += target \
             ICON \
             userguidemd \
             userguidepng \
-            enuserguidemd
+            enuserguidemd \
+            config
 
 unix {
     UI_DIR = .ui

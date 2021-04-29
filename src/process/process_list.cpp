@@ -658,7 +658,6 @@ ProcessList::ProcessList(QObject* parent)
     : QObject(parent), m_set {}
 {
     glibtop_init();
-    DesktopFileInfo::instance()->readAllDesktopFileInfo();
     this->num_cpus = glibtop_get_sysinfo()->ncpu;
     procNetThread = new ProcessNetwork(this);
     procNetThread->start(QThread::LowPriority);

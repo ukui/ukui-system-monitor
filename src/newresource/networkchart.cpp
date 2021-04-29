@@ -169,8 +169,22 @@ void NetWorkChart::onUpdateDownloadAndUploadData(long recvTotalBytes, long sentT
         m_curMaxLoadSpeed = 4 * 1024 * 1024;
     } else if (lfMaxNetSpeed >= 4 * 1024 * 1024 && lfMaxNetSpeed < 8 * 1024 * 1024) {
         m_curMaxLoadSpeed = 8 * 1024 * 1024;
-    } else {
+    } else if (lfMaxNetSpeed >= 8 * 1024 * 1024 && lfMaxNetSpeed < 16 * 1024 * 1024) {
         m_curMaxLoadSpeed = 16 * 1024 * 1024;
+    } else if (lfMaxNetSpeed >= 16 * 1024 * 1024 && lfMaxNetSpeed < 32 * 1024 * 1024) {
+        m_curMaxLoadSpeed = 32 * 1024 * 1024;
+    } else if (lfMaxNetSpeed >= 32 * 1024 * 1024 && lfMaxNetSpeed < 64 * 1024 * 1024) {
+        m_curMaxLoadSpeed = 64 * 1024 * 1024;
+    } else if (lfMaxNetSpeed >= 64 * 1024 * 1024 && lfMaxNetSpeed < 128 * 1024 * 1024) {
+        m_curMaxLoadSpeed = 128 * 1024 * 1024;
+    } else if (lfMaxNetSpeed >= 128 * 1024 * 1024 && lfMaxNetSpeed < 256 * 1024 * 1024) {
+        m_curMaxLoadSpeed = 256 * 1024 * 1024;
+    } else if (lfMaxNetSpeed >= 256 * 1024 * 1024 && lfMaxNetSpeed < 512 * 1024 * 1024) {
+        m_curMaxLoadSpeed = 512 * 1024 * 1024;
+    } else if (lfMaxNetSpeed >= 512 * 1024 * 1024 && lfMaxNetSpeed < 1024 * 1024 * 1024) {
+        m_curMaxLoadSpeed = 1024 * 1024 * 1024;
+    } else {
+        m_curMaxLoadSpeed = 2 * 1024 * 1024 * 1024;
     }
     emit this->speedToDynamicMax(m_curMaxLoadSpeed);
 }

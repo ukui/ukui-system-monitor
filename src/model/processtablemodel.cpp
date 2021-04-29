@@ -145,6 +145,15 @@ void ProcessTableModel::updateProcessListDelay()
                 }
             }
             if (icon.isNull()) {
+                strIconPath = m_processList[row].getProcName();
+                if (!strIconPath.isEmpty()) {
+                    QStringList simpleExecList = strIconPath.split("\\s+");
+                    simpleExecList = simpleExecList[0].split("/");
+                    strIconPath = simpleExecList[simpleExecList.size()-1];
+                    icon = QIcon::fromTheme(strIconPath, icon);
+                }
+            }
+            if (icon.isNull()) {
                 icon = QIcon::fromTheme("application-x-executable");//gnome-mine-application-x-executable
                 strIconPath = "application-x-executable";
                 if (icon.isNull()) {
@@ -177,6 +186,15 @@ void ProcessTableModel::updateProcessListDelay()
                     }
                 }
                 else {
+                    icon = QIcon::fromTheme(strIconPath, icon);
+                }
+            }
+            if (icon.isNull()) {
+                strIconPath = m_processList[row].getProcName();
+                if (!strIconPath.isEmpty()) {
+                    QStringList simpleExecList = strIconPath.split("\\s+");
+                    simpleExecList = simpleExecList[0].split("/");
+                    strIconPath = simpleExecList[simpleExecList.size()-1];
                     icon = QIcon::fromTheme(strIconPath, icon);
                 }
             }

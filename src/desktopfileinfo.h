@@ -24,6 +24,7 @@
 #include <QMap>
 #include <QObject>
 #include <QStringList>
+#include <QSettings>
 
 typedef struct _DTFileInfo_s {
     QString strExec = "";
@@ -31,6 +32,7 @@ typedef struct _DTFileInfo_s {
     QStringList strExecParam;
     QString strName = "";
     QString strGenericName = "";
+    QString strComment = "";
     QString strIcon = "";
 }DTFileInfo;
 
@@ -49,10 +51,16 @@ public:
     QString getNameByDesktopFile(QString strDesktopFileName);
     QString getIconByDesktopFile(QString strDesktopFileName);
 
+
+private:
     void readAllDesktopFileInfo();
+    void readCustomProcMap();
+    QString exchangeCustomProcMap(QString strExec);
 
 private:
     QMap<QString, DTFileInfo> m_mapDesktopInfoList;
+    QMap<QString, QString> m_mapCustomProc;
+    QSettings *m_proSettings;
 };
 
 #endif
