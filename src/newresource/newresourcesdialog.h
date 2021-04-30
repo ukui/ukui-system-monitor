@@ -163,7 +163,7 @@ public slots:
     void updateResourceStatus();
     void cpuHistoySetText(double percent);
     void memoryandswapSetText(const QString &infoMemory, double percentMemory,const QString &infoSwap, double percentSwap);
-    void networkSetText(long recvTotalBytes, long sentTotalBytes, long recvRateBytes, long sentRateBytes);
+    void networkSetText(quint64 recvTotalBytes, quint64 sentTotalBytes, quint64 recvRateBytes, quint64 sentRateBytes);
     void onUpdateMemoryAndSwapStatus();
 
 signals:
@@ -171,6 +171,6 @@ signals:
     void rebackMemoryAndSwapInfo(const QString &infoMemory, double percentMemory,const QString &infoSwap, double percentSwap);
     void rebackMemoryAndSwapData(float memory,double percentMemory,float swap,double percentSwap);
     void updateMemoryAndSwapStatus();
-    void updateNetworkStatus(long recvTotalBytes, long sentTotalBytes, long recvRateBytes, long sentRateBytes);
+    void updateNetworkStatus(quint64 recvTotalBytes, quint64 sentTotalBytes, quint64 recvRateBytes, quint64 sentRateBytes);
     void resetWidget();
 };

@@ -289,8 +289,8 @@ NewResouresDialog::NewResouresDialog(QWidget *parent)
     connect(this,SIGNAL(rebackMemoryAndSwapData(float,double,float,double)),swapandmemoryChart,SLOT(onUpdateMemoryAndSwapData(float,double,float,double)));
 
 //network connect
-    connect(this,SIGNAL(updateNetworkStatus(long,long,long,long)),this,SLOT(networkSetText(long,long,long,long)));
-    connect(this,SIGNAL(updateNetworkStatus(long,long,long,long)),networkChart,SLOT(onUpdateDownloadAndUploadData(long,long,long,long)));
+    connect(this,SIGNAL(updateNetworkStatus(quint64,quint64,quint64,quint64)),this,SLOT(networkSetText(quint64,quint64,quint64,quint64)));
+    connect(this,SIGNAL(updateNetworkStatus(quint64,quint64,quint64,quint64)),networkChart,SLOT(onUpdateDownloadAndUploadData(quint64,quint64,quint64,quint64)));
     updateStatusTimer->start(500);
 }
 
@@ -330,11 +330,11 @@ void NewResouresDialog::setChangeNetSpeedLabel()
         theFirtSpeedLabel->setText("0"+tr("KiB"));
     });
 
-    connect(networkChart,&NetWorkChart::speedToDynamicMax,this,[=](qreal lfMaxSpeed){
-        theFifthSpeedLabel->setText(formatNetworkBrandWidth(lfMaxSpeed,true));
-        theFourthSpeedLabel->setText(formatNetworkBrandWidth(lfMaxSpeed*3/4,true));
-        theThirdSpeedLabel->setText(formatNetworkBrandWidth(lfMaxSpeed*2/4,true));
-        theSecondSpeedLabel->setText(formatNetworkBrandWidth(lfMaxSpeed*1/4,true));
+    connect(networkChart,&NetWorkChart::speedToDynamicMax,this,[=](quint64 lluMaxSpeed){
+        theFifthSpeedLabel->setText(formatNetworkBrandWidth(lluMaxSpeed,true));
+        theFourthSpeedLabel->setText(formatNetworkBrandWidth(lluMaxSpeed*3/4,true));
+        theThirdSpeedLabel->setText(formatNetworkBrandWidth(lluMaxSpeed*2/4,true));
+        theSecondSpeedLabel->setText(formatNetworkBrandWidth(lluMaxSpeed*1/4,true));
         theFirtSpeedLabel->setText(formatNetworkBrandWidth(0,true));
     });
 }
@@ -360,7 +360,7 @@ void NewResouresDialog::memoryandswapSetText(const QString &infoMemory, double p
     swapUnitDataLabel->setText(sSwap);
 }
 
-void NewResouresDialog::networkSetText(long recvTotalBytes, long sentTotalBytes, long recvRateBytes, long sentRateBytes)
+void NewResouresDialog::networkSetText(quint64 recvTotalBytes, quint64 sentTotalBytes, quint64 recvRateBytes, quint64 sentRateBytes)
 {
     const QString downloadRate = formatNetworkRate(recvRateBytes);
     const QString uploadRate = formatNetworkRate(sentRateBytes);

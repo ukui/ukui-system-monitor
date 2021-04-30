@@ -45,19 +45,19 @@ private:
     QPainterPath m_upLoadPath;
     int m_pointsCount;
     QColor m_bgColor;
-    double m_curMaxLoadSpeed;
+    quint64 m_curMaxLoadSpeed;
 
-    QList<double> m_downLoadList;
-    QList<double> m_upLoadList;
+    QList<quint64> m_downLoadList;
+    QList<quint64> m_upLoadList;
 
 public slots:
-    void onUpdateDownloadAndUploadData(long,long,long,long);
+    void onUpdateDownloadAndUploadData(quint64,quint64,quint64,quint64);
 signals:
 //    void speedToMib();
     void speedToLowKib();
 //    void speedToMiddleKib();
     void speedToHighKib();
-    void speedToDynamicMax(qreal lfMaxSpeed);
+    void speedToDynamicMax(quint64 lluMaxSpeed);
 };
 
 #endif //_NETWORKCHSRT_H_
