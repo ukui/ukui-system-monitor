@@ -75,6 +75,9 @@ ProcessTableModel::ProcessTableModel(QObject *parent)
     connect(monitor->processList(), &ProcessList::processPriorityChanged, this,
             &ProcessTableModel::updateProcessPriority);
 
+    // get default icon from theme
+    m_defaultIcon = QIcon::fromTheme("application-x-executable");
+
     m_procIconMap.clear();
 }
 
@@ -141,7 +144,7 @@ void ProcessTableModel::updateProcessListDelay()
                     }
                 }
                 else {
-                    icon = QIcon::fromTheme(strIconPath, icon);
+                    icon = QIcon::fromTheme(strIconPath);
                 }
             }
             if (icon.isNull()) {
@@ -150,20 +153,12 @@ void ProcessTableModel::updateProcessListDelay()
                     QStringList simpleExecList = strIconPath.split("\\s+");
                     simpleExecList = simpleExecList[0].split("/");
                     strIconPath = simpleExecList[simpleExecList.size()-1];
-                    icon = QIcon::fromTheme(strIconPath, icon);
+                    icon = QIcon::fromTheme(strIconPath);
                 }
             }
             if (icon.isNull()) {
-                icon = QIcon::fromTheme("application-x-executable");//gnome-mine-application-x-executable
+                icon = m_defaultIcon;
                 strIconPath = "application-x-executable";
-                if (icon.isNull()) {
-                    icon = QIcon("/usr/share/icons/kylin-icon-theme/48x48/mimetypes/application-x-executable.png");
-                    strIconPath = "/usr/share/icons/kylin-icon-theme/48x48/mimetypes/application-x-executable.png";
-                    if (icon.isNull()) {
-                        icon = QIcon(":/res/autostart-default.png");
-                        strIconPath = ":/res/autostart-default.png";
-                    }
-                }
             }
             iconPixmap = icon.pixmap(24, 24);
             m_processList[row].setIconPath(strIconPath);
@@ -186,7 +181,7 @@ void ProcessTableModel::updateProcessListDelay()
                     }
                 }
                 else {
-                    icon = QIcon::fromTheme(strIconPath, icon);
+                    icon = QIcon::fromTheme(strIconPath);
                 }
             }
             if (icon.isNull()) {
@@ -195,20 +190,12 @@ void ProcessTableModel::updateProcessListDelay()
                     QStringList simpleExecList = strIconPath.split("\\s+");
                     simpleExecList = simpleExecList[0].split("/");
                     strIconPath = simpleExecList[simpleExecList.size()-1];
-                    icon = QIcon::fromTheme(strIconPath, icon);
+                    icon = QIcon::fromTheme(strIconPath);
                 }
             }
             if (icon.isNull()) {
-                icon = QIcon::fromTheme("application-x-executable");//gnome-mine-application-x-executable
+                icon = m_defaultIcon;
                 strIconPath = "application-x-executable";
-                if (icon.isNull()) {
-                    icon = QIcon("/usr/share/icons/kylin-icon-theme/48x48/mimetypes/application-x-executable.png");
-                    strIconPath = "/usr/share/icons/kylin-icon-theme/48x48/mimetypes/application-x-executable.png";
-                    if (icon.isNull()) {
-                        icon = QIcon(":/res/autostart-default.png");
-                        strIconPath = ":/res/autostart-default.png";
-                    }
-                }
             }
             iconPixmap = icon.pixmap(24, 24);
             m_processList[row].setIconPath(strIconPath);

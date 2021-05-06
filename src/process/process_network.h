@@ -75,6 +75,12 @@ extern "C" {
 
 #define MAX_PID_LENGTH    20
 
+typedef enum {
+    dir_unknown, 
+    dir_outgoing, 
+    dir_incoming
+} packetdir;
+
 typedef struct _LocalAddr_s
 {
     in_addr_t addr;
@@ -108,6 +114,7 @@ typedef struct _ProcessNetPacket_s
     string strHashKey;
     string strDevName;
     uint8_t uIpProtocol;
+    packetdir dir = dir_unknown;
 }ProcessNetPacket;
 
 class ProcessNetwork : public QThread

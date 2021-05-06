@@ -283,7 +283,7 @@ bool ProcessNetwork::attachPacketToProcess(ProcessNetPacket& procNetPacket)
         if (!attachPacketToProcess(itConnINode->second, procNetPacket)) {
             refreshProcNetInfo();
             if (!attachPacketToProcess(itConnINode->second, procNetPacket)) {
-                return false;                
+                return false;
             }
         }
     } else {
@@ -713,13 +713,12 @@ void ProcessNetwork::refreshProcNetInfo()
 	while ((entry = readdir(proc))) {
 		if (entry->d_type != DT_DIR) continue;
 
-		if (! is_number (entry->d_name)) continue;
+		if (!is_number(entry->d_name)) continue;
 
 		char dirname[10 + MAX_PID_LENGTH] = {0};
         size_t dirlen = 10 + MAX_PID_LENGTH;
         string strPid = entry->d_name;
         snprintf(dirname, dirlen, "/proc/%s/fd", strPid.c_str());
-
         DIR * dir = opendir(dirname);
         if (!dir)
         {
@@ -731,7 +730,6 @@ void ProcessNetwork::refreshProcNetInfo()
         while ((entryFd = readdir(dir))) {
             if (entryFd->d_type != DT_LNK)
                 continue;
-
             size_t fromlen = 256;
             char fromname[256] = {0};
             string strFd = entryFd->d_name;
@@ -799,14 +797,19 @@ void ProcessNetwork::checkProcessInfo()
 
 bool ProcessNetwork::isPacketOutgoing(ProcessNetPacket& procNetPacket)
 {
+    if (procNetPacket.dir != dir_unknown) {
+        return procNetPacket.dir == dir_outgoing;
+    }
     bool islocal = false;
     if (procNetPacket.sa_family == AF_INET)
         islocal = localAddrContains(procNetPacket.sip.s_addr);
     else
         islocal = localAddrContains(procNetPacket.sip6);
     if (islocal) {
+        procNetPacket.dir = dir_outgoing;
         return true;
     } else {
+        procNetPacket.dir = dir_incoming;
         return false;
     }
 }
@@ -841,13 +844,13 @@ void ProcessNetwork::run()
     while (!m_isStoped && !m_mapNetDeviceHandle.empty()) { // main loop
         bool packets_read = false;
         quint64 curTickCount = QDateTime::currentDateTime().toMSecsSinceEpoch();
-        if (curTickCount-m_refreshProcNetInfoTick > 2000) {
+        if (curTickCount-m_refreshProcNetInfoTick > 1000) {
             m_refreshProcNetInfoTick = curTickCount;
-            // fresh process net info
-            // refreshConnINodes();
+            // fresh connection inodes
+            refreshConnINodes();
             // refreshProcNetInfo();
         }
-        
+
         map<string, dp_handle*>::iterator itNetDevHandle = m_mapNetDeviceHandle.begin();
         while (itNetDevHandle != m_mapNetDeviceHandle.end()) {
             m_tempNetPacket.strDevName = itNetDevHandle->first;
@@ -868,7 +871,7 @@ void ProcessNetwork::run()
 
         // If no packets were read at all this iteration, pause to prevent 100% CPU utilisation
         if (!packets_read) {
-            usleep(500);
+            usleep(1000);
         }
         if (curTickCount-m_updateProcNetInfoTick > 2000) {
             m_updateProcNetInfoTick = curTickCount;

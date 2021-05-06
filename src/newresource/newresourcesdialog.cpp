@@ -291,7 +291,7 @@ NewResouresDialog::NewResouresDialog(QWidget *parent)
 //network connect
     connect(this,SIGNAL(updateNetworkStatus(quint64,quint64,quint64,quint64)),this,SLOT(networkSetText(quint64,quint64,quint64,quint64)));
     connect(this,SIGNAL(updateNetworkStatus(quint64,quint64,quint64,quint64)),networkChart,SLOT(onUpdateDownloadAndUploadData(quint64,quint64,quint64,quint64)));
-    updateStatusTimer->start(500);
+    updateStatusTimer->start(1000);
 }
 
 void NewResouresDialog::getsetFontSize(int fSize,QLabel *label)
