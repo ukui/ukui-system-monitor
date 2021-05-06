@@ -26,6 +26,7 @@
 
 #include <glib.h>
 #include <QMap>
+#include <QList>
 #include <QIcon>
 #include <QPixmap>
 #include <QReadWriteLock>
@@ -195,6 +196,7 @@ public:
     void disconnectNetStateRefresh();
     void stopScanProcess();
     void startScanProcess();
+    bool isShellCmd(QString strCmd);
 
 public slots:
     void refreshLine(const QString& procname, quint64 rcv, quint64 sent, int pid, unsigned int uid, const QString& devname);
@@ -230,6 +232,7 @@ private:
     QString m_strFilter = "all";
     bool m_isScanStoped = false;
     QReadWriteLock m_lockReadWrite;
+    QList<QString> m_shellList {}; // list of shell commands
 };
 
 } // namespace process

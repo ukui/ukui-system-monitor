@@ -664,6 +664,27 @@ ProcessList::ProcessList(QObject* parent)
 
     connect(procNetThread, SIGNAL(procDetected(const QString &, quint64 , quint64 , int , unsigned int , const QString&)),
              this, SLOT(refreshLine(const QString &, quint64 , quint64 , int, unsigned int , const QString&)));
+
+    // fill shell list
+    [ = ] {
+        FILE *fp;
+        fp = fopen("/etc/shells", "r");
+        if (fp)
+        {
+            char buf[128] {};
+            char *s;
+            while ((s = fgets(buf, 128, fp))) {
+                if (s[0] == '/') {
+                    auto sh = QLatin1String(basename(s));
+                    if (sh.endsWith('\n'))
+                        sh.chop(1);
+                    if (!m_shellList.contains(sh)) {
+                        m_shellList << sh;
+                    }
+                }
+            }
+        }
+    }();
 }
 
 ProcessList::~ProcessList()
@@ -988,6 +1009,13 @@ void ProcessList::refreshLine(const QString &procname, quint64 rcv, quint64 sent
         m_set[pid].setFlowNetDesc(addFlownetPerSec);
     }
     m_lockReadWrite.unlock();
+}
+
+bool ProcessList::isShellCmd(QString strCmd)
+{
+    if (strCmd.isEmpty())
+        return false;
+    return m_shellList.contains(strCmd);
 }
 
 } // namespace process
