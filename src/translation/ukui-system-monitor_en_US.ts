@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="ru_RU">
+<TS version="2.1" language="en_US">
 <context>
     <name>FileSystemModel</name>
     <message>
@@ -192,7 +192,7 @@
         <location filename="../newresource/newresourcesdialog.cpp" line="329"/>
         <location filename="../newresource/newresourcesdialog.cpp" line="330"/>
         <source>KiB</source>
-        <translation type="unfinished"></translation>
+        <translation>KB</translation>
     </message>
     <message>
         <location filename="../newresource/newresourcesdialog.cpp" line="355"/>
@@ -232,7 +232,7 @@
         <location filename="../newresource/newresourcesdialog.cpp" line="517"/>
         <location filename="../newresource/newresourcesdialog.cpp" line="531"/>
         <source>GiB</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">GB</translation>
     </message>
     <message>
         <location filename="../newresource/newresourcesdialog.cpp" line="541"/>
@@ -413,7 +413,7 @@
     <message>
         <location filename="../gui/processtableview.cpp" line="661"/>
         <source>End the selected process &quot;%1&quot;(PID:%2)?</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">End the selected process &quot;%1&quot;(PID:%2)?</translation>
     </message>
     <message>
         <location filename="../gui/processtableview.cpp" line="662"/>
@@ -430,7 +430,7 @@ Are you sure to continue?</source>
     <message>
         <location filename="../gui/processtableview.cpp" line="686"/>
         <source>Kill the selected process &quot;%1&quot;(PID:%2)?</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Kill the selected process &quot;%1&quot;(PID:%2)?</translation>
     </message>
     <message>
         <location filename="../gui/processtableview.cpp" line="687"/>
@@ -441,6 +441,76 @@ Are you sure to continue?</source>
 </context>
 <context>
     <name>QObject</name>
+    <message>
+        <location filename="../newresource/newresourcesdialog.cpp" line="78"/>
+        <location filename="../newresource/newresourcesdialog.cpp" line="220"/>
+        <source>KiB</source>
+        <translation>KB</translation>
+    </message>
+    <message>
+        <location filename="../model/processtablemodel.cpp" line="50"/>
+        <location filename="../newresource/newresourcesdialog.cpp" line="83"/>
+        <location filename="../newresource/newresourcesdialog.cpp" line="226"/>
+        <source>MiB</source>
+        <translation>MB</translation>
+    </message>
+    <message>
+        <location filename="../newresource/newresourcesdialog.cpp" line="88"/>
+        <location filename="../newresource/newresourcesdialog.cpp" line="232"/>
+        <source>GiB</source>
+        <translation>GB</translation>
+    </message>
+    <message>
+        <location filename="../newresource/newresourcesdialog.cpp" line="93"/>
+        <location filename="../newresource/newresourcesdialog.cpp" line="238"/>
+        <source>TiB</source>
+        <translation>TB</translation>
+    </message>
+    <message>
+        <location filename="../newresource/newresourcesdialog.cpp" line="222"/>
+        <source>KiB/s</source>
+        <translation>KB/s</translation>
+    </message>
+    <message>
+        <location filename="../newresource/newresourcesdialog.cpp" line="228"/>
+        <source>MiB/s</source>
+        <translation>MB/s</translation>
+    </message>
+    <message>
+        <location filename="../newresource/newresourcesdialog.cpp" line="234"/>
+        <source>GiB/s</source>
+        <translation>GB/s</translation>
+    </message>
+    <message>
+        <location filename="../newresource/newresourcesdialog.cpp" line="240"/>
+        <source>TiB/s</source>
+        <translation>TB/s</translation>
+    </message>
+    <message>
+        <location filename="../gui/procpropertiesdlg.cpp" line="166"/>
+        <source>User name:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../gui/procpropertiesdlg.cpp" line="166"/>
+        <source>Process name:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../gui/procpropertiesdlg.cpp" line="166"/>
+        <source>Command line:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../gui/procpropertiesdlg.cpp" line="166"/>
+        <source>CPU Time:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../gui/procpropertiesdlg.cpp" line="166"/>
+        <source>Started Time:</source>
+        <translation type="unfinished"></translation>
+    </message>
     <message>
         <location filename="../util.cpp" line="388"/>
         <source>Running</source>
@@ -520,76 +590,6 @@ Are you sure to continue?</source>
     <message>
         <location filename="../util.cpp" line="436"/>
         <source>Very Low Priority</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../newresource/newresourcesdialog.cpp" line="78"/>
-        <location filename="../newresource/newresourcesdialog.cpp" line="220"/>
-        <source>KiB</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../newresource/newresourcesdialog.cpp" line="222"/>
-        <source>KiB/s</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../model/processtablemodel.cpp" line="50"/>
-        <location filename="../newresource/newresourcesdialog.cpp" line="83"/>
-        <location filename="../newresource/newresourcesdialog.cpp" line="226"/>
-        <source>MiB</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../newresource/newresourcesdialog.cpp" line="228"/>
-        <source>MiB/s</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../newresource/newresourcesdialog.cpp" line="88"/>
-        <location filename="../newresource/newresourcesdialog.cpp" line="232"/>
-        <source>GiB</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../newresource/newresourcesdialog.cpp" line="234"/>
-        <source>GiB/s</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../newresource/newresourcesdialog.cpp" line="93"/>
-        <location filename="../newresource/newresourcesdialog.cpp" line="238"/>
-        <source>TiB</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../newresource/newresourcesdialog.cpp" line="240"/>
-        <source>TiB/s</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../gui/procpropertiesdlg.cpp" line="166"/>
-        <source>User name:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../gui/procpropertiesdlg.cpp" line="166"/>
-        <source>Process name:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../gui/procpropertiesdlg.cpp" line="166"/>
-        <source>Command line:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../gui/procpropertiesdlg.cpp" line="166"/>
-        <source>CPU Time:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../gui/procpropertiesdlg.cpp" line="166"/>
-        <source>Started Time:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

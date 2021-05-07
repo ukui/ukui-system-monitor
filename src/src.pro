@@ -190,4 +190,5 @@ TRANSLATIONS += \
     translation/ukui-system-monitor_fr.ts \
     translation/ukui-system-monitor_ru.ts \
     translation/ukui-system-monitor_tr.ts \
-    translation/ukui-system-monitor_zh_CN.ts
+    translation/ukui-system-monitor_zh_CN.ts \
+    translation/ukui-system-monitor_en_US.ts

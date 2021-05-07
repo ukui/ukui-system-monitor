@@ -17,6 +17,8 @@
         <file>translation/ukui-system-monitor_tr.ts</file>
         <file>translation/ukui-system-monitor_zh_CN.qm</file>
         <file>translation/ukui-system-monitor_zh_CN.ts</file>
+        <file>translation/ukui-system-monitor_en_US.qm</file>
+        <file>translation/ukui-system-monitor_en_US.ts</file>
         <file>img/user_proc.png</file>
         <file>img/all_proc.png</file>
         <file>img/active_proc.png</file>

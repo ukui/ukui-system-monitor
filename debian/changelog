@@ -1,3 +1,13 @@
+ukui-system-monitor (2.0.5-2) v101; urgency=medium
+
+  * BUG号：51334 资源界面的监控图，网络历史图纵轴的数量与实际的数据不匹配;
+           50286 活动进程未能一直显示正在进行中的进程;
+           51503 进程名称中存在部分应用名称为英文，建议完善
+  * 需求号：29209 修改自研软件名称 （中文）系统监视器 （英文）System Monitor
+  * 其他改动说明：无
+ 
+ -- Yang Min <yangmin@kylinos.cn>  Fri, 07 May 2021 16:49:28 +0800
+
 ukui-system-monitor (2.0.5-1) v101; urgency=medium
 
   * 增加功能：接入日志sdk
