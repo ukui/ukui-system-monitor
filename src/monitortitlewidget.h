@@ -30,6 +30,7 @@
 #include <QPropertyAnimation>
 #include <QToolButton>
 #include <QtDBus/QtDBus>
+#include <QLineEdit>
 
 #include "shell/customstyle.h"
 #include "../shell/macro.h"
@@ -39,8 +40,6 @@ class QVBoxLayout;
 class QHBoxLayout;
 class QLabel;
 class QPushButton;
-class MySearchEdit;
-class MyTristateButton;
 
 class MonitorTitleWidget : public QFrame
 {
@@ -98,7 +97,6 @@ private:
     QEasingCurve m_hideCurve;
     QEasingCurve m_showCurve;
     QSettings *proSettings;
-    MySearchEdit *m_searchEdit = nullptr;
     QLineEdit *m_searchEditNew = nullptr;
     QWidget *m_queryWid=nullptr;
     QLabel *m_queryIcon=nullptr;
@@ -115,7 +113,6 @@ private:
     QHBoxLayout *m_titleLeftLayout = nullptr;
     QHBoxLayout *m_toolLeftLayout = nullptr;
     QHBoxLayout *m_toolRightLayout = nullptr;
-    MyTristateButton *maxBtn = nullptr;
     QWidget *buttonWidget = nullptr;
     QPushButton *m_processButton = nullptr;
     QPushButton *m_resourceButton = nullptr;
@@ -127,6 +124,7 @@ private:
     QWidget *emptyWidget2 = nullptr;
     QRectF m_rectSeachAnimationBegin;
     QRectF m_rectSeachAnimationEnd;
+    QMenu *m_toolMenu = nullptr;
 
     float fontSize;
 

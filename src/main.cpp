@@ -54,7 +54,8 @@ int main(int argc, char *argv[])
 
         QString locale = QLocale::system().name();
         QTranslator translator;
-        if(locale == "zh_CN" || locale == "es" || locale == "fr" || locale == "de" || locale == "ru") {//中文 西班牙语 法语 德语 俄语
+        if(locale == "zh_CN" || locale == "es" || locale == "fr" || locale == "de" 
+            || locale == "ru" || locale == "en_US") {//中文 西班牙语 法语 德语 俄语 英语
             if(!translator.load("ukui-system-monitor_" + locale + ".qm",
                                 ":/translation/"))
                 qDebug() << "Load translation file："<< "ukui-system-monitor_" + locale + ".qm" << " failed!";

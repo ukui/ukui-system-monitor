@@ -19,9 +19,6 @@
  */
 
 #include "monitortitlewidget.h"
-#include "../widgets/mytristatebutton.h"
-#include "../widgets/myunderlinebutton.h"
-#include "../widgets/mysearchedit.h"
 #include "../shell/macro.h"
 #include "util.h"
 
@@ -206,10 +203,6 @@ MonitorTitleWidget::~MonitorTitleWidget()
     if (emptyLabel) {
         delete emptyLabel;
         emptyLabel = nullptr;
-    }
-    if (maxBtn) {
-        delete maxBtn;
-        maxBtn = nullptr;
     }
 
     if (m_searchTimer) {
@@ -434,15 +427,15 @@ void MonitorTitleWidget::initTitlebarRightContent()
     menuBtn->setFixedSize(30,30);
     menuBtn->setAutoRaise(true);
 //    connect(menuBtn, SIGNAL(clicked()), this, SLOT(onMinBtnClicked()));
-    QMenu *btnMenu = new QMenu(this);
+    m_toolMenu = new QMenu(this);
     QMenu *themeMenu = new QMenu(tr("theme"));
-    QAction *helpAction = new QAction(tr("help"),btnMenu);
-    QAction *aboutAction = new QAction(tr("about"),btnMenu);
-    QAction *quitAction = new QAction(tr("quit"),btnMenu);
+    QAction *helpAction = new QAction(tr("help"),m_toolMenu);
+    QAction *aboutAction = new QAction(tr("about"),m_toolMenu);
+    QAction *quitAction = new QAction(tr("quit"),m_toolMenu);
     actions <<helpAction <<aboutAction << quitAction;
-//    btnMenu->addMenu(themeMenu);
-    btnMenu->addActions(actions);
-    menuBtn->setMenu(btnMenu);
+//    m_toolMenu->addMenu(themeMenu);
+    m_toolMenu->addActions(actions);
+    menuBtn->setMenu(m_toolMenu);
     menuBtn->setPopupMode(QToolButton::InstantPopup);
 
     QList<QAction *>themeactions;
@@ -722,7 +715,6 @@ void MonitorTitleWidget::onThemeFontChange(unsigned uFontSize)
 
 void MonitorTitleWidget::initToolbarRightContent()
 {
-//    connect(m_searchEdit, &MySearchEdit::textChanged, this, &MonitorTitleWidget::handleSearchTextChanged, Qt::QueuedConnection);
     connect(m_searchEditNew,&QLineEdit::textChanged,this,&MonitorTitleWidget::handleSearchTextChanged,Qt::QueuedConnection);
 
     emptyWidget2 = new QWidget();

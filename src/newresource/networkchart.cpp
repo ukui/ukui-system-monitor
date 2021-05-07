@@ -134,9 +134,9 @@ void NetWorkChart::paintEvent(QPaintEvent *event)
     QWidget::paintEvent(event);
 }
 
-void NetWorkChart::onUpdateDownloadAndUploadData(long recvTotalBytes, long sentTotalBytes, long recvRateBytes, long sentRateBytes)
+void NetWorkChart::onUpdateDownloadAndUploadData(quint64 recvTotalBytes, quint64 sentTotalBytes, quint64 recvRateBytes, quint64 sentRateBytes)
 {
-    double lfMaxNetSpeed = 0;
+    quint64 lluMaxNetSpeed = 0;
     m_downLoadList.append(recvRateBytes);
     while (m_downLoadList.size() > m_pointsCount) {
         m_downLoadList.pop_front();
@@ -147,30 +147,44 @@ void NetWorkChart::onUpdateDownloadAndUploadData(long recvTotalBytes, long sentT
     }
 
     for (int n = 0; n < m_downLoadList.size(); n++) {
-        if (lfMaxNetSpeed<m_downLoadList[n]) {
-            lfMaxNetSpeed = m_downLoadList[n];
+        if (lluMaxNetSpeed<m_downLoadList[n]) {
+            lluMaxNetSpeed = m_downLoadList[n];
         }
-        if (lfMaxNetSpeed<m_upLoadList[n]) {
-            lfMaxNetSpeed = m_upLoadList[n];
+        if (lluMaxNetSpeed<m_upLoadList[n]) {
+            lluMaxNetSpeed = m_upLoadList[n];
         }
     }
 
-    if (lfMaxNetSpeed < 20 * 1024) {
+    if (lluMaxNetSpeed < 20 * 1024) {
         m_curMaxLoadSpeed = 20 * 1024;
-    } else if (lfMaxNetSpeed >= 20 *1024 && lfMaxNetSpeed < 100 * 1024) {
+    } else if (lluMaxNetSpeed >= 20 *1024 && lluMaxNetSpeed < 100 * 1024) {
         m_curMaxLoadSpeed = 100 * 1024;
-    } else if (lfMaxNetSpeed >= 100 *1024 && lfMaxNetSpeed < 500 * 1024) {
+    } else if (lluMaxNetSpeed >= 100 *1024 && lluMaxNetSpeed < 500 * 1024) {
         m_curMaxLoadSpeed = 500 * 1024;
-    } else if (lfMaxNetSpeed >= 500 *1024 && lfMaxNetSpeed < 1 * 1024 * 1024) {
+    } else if (lluMaxNetSpeed >= 500 *1024 && lluMaxNetSpeed < 1 * 1024 * 1024) {
         m_curMaxLoadSpeed = 1 * 1024 * 1024;
-    } else if (lfMaxNetSpeed >= 1 * 1024 * 1024 && lfMaxNetSpeed < 2 * 1024 * 1024) {
+    } else if (lluMaxNetSpeed >= 1 * 1024 * 1024 && lluMaxNetSpeed < 2 * 1024 * 1024) {
         m_curMaxLoadSpeed = 2 * 1024 * 1024;
-    } else if (lfMaxNetSpeed >= 2 * 1024 * 1024 && lfMaxNetSpeed < 4 * 1024 * 1024) {
+    } else if (lluMaxNetSpeed >= 2 * 1024 * 1024 && lluMaxNetSpeed < 4 * 1024 * 1024) {
         m_curMaxLoadSpeed = 4 * 1024 * 1024;
-    } else if (lfMaxNetSpeed >= 4 * 1024 * 1024 && lfMaxNetSpeed < 8 * 1024 * 1024) {
+    } else if (lluMaxNetSpeed >= 4 * 1024 * 1024 && lluMaxNetSpeed < 8 * 1024 * 1024) {
         m_curMaxLoadSpeed = 8 * 1024 * 1024;
-    } else {
+    } else if (lluMaxNetSpeed >= 8 * 1024 * 1024 && lluMaxNetSpeed < 16 * 1024 * 1024) {
         m_curMaxLoadSpeed = 16 * 1024 * 1024;
+    } else if (lluMaxNetSpeed >= 16 * 1024 * 1024 && lluMaxNetSpeed < 32 * 1024 * 1024) {
+        m_curMaxLoadSpeed = 32 * 1024 * 1024;
+    } else if (lluMaxNetSpeed >= 32 * 1024 * 1024 && lluMaxNetSpeed < 64 * 1024 * 1024) {
+        m_curMaxLoadSpeed = 64 * 1024 * 1024;
+    } else if (lluMaxNetSpeed >= 64 * 1024 * 1024 && lluMaxNetSpeed < 128 * 1024 * 1024) {
+        m_curMaxLoadSpeed = 128 * 1024 * 1024;
+    } else if (lluMaxNetSpeed >= 128 * 1024 * 1024 && lluMaxNetSpeed < 256 * 1024 * 1024) {
+        m_curMaxLoadSpeed = 256 * 1024 * 1024;
+    } else if (lluMaxNetSpeed >= 256 * 1024 * 1024 && lluMaxNetSpeed < 512 * 1024 * 1024) {
+        m_curMaxLoadSpeed = 512 * 1024 * 1024;
+    } else if (lluMaxNetSpeed >= 512 * 1024 * 1024 && lluMaxNetSpeed < 1024 * 1024 * 1024) {
+        m_curMaxLoadSpeed = (quint64)1024 * 1024 * 1024;
+    } else {
+        m_curMaxLoadSpeed = (quint64)2 * 1024 * 1024 * 1024;
     }
     emit this->speedToDynamicMax(m_curMaxLoadSpeed);
 }

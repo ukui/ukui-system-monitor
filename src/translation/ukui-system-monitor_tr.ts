@@ -348,7 +348,7 @@
     <message>
         <location filename="../monitortitlewidget.cpp" line="392"/>
         <source>Kylin System Monitor</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">System Monitor</translation>
     </message>
     <message>
         <location filename="../monitortitlewidget.cpp" line="428"/>
@@ -1216,7 +1216,7 @@ Devam etmek istediğinizden emin misiniz?</translation>
     <message>
         <location filename="../systemmonitor.cpp" line="74"/>
         <source>Kylin System Monitor</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">System Monitor</translation>
     </message>
 </context>
 <context>
@@ -1243,7 +1243,7 @@ Devam etmek istediğinizden emin misiniz?</translation>
         <location filename="../newaboutdialog.cpp" line="45"/>
         <location filename="../newaboutdialog.cpp" line="84"/>
         <source>Kylin System Monitor</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">System Monitor</translation>
     </message>
     <message>
         <location filename="../newaboutdialog.cpp" line="94"/>
@@ -1253,7 +1253,7 @@ Devam etmek istediğinizden emin misiniz?</translation>
     <message>
         <location filename="../newaboutdialog.cpp" line="123"/>
         <source>kylin system monitor</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">System Monitor</translation>
     </message>
     <message>
         <location filename="../newaboutdialog.cpp" line="144"/>

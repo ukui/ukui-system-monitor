@@ -56,7 +56,7 @@ ProcessTableView::ProcessTableView(QSettings* proSettings, QWidget *parent)
 {
     // install event filter for table view to handle key events
     installEventFilter(this);
-
+    this->setProperty("useIconHighlightEffect", 0x2);
     // model & sort filter proxy model instance
     m_model = new ProcessTableModel(this);
     m_proxyModel = new ProcessSortFilterProxyModel(this);

@@ -1,6 +1,6 @@
-# Kylin System Monitor
+# System Monitor
 ## Overview
-Kylin System Monitor is a professional application for monitoring system processes, system resources and file systems on domestic Galaxy Kylin and Ukylin. Through its concise and clear interface, it can intuitively display system-related information that users want to find.
+System Monitor is a professional application for monitoring system processes, system resources and file systems on domestic Galaxy Kylin and Ukylin. Through its concise and clear interface, it can intuitively display system-related information that users want to find.
 
 ![Fig 1 Kylin System Monitor-big](image/1.png)
 <br>

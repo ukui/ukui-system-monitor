@@ -93,4 +93,7 @@ enum SIGTYPE
     YELLOWTYPE
 };
 
+// custom proc map config
+#define UKUI_SYSTEM_MONITOR_CONF  "/usr/share/ukui/ukui-system-monitor.conf"
+
 #endif

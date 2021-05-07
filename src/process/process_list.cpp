@@ -658,13 +658,33 @@ ProcessList::ProcessList(QObject* parent)
     : QObject(parent), m_set {}
 {
     glibtop_init();
-    DesktopFileInfo::instance()->readAllDesktopFileInfo();
     this->num_cpus = glibtop_get_sysinfo()->ncpu;
     procNetThread = new ProcessNetwork(this);
     procNetThread->start(QThread::LowPriority);
 
     connect(procNetThread, SIGNAL(procDetected(const QString &, quint64 , quint64 , int , unsigned int , const QString&)),
              this, SLOT(refreshLine(const QString &, quint64 , quint64 , int, unsigned int , const QString&)));
+
+    // fill shell list
+    [ = ] {
+        FILE *fp;
+        fp = fopen("/etc/shells", "r");
+        if (fp)
+        {
+            char buf[128] {};
+            char *s;
+            while ((s = fgets(buf, 128, fp))) {
+                if (s[0] == '/') {
+                    auto sh = QLatin1String(basename(s));
+                    if (sh.endsWith('\n'))
+                        sh.chop(1);
+                    if (!m_shellList.contains(sh)) {
+                        m_shellList << sh;
+                    }
+                }
+            }
+        }
+    }();
 }
 
 ProcessList::~ProcessList()
@@ -726,6 +746,7 @@ void ProcessList::scanProcess()
     glibtop_proclist proclist;
     int which = 0;
     int arg = 0;
+    bool bFilterActive = false;
 
     m_lockReadWrite.lockForRead();
     if (m_strFilter == "all")
@@ -735,7 +756,8 @@ void ProcessList::scanProcess()
     }
     else if (m_strFilter == "active")
     {
-        which = GLIBTOP_KERN_PROC_ALL | GLIBTOP_EXCLUDE_IDLE;
+        which = GLIBTOP_KERN_PROC_ALL /*| GLIBTOP_EXCLUDE_IDLE*/;
+        bFilterActive = true;
         arg = 0;
     }
     else if (m_strFilter == "user")
@@ -827,8 +849,14 @@ void ProcessList::scanProcess()
 
         // check cpu time
         if (!m_isScanStoped) {
-            if (oldProcInfo.isValid() && proc.getProcCpuTime() >= oldProcInfo.getProcCpuTime()) {
+            if (oldProcInfo.isValid()) {
                 proc.setProcCpuTime(oldProcInfo.getProcCpuTime());
+            } else {
+                if (m_mapCpuTimes.contains(pidCur) && proctime.rtime >= m_mapCpuTimes[pidCur]) {
+                    proc.setProcCpuTime(m_mapCpuTimes[pidCur]);
+                } else {
+                    proc.setProcCpuTime(proctime.rtime);
+                }
             }
         }
 
@@ -847,6 +875,7 @@ void ProcessList::scanProcess()
 //        CPU 百分比使用 Solaris 模式，工作在“Solaris 模式”，其中任务的 CPU 使用量将被除以总的 CPU 数目。否则它将工作在“Irix 模式”。
         proc.setFrequency(cpu.frequency);
         proc.setProcCpuTime(proctime.rtime);
+        m_mapCpuTimes[pidCur] = proctime.rtime;
         proc.setNice(procuid.nice);
 
         // disk io
@@ -893,6 +922,12 @@ void ProcessList::scanProcess()
         proc.setProcCpuDurationTime(formatDurationForDisplay(100 * proc.getProcCpuTime() / proc.getFrequency()));
         proc.setProcStatus(formatProcessState(proc.getStatus()));
         if (proc.getStatus() == GLIBTOP_PROCESS_ZOMBIE) {
+            if (m_set.contains(proc.pid())) {
+                m_lockReadWrite.unlock();
+                removeProcess(proc.pid());
+                m_lockReadWrite.lockForWrite();
+            }
+        } else if (bFilterActive && proc.getStatus() != GLIBTOP_PROCESS_RUNNING) {
             if (m_set.contains(proc.pid())) {
                 m_lockReadWrite.unlock();
                 removeProcess(proc.pid());
@@ -974,6 +1009,13 @@ void ProcessList::refreshLine(const QString &procname, quint64 rcv, quint64 sent
         m_set[pid].setFlowNetDesc(addFlownetPerSec);
     }
     m_lockReadWrite.unlock();
+}
+
+bool ProcessList::isShellCmd(QString strCmd)
+{
+    if (strCmd.isEmpty())
+        return false;
+    return m_shellList.contains(strCmd);
 }
 
 } // namespace process

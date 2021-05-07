@@ -30,8 +30,6 @@ class QLabel;
 class QSlider;
 class QPushButton;
 
-#include "../component/mytitlebar.h"
-
 class ReniceDialog : public QDialog
 {
     Q_OBJECT
@@ -60,7 +58,6 @@ private:
 
 private:
     QVBoxLayout *m_mainLayout = nullptr;
-    MyTitleBar *m_titleBar = nullptr;
 
     QHBoxLayout *h_layout = nullptr;
     QHBoxLayout *tip_layout = nullptr;

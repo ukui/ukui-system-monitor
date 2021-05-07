@@ -155,6 +155,7 @@ private:
     QList<pid_t> m_procIdList; // pid list
     QList<sysmonitor::process::Process> m_processList; // pid list
     QMap<QString,QPixmap> m_procIconMap; // icon map
+    QIcon m_defaultIcon {};
 };
 
 #endif  // __PROCESS_TABLE_MODEL_H__

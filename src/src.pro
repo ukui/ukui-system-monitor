@@ -35,6 +35,9 @@ ICON.path = /usr/share/icons/hicolor/
 desktop.files += ../ukui-system-monitor.desktop
 desktop.path = /usr/share/applications/
 
+config.files += ../ukui-system-monitor.conf
+config.path = /usr/share/ukui/
+
 target.source += $$TARGET
 target.path = /usr/bin
 
@@ -61,7 +64,8 @@ INSTALLS += target \
             ICON \
             userguidemd \
             userguidepng \
-            enuserguidemd
+            enuserguidemd \
+            config
 
 unix {
     UI_DIR = .ui
@@ -77,19 +81,14 @@ HEADERS += \
     util.h \
     ../component/utils.h \
     ../widgets/mydialog.h \
-    ../widgets/mytristatebutton.h \
-    ../widgets/myunderlinebutton.h \
-    ../widgets/myhoverbutton.h \
     ../widgets/myactiongroup.h \
     ../widgets/myactiongroupitem.h \
     ../widgets/myaction.h \
     monitortitlewidget.h \
     filesystem/filesystemworker.h \
     filesystem/filesystemdata.h \
-    ../widgets/mysearchedit.h \
     filesystem/filesystemwatcher.h \
     renicedialog.h \
-    ../component/mytitlebar.h \
     framelessExtended/cursorposcalculator.h \
     framelessExtended/framelesshandle.h \
     framelessExtended/framelesshandleprivate.h \
@@ -135,19 +134,14 @@ SOURCES += \
     linebandwith.cpp \
     util.cpp \
     ../widgets/mydialog.cpp \
-    ../widgets/mytristatebutton.cpp \
-    ../widgets/myunderlinebutton.cpp \
-    ../widgets/myhoverbutton.cpp \
     ../widgets/myactiongroup.cpp \
     ../widgets/myactiongroupitem.cpp \
     ../widgets/myaction.cpp \
     monitortitlewidget.cpp \
     filesystem/filesystemworker.cpp \
     filesystem/filesystemdata.cpp \
-    ../widgets/mysearchedit.cpp \
     filesystem/filesystemwatcher.cpp \
     renicedialog.cpp \
-    ../component/mytitlebar.cpp \
     framelessExtended/cursorposcalculator.cpp \
     framelessExtended/framelesshandle.cpp \
     framelessExtended/widgethandlerealize.cpp \
@@ -196,4 +190,5 @@ TRANSLATIONS += \
     translation/ukui-system-monitor_fr.ts \
     translation/ukui-system-monitor_ru.ts \
     translation/ukui-system-monitor_tr.ts \
-    translation/ukui-system-monitor_zh_CN.ts
+    translation/ukui-system-monitor_zh_CN.ts \
+    translation/ukui-system-monitor_en_US.ts
