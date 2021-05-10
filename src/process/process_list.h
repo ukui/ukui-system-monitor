@@ -215,6 +215,7 @@ Q_SIGNALS:
 
 private:
     void scanProcess();
+    unsigned getCpuCount();
 
 private:
     QMap<pid_t, Process> m_set;

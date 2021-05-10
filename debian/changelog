@@ -1,3 +1,11 @@
+ukui-system-monitor (2.0.5-3) v101; urgency=medium
+
+  * BUG号：48973 系统监视器cpu占用率显示0
+  * 需求号：无
+  * 其他改动说明：无
+
+ -- Yang Min <yangmin@kylinos.cn>  Sat, 08 May 2021 15:43:29 +0800
+
 ukui-system-monitor (2.0.5-2) v101; urgency=medium
 
   * BUG号：51334 资源界面的监控图，网络历史图纵轴的数量与实际的数据不匹配;

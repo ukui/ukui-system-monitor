@@ -658,7 +658,7 @@ ProcessList::ProcessList(QObject* parent)
     : QObject(parent), m_set {}
 {
     glibtop_init();
-    this->num_cpus = glibtop_get_sysinfo()->ncpu;
+    this->num_cpus = getCpuCount();//glibtop_get_sysinfo()->ncpu;
     procNetThread = new ProcessNetwork(this);
     procNetThread->start(QThread::LowPriority);
 
@@ -939,6 +939,28 @@ void ProcessList::scanProcess()
         m_lockReadWrite.unlock();
     }
     g_free (pid_list);
+}
+
+unsigned ProcessList::getCpuCount()
+{
+    FILE* file = fopen("/proc/stat", "r");
+    if (file == NULL) {
+        qCritical("Cannot open /proc/stat!");
+        return 1;
+    }
+    unsigned cpus = 0;
+    do {
+        char buffer[4096+1] = {0};
+        if (fgets(buffer, 4096+1, file) == NULL) {
+            break;
+        } else if (g_str_has_prefix(buffer, "cpu")) {
+            cpus++;
+        }
+    } while(true);
+
+    fclose(file);
+    cpus = MAX(cpus - 1, 1);
+    return cpus;
 }
 
 Process ProcessList::getProcessById(pid_t pid)
