@@ -223,7 +223,7 @@ std::string getDesktopFileAccordProcName(QString procName, QString cmdline)
         if (dir.fileInfo().suffix() == "desktop") {
             if (dir.fileName().toLower().contains(processFilename)) {
                 desktopFile = dir.filePath().toStdString();
-//                std::cout<<"---desktopFile---"<<desktopFile<<std::endl;
+//                qDebug()<<"---desktopFile---"<<desktopFile<<std::endl;
                 break;
             }
         }

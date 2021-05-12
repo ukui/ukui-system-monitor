@@ -167,7 +167,7 @@ public:
 
     void UpdateProcInfo();
     QString calcDiskIoPerSec(qint64 nNewCount);
-    QString calcFlownetPerSec(qint64 nNewCount);
+    QString calcFlownetPerSec(double lfValue, bool isSpeed = false);
 
 private:
     void get_process_name(const gchar *cmd, const GStrv args);
@@ -199,7 +199,7 @@ public:
     bool isShellCmd(QString strCmd);
 
 public slots:
-    void refreshLine(const QString& procname, quint64 rcv, quint64 sent, int pid, unsigned int uid, const QString& devname);
+    void refreshLine(const QString& procname, double rcv, double sent, int pid, unsigned int uid, const QString& devname);
     void onClearAllProcess();
 
 Q_SIGNALS:

@@ -1,6 +1,9 @@
 TEMPLATE = subdirs
 
-CONFIG += ordered
+#CONFIG += ordered
 
 SUBDIRS = \
+    procnet-monitor \
     src \
+
+src.depends = procnet-monitor
