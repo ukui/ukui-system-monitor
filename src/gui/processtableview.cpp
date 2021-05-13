@@ -634,6 +634,7 @@ void ProcessTableView::showPropertiesDialog()
         if (qobject_cast<const ProcPropertiesDlg*>(widget) != 0) {
             ProcPropertiesDlg *dialog = qobject_cast<ProcPropertiesDlg*>(widget);
             if (dialog->getPid() == selectPid) {
+                dialog->setModal(true);
                 dialog->show();
                 return;
             }
@@ -641,8 +642,9 @@ void ProcessTableView::showPropertiesDialog()
     }
 
     ProcPropertiesDlg *dialog = new ProcPropertiesDlg(selectPid, this);
-    dialog->show();
     dialog->setAttribute(Qt::WA_DeleteOnClose);
+    dialog->setModal(true);
+    dialog->show();
 }
 
 // show end proc dialog
@@ -665,9 +667,10 @@ void ProcessTableView::showEndProcessDialog()
     endProcessDialog->addButton(QString(tr("Cancel")), false);
     endProcessDialog->addButton(QString(tr("End process")), true);
     connect(endProcessDialog, &MyDialog::buttonClicked, this, &ProcessTableView::endDialogButtonClicked);
-    endProcessDialog->show();
-    endProcessDialog->setAttribute(Qt::WA_DeleteOnClose);
     connect(this,&ProcessTableView::closeDialog,endProcessDialog,&MyDialog::onButtonClicked);
+    endProcessDialog->setAttribute(Qt::WA_DeleteOnClose);
+    endProcessDialog->setModal(true);
+    endProcessDialog->show();
 }
 
 // show kill proc dialog
@@ -690,9 +693,10 @@ void ProcessTableView::showKillProcessDialog()
     killProcessDialog->addButton(QString(tr("Cancel")), false);
     killProcessDialog->addButton(QString(tr("Kill process")), true);
     connect(killProcessDialog, &MyDialog::buttonClicked, this, &ProcessTableView::killDialogButtonClicked);
-    killProcessDialog->show();
-    killProcessDialog->setAttribute(Qt::WA_DeleteOnClose);
     connect(this,&ProcessTableView::closeDialog,killProcessDialog,&MyDialog::onButtonClicked);
+    killProcessDialog->setAttribute(Qt::WA_DeleteOnClose);
+    killProcessDialog->setModal(true);
+    killProcessDialog->show();
 }
 
 // on end dialog btn clicked
@@ -733,6 +737,7 @@ void ProcessTableView::changeProcPriority(int nice)
             connect(m_dlgRenice, &ReniceDialog::resetReniceValue, [=] (int value) {
                 this->changeProcPriority(value);
             });
+            m_dlgRenice->setModal(true);
             m_dlgRenice->show();
         }
     }

@@ -1226,6 +1226,10 @@ Kylin Team &lt;ubuntukylin-members@list.launchpad.net&gt;</source>
         <translation type="unfinished">全部进程</translation>
     </message>
     <message>
+        <source>Applications</source>
+        <translation type="unfinished">应用程序</translation>
+    </message>
+    <message>
         <source>Kylin System Monitor</source>
         <translation>系统监视器</translation>
     </message>
@@ -1382,7 +1386,11 @@ Kylin Team &lt;ubuntukylin-members@list.launchpad.net&gt;</source>
     </message>
     <message>
         <source>CPU history</source>
-        <translation type="unfinished">CPU历史</translation>
+        <translation type="unfinished">处理器历史</translation>
+    </message>
+    <message>
+        <source>CPU: </source>
+        <translation type="unfinished">处理器: </translation>
     </message>
     <message>
         <source>memory and swap history</source>
@@ -1558,7 +1566,7 @@ Are you sure to continue?</source>
     </message>
     <message>
         <source>Change Priority of Process %1 (PID: %2)</source>
-        <translation type="vanished">更改进程“%1”(PID：%2)的优先级</translation>
+        <translation type="vanished">更改进程“%1”(进程号：%2)的优先级</translation>
     </message>
 </context>
 <context>
@@ -1666,11 +1674,11 @@ Are you sure to continue?</source>
     </message>
     <message>
         <source>CPU</source>
-        <translation></translation>
+        <translation>处理器</translation>
     </message>
     <message>
         <source>ID</source>
-        <translation>ID</translation>
+        <translation>进程号</translation>
     </message>
     <message>
         <source>Flownet Persec</source>
@@ -1741,7 +1749,7 @@ Are you sure to continue?</source>
     </message>
     <message>
         <source>User</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">用户名</translation>
     </message>
     <message>
         <source>Disk</source>
@@ -1749,11 +1757,11 @@ Are you sure to continue?</source>
     </message>
     <message>
         <source>CPU</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">处理器</translation>
     </message>
     <message>
         <source>ID</source>
-        <translation type="unfinished">ID</translation>
+        <translation type="unfinished">进程号</translation>
     </message>
     <message>
         <source>Flownet Persec</source>
@@ -1785,15 +1793,15 @@ Are you sure to continue?</source>
     </message>
     <message>
         <source>Change Priority of Process %1 (PID: %2)</source>
-        <translation type="obsolete">更改进程“%1”(PID：%2)的优先级</translation>
+        <translation type="obsolete">更改进程“%1”(进程号：%2)的优先级</translation>
     </message>
     <message>
         <source>End the selected process &quot;%1&quot;(PID:%2)?</source>
-        <translation type="unfinished">结束所选进程 &quot;%1&quot;(PID:%2)?</translation>
+        <translation type="unfinished">结束所选进程 &quot;%1&quot;(进程号:%2)?</translation>
     </message>
     <message>
         <source>Kill the selected process &quot;%1&quot;(PID:%2)?</source>
-        <translation type="unfinished">杀死所选进程 &quot;%1&quot;(PID:%2)?</translation>
+        <translation type="unfinished">杀死所选进程 &quot;%1&quot;(进程号:%2)?</translation>
     </message>
 </context>
 <context>
@@ -2503,7 +2511,7 @@ Are you sure to continue?</source>
     </message>
     <message>
         <source>CPU Time:</source>
-        <translation>CPU 时间：</translation>
+        <translation>处理器时间：</translation>
     </message>
     <message>
         <source>Started Time:</source>
@@ -2530,7 +2538,7 @@ Are you sure to continue?</source>
     </message>
     <message>
         <source>The priority of a process is given by its nice value. A lower nice value corresponds to a higher priority.</source>
-        <translation>进程的优先级由它的 nice 值指定。较低的 nice 值对应较高的优先级。</translation>
+        <translation>进程的优先级由它的 Nice 值指定。较低的 Nice 值对应较高的优先级。</translation>
     </message>
     <message>
         <source>Cancel</source>
@@ -2542,7 +2550,7 @@ Are you sure to continue?</source>
     </message>
     <message>
         <source>Change Priority of Process %1 (PID: %2)</source>
-        <translation type="unfinished">更改进程“%1”(PID：%2)的优先级</translation>
+        <translation type="unfinished">更改进程“%1”(进程号：%2)的优先级</translation>
     </message>
 </context>
 <context>
