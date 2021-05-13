@@ -737,6 +737,7 @@ void ProcessTableView::changeProcPriority(int nice)
             connect(m_dlgRenice, &ReniceDialog::resetReniceValue, [=] (int value) {
                 this->changeProcPriority(value);
             });
+            m_dlgRenice->setAttribute(Qt::WA_DeleteOnClose);
             m_dlgRenice->setModal(true);
             m_dlgRenice->show();
         }

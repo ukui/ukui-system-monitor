@@ -72,7 +72,7 @@ SystemMonitor::SystemMonitor(QWidget *parent)
 
     this->setAutoFillBackground(true);
     this->setWindowTitle(tr("Kylin System Monitor"));
-    this->setWindowIcon(QIcon::fromTheme("ukui-system-monitor")); //control show img in panel
+    //this->setWindowIcon(QIcon::fromTheme("ukui-system-monitor")); //control show img in panel
     this->resize(MAINWINDOWWIDTH,MAINWINDOWHEIGHT);
     setMinimumSize(MAINWINDOWWIDTH, MAINWINDOWHEIGHT);  //set the minimum size of the mainwindow
 

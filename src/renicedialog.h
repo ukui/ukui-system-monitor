@@ -54,7 +54,7 @@ protected:
     void paintEvent(QPaintEvent *event);
 
 private:
-    void initFontSize();
+    void initThemeStyle();
 
 private:
     QVBoxLayout *m_mainLayout = nullptr;
@@ -69,10 +69,11 @@ private:
     QLabel *m_tipTitle = nullptr;
     QLabel *m_tipLabel = nullptr;
     QLabel *m_dlgTitleLable = nullptr;
+    QLabel *m_picTitleIcon = nullptr;
     QString m_strProcName;
     QString m_strProcId;
     qreal fontSize;
-    QGSettings *fontSettings;
+    QGSettings *styleSettings;
 
     QPushButton *m_cancelbtn = nullptr;
     QPushButton *m_changeBtn = nullptr;

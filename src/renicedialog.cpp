@@ -48,18 +48,17 @@ ReniceDialog::ReniceDialog(const QString &procName, const QString &procId, QWidg
     const QByteArray id(THEME_QT_SCHEMA);
     if(QGSettings::isSchemaInstalled(id))
     {
-        fontSettings = new QGSettings(id);
+        styleSettings = new QGSettings(id);
     }
 
-    initFontSize();
+    initThemeStyle();
 
     m_mainLayout = new QVBoxLayout(this);
     m_mainLayout->setContentsMargins(0,0,0,0);
     m_mainLayout->setSpacing(20);
     m_mainLayout->setMargin(0);
-    QLabel *picTitleIcon = new QLabel;
-    QPixmap pixmap("/usr/share/icons/hicolor/png/1-24*24/ukui-system-monitor.png");
-    picTitleIcon->setPixmap(pixmap);
+    m_picTitleIcon = new QLabel(this);
+    m_picTitleIcon->setPixmap(QIcon::fromTheme("ukui-system-monitor").pixmap(24,24));
     m_dlgTitleLable = new QLabel;
     m_strProcName = procName;
     m_strProcId = procId;
@@ -74,7 +73,7 @@ ReniceDialog::ReniceDialog(const QString &procName, const QString &procId, QWidg
     QHBoxLayout *title_H_BoxLayout = new QHBoxLayout();
     title_H_BoxLayout->setContentsMargins(5,5,5,0);
     title_H_BoxLayout->setSpacing(10);
-    title_H_BoxLayout->addWidget(picTitleIcon,0,Qt::AlignLeft);
+    title_H_BoxLayout->addWidget(m_picTitleIcon,0,Qt::AlignLeft);
     title_H_BoxLayout->addWidget(m_dlgTitleLable,0,Qt::AlignLeft);
     title_H_BoxLayout->addWidget(closeButton,0,Qt::AlignRight);
 
@@ -195,9 +194,9 @@ ReniceDialog::~ReniceDialog()
     }
 
     delete m_mainLayout;
-    if (fontSettings) {
-        delete fontSettings;
-        fontSettings = nullptr;
+    if (styleSettings) {
+        delete styleSettings;
+        styleSettings = nullptr;
     }
 }
 
@@ -287,21 +286,24 @@ void ReniceDialog::paintEvent(QPaintEvent *event)
     QDialog::paintEvent(event);
 }
 
-void ReniceDialog::initFontSize()
+void ReniceDialog::initThemeStyle()
 {
-    if (!fontSettings) {
+    if (!styleSettings) {
         fontSize = DEFAULT_FONT_SIZE;
         return;
     }
-    connect(fontSettings,&QGSettings::changed,[=](QString key)
+    connect(styleSettings,&QGSettings::changed,[=](QString key)
     {
         if("systemFont" == key || "systemFontSize" == key)
         {
-            fontSize = fontSettings->get(FONT_SIZE).toString().toFloat();
+            fontSize = styleSettings->get(FONT_SIZE).toString().toFloat();
             this->onThemeFontChange(fontSize);
+        } else if ("iconThemeName" == key) {
+            if (m_picTitleIcon)
+                m_picTitleIcon->setPixmap(QIcon::fromTheme("ukui-system-monitor").pixmap(24,24));
         }
     });
-    fontSize = fontSettings->get(FONT_SIZE).toString().toFloat();
+    fontSize = styleSettings->get(FONT_SIZE).toString().toFloat();
 }
 
 void ReniceDialog::onThemeFontChange(qreal lfFontSize)
