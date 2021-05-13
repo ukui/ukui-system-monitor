@@ -813,28 +813,17 @@ void MonitorTitleWidget::animationFinishedSlot()
 
 void MonitorTitleWidget::paintEvent(QPaintEvent *event)
 {
-    QRect rect = this->rect();
-    rect.setWidth(rect.width());
-    rect.setHeight(rect.height());
-    rect.setX(this->rect().x());
-    rect.setY(this->rect().y());
-    rect.setWidth(this->rect().width());
-    rect.setHeight(this->rect().height());
-
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);  // 反锯齿;
     painter.setClipping(true);
     painter.setPen(Qt::transparent);
 
     QPainterPath path;
-    path.addRoundedRect(this->rect(),6,6);
     path.setFillRule(Qt::WindingFill); // 多块区域组合填充模式
-    path.addRect(0,height() - 6 ,6,6);
-    path.addRect(width() - 6,height() -6 ,6,6);
+    path.addRect(this->rect());
 
     painter.setBrush(this->palette().base());
     painter.setPen(Qt::transparent);
-//    painter.setOpacity(m_transparency);
     painter.drawPath(path);
     QWidget::paintEvent(event);
 }

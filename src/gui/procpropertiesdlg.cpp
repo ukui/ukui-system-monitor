@@ -425,16 +425,13 @@ void ProcPropertiesDlg::mouseMoveEvent(QMouseEvent *event)
 
 void ProcPropertiesDlg::paintEvent(QPaintEvent *event)
 {
+    QPainterPath path;
     QPainter painter(this);
 
-    //绘制圆角矩形
-    painter.setPen(QPen(QColor("#808080"), 0));//边框颜色 #3f96e4
-//    painter.setPen(Qt::NoPen);
-    painter.setBrush(this->palette().base());//背景色
-    painter.setRenderHint(QPainter::Antialiasing, true);
-    painter.setOpacity(1);
-    QRectF r(0 / 2.0, 0 / 2.0, width() - 0, height() - 0);//左边 上边 右边 下边
-    painter.drawRoundedRect(r, 4, 4);
-
+    path.addRect(this->rect());
+    path.setFillRule(Qt::WindingFill);
+    painter.setBrush(this->palette().base());
+    painter.setPen(Qt::transparent);
+    painter.drawPath(path);
     QDialog::paintEvent(event);
 }

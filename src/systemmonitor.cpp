@@ -129,55 +129,6 @@ SystemMonitor::~SystemMonitor()
 
 void SystemMonitor::paintEvent(QPaintEvent *event)
 {
-/***********************************old main interface********************************
-    QPainter p(this);
-#if (QT_VERSION < QT_VERSION_CHECK(5,7,0))
-    p.setOpacity(0.95);
-#else
-    p.setOpacity(m_transparency);
-#endif
-    Q_UNUSED(event);
-
-    p.setRenderHint(QPainter::Antialiasing);
-    QPainterPath rectPath;
-//    rectPath.addRoundedRect(this->rect().adjusted(1, 1, -1, -1), 6, 6);
-    rectPath.addRect(this->rect());
-    // 画一个黑底
-    QPixmap pixmap(this->rect().size());
-    pixmap.fill(Qt::transparent);
-    QPainter pixmapPainter(&pixmap);
-    pixmapPainter.setRenderHint(QPainter::Antialiasing);
-    pixmapPainter.setPen(Qt::transparent);
-    pixmapPainter.setBrush(Qt::black);
-    pixmapPainter.drawPath(rectPath);
-    pixmapPainter.end();
-
-    // 模糊这个黑底
-    QImage img = pixmap.toImage();
-    qt_blurImage(img, 5, false, false);
-
-    // 挖掉中心
-    pixmap = QPixmap::fromImage(img);
-    QPainter pixmapPainter2(&pixmap);
-    pixmapPainter2.setRenderHint(QPainter::Antialiasing);
-    pixmapPainter2.setCompositionMode(QPainter::CompositionMode_Clear);
-    pixmapPainter2.setPen(Qt::transparent);
-    pixmapPainter2.setBrush(Qt::transparent);
-    pixmapPainter2.drawPath(rectPath);
-
-    // 绘制阴影
-    p.drawPixmap(this->rect(), pixmap, pixmap.rect());
-
-    // 绘制一个背景
-    p.save();
-    p.fillPath(rectPath,palette().color(QPalette::Base));
-    p.restore();
-
-    QStyleOption opt;
-    opt.init(this);
-    style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
-    KWindowEffects::enableBlurBehind(this->winId(),true,QRegion(rectPath.toFillPolygon().toPolygon()));
-******************************* old main interface paintEvent*********************************/
     QPainterPath path;
 
     QPainter painter(this);
@@ -186,21 +137,15 @@ void SystemMonitor::paintEvent(QPaintEvent *event)
     painter.setClipping(true);
     painter.setPen(Qt::transparent);
 
-    path.addRect(this->rect().adjusted(1, 1, -1, -1))/*, 6, 6)*/;
-//    path.addRoundedRect(QRectF(0,MONITOR_TITLE_WIDGET_HEIGHT, this->rect().width(),this->rect().height() - MONITOR_TITLE_WIDGET_HEIGHT).adjusted(1,1,-1,-1),6,6);
-
-//    path.addRect(width() - 6,MONITOR_TITLE_WIDGET_HEIGHT,6,6);
-//    path.addRect(0,MONITOR_TITLE_WIDGET_HEIGHT,6,6);
+    path.addRect(this->rect());
     path.setFillRule(Qt::WindingFill);
     painter.setBrush(this->palette().base());
     painter.setPen(Qt::transparent);
 
     painter.drawPath(path);
-//        setProperty("blurRegion", QRegion(path.toFillPolygon().toPolygon()));
     QStyleOption opt;
     opt.init(this);
     style()->drawPrimitive(QStyle::PE_Widget, &opt, &painter, this);
-    KWindowEffects::enableBlurBehind(this->winId(), true, QRegion(path.toFillPolygon().toPolygon()));
     QFrame::paintEvent(event);
 }
 
