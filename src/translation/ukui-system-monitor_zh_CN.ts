@@ -2530,7 +2530,7 @@ Are you sure to continue?</source>
     <name>ReniceDialog</name>
     <message>
         <source>Nice value:</source>
-        <translation>Nice 值：</translation>
+        <translation>优先值：</translation>
     </message>
     <message>
         <source>Note:</source>
@@ -2538,7 +2538,7 @@ Are you sure to continue?</source>
     </message>
     <message>
         <source>The priority of a process is given by its nice value. A lower nice value corresponds to a higher priority.</source>
-        <translation>进程的优先级由它的 Nice 值指定。较低的 Nice 值对应较高的优先级。</translation>
+        <translation>进程的优先级由它的优先值指定。较低的优先值对应较高的优先级。</translation>
     </message>
     <message>
         <source>Cancel</source>
