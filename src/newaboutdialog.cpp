@@ -66,7 +66,7 @@ void newaboutdialog::initWidgets()
 {
     pe.setColor(QPalette::WindowText,QColor(59,59,59));
 
-    initTitleWidget();
+    //initTitleWidget();
     initContentWidget();
     initIntroduceWidget();
 
@@ -250,6 +250,7 @@ void newaboutdialog::initThemeStyle()
     connect(styleSettings,&QGSettings::changed,[=](QString key)
     {
         if ("iconThemeName" == key) {
+            this->setWindowIcon(QIcon::fromTheme("ukui-system-monitor"));
             if (m_titleImgLabel)
                 m_titleImgLabel->setPixmap(QIcon::fromTheme("ukui-system-monitor").pixmap(24,24));
             if (m_bigImgLabel)
