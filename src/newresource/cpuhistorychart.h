@@ -34,6 +34,7 @@ public:
     ~CpuHistoryChart();
     void refreshCpuHistoryData(double cpu);
     void redrawCpuHistoryPath();
+    void setBgColor(QColor bgColor);
 
 protected:
     void paintEvent(QPaintEvent *event);

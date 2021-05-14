@@ -37,6 +37,7 @@ public:
     SwapAndMemoryChart(QWidget *parent = 0);
     ~SwapAndMemoryChart();
     void refreshMemoryAndSwapData(float,double,float,double);
+    void setBgColor(QColor bgColor);
 protected:
     void paintEvent(QPaintEvent *event);
     void resizeEvent(QResizeEvent *event);

@@ -32,6 +32,8 @@ public:
     NetWorkChart(QWidget *parent = 0);
     ~NetWorkChart();
 
+    void setBgColor(QColor bgColor);
+
 protected:
     void paintEvent(QPaintEvent *event);
     void resizeEvent(QResizeEvent *event);

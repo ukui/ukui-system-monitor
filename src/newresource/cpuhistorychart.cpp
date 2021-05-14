@@ -34,6 +34,7 @@ CpuHistoryChart::CpuHistoryChart(QWidget *parent):QWidget(parent)
     this->setSizePolicy(QSizePolicy::MinimumExpanding,QSizePolicy::Expanding);
     m_pointsCount = CPUHIS_POINT_COUNT_MAX;
     m_CpuHistoryList.clear();
+    m_bgColor = (QColor("#131414"));
 }
 
 CpuHistoryChart::~CpuHistoryChart()
@@ -55,7 +56,6 @@ void CpuHistoryChart::paintEvent(QPaintEvent *event)
     QPainterPath framePath;
     QStyleOption opt;
     opt.init(this);
-    m_bgColor = (QColor("#131414"));
     framePath.addRoundedRect(rect(), 4, 4);
     painter.fillPath(framePath, this->m_bgColor);//painter.drawPath(framePath);
     painter.restore();
@@ -103,6 +103,11 @@ void CpuHistoryChart::paintEvent(QPaintEvent *event)
     painter.drawPath(pathPoint);
     painter.restore();
     QWidget::paintEvent(event);
+}
+
+void CpuHistoryChart::setBgColor(QColor bgColor)
+{
+    m_bgColor = bgColor;
 }
 
 // 记录cpu历史占比

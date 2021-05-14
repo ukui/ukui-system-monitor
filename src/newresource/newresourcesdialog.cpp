@@ -456,6 +456,14 @@ void NewResouresDialog::initCpuHistory()
     cpuChart_H_BoxLayout->addSpacing(5);
     cpuChart_H_BoxLayout->addWidget(histoyChart);
     cpuChart_H_BoxLayout->setSpacing(0);
+    if(currentThemeMode == "ukui-dark" || currentThemeMode == "ukui-black")
+    {
+        histoyChart->setBgColor(QColor(255,255,255));
+    }
+    else
+    {
+        histoyChart->setBgColor(QColor(13,14,14));
+    }
 }
 
 void NewResouresDialog::initSwapMeomoryHistory()
@@ -530,6 +538,14 @@ void NewResouresDialog::initSwapMeomoryHistory()
             twopointfiveGibLabel->setText(formatMemory(lfMaxSpace*1/4));
             nullGibLabel->setText("0.0"+tr("GiB"));
         });
+        if(currentThemeMode == "ukui-dark" || currentThemeMode == "ukui-black")
+        {
+            swapandmemoryChart->setBgColor(QColor(255,255,255));
+        }
+        else
+        {
+            swapandmemoryChart->setBgColor(QColor(13,14,14));
+        }
 }
 
 void NewResouresDialog::initNetSpeedHistory()
@@ -590,6 +606,14 @@ void NewResouresDialog::initNetSpeedHistory()
         networkChart_H_BoxLayout->addWidget(networkWidget);
         networkChart_H_BoxLayout->addSpacing(5);
         networkChart_H_BoxLayout->addWidget(networkChart);
+        if(currentThemeMode == "ukui-dark" || currentThemeMode == "ukui-black")
+        {
+            networkChart->setBgColor(QColor(255,255,255));
+        }
+        else
+        {
+            networkChart->setBgColor(QColor(13,14,14));
+        }
 }
 
 void NewResouresDialog::tosetFontSize()
@@ -658,12 +682,22 @@ void NewResouresDialog::initThemeMode()
             if(currentThemeMode == "ukui-dark" || currentThemeMode == "ukui-black")
             {
                 pe.setColor(QPalette::WindowText,QColor(255,255,255,130));
-
+                if (histoyChart)
+                    histoyChart->setBgColor(QColor(255,255,255));
+                if (swapandmemoryChart)
+                    swapandmemoryChart->setBgColor(QColor(255,255,255));
+                if (networkChart)
+                    networkChart->setBgColor(QColor(255,255,255));
             }
             else
             {
-                pe.setColor(QPalette::WindowText,QColor(13,14,13,130));
-                //qDebug()<<"this theme is default";
+                pe.setColor(QPalette::WindowText,QColor(13,14,14));
+                if (histoyChart)
+                    histoyChart->setBgColor(QColor(13,14,14));
+                if (swapandmemoryChart)
+                    swapandmemoryChart->setBgColor(QColor(13,14,14));
+                if (networkChart)
+                    networkChart->setBgColor(QColor(13,14,14));
             }
             onehundredLabel->setPalette(pe);
             threequarterLabel->setPalette(pe);
