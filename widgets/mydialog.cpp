@@ -53,14 +53,13 @@ MyDialog::MyDialog(const QString &title, const QString &message, QWidget *parent
     const QByteArray id(THEME_QT_SCHEMA);
     if(QGSettings::isSchemaInstalled(id))
     {
-        fontSettings = new QGSettings(id);
+        styleSettings = new QGSettings(id);
     }
 
-    initFontSize();
+    initThemeStyle();
 
     m_titleIcon = new QLabel;
-    QPixmap pixmap("/usr/share/icons/hicolor/png/1-24*24/ukui-system-monitor.png");
-    m_titleIcon->setPixmap(pixmap);
+    m_titleIcon->setPixmap(QIcon::fromTheme("ukui-system-monitor").pixmap(24,24));
     m_titleIcon->setFixedWidth(30);
 
     QHBoxLayout* titleLayout = new QHBoxLayout();
@@ -155,27 +154,29 @@ MyDialog::~MyDialog()
 //        item->widget()->deleteLater();
 //        delete item;
 //    }
-    if (fontSettings) {
-        delete fontSettings;
-        fontSettings = nullptr;
+    if (styleSettings) {
+        delete styleSettings;
+        styleSettings = nullptr;
     }
 }
 
-void MyDialog::initFontSize()
+void MyDialog::initThemeStyle()
 {
-    if (!fontSettings) {
+    if (!styleSettings) {
         fontSize = DEFAULT_FONT_SIZE;
         return;
     }
-    connect(fontSettings,&QGSettings::changed,[=](QString key)
+    connect(styleSettings,&QGSettings::changed,[=](QString key)
     {
-        if("systemFont" == key || "systemFontSize" == key)
-        {
-            fontSize = fontSettings->get(FONT_SIZE).toString().toFloat();
+        if ("systemFont" == key || "systemFontSize" == key) {
+            fontSize = styleSettings->get(FONT_SIZE).toString().toFloat();
             this->onThemeFontChange(fontSize);
+        } else if ("iconThemeName" == key) {
+            if (m_titleIcon)
+                m_titleIcon->setPixmap(QIcon::fromTheme("ukui-system-monitor").pixmap(24,24));
         }
     });
-    fontSize = fontSettings->get(FONT_SIZE).toString().toFloat();
+    fontSize = styleSettings->get(FONT_SIZE).toString().toFloat();
 }
 
 void MyDialog::onThemeFontChange(qreal lfFontSize)
@@ -350,24 +351,14 @@ void MyDialog::mouseMoveEvent(QMouseEvent *event)
 
 void MyDialog::paintEvent(QPaintEvent *event)
 {
+    QPainterPath path;
     QPainter painter(this);
 
-    //绘制圆角矩形
-    painter.setPen(QPen(QColor("#808080"), 0));//边框颜色
-//    painter.setBrush(QColor("#e9eef0"));//背景色   #0d87ca
+    path.addRect(this->rect());
+    path.setFillRule(Qt::WindingFill);
     painter.setBrush(this->palette().base());
-    painter.setRenderHint(QPainter::Antialiasing, true);
-    painter.setOpacity(1);
-    QRectF r(0 / 2.0, 0 / 2.0, width() - 0, height() - 0);//左边 上边 右边 下边
-    painter.drawRoundedRect(r, 4, 4);
-
-
-    //绘制背景色
-//    QPainterPath path;
-//    path.addRect(QRectF(rect()));
-//    painter.setOpacity(1);
-//    painter.fillPath(path, QColor("#ffffff"));
-
+    painter.setPen(Qt::transparent);
+    painter.drawPath(path);
     QDialog::paintEvent(event);
 }
 

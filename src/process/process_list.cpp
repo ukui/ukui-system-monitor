@@ -506,35 +506,54 @@ QString Process::calcDiskIoPerSec(qint64 nNewCount)
     return speedPerSec;
 }
 
-QString Process::calcFlownetPerSec(qint64 nNewCount)
+QString Process::calcFlownetPerSec(double lfValue, bool isSpeed)
 {
-    qint64 bandwith = nNewCount - getPreFlownetCount();
-    QDateTime now = QDateTime::currentDateTime();
-    quint64 ms_lapse = d->m_preFlownetTime.msecsTo(now);
-    QString speedPerSec = "";
+    if (!isSpeed) {
+        qint64 bandwith = lfValue - getPreFlownetCount();
+        QDateTime now = QDateTime::currentDateTime();
+        quint64 ms_lapse = d->m_preFlownetTime.msecsTo(now);
+        QString speedPerSec = "";
 
-    if (ms_lapse < 1000) ms_lapse = 1000; // prevent division by 0 ;-)
-    qint64 speed = bandwith * 1000 / ms_lapse;
+        if (ms_lapse < 1000) ms_lapse = 1000; // prevent division by 0 ;-)
+        qint64 speed = bandwith * 1000 / ms_lapse;
 
-    if (speed == 0 || speed < 0) {
-        speedPerSec = "0 KB/s"; }
-    else if (speed < 1900) {
-        speedPerSec.setNum(speed);
-        speedPerSec.append(" B/s"); }
-    else if (speed < 1900000) {
-        speedPerSec.setNum(speed/1024);
-        speedPerSec.append(" KB/s"); }
-    else if (speed < 1900000000) {
-        speedPerSec.setNum(speed/(1024*1024));
-        speedPerSec.append(" MB/s"); }
-    else {
-        speedPerSec.setNum(speed/(1024*1024*1024));
-        speedPerSec.append(" GB/s");
+        if (speed == 0 || speed < 0) {
+            speedPerSec = "0 KB/s"; 
+        } else if (speed < 1900) {
+            speedPerSec.setNum(speed);
+            speedPerSec.append(" B/s");
+        } else if (speed < 1900000) {
+            speedPerSec.setNum(speed/1024);
+            speedPerSec.append(" KB/s");
+        } else if (speed < 1900000000) {
+            speedPerSec.setNum(speed/(1024*1024));
+            speedPerSec.append(" MB/s"); 
+        } else {
+            speedPerSec.setNum(speed/(1024*1024*1024));
+            speedPerSec.append(" GB/s");
+        }
+
+        d->m_preFlownetTime.swap(now);
+        setPreFlownetCount(lfValue);
+        return speedPerSec;
+    } else {
+        QString speedPerSec = "";
+        if (lfValue < 0)
+            lfValue = 0;
+        if (lfValue == 0 || lfValue < 0) {
+            speedPerSec = "0 KB/s"; 
+        } else if (lfValue < 1024) {
+            speedPerSec.setNum(lfValue, 'f', 1);
+            speedPerSec.append(" KB/s"); 
+        } else if (lfValue < 1024 * 1024) {
+            speedPerSec.setNum(lfValue/1024, 'f', 1);
+            speedPerSec.append(" MB/s"); 
+        } else {
+            speedPerSec.setNum(lfValue/(1024*1024), 'f', 1);
+            speedPerSec.append(" GB/s");
+        }
+        return speedPerSec;
     }
-
-    d->m_preFlownetTime.swap(now);
-    setPreFlownetCount(nNewCount);
-    return speedPerSec;
 }
 
 void Process::updateProcUser(unsigned uUid)
@@ -662,8 +681,8 @@ ProcessList::ProcessList(QObject* parent)
     procNetThread = new ProcessNetwork(this);
     procNetThread->start(QThread::LowPriority);
 
-    connect(procNetThread, SIGNAL(procDetected(const QString &, quint64 , quint64 , int , unsigned int , const QString&)),
-             this, SLOT(refreshLine(const QString &, quint64 , quint64 , int, unsigned int , const QString&)));
+    connect(procNetThread, SIGNAL(procDetected(const QString &, double , double , int , unsigned int , const QString&)),
+             this, SLOT(refreshLine(const QString &, double , double , int, unsigned int , const QString&)));
 
     // fill shell list
     [ = ] {
@@ -700,14 +719,14 @@ ProcessList::~ProcessList()
 
 void ProcessList::connectNetStateRefresh()
 {
-    connect(procNetThread, SIGNAL(procDetected(const QString &, quint64 , quint64 , int , unsigned int , const QString&)),
-             this, SLOT(refreshLine(const QString &, quint64 , quint64 , int, unsigned int , const QString&)));
+    connect(procNetThread, SIGNAL(procDetected(const QString &, double , double , int , unsigned int , const QString&)),
+             this, SLOT(refreshLine(const QString &, double , double , int, unsigned int , const QString&)));
 }
 
 void ProcessList::disconnectNetStateRefresh()
 {
-    disconnect(procNetThread, SIGNAL(procDetected(const QString &, quint64 , quint64 , int , unsigned int , const QString&)),
-             this, SLOT(refreshLine(const QString &, quint64 , quint64 , int, unsigned int , const QString&)));
+    disconnect(procNetThread, SIGNAL(procDetected(const QString &, double , double , int , unsigned int , const QString&)),
+             this, SLOT(refreshLine(const QString &, double , double , int, unsigned int , const QString&)));
 }
 
 bool ProcessList::containsById(pid_t pid)
@@ -1020,17 +1039,34 @@ void ProcessList::startScanProcess()
     m_lockReadWrite.unlock();
 }
 
-void ProcessList::refreshLine(const QString &procname, quint64 rcv, quint64 sent, int pid, unsigned int uid, const QString &devname)
+void ProcessList::refreshLine(const QString &procname, double rcv, double sent, int pid, unsigned int uid, const QString &devname)
 {
     // record process flownet
+    #if 0
     qint64 tmptotalFlowNetPerSec = rcv + sent;
     m_lockReadWrite.lockForWrite();
     if (m_set.contains(pid) && m_set[pid].isValid()) {
-        m_set[pid].setFlowNet(tmptotalFlowNetPerSec-m_set[pid].getPreFlownetCount());
+        if (tmptotalFlowNetPerSec < m_set[pid].getPreFlownetCount()) {
+            m_set[pid].setPreFlownetCount(tmptotalFlowNetPerSec);
+            m_set[pid].setFlowNet(tmptotalFlowNetPerSec);
+        } else {
+            m_set[pid].setFlowNet(tmptotalFlowNetPerSec-m_set[pid].getPreFlownetCount());
+        }
         QString addFlownetPerSec = m_set[pid].calcFlownetPerSec(tmptotalFlowNetPerSec);
         m_set[pid].setFlowNetDesc(addFlownetPerSec);
     }
     m_lockReadWrite.unlock();
+    #else
+    double tmptotalFlowNetPerSec = rcv + sent;
+    m_lockReadWrite.lockForWrite();
+    if (m_set.contains(pid) && m_set[pid].isValid()) {
+        m_set[pid].setPreFlownetCount(tmptotalFlowNetPerSec);
+        m_set[pid].setFlowNet(tmptotalFlowNetPerSec);
+        QString addFlownetPerSec = m_set[pid].calcFlownetPerSec(tmptotalFlowNetPerSec, true);
+        m_set[pid].setFlowNetDesc(addFlownetPerSec);
+    }
+    m_lockReadWrite.unlock();
+    #endif
 }
 
 bool ProcessList::isShellCmd(QString strCmd)

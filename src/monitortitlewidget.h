@@ -120,6 +120,7 @@ private:
     QToolButton *maxTitleBtn = nullptr;
     QComboBox *m_changeBox;
     QLabel *titleLabel;
+    QLabel *m_picLabel = nullptr;
     QWidget *emptyWidget = nullptr;
     QWidget *emptyWidget2 = nullptr;
     QRectF m_rectSeachAnimationBegin;

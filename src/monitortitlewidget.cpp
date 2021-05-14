@@ -47,9 +47,7 @@ MonitorTitleWidget::MonitorTitleWidget(QSettings *settings, QWidget *parent)
     this->setAttribute(Qt::WA_TranslucentBackground);
     fontSize = DEFAULT_FONT_SIZE;
     m_queryIcon=new QLabel();
-    QIcon queryIcon;
-    queryIcon = QIcon::fromTheme("preferences-system-search-symbolic");
-    pixmap = queryIcon.pixmap(QSize(16, 16));
+    pixmap = QIcon::fromTheme("preferences-system-search-symbolic").pixmap(QSize(16, 16));
     m_queryIcon->setPixmap(pixmap);
     m_queryIcon->setProperty("useIconHighlightEffect", 0x2);
     const QByteArray idd(THEME_QT_SCHEMA);
@@ -141,8 +139,7 @@ void MonitorTitleWidget::initThemeMode()
     //监听主题改变
     connect(qtSettings, &QGSettings::changed, this, [=](const QString &key)
     {
-        if (key == "styleName")
-        {
+        if (key == "styleName") {
             currentThemeMode = qtSettings->get(MODE_QT_KEY).toString();
             if (currentThemeMode == "ukui-light" || currentThemeMode == "ukui-default" || currentThemeMode == "ukui-white")
             {
@@ -155,6 +152,13 @@ void MonitorTitleWidget::initThemeMode()
             {
                 this->setObjectName("MonitorTitle");
                 // m_queryIcon->setPixmap(drawSymbolicColoredPixmap(pixmap));
+            }
+        } else if ("iconThemeName" == key) {
+            if (m_picLabel)
+                m_picLabel->setPixmap(QIcon::fromTheme("ukui-system-monitor").pixmap(24,24));
+            if (m_queryIcon) {
+                pixmap = QIcon::fromTheme("preferences-system-search-symbolic").pixmap(QSize(16, 16));
+                m_queryIcon->setPixmap(pixmap);
             }
         }
     });
@@ -380,16 +384,13 @@ void MonitorTitleWidget::initTitlebarLeftContent()
     m_titleMiddleLayout = new QHBoxLayout(w);
     m_titleMiddleLayout->setContentsMargins(8, 4, 0, 0);
     titleLabel = new QLabel;
-    QLabel *picLabel = new QLabel;
+    m_picLabel = new QLabel();
     QFont font;
     font.setPointSize(fontSize);
 //    titleLabel->setFont(font);
     titleLabel->setText(tr("Kylin System Monitor"));
-    QPixmap pixmap("/usr/share/icons/hicolor/png/1-24*24/ukui-system-monitor.png");
-//    QSize sz(24,24);
-//    pixmap = pixmap.scaled(sz,Qt::KeepAspectRatio, Qt::SmoothTransformation);
-    picLabel->setPixmap(pixmap);
-    m_titleMiddleLayout->addWidget(picLabel);
+    m_picLabel->setPixmap(QIcon::fromTheme("ukui-system-monitor").pixmap(24,24));
+    m_titleMiddleLayout->addWidget(m_picLabel);
     m_titleMiddleLayout->addWidget(titleLabel);
     m_topLayout->addWidget(w/*,1,Qt::AlignLeft*/);
 }
@@ -461,7 +462,9 @@ void MonitorTitleWidget::initTitlebarRightContent()
         }
     });
     connect(aboutAction,&QAction::triggered,this,[=]{
-            newaboutdialog *showaboutdialog = new newaboutdialog();
+            newaboutdialog *showaboutdialog = new newaboutdialog(this);
+            showaboutdialog->setAttribute(Qt::WA_DeleteOnClose);
+            showaboutdialog->setModal(true);
             showaboutdialog->show();
     });
     connect(quitAction,&QAction::triggered,this,[=](){
@@ -810,28 +813,17 @@ void MonitorTitleWidget::animationFinishedSlot()
 
 void MonitorTitleWidget::paintEvent(QPaintEvent *event)
 {
-    QRect rect = this->rect();
-    rect.setWidth(rect.width());
-    rect.setHeight(rect.height());
-    rect.setX(this->rect().x());
-    rect.setY(this->rect().y());
-    rect.setWidth(this->rect().width());
-    rect.setHeight(this->rect().height());
-
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);  // 反锯齿;
     painter.setClipping(true);
     painter.setPen(Qt::transparent);
 
     QPainterPath path;
-    path.addRoundedRect(this->rect(),6,6);
     path.setFillRule(Qt::WindingFill); // 多块区域组合填充模式
-    path.addRect(0,height() - 6 ,6,6);
-    path.addRect(width() - 6,height() -6 ,6,6);
+    path.addRect(this->rect());
 
     painter.setBrush(this->palette().base());
     painter.setPen(Qt::transparent);
-//    painter.setOpacity(m_transparency);
     painter.drawPath(path);
     QWidget::paintEvent(event);
 }

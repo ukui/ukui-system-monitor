@@ -73,7 +73,7 @@ protected:
     void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
 
 private:
-    void initFontSize();
+    void initThemeStyle();
     void onThemeFontChange(qreal lfFontSize);
 
 private:
@@ -94,7 +94,7 @@ private:
     int m_titleWidth;
     QString m_message;
     qreal fontSize;
-    QGSettings *fontSettings;
+    QGSettings *styleSettings;
 
     QPoint dragPosition;
     bool mousePressed;

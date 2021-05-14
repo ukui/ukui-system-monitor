@@ -75,6 +75,7 @@ int main(int argc, char *argv[])
         XAtomHelper::getInstance()->setWindowMotifHint(monitor.winId(), hints);
 
         app.setActivationWindow(&monitor);
+        app.setWindowIcon(QIcon::fromTheme("ukui-system-monitor"));
         QObject::connect(&app, SIGNAL(messageReceived(const QString&)),&monitor, SLOT(sltMessageReceived(const QString&)));
         monitor.show();
         return app.exec();

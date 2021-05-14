@@ -20,6 +20,7 @@
 
 #include "newaboutdialog.h"
 #include "../shell/xatom-helper.h"
+#include "../shell/macro.h"
 #include "util.h"
 #include <QDebug>
 #include <QTextEdit>
@@ -39,6 +40,14 @@ newaboutdialog::newaboutdialog(QWidget *parent) : QDialog(parent)
 //    this->setWindowFlags(Qt::Dialog |  Qt::CustomizeWindowHint); this can make dialog be moveable and be showable too
     this->setFixedHeight(450);
     this->setFixedWidth(420);
+
+    const QByteArray id(THEME_QT_SCHEMA);
+    if(QGSettings::isSchemaInstalled(id))
+    {
+        styleSettings = new QGSettings(id);
+    }
+    initThemeStyle();
+
     initWidgets();
     this->setBackgroundRole(QPalette::Base);
     this->setAutoFillBackground(true);
@@ -47,13 +56,17 @@ newaboutdialog::newaboutdialog(QWidget *parent) : QDialog(parent)
 
 newaboutdialog::~newaboutdialog()
 {
+    if (styleSettings) {
+        delete styleSettings;
+        styleSettings = nullptr;
+    }
 }
 
 void newaboutdialog::initWidgets()
 {
     pe.setColor(QPalette::WindowText,QColor(59,59,59));
 
-    initTitleWidget();
+    //initTitleWidget();
     initContentWidget();
     initIntroduceWidget();
 
@@ -77,9 +90,8 @@ void newaboutdialog::initWidgets()
 void newaboutdialog::initTitleWidget()
 {
     QHBoxLayout *topLeftTilte_H_BoxLayout = new QHBoxLayout();
-    QLabel *m_titleImgLabel = new QLabel();
-    QPixmap pixmap("/usr/share/icons/hicolor/png/2-24*24/ukui-system-monitor.png");
-    m_titleImgLabel->setPixmap(pixmap);
+    m_titleImgLabel = new QLabel();
+    m_titleImgLabel->setPixmap(QIcon::fromTheme("ukui-system-monitor").pixmap(24,24));
     QLabel *m_titletextLabel = new QLabel;
     m_titletextLabel->setText(tr("Kylin System Monitor"));
     setFontSize(m_titletextLabel,FontSize);
@@ -113,12 +125,11 @@ void newaboutdialog::initTitleWidget()
 
 void newaboutdialog::initContentWidget()
 {
-    QLabel *bigImgLabel = new QLabel();
+    m_bigImgLabel = new QLabel();
     QLabel *appLabel = new QLabel();
     QLabel *versionLabel = new QLabel();
 
-    QPixmap pixmap("/usr/share/icons/hicolor/png/96*96/ukui-system-monitor.png");
-    bigImgLabel->setPixmap(pixmap);
+    m_bigImgLabel->setPixmap(QIcon::fromTheme("ukui-system-monitor").pixmap(96,96));
 
     appLabel->setText(tr("kylin system monitor"));
     setFontSize(appLabel,FontSize);
@@ -146,7 +157,7 @@ void newaboutdialog::initContentWidget()
     setFontSize(versionLabel,FontSize);
 
     img_H_Boxlayout = new QHBoxLayout();
-    img_H_Boxlayout->addWidget(bigImgLabel,1,Qt::AlignHCenter);
+    img_H_Boxlayout->addWidget(m_bigImgLabel,1,Qt::AlignHCenter);
 
     app_H_Boxlayout = new QHBoxLayout();
     app_H_Boxlayout->addWidget(appLabel,1,Qt::AlignHCenter);
@@ -229,4 +240,21 @@ void newaboutdialog::openMailTo(QString strMailAddr)
 {
     QString targetPath = QString("mailto://%1").arg(strMailAddr);
     QDesktopServices::openUrl(QUrl(targetPath));//xdg-open
+}
+
+void newaboutdialog::initThemeStyle()
+{
+    if (!styleSettings) {
+        return;
+    }
+    connect(styleSettings,&QGSettings::changed,[=](QString key)
+    {
+        if ("iconThemeName" == key) {
+            this->setWindowIcon(QIcon::fromTheme("ukui-system-monitor"));
+            if (m_titleImgLabel)
+                m_titleImgLabel->setPixmap(QIcon::fromTheme("ukui-system-monitor").pixmap(24,24));
+            if (m_bigImgLabel)
+                m_bigImgLabel->setPixmap(QIcon::fromTheme("ukui-system-monitor").pixmap(96,96));
+        }
+    });
 }

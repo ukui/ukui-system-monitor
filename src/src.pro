@@ -17,7 +17,7 @@ TEMPLATE = app
 DESTDIR = ..
 DEFINES += QT_MESSAGELOGCONTEXT
 
-LIBS += -L/usr/lib/ -lX11 -lpcap -lm -lpthread -lukui-log4qt
+LIBS += -L/usr/lib/ -lX11 -lpcap -lm -lpthread -lukui-log4qt -L../procnet-monitor -lprocnet-monitor
 
 CONFIG += link_pkgconfig \
                  c++11

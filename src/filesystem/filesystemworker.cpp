@@ -183,13 +183,13 @@ void FileSystemWorker::onFileSystemListChanged()
                     char *availSize = g_format_size_full(disk.bavail, G_FORMAT_SIZE_DEFAULT);
                     char *usedSize = g_format_size_full(disk.bused, G_FORMAT_SIZE_DEFAULT);
 
-                    std::string formatted_mountdir(make_string(g_strdup(disk.mountdir)));
+                    //std::string formatted_mountdir(make_string(g_strdup(disk.mountdir)));
                     std::string formatted_type(make_string(g_strdup(disk.type)));
                     std::string formatted_btotal(make_string(g_strdup(totalSize)));
                     std::string formatted_bfree(make_string(g_strdup(freeSize)));
                     std::string formatted_bavail(make_string(g_strdup(availSize)));
                     std::string formatted_bused(make_string(g_strdup(usedSize)));
-                    info.updateDiskInfo(QString::fromStdString(formatted_mountdir), QString::fromStdString(formatted_type), 
+                    info.updateDiskInfo(info.mountDir(), QString::fromStdString(formatted_type), 
                         QString::fromStdString(formatted_btotal), QString::fromStdString(formatted_bfree), 
                         QString::fromStdString(formatted_bavail), QString::fromStdString(formatted_bused), 
                         disk.percentage, disk.btotal, disk.bfree, disk.bavail, disk.bused);

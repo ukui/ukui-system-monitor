@@ -48,18 +48,17 @@ ReniceDialog::ReniceDialog(const QString &procName, const QString &procId, QWidg
     const QByteArray id(THEME_QT_SCHEMA);
     if(QGSettings::isSchemaInstalled(id))
     {
-        fontSettings = new QGSettings(id);
+        styleSettings = new QGSettings(id);
     }
 
-    initFontSize();
+    initThemeStyle();
 
     m_mainLayout = new QVBoxLayout(this);
     m_mainLayout->setContentsMargins(0,0,0,0);
     m_mainLayout->setSpacing(20);
     m_mainLayout->setMargin(0);
-    QLabel *picTitleIcon = new QLabel;
-    QPixmap pixmap("/usr/share/icons/hicolor/png/1-24*24/ukui-system-monitor.png");
-    picTitleIcon->setPixmap(pixmap);
+    m_picTitleIcon = new QLabel(this);
+    m_picTitleIcon->setPixmap(QIcon::fromTheme("ukui-system-monitor").pixmap(24,24));
     m_dlgTitleLable = new QLabel;
     m_strProcName = procName;
     m_strProcId = procId;
@@ -74,7 +73,7 @@ ReniceDialog::ReniceDialog(const QString &procName, const QString &procId, QWidg
     QHBoxLayout *title_H_BoxLayout = new QHBoxLayout();
     title_H_BoxLayout->setContentsMargins(5,5,5,0);
     title_H_BoxLayout->setSpacing(10);
-    title_H_BoxLayout->addWidget(picTitleIcon,0,Qt::AlignLeft);
+    title_H_BoxLayout->addWidget(m_picTitleIcon,0,Qt::AlignLeft);
     title_H_BoxLayout->addWidget(m_dlgTitleLable,0,Qt::AlignLeft);
     title_H_BoxLayout->addWidget(closeButton,0,Qt::AlignRight);
 
@@ -195,9 +194,9 @@ ReniceDialog::~ReniceDialog()
     }
 
     delete m_mainLayout;
-    if (fontSettings) {
-        delete fontSettings;
-        fontSettings = nullptr;
+    if (styleSettings) {
+        delete styleSettings;
+        styleSettings = nullptr;
     }
 }
 
@@ -266,42 +265,35 @@ void ReniceDialog::mouseMoveEvent(QMouseEvent *event)
 
 void ReniceDialog::paintEvent(QPaintEvent *event)
 {
+    QPainterPath path;
     QPainter painter(this);
 
-    //绘制圆角矩形
-    painter.setPen(QPen(QColor("#808080"), 0));//边框颜色
-//    painter.setBrush(QColor("#e9eef0"));//背景色   #0d87ca
+    path.addRect(this->rect());
+    path.setFillRule(Qt::WindingFill);
     painter.setBrush(this->palette().base());
-    painter.setRenderHint(QPainter::Antialiasing, true);
-    painter.setOpacity(1);
-    QRectF r(0 / 2.0, 0 / 2.0, width() - 0, height() - 0);//左边 上边 右边 下边
-    painter.drawRoundedRect(r, 4, 4);
-
-
-    //绘制背景色
-//    QPainterPath path;
-//    path.addRect(QRectF(rect()));
-//    painter.setOpacity(1);
-//    painter.fillPath(path, QColor("#ffffff"));
-
+    painter.setPen(Qt::transparent);
+    painter.drawPath(path);
     QDialog::paintEvent(event);
 }
 
-void ReniceDialog::initFontSize()
+void ReniceDialog::initThemeStyle()
 {
-    if (!fontSettings) {
+    if (!styleSettings) {
         fontSize = DEFAULT_FONT_SIZE;
         return;
     }
-    connect(fontSettings,&QGSettings::changed,[=](QString key)
+    connect(styleSettings,&QGSettings::changed,[=](QString key)
     {
         if("systemFont" == key || "systemFontSize" == key)
         {
-            fontSize = fontSettings->get(FONT_SIZE).toString().toFloat();
+            fontSize = styleSettings->get(FONT_SIZE).toString().toFloat();
             this->onThemeFontChange(fontSize);
+        } else if ("iconThemeName" == key) {
+            if (m_picTitleIcon)
+                m_picTitleIcon->setPixmap(QIcon::fromTheme("ukui-system-monitor").pixmap(24,24));
         }
     });
-    fontSize = fontSettings->get(FONT_SIZE).toString().toFloat();
+    fontSize = styleSettings->get(FONT_SIZE).toString().toFloat();
 }
 
 void ReniceDialog::onThemeFontChange(qreal lfFontSize)

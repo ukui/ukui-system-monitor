@@ -28,6 +28,7 @@
 #include <QLabel>
 #include <QToolButton>
 #include <QPalette>
+#include <QGSettings>
 
 class newaboutdialog : public QDialog
 {
@@ -46,6 +47,10 @@ private Q_SLOTS:
 
 protected:
 //    void paintEvent(QPaintEvent *event);
+
+private:
+    void initThemeStyle();
+
 private:
     QHBoxLayout *title_H_BoxLayout;
     QHBoxLayout *img_H_Boxlayout;
@@ -54,11 +59,13 @@ private:
     QHBoxLayout *introduce_H_Boxlayout;
     QHBoxLayout *support_H_Boxlayout;
     QVBoxLayout *main_V_BoxLayout;
+    QLabel *m_titleImgLabel = nullptr;
+    QLabel *m_bigImgLabel = nullptr;
 //    QLabel *m_titleImgLabel;
 //    QLabel *m_titletextLabel;
     QToolButton *m_closeBtn;
     QPalette pe;
-
+    QGSettings *styleSettings;
 };
 
 #endif //_NEWABOUT_DIALOG_H_

@@ -37,10 +37,16 @@ NetWorkChart::NetWorkChart(QWidget *parent):QWidget(parent)
     m_downLoadList.clear();
     m_upLoadList.clear();
     m_curMaxLoadSpeed = 20 * 1024;
+    m_bgColor = (QColor("#131414"));
 }
 
 NetWorkChart::~NetWorkChart()
 {
+}
+
+void NetWorkChart::setBgColor(QColor bgColor)
+{
+    m_bgColor = bgColor;
 }
 
 void NetWorkChart::paintEvent(QPaintEvent *event)
@@ -51,7 +57,6 @@ void NetWorkChart::paintEvent(QPaintEvent *event)
     QPainterPath framePath;
     QStyleOption opt;
     opt.init(this);
-    m_bgColor = (QColor("#131414"));
     framePath.addRoundedRect(rect(),4,4);
     painter.fillPath(framePath, this->m_bgColor);//painter.drawPath(framePath);
     painter.restore();
