@@ -308,7 +308,7 @@ QVariant ProcessTableModel::data(const QModelIndex &index, int role) const
             return proc.getDiskIODesc();
         case ProcessCpuColumn:
             // formated cpu percent utilization
-            return QString("%1").arg(proc.getCpuPercent(), 0, 'f', 1);
+            return QString("%1%").arg(proc.getCpuPercent(), 0, 'f', 1);
         case ProcessIdColumn: 
             // process pid text
             return QString("%1").arg(proc.pid());
