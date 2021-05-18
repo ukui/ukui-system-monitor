@@ -19,6 +19,7 @@
  */
 
 #include "sigcheck.h"
+#include <QPainterPath>
 
 sigCheck::sigCheck(QWidget *parent,int whichSig)
     : QWidget(parent),sig(whichSig)

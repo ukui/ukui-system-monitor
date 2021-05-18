@@ -31,6 +31,7 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QIcon>
+#include <QPainterPath>
 
 ReniceDialog::ReniceDialog(const QString &procName, const QString &procId, QWidget *parent)
     : QDialog(parent)

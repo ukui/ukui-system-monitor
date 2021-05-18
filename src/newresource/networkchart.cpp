@@ -23,6 +23,7 @@
 #include "smoothlinegenerator.h"
 #include <QPainter>
 #include <QDebug>
+#include <QPainterPath>
 
 #define NETHIS_POINT_COUNT_MAX      100
 
