@@ -38,6 +38,7 @@
 #include <QFileInfo>
 #include <QIcon>
 #include <QLineEdit>
+#include <QPainterPath>
 
 #define PROC_GRIDITEM_SPACING   6
 #define PROC_GRIDLAYOUT_WIDTH   340

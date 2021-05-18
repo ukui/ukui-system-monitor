@@ -23,6 +23,7 @@
 #include "cpuhistorychart.h"
 #include "../shell/macro.h"
 #include "smoothlinegenerator.h"
+#include <QPainterPath>
 
 #define CPUHIS_POINT_COUNT_MAX      100
 

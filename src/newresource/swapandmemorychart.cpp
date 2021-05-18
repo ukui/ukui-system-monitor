@@ -22,6 +22,7 @@
 #include "../shell/macro.h"
 #include <QPainter>
 #include <math.h>
+#include <QPainterPath>
 
 inline double formatMemory(double size)
 {

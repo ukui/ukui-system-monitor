@@ -33,6 +33,7 @@
 #include <QObject>
 #include <QStandardItemModel>
 #include <QMenu>
+#include <QPainterPath>
 
 #define MENU_SCHEMA "org.ukui.system-monitor.menu"
 #define WHICH_MENU "which-menu"

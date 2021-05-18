@@ -21,6 +21,7 @@
 #include "smoothlinegenerator.h"
 #include <QDebug>
 #include <QPainter>
+#include <QPainterPath>
 
 QPainterPath SmoothLineGenerator::generateSmoothCurve1(const QList<QPointF> &points) {
     if (points.size() == 0) {

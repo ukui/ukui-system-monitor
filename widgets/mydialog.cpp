@@ -33,6 +33,7 @@
 #include <QPushButton>
 #include <QAbstractButton>
 #include <QPainter>
+#include <QPainterPath>
 
 MyDialog::MyDialog(const QString &title, const QString &message, QWidget *parent) :
     QDialog(parent)
