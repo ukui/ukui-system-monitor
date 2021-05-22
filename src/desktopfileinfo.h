@@ -50,6 +50,8 @@ public:
     QString getIconByExec(QString strExec);
     QString getNameByDesktopFile(QString strDesktopFileName);
     QString getIconByDesktopFile(QString strDesktopFileName);
+    QString getAndroidAppNameByCmd(QString strCmd);
+    QString getAndroidAppIconByCmd(QString strCmd);
 
 
 private:
@@ -61,6 +63,7 @@ private:
     QMap<QString, DTFileInfo> m_mapDesktopInfoList;
     QMap<QString, QString> m_mapCustomProc;
     QSettings *m_proSettings;
+    QMap<QString, DTFileInfo> m_mapAndroidAppList;
 };
 
 #endif

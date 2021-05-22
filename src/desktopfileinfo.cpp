@@ -261,6 +261,7 @@ void DesktopFileInfo::readAllDesktopFileInfo()
     // read all autostart desktop file
     QDirIterator dirXdgAutostart("/etc/xdg/autostart", QDirIterator::Subdirectories);
     while(dirXdgAutostart.hasNext()) {
+        dirXdgAutostart.next();
         if (dirXdgAutostart.fileInfo().suffix() == "desktop") {
             QSettings* desktopFile = new QSettings(dirXdgAutostart.filePath(), QSettings::IniFormat);
             if (desktopFile) {
@@ -284,18 +285,18 @@ void DesktopFileInfo::readAllDesktopFileInfo()
                 desktopFile = nullptr;
             }
         }
-        dirXdgAutostart.next();
     }
     // read all application desktop file
     QDirIterator dirApplication("/usr/share/applications", QDirIterator::Subdirectories);
     while(dirApplication.hasNext()) {
+        dirApplication.next();
         if (dirApplication.fileInfo().suffix() == "desktop") {
             QSettings* desktopFile = new QSettings(dirApplication.filePath(), QSettings::IniFormat);
             if (desktopFile) {
                 DTFileInfo dtFileInfo;
                 desktopFile->setIniCodec("utf-8");
                 dtFileInfo.strExec = desktopFile->value(QString("Desktop Entry/Exec")).toString();
-                dtFileInfo.strExecParam = dtFileInfo.strExec.split(" ");
+                dtFileInfo.strExecParam = dtFileInfo.strExec.split(QRegExp("\\s+"));
                 if (dtFileInfo.strExecParam.size() > 0) {
                     QStringList simpleExecList = dtFileInfo.strExecParam[0].split("/");
                     if (simpleExecList.size() > 0) {
@@ -315,7 +316,39 @@ void DesktopFileInfo::readAllDesktopFileInfo()
                 desktopFile = nullptr;
             }
         }
-        dirApplication.next();
+    }
+    // read all android application desktop file
+    m_mapAndroidAppList.clear();
+    QDirIterator dirAndroidApp(QDir::homePath()+"/.local/share/applications", QDirIterator::Subdirectories);
+    while(dirAndroidApp.hasNext()) {
+        dirAndroidApp.next();
+        if (dirAndroidApp.fileInfo().suffix() == "desktop") {
+            QSettings* desktopFile = new QSettings(dirAndroidApp.filePath(), QSettings::IniFormat);
+            if (desktopFile) {
+                DTFileInfo dtFileInfo;
+                desktopFile->setIniCodec("utf-8");
+                dtFileInfo.strExec = desktopFile->value(QString("Desktop Entry/Exec")).toString();
+                dtFileInfo.strExecParam = dtFileInfo.strExec.split(QRegExp("\\s+"));
+                if (dtFileInfo.strExecParam.size() > 0) {
+                    QStringList simpleExecList = dtFileInfo.strExecParam[0].split("/");
+                    if (simpleExecList.size() > 0) {
+                        dtFileInfo.strSimpleExec = simpleExecList[simpleExecList.size()-1];
+                    }
+                }
+                dtFileInfo.strName = desktopFile->value(QString("Desktop Entry/Name[%1]").arg(QLocale::system().name())).toString();
+                if (dtFileInfo.strName.isEmpty()) {
+                    dtFileInfo.strName = desktopFile->value(QString("Desktop Entry/Name")).toString();
+                }
+                dtFileInfo.strGenericName = desktopFile->value(QString("Desktop Entry/GenericName[%1]").arg(QLocale::system().name())).toString();
+                dtFileInfo.strComment = desktopFile->value(QString("Desktop Entry/Comment[%1]").arg(QLocale::system().name())).toString();
+                dtFileInfo.strIcon = desktopFile->value(QString("Desktop Entry/Icon")).toString();
+                if (m_mapAndroidAppList.find(dirAndroidApp.fileName()) == m_mapAndroidAppList.end())
+                    m_mapAndroidAppList[dirAndroidApp.fileName()] = dtFileInfo;
+                delete desktopFile;
+                desktopFile = nullptr;
+                //qInfo()<<"AndroidApp:"<<dtFileInfo.strExec<<","<<dtFileInfo.strExecParam<<","<<dtFileInfo.strName<<","<<dtFileInfo.strIcon<<","<<dirAndroidApp.fileName();
+            }
+        }
     }
 }
 
@@ -340,4 +373,40 @@ QString DesktopFileInfo::exchangeCustomProcMap(QString strExec)
         }
     }
     return strExec;
+}
+
+QString DesktopFileInfo::getAndroidAppNameByCmd(QString strExec)
+{
+    strExec.remove(QRegExp("\\s+")); // 去除所有空格
+    QMap<QString, DTFileInfo>::iterator itApp = m_mapAndroidAppList.begin();
+    for (; itApp != m_mapAndroidAppList.end(); itApp ++) {
+        if (itApp.value().strExecParam.contains(strExec)) {
+            if (itApp.value().strName.isEmpty()) {
+                if (itApp.value().strGenericName.isEmpty()) {
+                    if (itApp.value().strComment.isEmpty()) {
+                        return "";
+                    } else {
+                        return itApp.value().strComment;
+                    }
+                } else {
+                    return itApp.value().strGenericName;
+                }
+            } else {
+                return itApp.value().strName;
+            }
+        }
+    }
+    return "";
+}
+
+QString DesktopFileInfo::getAndroidAppIconByCmd(QString strExec)
+{
+    strExec.remove(QRegExp("\\s+")); // 去除所有空格
+    QMap<QString, DTFileInfo>::iterator itApp = m_mapAndroidAppList.begin();
+    for (; itApp != m_mapAndroidAppList.end(); itApp ++) {
+        if (itApp.value().strExecParam.contains(strExec)) {
+            return itApp.value().strIcon;
+        }
+    }
+    return "";
 }
