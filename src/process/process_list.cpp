@@ -922,6 +922,8 @@ void ProcessList::scanProcess()
         
         if (!oldProcInfo.isValid()) {
             QString strIconPath = DesktopFileInfo::instance()->getIconByExec(proc.getProcName());
+            if (strIconPath.isEmpty())
+                strIconPath = DesktopFileInfo::instance()->getAndroidAppIconByCmd(proc.getProcArgments());
             proc.setIconPath(strIconPath);         
         } else {
             proc.setIconPath(oldProcInfo.getIconPath());
@@ -934,7 +936,12 @@ void ProcessList::scanProcess()
 
         QString title = DesktopFileInfo::instance()->getNameByExec(proc.getProcName());
         if (title.isEmpty()) {
-            proc.setDisplayName(proc.getProcName()); //进程名称
+            title = DesktopFileInfo::instance()->getAndroidAppNameByCmd(proc.getProcArgments());
+            if (title.isEmpty()) {
+                proc.setDisplayName(proc.getProcName()); //进程名称
+            } else {
+                proc.setDisplayName(title);
+            }
         } else {
             proc.setDisplayName(title);
         }

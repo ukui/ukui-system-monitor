@@ -290,6 +290,9 @@ void ProcPropertiesDlg::initProcproperties()
                 defaultExecutableIcon = QIcon(":/res/autostart-default.png");
         }
         QPixmap defaultPixmap = defaultExecutableIcon.pixmap(iconSize, iconSize);
+        if (iconPath.isEmpty()) {   // try get android app icon
+            iconPath = DesktopFileInfo::instance()->getAndroidAppIconByCmd(info.getProcArgments());
+        }
         if (iconPath.isEmpty()) {
             icon_pixmap = defaultPixmap;
             //icon_pixmap.setDevicePixelRatio(qApp->devicePixelRatio());
@@ -310,7 +313,10 @@ void ProcPropertiesDlg::initProcproperties()
         }
         m_strTitleName = DesktopFileInfo::instance()->getNameByExec(name);
         if (m_strTitleName.isEmpty()) {
-            m_strTitleName = name;
+            m_strTitleName = DesktopFileInfo::instance()->getAndroidAppNameByCmd(info.getProcArgments());
+            if (m_strTitleName.isEmpty()) {
+                m_strTitleName = name;
+            }
         }
         m_iconLabel->setPixmap(icon_pixmap);
         QString titleName = getElidedText(m_titleLabel->font(), m_strTitleName, PROC_DIALOGTITLE_WIDTH-PROC_GRIDITEM_BOARD);
