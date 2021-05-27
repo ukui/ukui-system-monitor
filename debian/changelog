@@ -19,6 +19,8 @@ ukui-system-monitor (2.0.6hw2) v101.hw; urgency=medium
                   2、优化深色主题下资源折线图背景不明显现象
                   3、兼容QT5.15
 
+ -- Yang Min <yangmin@kylinos.cn>  Thu, 13 May 2021 20:52:51 +0800
+
 ukui-system-monitor (2.0.6) v101; urgency=medium
 
   * BUG号：53815/56902 浏览器邮箱在上传文件，但是系统监视器浏览器网速依然为0kb/s
