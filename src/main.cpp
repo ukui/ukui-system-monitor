@@ -33,8 +33,88 @@
 
 #include <X11/Xlib.h>   // should be put in the last
 
+#include <execinfo.h>
+#include <unistd.h>
+#define BUFF_SIZE  1024
+
+static void crashHandler(int sig)
+{
+    signal(sig, SIG_IGN);
+    size_t size = 0;
+    char **strings = NULL;
+    size_t i = 0, j = 0;
+
+    char path[BUFF_SIZE] = {0};
+    static char *homePath = getenv("HOME");
+    snprintf(path, BUFF_SIZE, "%s/.config/ukui", homePath);
+    strcat(path,"/ukui_sysmon_crash.log");
+    FILE *fp = fopen(path,"a+");
+    
+    if (fp) {
+        void *array[20];
+        size = backtrace (array, 20);
+        strings = (char **)backtrace_symbols (array, size);
+
+        char logStr[BUFF_SIZE] = "0";
+        sprintf(logStr,"!!!--- [%s]pid:%d received signal: %d=%s ---!!!\n version = %s, Stack trace\r\n", 
+            QDateTime::currentDateTime().toString().toStdString().c_str(),getpid(),sig,strsignal(sig), "2.0.6");
+        fwrite(logStr,sizeof(char),sizeof(logStr),fp);
+        for (i = 0; i < size; i++)
+        {
+            memset(logStr,0,BUFF_SIZE);
+            snprintf(logStr, BUFF_SIZE, "#%d\t%s \n",i,strings[i]);
+            fwrite(logStr,sizeof(char),sizeof(logStr),fp);
+        }
+
+        fflush(fp);
+        fclose(fp);
+        free (strings);
+    }
+    exit(128 + sig);
+}
+
+static void registerSignals()
+{
+    if(signal(SIGCHLD,SIG_IGN)==SIG_ERR)//忽略子进程已经停止或退出
+    {
+        //注册SIGCHLD信号失败
+        perror("signal error");
+    }
+    if(signal(SIGSEGV,crashHandler)==SIG_ERR)//无效内存段访问
+    {
+        //注册SIGSEGV信号失败
+        perror("signal error");
+    }
+    if(signal(SIGILL,crashHandler)==SIG_ERR)//非法指令
+    {
+        //注册SIGILL信号失败
+        perror("signal error");
+    }
+    if(signal(SIGTERM,crashHandler)==SIG_ERR)//终止
+    {
+        //注册SIGTERM信号失败
+        perror("signal error");
+    }
+    if(signal(SIGHUP,crashHandler)==SIG_ERR)//系统挂断
+    {
+        //注册SIGHUP信号失败
+        perror("signal error");
+    }
+    if(signal(SIGABRT,crashHandler)==SIG_ERR)//进程停止运行
+    {
+        //注册SIGABRT信号失败
+        perror("signal error");
+    }
+    if(signal(SIGKILL,crashHandler)==SIG_ERR)//终止
+    {
+        //注册SIGKILL信号失败
+        perror("signal error");
+    }
+}
+
 int main(int argc, char *argv[])
 {
+    registerSignals();
     initUkuiLog4qt("ukui-system-monitor");
     #if (QT_VERSION >= QT_VERSION_CHECK(5, 12, 0))
       QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
