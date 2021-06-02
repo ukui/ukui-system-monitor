@@ -125,7 +125,9 @@ HEADERS += \
     model/processsortfilterproxymodel.h \
     model/filesystemmodel.h \
     model/filesystemsortfilterproxymodel.h \
-    desktopfileinfo.h
+    desktopfileinfo.h \
+    style/usmproxystyle.h \
+    control/kgroupbutton.h
 
 SOURCES += \
     ../shell/xatom-helper.cpp \
@@ -175,7 +177,9 @@ SOURCES += \
     model/processsortfilterproxymodel.cpp \
     model/filesystemmodel.cpp \
     model/filesystemsortfilterproxymodel.cpp \
-    desktopfileinfo.cpp
+    desktopfileinfo.cpp \
+    style/usmproxystyle.cpp \
+    control/kgroupbutton.cpp
 
 OTHER_FILES += \
     systemmonitor.json

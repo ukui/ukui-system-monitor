@@ -191,14 +191,6 @@ void MonitorTitleWidget::initFontSize()
             fontSize = fontSettings->get(FONT_SIZE).toString().toFloat();
             this->onThemeFontChange(fontSize);
         }
-//        QFont font;
-//        font.setPointSize(fontSize);
-//        titleLabel->setFont(font);
-//        m_queryText->setFont(font);
-
-//        QFont changeBoxFont;
-//        changeBoxFont.setPointSize(fontSize);
-//        m_changeBox->setFont(changeBoxFont);
     });
     fontSize = fontSettings->get(FONT_SIZE).toString().toFloat();
 }
@@ -322,18 +314,10 @@ bool MonitorTitleWidget::eventFilter(QObject *obj, QEvent *event)    //set the e
 
 void MonitorTitleWidget::setSearchEditFocus()
 {
-//    if (m_searchEdit->searchedText() != "") {
-//        m_searchEdit->getLineEdit()->setFocus();
-//    } else {
-//        m_searchEdit->setFocus();
-//    }
 }
 
 void MonitorTitleWidget::onRefreshSearchResult()
 {
-//    if (m_searchEdit->searchedText() == searchTextCache) {
-//        emit this->searchSignal(searchTextCache);
-//    }
     if (m_searchEditNew->text() == searchTextCache) {
         emit this->searchSignal(searchTextCache);
     }
@@ -341,7 +325,6 @@ void MonitorTitleWidget::onRefreshSearchResult()
 
 void MonitorTitleWidget::handleSearchTextChanged()
 {
-//    searchTextCache = m_searchEdit->searchedText();
     searchTextCache = m_searchEditNew->text();
     if (searchTextCache.isEmpty()) {
         m_isSearching = false;
@@ -356,7 +339,6 @@ void MonitorTitleWidget::handleSearchTextChanged()
 
 void MonitorTitleWidget::onCancelSearchBtnClicked(bool b)
 {
-//    m_searchEdit->clearAndFocusEdit();
     emit canelSearchEditFocus();
 }
 
@@ -374,43 +356,20 @@ void MonitorTitleWidget::mouseDoubleClickEvent(QMouseEvent *e)
 
 void MonitorTitleWidget::initTitlebarLeftContent()
 {
-//    QWidget *w = new QWidget;
-//    m_titleLeftLayout = new QHBoxLayout(w);
-//    m_titleLeftLayout->setContentsMargins(6, 0, 0, 0);
-//    m_titleLeftLayout->setSpacing(0);
-//    emptyLabel = new QLabel;
-//    m_titleLeftLayout->addWidget(emptyLabel);
-//    m_topLayout->addWidget(w, 1, Qt::AlignLeft);
     QWidget *w = new QWidget;
     m_titleMiddleLayout = new QHBoxLayout(w);
     m_titleMiddleLayout->setContentsMargins(8, 4, 0, 0);
     titleLabel = new QLabel;
     m_picLabel = new QLabel();
-    QFont font;
-    font.setPointSize(fontSize);
-//    titleLabel->setFont(font);
     titleLabel->setText(tr("Kylin System Monitor"));
     m_picLabel->setPixmap(QIcon::fromTheme("ukui-system-monitor").pixmap(24,24));
     m_titleMiddleLayout->addWidget(m_picLabel);
     m_titleMiddleLayout->addWidget(titleLabel);
-    m_topLayout->addWidget(w/*,1,Qt::AlignLeft*/);
+    m_topLayout->addWidget(w);
 }
 
 void MonitorTitleWidget::initTitlebarMiddleContent()
 {
-//    QWidget *w = new QWidget;
-//    m_titleMiddleLayout = new QHBoxLayout(w);
-//    m_titleMiddleLayout->setContentsMargins(0, 0, 0, 0);
-//    titleLabel = new QLabel;
-//    QLabel *picLabel = new QLabel;
-//    QFont font;
-//    font.setPointSize(fontSize);
-//    titleLabel->setFont(font);
-//    titleLabel->setText(tr("Kylin System Monitor"));
-//    picLabel->setPixmap(QPixmap(":img/ukui-system-monitor.png"));
-//    m_titleMiddleLayout->addWidget(picLabel);
-//    m_titleMiddleLayout->addWidget(titleLabel);
-//    m_topLayout->addWidget(w/*,1,Qt::AlignLeft*/);
 }
 
 void MonitorTitleWidget::initTitlebarRightContent()
@@ -601,22 +560,25 @@ void MonitorTitleWidget::onUpdateMaxBtnStatusChanged()
 
 void MonitorTitleWidget::initToolbarLeftContent()
 {
-    m_processButton = new QPushButton();
+    m_processButton = new KGroupButton();
     m_processButton->setCheckable(true);
     m_processButton->setAutoExclusive(true);
     m_processButton->setChecked(true);
+    m_processButton->setPosition(GroupButtonStyleOption::Begin);
     m_processButton->setFixedSize(NORMALWIDTH,NORMALHEIGHT);
 
-    m_resourceButton = new QPushButton();
+    m_resourceButton = new KGroupButton();
     m_resourceButton->setChecked(false);
     m_resourceButton->setCheckable(true);
     m_resourceButton->setAutoExclusive(true);
+    m_resourceButton->setPosition(GroupButtonStyleOption::Middle);
     m_resourceButton->setFixedSize(NORMALWIDTH,NORMALHEIGHT);
 
-    m_filesystemButton = new QPushButton();
+    m_filesystemButton = new KGroupButton();
     m_filesystemButton->setChecked(false);
     m_filesystemButton->setCheckable(true);
     m_filesystemButton->setAutoExclusive(true);
+    m_filesystemButton->setPosition(GroupButtonStyleOption::End);
     m_filesystemButton->setFixedSize(NORMALWIDTH,NORMALHEIGHT);
 
     connect(m_processButton, &QPushButton::clicked, this, [=] {
@@ -657,10 +619,25 @@ void MonitorTitleWidget::initToolbarLeftContent()
     m_bottomLayout->addWidget(m_resourceButton);
     m_bottomLayout->addWidget(m_filesystemButton);
     m_bottomLayout->addWidget(emptyWidget, 3);
+    m_bottomLayout->setSpacing(1);
 }
 
 void MonitorTitleWidget::onThemeFontChange(unsigned uFontSize)
 {
+    int nEditHeight = NORMALHEIGHT;
+    if (m_searchEditNew) {
+        QFont eFont = m_searchEditNew->font();
+        if (uFontSize >= 14) {
+            eFont.setPointSize(14);
+            m_searchEditNew->setFont(eFont);
+            m_searchEditNew->setFixedSize(SPECIALWIDTH, NORMALHEIGHT+6);
+        } else {
+            eFont.setPointSize(12);
+            m_searchEditNew->setFont(eFont);
+            m_searchEditNew->setFixedSize(SPECIALWIDTH, NORMALHEIGHT+3);
+        }
+        nEditHeight = m_searchEditNew->height();
+    }
     if (m_processButton) {
         QString strContent = tr("Processes");
         if (!strContent.isEmpty()) {
@@ -672,7 +649,7 @@ void MonitorTitleWidget::onThemeFontChange(unsigned uFontSize)
                 m_processButton->setToolTip("");
             }
         }
-        m_processButton->setFixedSize(NORMALWIDTH, NORMALHEIGHT+(uFontSize-DEFAULT_FONT_SIZE)*1);
+        m_processButton->setFixedSize(NORMALWIDTH, nEditHeight);
     }
     if (m_resourceButton) {
         QString strContent = tr("Resources");
@@ -685,7 +662,7 @@ void MonitorTitleWidget::onThemeFontChange(unsigned uFontSize)
                 m_resourceButton->setToolTip("");
             }
         }
-        m_resourceButton->setFixedSize(NORMALWIDTH, NORMALHEIGHT+(uFontSize-DEFAULT_FONT_SIZE)*1);
+        m_resourceButton->setFixedSize(NORMALWIDTH, nEditHeight);
     }
     if (m_filesystemButton) {
         QString strContent = tr("File Systems");
@@ -698,19 +675,10 @@ void MonitorTitleWidget::onThemeFontChange(unsigned uFontSize)
                 m_filesystemButton->setToolTip("");
             }
         }
-        m_filesystemButton->setFixedSize(NORMALWIDTH, NORMALHEIGHT+(uFontSize-DEFAULT_FONT_SIZE)*1);
+        m_filesystemButton->setFixedSize(NORMALWIDTH, nEditHeight);
     }
-    if (m_searchEditNew) {
-        QFont eFont = m_searchEditNew->font();
-        if (uFontSize >= 14) {
-            eFont.setPointSize(14);
-            m_searchEditNew->setFont(eFont);
-            m_searchEditNew->setFixedSize(SPECIALWIDTH, NORMALHEIGHT+6);
-        } else {
-            eFont.setPointSize(12);
-            m_searchEditNew->setFont(eFont);
-            m_searchEditNew->setFixedSize(SPECIALWIDTH, NORMALHEIGHT+3);
-        }
+    if (m_changeBox) {
+        m_changeBox->setFixedHeight(nEditHeight);
     }
     if (m_queryText) {
         m_queryText->update();
@@ -785,7 +753,7 @@ void MonitorTitleWidget::initWidgets()
 
     QWidget *bottomWidget = new QWidget;
     m_bottomLayout = new QHBoxLayout(bottomWidget);
-//    m_bottomLayout->setContentsMargins(10, 0, 10, 0);
+    m_bottomLayout->setContentsMargins(20, 0, 20, 0);
     m_layout->addWidget(bottomWidget);
 //    m_layout->setContentsMargins(0,0,0,0);
 

@@ -83,6 +83,7 @@ private:
     int daemonIsNotRunning();
     void showGuide(QString appName);
     void getOsRelease();
+    void initCustomStyle();
 private:
     QSettings *proSettings;
 
@@ -96,8 +97,7 @@ private:
     QPoint dragPosition;
     bool mousePressed;
     
-    QGSettings *fontSettings;
-    float fontSize;
+    QGSettings *styleSettings;
 
     QGSettings *opacitySettings;
     double m_transparency;

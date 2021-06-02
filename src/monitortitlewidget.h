@@ -34,7 +34,7 @@
 
 #include "shell/customstyle.h"
 #include "../shell/macro.h"
-#include "newaboutdialog.h"
+#include "control/kgroupbutton.h"
 
 class QVBoxLayout;
 class QHBoxLayout;
@@ -114,9 +114,9 @@ private:
     QHBoxLayout *m_toolLeftLayout = nullptr;
     QHBoxLayout *m_toolRightLayout = nullptr;
     QWidget *buttonWidget = nullptr;
-    QPushButton *m_processButton = nullptr;
-    QPushButton *m_resourceButton = nullptr;
-    QPushButton *m_filesystemButton = nullptr;
+    KGroupButton *m_processButton = nullptr;
+    KGroupButton *m_resourceButton = nullptr;
+    KGroupButton *m_filesystemButton = nullptr;
     QToolButton *maxTitleBtn = nullptr;
     QComboBox *m_changeBox;
     QLabel *titleLabel;
