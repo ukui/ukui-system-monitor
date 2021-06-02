@@ -21,6 +21,7 @@
 #include "monitortitlewidget.h"
 #include "../shell/macro.h"
 #include "util.h"
+#include "gui/usmaboutdialog.h"
 
 #include <QApplication>
 #include <QDebug>
@@ -422,7 +423,7 @@ void MonitorTitleWidget::initTitlebarRightContent()
         }
     });
     connect(aboutAction,&QAction::triggered,this,[=]{
-            newaboutdialog *showaboutdialog = new newaboutdialog(this);
+            USMAboutDialog *showaboutdialog = new USMAboutDialog(this);
             showaboutdialog->setAttribute(Qt::WA_DeleteOnClose);
             showaboutdialog->setModal(true);
             showaboutdialog->show();

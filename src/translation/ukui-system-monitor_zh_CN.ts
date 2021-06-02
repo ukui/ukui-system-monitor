@@ -2757,6 +2757,25 @@ Are you sure to continue?</source>
     </message>
 </context>
 <context>
+    <name>USMAboutDialog</name>
+    <message>
+        <source>Kylin System Monitor</source>
+        <translation type="unfinished">系统监视器</translation>
+    </message>
+    <message>
+        <source>version: </source>
+        <translation type="unfinished">版本号: </translation>
+    </message>
+    <message>
+        <source>System monitor is a desktop application that face desktop users of Kylin operating system,It meets the needs of users to monitor the system process, system resources and file system</source>
+        <translation type="unfinished">系统监视器是一款面向麒麟操作系统用户的应用，它满足用户对系统监视器，进程资源和文件系统监控的需求</translation>
+    </message>
+    <message>
+        <source>Service and support team:</source>
+        <translation type="unfinished">服务与支持团队:</translation>
+    </message>
+</context>
+<context>
     <name>WindowWidget</name>
     <message>
         <source>Arrangement of buttons on the titlebar</source>
