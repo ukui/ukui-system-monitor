@@ -150,7 +150,7 @@ void ProcessTableView::onChangeProcessFilter(int index)
             this->displayAllProcess();
     }
 
-    saveSettings();
+    // saveSettings();
 }
 
 // initialize ui components
@@ -494,9 +494,9 @@ void ProcessTableView::onSearchFocusOut()
 bool ProcessTableView::loadSettings()
 {
     if (m_proSettings) {
-        m_proSettings->beginGroup("PROCESS");
-        m_strFilter = m_proSettings->value("WhoseProcesses", m_strFilter).toString();
-        m_proSettings->endGroup();
+        // m_proSettings->beginGroup("PROCESS");
+        // m_strFilter = m_proSettings->value("WhoseProcesses", m_strFilter).toString();
+        // m_proSettings->endGroup();
         m_proSettings->beginGroup("PROCESS");
         QVariant opt = m_proSettings->value(SETTINGSOPTION_PROCESSTABLEHEADERSTATE);
         m_proSettings->endGroup();
@@ -513,9 +513,9 @@ bool ProcessTableView::loadSettings()
 void ProcessTableView::saveSettings()
 {
     if (m_proSettings) {
-        m_proSettings->beginGroup("PROCESS");
-        m_proSettings->setValue("WhoseProcesses", m_strFilter);
-        m_proSettings->endGroup();
+        // m_proSettings->beginGroup("PROCESS");
+        // m_proSettings->setValue("WhoseProcesses", m_strFilter);
+        // m_proSettings->endGroup();
         QByteArray buf = header()->saveState();
         m_proSettings->beginGroup("PROCESS");
         m_proSettings->setValue(SETTINGSOPTION_PROCESSTABLEHEADERSTATE, buf.toBase64());

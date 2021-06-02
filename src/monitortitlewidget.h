@@ -57,6 +57,8 @@ public:
     void initThemeMode();
     void initFontSize();
     void getTransparentData();
+    inline int whichProcType()
+    { return whichNum; }
 
 public slots:
     void onRefreshSearchResult();

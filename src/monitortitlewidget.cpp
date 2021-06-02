@@ -463,7 +463,6 @@ void MonitorTitleWidget::initTitlebarRightContent()
     m_changeBox->setCurrentIndex(whichNum);
     switchChangeItemProcessSignal(whichNum);
     connect(m_changeBox,SIGNAL(currentIndexChanged(int)),this,SLOT(switchChangeItemProcessSignal(int)));
-    setMyComBoxTootip(whichNum);
     m_titleRightLayout->addWidget(menuBtn);
     m_titleRightLayout->addSpacing(4);
     m_titleRightLayout->addWidget(minBtn);
@@ -504,17 +503,14 @@ void MonitorTitleWidget::showGuide(QString appName)
 
 void MonitorTitleWidget::setMyComBoxTootip(int index)
 {
-    if(index == 0)
-    {
+    if(index == 0) {
         m_changeBox->setToolTip(tr("Active Processes"));
-    }
-    if(index == 1)
-    {
+    } else if(index == 1) {
         m_changeBox->setToolTip(tr("My Processes"));
-    }
-    if(index == 2)
-    {
+    } else if(index == 2) {
         m_changeBox->setToolTip(tr("All Process"));
+    } else if(index == 3) {
+        m_changeBox->setToolTip(tr("Applications"));
     }
 }
 
@@ -548,7 +544,7 @@ void MonitorTitleWidget::onCloseBtnClicked()
 
 void MonitorTitleWidget::switchChangeItemProcessSignal(int a)
 {
-    //qDebug()<<"whichNum----"<<whichNum;
+    qDebug()<<"whichNum----"<<whichNum;
     emit changeProcessItemDialog(a);
     whichNum = ifsettings->get(WHICH_MENU).toInt();
     ifsettings->set(WHICH_MENU,a);

@@ -86,6 +86,7 @@ SystemMonitor::SystemMonitor(QWidget *parent)
     connect(m_titleWidget,SIGNAL(changeProcessItemDialog(int)),newProcessDialog,SLOT(onChangeProcessFilter(int)));  //配置文件中为whoseprocess赋值
     connect(m_titleWidget,SIGNAL(SearchFocusIn()),newProcessDialog,SLOT(onSearchFocusIn()));
     connect(m_titleWidget,SIGNAL(SearchFocusOut()),newProcessDialog,SLOT(onSearchFocusOut()));
+    newProcessDialog->onChangeProcessFilter(m_titleWidget->whichProcType());
     getTransparentData();
     initCustomStyle();
     this->moveCenter();

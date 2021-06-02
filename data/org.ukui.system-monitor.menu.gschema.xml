@@ -1,7 +1,7 @@
 <schemalist gettext-domain="ukui-system-monitor">
   <schema id="org.ukui.system-monitor.menu" path="/org/ukui/system-monitor/menu/">
     <key type="i" name="which-menu">
-      <default>2</default>
+      <default>0</default>
       <summary>Control which content to show of all components</summary>
       <description>Control the menu of all components</description>
     </key>
