@@ -728,7 +728,7 @@ void MonitorTitleWidget::initWidgets()
     m_rectSeachAnimationEnd.setX(0);
     m_rectSeachAnimationEnd.setY(0);
     m_rectSeachAnimationEnd.setWidth(m_queryIcon->width()+5);
-    m_rectSeachAnimationEnd.setHeight((m_searchEditNew->height()+20)/2);
+    m_rectSeachAnimationEnd.setHeight((m_searchEditNew->height()+30)/2);
     m_queryWid->setGeometry(m_rectSeachAnimationBegin.x(), m_rectSeachAnimationBegin.y(), 
         m_rectSeachAnimationBegin.width(), m_rectSeachAnimationBegin.height());   //设置显示label的区域
 
