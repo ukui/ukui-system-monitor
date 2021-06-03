@@ -149,8 +149,6 @@ void ProcessTableView::onChangeProcessFilter(int index)
         if (this->m_strFilter != "all")
             this->displayAllProcess();
     }
-
-    // saveSettings();
 }
 
 // initialize ui components
@@ -288,7 +286,7 @@ void ProcessTableView::initConnections(bool settingsLoaded)
     m_contextMenu->addAction(propertiyAction);
 
     auto *h = header();
-    connect(h, &QHeaderView::sectionResized, this, [ = ]() { saveSettings(); });
+    //connect(h, &QHeaderView::sectionResized, this, [ = ]() { saveSettings(); });
     connect(h, &QHeaderView::sectionMoved, this, [ = ]() { saveSettings(); });
     connect(h, &QHeaderView::sortIndicatorChanged, this, [ = ]() { saveSettings(); });
     connect(h, &QHeaderView::customContextMenuRequested, this,
@@ -432,7 +430,7 @@ void ProcessTableView::resizeEvent(QResizeEvent *event)
     // adjust search result tip label's visibility & position when resizing
     adjustInfoLabelVisibility();
 
-    QTreeView::resizeEvent(event);
+    KTableView::resizeEvent(event);
 }
 
 // show event handler
@@ -771,4 +769,47 @@ void ProcessTableView::changeProcPriority(int nice)
             }
         }
     }
+}
+
+void ProcessTableView::adjustColumnsSize()
+{
+    if (!model())
+        return;
+
+    if (model()->columnCount() == 0)
+        return;
+
+    // proc name
+    setColumnWidth(ProcessTableModel::ProcessNameColumn, namepadding);
+    // account
+    setColumnWidth(ProcessTableModel::ProcessUserColumn, userpadding);
+    // diskio
+    setColumnWidth(ProcessTableModel::ProcessDiskIoColumn, diskpadding);
+    // cpu
+    setColumnWidth(ProcessTableModel::ProcessCpuColumn, cpupadding);
+    // pid
+    setColumnWidth(ProcessTableModel::ProcessIdColumn, idpadding);
+    // flownet
+    setColumnWidth(ProcessTableModel::ProcessFlowNetColumn, networkpadding);
+    // memory
+    setColumnWidth(ProcessTableModel::ProcessMemoryColumn, memorypadding);
+    // priority
+    setColumnWidth(ProcessTableModel::ProcessNiceColumn, prioritypadding);
+
+    int rightPartsSize = userpadding + diskpadding + cpupadding + idpadding + networkpadding + memorypadding + prioritypadding;
+
+    //set column 0 minimum width, fix header icon overlap with name issue
+    if(columnWidth(0) < columnWidth(1))
+        setColumnWidth(0, columnWidth(1));
+
+    if (this->width() - rightPartsSize < namepadding) {
+        int size = width() - namepadding;
+        size /= header()->count() - 1;
+        setColumnWidth(0, namepadding);
+        for (int column = 1; column < model()->columnCount(); column++) {
+            setColumnWidth(column, size);
+        }
+        return;
+    }
+    header()->resizeSection(ProcessTableModel::ProcessNameColumn, this->viewport()->width() - rightPartsSize);
 }

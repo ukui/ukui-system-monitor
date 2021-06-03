@@ -71,8 +71,8 @@
 #define cpupadding 80
 #define idpadding 80
 #define networkpadding 80
-#define memorypadding 120
-#define prioritypadding 80
+#define memorypadding 100
+#define prioritypadding 100
 #define direciconposition 100
 
 //file system setting

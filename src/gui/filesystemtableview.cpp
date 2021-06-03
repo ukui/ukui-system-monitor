@@ -162,7 +162,7 @@ void FileSystemTableView::initConnections(bool settingsLoaded)
     m_contextMenu->addAction(refreshAction);//刷新
 
     auto *h = header();
-    connect(h, &QHeaderView::sectionResized, this, [ = ]() { saveSettings(); });
+    //connect(h, &QHeaderView::sectionResized, this, [ = ]() { saveSettings(); });
     connect(h, &QHeaderView::sectionMoved, this, [ = ]() { saveSettings(); });
     connect(h, &QHeaderView::sortIndicatorChanged, this, [ = ]() { saveSettings(); });
     connect(h, &QHeaderView::customContextMenuRequested, this,
@@ -270,7 +270,7 @@ void FileSystemTableView::displayProcessTableHeaderContextMenu(const QPoint &p)
 // resize event handler
 void FileSystemTableView::resizeEvent(QResizeEvent *event)
 {
-    QTreeView::resizeEvent(event);
+    KTableView::resizeEvent(event);
 }
 
 // backup current selected item's pid when selection changed
@@ -338,3 +338,43 @@ void FileSystemTableView::saveSettings()
     }
 }
 
+void FileSystemTableView::adjustColumnsSize()
+{
+    if (!model())
+        return;
+
+    if (model()->columnCount() == 0)
+        return;
+
+    // dev name
+    setColumnWidth(FileSystemModel::DeviceNameColumn, devicepadding);
+    // mount uri
+    setColumnWidth(FileSystemModel::MountUriColumn, mounturiadding);
+    // type
+    setColumnWidth(FileSystemModel::FileSystemTypeColumn, typepadding);
+    // total
+    setColumnWidth(FileSystemModel::TotalCapcityColumn, totalcapacitypadding);
+    // free
+    setColumnWidth(FileSystemModel::FreeCapcityColumn, idlepadding);
+    // avalid
+    setColumnWidth(FileSystemModel::AvalidCapcityColumn, avaliablepadding);
+    // used
+    setColumnWidth(FileSystemModel::UsedCapcityColumn, usedpadding);
+
+    int rightPartsSize = mounturiadding + typepadding + totalcapacitypadding + idlepadding + avaliablepadding + usedpadding;
+
+    //set column 0 minimum width, fix header icon overlap with name issue
+    if(columnWidth(0) < columnWidth(1))
+        setColumnWidth(0, columnWidth(1));
+
+    if (this->width() - rightPartsSize < devicepadding) {
+        int size = width() - devicepadding;
+        size /= header()->count() - 1;
+        setColumnWidth(0, devicepadding);
+        for (int column = 1; column < model()->columnCount(); column++) {
+            setColumnWidth(column, size);
+        }
+        return;
+    }
+    header()->resizeSection(FileSystemModel::DeviceNameColumn, this->viewport()->width() - rightPartsSize);
+}

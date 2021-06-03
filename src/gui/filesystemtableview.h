@@ -66,6 +66,8 @@ private Q_SLOTS:
      */
     void onDoubleClicked(const QModelIndex &index);
 
+    virtual void adjustColumnsSize();
+
 protected:
     /**
      * @brief Load Filesystem table view backup settings

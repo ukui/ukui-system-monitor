@@ -30,7 +30,7 @@
 #include <QObject>
 #include <QPainter>
 
-#define MONITOR_TITLE_WIDGET_HEIGHT 97
+#define MONITOR_TITLE_WIDGET_HEIGHT 88
 #define TITLE_WIDGET_HEIGHT 39
 #define DEVICE_MOUNT_PONINT_RECORD_FILE "/proc/mounts"
 #define FontSize 12

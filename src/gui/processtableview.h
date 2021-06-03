@@ -151,6 +151,8 @@ public Q_SLOTS:
      */
     void onSearchFocusOut();
 
+    virtual void adjustColumnsSize();
+
 protected:
     /**
      * @brief Load process table view backup settings
