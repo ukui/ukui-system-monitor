@@ -72,6 +72,7 @@ public slots:
     void switchChangeItemProcessSignal(int a);
     void animationFinishedSlot();
     void onThemeFontChange(unsigned uFontSize);
+    void onUpdateMaxBtnState();
 private:
     int daemonIsNotRunning();
     void showGuide(QString appName);

@@ -69,6 +69,9 @@ public:
     void displayActiveProcess();
     void displayCurrentUserProcess();
 
+    // main Wnd close
+    virtual void onWndClose();
+
 signals:
     void changeSortStatus(int index, bool isSort);
     void changeRefreshFilter(QString strFilter);

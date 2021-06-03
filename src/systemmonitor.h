@@ -84,9 +84,13 @@ private:
     void showGuide(QString appName);
     void getOsRelease();
     void initCustomStyle();
+    bool loadSettings();
+    void saveSettings();
+    
 private:
     QSettings *proSettings;
-
+    QSize lastWndSize;
+    bool bIsWndMax;
 //    WId mWindow;
     QStackedWidget  *m_sysMonitorStack = nullptr;
     MonitorTitleWidget  *m_titleWidget = nullptr;
@@ -97,7 +101,7 @@ private:
     QPoint dragPosition;
     bool mousePressed;
     
-    QGSettings *styleSettings;
+    QGSettings *styleSettings = nullptr;
 
     QGSettings *opacitySettings;
     double m_transparency;

@@ -58,6 +58,9 @@ public:
      */
     bool eventFilter(QObject *obj, QEvent *event) override;
 
+    // main Wnd close
+    virtual void onWndClose();
+
 signals:
 
 private Q_SLOTS:

@@ -450,6 +450,7 @@ void MonitorTitleWidget::initTitlebarRightContent()
     maxTitleBtn->setAutoRaise(true);
     maxTitleBtn->setIcon(QIcon::fromTheme("window-maximize-symbolic"));
     connect(maxTitleBtn, SIGNAL(clicked()), this, SLOT(onMaxBtnClicked()));
+    
     QToolButton *closeBtn = new QToolButton(this);
     closeBtn->setToolTip(tr("close"));
     closeBtn->setIcon(QIcon::fromTheme("window-close-symbolic"));
@@ -499,6 +500,17 @@ void MonitorTitleWidget::showGuide(QString appName)
     if (interface) {
         delete interface;
         interface = nullptr;
+    }
+}
+
+void MonitorTitleWidget::onUpdateMaxBtnState()
+{
+    if (maxTitleBtn) {
+        if(window()->isMaximized()) {
+            maxTitleBtn->setIcon(QIcon::fromTheme("window-restore-symbolic"));
+        } else {
+            maxTitleBtn->setIcon(QIcon::fromTheme("window-maximize-symbolic"));
+        }
     }
 }
 

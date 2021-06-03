@@ -71,6 +71,9 @@ public:
     void getsetFontSize(int fSize,QLabel *label);
     void setChangeNetSpeedLabel();
 
+    // main Wnd close
+    virtual void onWndClose();
+
 private:
 
     //cpu

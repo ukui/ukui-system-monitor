@@ -73,11 +73,18 @@ SystemMonitor::SystemMonitor(QWidget *parent)
     this->setAutoFillBackground(true);
     this->setWindowTitle(tr("Kylin System Monitor"));
     //this->setWindowIcon(QIcon::fromTheme("ukui-system-monitor")); //control show img in panel
-    this->resize(MAINWINDOWWIDTH,MAINWINDOWHEIGHT);
-    setMinimumSize(MAINWINDOWWIDTH, MAINWINDOWHEIGHT);  //set the minimum size of the mainwindow
+    lastWndSize.setWidth(MAINWINDOWWIDTH);
+    lastWndSize.setHeight(MAINWINDOWHEIGHT);
+    bIsWndMax = false;
 
     proSettings = new QSettings(UKUI_COMPANY_SETTING, UKUI_SETTING_FILE_NAME_SETTING, this);
     proSettings->setIniCodec("UTF-8");
+    loadSettings();
+    this->resize(lastWndSize.width(),lastWndSize.height());
+    if (bIsWndMax) {
+        QTimer::singleShot(0, this, SLOT(onMaximizeWindow()));
+    }
+    setMinimumSize(MAINWINDOWWIDTH, MAINWINDOWHEIGHT);  //set the minimum size of the mainwindow
 
     this->initTitleWidget();
     this->initPanelStack();
@@ -129,7 +136,7 @@ SystemMonitor::~SystemMonitor()
         delete styleSettings;
         styleSettings = nullptr;
     }
-    //qDebug()<<"SystemMonitor Destroyed!!";
+    qDebug()<<"SystemMonitor Destroyed!!";
 }
 
 void SystemMonitor::paintEvent(QPaintEvent *event)
@@ -312,6 +319,8 @@ void SystemMonitor::onMaximizeWindow()
     else {
         this->showMaximized();
     }
+    if (m_titleWidget)
+        m_titleWidget->onUpdateMaxBtnState();
 }
 
 void SystemMonitor::onMinimizeWindow()
@@ -440,6 +449,15 @@ void SystemMonitor::getOsRelease()
 
 void SystemMonitor::closeEvent(QCloseEvent *event)
 {
+    lastWndSize = size();
+    bIsWndMax = isMaximized();
+    if (newProcessDialog)
+        newProcessDialog->onWndClose();
+    if (filesystemView)
+        filesystemView->onWndClose();
+    if (newProcessDialog)
+        newProcessDialog->onWndClose();
+    saveSettings();
     event->accept();
 }
 
@@ -535,5 +553,39 @@ void SystemMonitor::showGuide(QString appName)
     if (interface) {
         delete interface;
         interface = nullptr;
+    }
+}
+
+bool SystemMonitor::loadSettings()
+{
+    bool bSuccess = false;
+    if (proSettings) {
+        proSettings->beginGroup("SystemMonitor");
+        QVariant wndWidth = proSettings->value(MAINWINDOW_SIZE_W);
+        QVariant wndHeight = proSettings->value(MAINWINDOW_SIZE_H);
+        QVariant isWndMax = proSettings->value(MAINWINDOW_SIZE_MAX);
+        proSettings->endGroup();
+        if (wndWidth.isValid() && wndWidth.toInt() > 0 && 
+            wndHeight.isValid() && wndHeight.toInt() > 0) {
+            lastWndSize.setWidth(wndWidth.toInt());
+            lastWndSize.setHeight(wndHeight.toInt());
+        }
+        if (isWndMax.isValid()) {
+            bIsWndMax = isWndMax.toBool();
+        }
+        bSuccess = true;
+    }
+    return bSuccess;
+}
+
+void SystemMonitor::saveSettings()
+{
+    if (proSettings) {
+        proSettings->beginGroup("SystemMonitor");
+        proSettings->setValue(MAINWINDOW_SIZE_W, lastWndSize.width());
+        proSettings->setValue(MAINWINDOW_SIZE_H, lastWndSize.height());
+        proSettings->setValue(MAINWINDOW_SIZE_MAX, bIsWndMax);
+        proSettings->endGroup();
+        proSettings->sync();
     }
 }

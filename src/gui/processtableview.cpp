@@ -80,9 +80,14 @@ ProcessTableView::ProcessTableView(QSettings* proSettings, QWidget *parent)
 
 // destructor
 ProcessTableView::~ProcessTableView()
-{
+{    
     // start process monitor thread
     ProcessMonitorThread::instance()->stop();
+}
+
+void ProcessTableView::onWndClose()
+{
+    saveSettings();
 }
 
 // event filter
@@ -194,25 +199,25 @@ void ProcessTableView::initUI(bool settingsLoaded)
     m_headerContextMenu = new QMenu(this);
     m_headerContextMenu->setObjectName("MonitorMenu");
 
-    // show default style
-    // proc name
-    setColumnWidth(ProcessTableModel::ProcessNameColumn, namepadding);
-    // account
-    setColumnWidth(ProcessTableModel::ProcessUserColumn, userpadding);
-    // diskio
-    setColumnWidth(ProcessTableModel::ProcessDiskIoColumn, diskpadding);
-    // cpu
-    setColumnWidth(ProcessTableModel::ProcessCpuColumn, cpupadding);
-    // pid
-    setColumnWidth(ProcessTableModel::ProcessIdColumn, idpadding);
-    // flownet
-    setColumnWidth(ProcessTableModel::ProcessFlowNetColumn, networkpadding);
-    // memory
-    setColumnWidth(ProcessTableModel::ProcessMemoryColumn, memorypadding);
-    // priority
-    setColumnWidth(ProcessTableModel::ProcessNiceColumn, prioritypadding);
-
     if (!settingsLoaded) {
+        // show default style
+        // proc name
+        setColumnWidth(ProcessTableModel::ProcessNameColumn, namepadding);
+        // account
+        setColumnWidth(ProcessTableModel::ProcessUserColumn, userpadding);
+        // diskio
+        setColumnWidth(ProcessTableModel::ProcessDiskIoColumn, diskpadding);
+        // cpu
+        setColumnWidth(ProcessTableModel::ProcessCpuColumn, cpupadding);
+        // pid
+        setColumnWidth(ProcessTableModel::ProcessIdColumn, idpadding);
+        // flownet
+        setColumnWidth(ProcessTableModel::ProcessFlowNetColumn, networkpadding);
+        // memory
+        setColumnWidth(ProcessTableModel::ProcessMemoryColumn, memorypadding);
+        // priority
+        setColumnWidth(ProcessTableModel::ProcessNiceColumn, prioritypadding);
+
         setColumnHidden(ProcessTableModel::ProcessNameColumn, false);
         setColumnHidden(ProcessTableModel::ProcessUserColumn, false);
         setColumnHidden(ProcessTableModel::ProcessDiskIoColumn, false);
@@ -225,7 +230,6 @@ void ProcessTableView::initUI(bool settingsLoaded)
         //sort
         sortByColumn(ProcessTableModel::ProcessCpuColumn, Qt::DescendingOrder);
     }
-    saveSettings();
 }
 
 // initialize connections
@@ -286,9 +290,6 @@ void ProcessTableView::initConnections(bool settingsLoaded)
     m_contextMenu->addAction(propertiyAction);
 
     auto *h = header();
-    //connect(h, &QHeaderView::sectionResized, this, [ = ]() { saveSettings(); });
-    connect(h, &QHeaderView::sectionMoved, this, [ = ]() { saveSettings(); });
-    connect(h, &QHeaderView::sortIndicatorChanged, this, [ = ]() { saveSettings(); });
     connect(h, &QHeaderView::customContextMenuRequested, this,
             &ProcessTableView::displayProcessTableHeaderContextMenu);
 
@@ -298,49 +299,42 @@ void ProcessTableView::initConnections(bool settingsLoaded)
     userHeaderAction->setCheckable(true);
     connect(userHeaderAction, &QAction::triggered, this, [this](bool b) {
         header()->setSectionHidden(ProcessTableModel::ProcessUserColumn, !b);
-        saveSettings();
     });
     // diskio action
     auto *diskioHeaderAction = m_headerContextMenu->addAction(tr("Disk"));
     diskioHeaderAction->setCheckable(true);
     connect(diskioHeaderAction, &QAction::triggered, this, [this](bool b) {
         header()->setSectionHidden(ProcessTableModel::ProcessDiskIoColumn, !b);
-        saveSettings();
     });
     // cpu action
     auto *cpuHeaderAction = m_headerContextMenu->addAction(tr("CPU"));
     cpuHeaderAction->setCheckable(true);
     connect(cpuHeaderAction, &QAction::triggered, this, [this](bool b) {
         header()->setSectionHidden(ProcessTableModel::ProcessCpuColumn, !b);
-        saveSettings();
     });
     // id action
     auto *idHeaderAction = m_headerContextMenu->addAction(tr("ID"));
     idHeaderAction->setCheckable(true);
     connect(idHeaderAction, &QAction::triggered, this, [this](bool b) {
         header()->setSectionHidden(ProcessTableModel::ProcessIdColumn, !b);
-        saveSettings();
     });
     // flownet action
     auto *flownetHeaderAction = m_headerContextMenu->addAction(tr("Flownet Persec"));
     flownetHeaderAction->setCheckable(true);
     connect(flownetHeaderAction, &QAction::triggered, this, [this](bool b) {
         header()->setSectionHidden(ProcessTableModel::ProcessFlowNetColumn, !b);
-        saveSettings();
     });
     // memory action
     auto *memHeaderAction = m_headerContextMenu->addAction(tr("Memory"));
     memHeaderAction->setCheckable(true);
     connect(memHeaderAction, &QAction::triggered, this, [this](bool b) {
         header()->setSectionHidden(ProcessTableModel::ProcessMemoryColumn, !b);
-        saveSettings();
     });
     // priority action
     auto *priHeaderAction = m_headerContextMenu->addAction(tr("Priority"));
     priHeaderAction->setCheckable(true);
     connect(priHeaderAction, &QAction::triggered, this, [this](bool b) {
         header()->setSectionHidden(ProcessTableModel::ProcessNiceColumn, !b);
-        saveSettings();
     });
 
     // set default header context menu checkable state when settings load without success
@@ -518,7 +512,7 @@ void ProcessTableView::saveSettings()
         m_proSettings->beginGroup("PROCESS");
         m_proSettings->setValue(SETTINGSOPTION_PROCESSTABLEHEADERSTATE, buf.toBase64());
         m_proSettings->endGroup();
-        m_proSettings->sync();
+        //m_proSettings->sync();
     }
 }
 
