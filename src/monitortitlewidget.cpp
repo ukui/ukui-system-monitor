@@ -35,6 +35,7 @@
 #include <QStandardItemModel>
 #include <QMenu>
 #include <QPainterPath>
+#include "style/usmproxystyle.h"
 
 #define MENU_SCHEMA "org.ukui.system-monitor.menu"
 #define WHICH_MENU "which-menu"
@@ -617,6 +618,42 @@ void MonitorTitleWidget::initToolbarLeftContent()
     m_bottomLayout->addWidget(m_filesystemButton);
     m_bottomLayout->addWidget(emptyWidget, 3);
     m_bottomLayout->setSpacing(1);
+    if (qtSettings) {
+        connect(qtSettings, &QGSettings::changed, this, [=](const QString &key) {
+            if (key == "styleName") {
+                qDebug()<<"style name changed";
+                auto styleName = qtSettings->get("styleName").toString();
+
+                if (styleName == "ukui-default" || styleName == "ukui-dark" || styleName == "ukui-white"
+                        || styleName == "ukui-black" || styleName == "ukui-light" || styleName == "ukui") {
+                    if (styleName == "ukui")
+                        styleName = "ukui-default";
+                    else if (styleName == "ukui-black")
+                        styleName = "ukui-dark";
+                    else if (styleName == "ukui-white")
+                        styleName = "ukui-light";
+
+                    m_processButton->setStyle(new USMProxyStyle(styleName));
+                    m_resourceButton->setStyle(new USMProxyStyle(styleName));
+                    m_filesystemButton->setStyle(new USMProxyStyle(styleName));
+                }
+            }
+        });
+        auto styleName = qtSettings->get("styleName").toString();
+        if (styleName == "ukui-default" || styleName == "ukui-dark" || styleName == "ukui-white"
+                || styleName == "ukui-black" || styleName == "ukui-light" || styleName == "ukui") {
+            if (styleName == "ukui")
+                styleName = "ukui-default";
+            else if (styleName == "ukui-black")
+                styleName = "ukui-dark";
+            else if (styleName == "ukui-white")
+                styleName = "ukui-light";
+
+            m_processButton->setStyle(new USMProxyStyle(styleName));
+            m_resourceButton->setStyle(new USMProxyStyle(styleName));
+            m_filesystemButton->setStyle(new USMProxyStyle(styleName));
+        }
+    }
 }
 
 void MonitorTitleWidget::onThemeFontChange(unsigned uFontSize)

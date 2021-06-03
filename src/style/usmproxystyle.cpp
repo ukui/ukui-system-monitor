@@ -20,7 +20,8 @@ void USMProxyStyle::drawControl(QStyle::ControlElement element, const QStyleOpti
     switch(element) {
     case CE_PushButton:
         if (const GroupButtonStyleOption *btn = qstyleoption_cast<const GroupButtonStyleOption *>(option)) {
-            if (btn->position == GroupButtonStyleOption::OnlyOne)
+            if (btn->position < GroupButtonStyleOption::Begin || 
+                btn->position > GroupButtonStyleOption::End)
                 break;
             proxy()->drawControl(CE_PushButtonBevel, btn, painter, widget);
             GroupButtonStyleOption subopt = *btn;
@@ -30,7 +31,8 @@ void USMProxyStyle::drawControl(QStyle::ControlElement element, const QStyleOpti
         return;
     case CE_PushButtonBevel:
         if (const GroupButtonStyleOption *btn = qstyleoption_cast<const GroupButtonStyleOption *>(option)) {
-            if (btn->position == GroupButtonStyleOption::OnlyOne)
+            if (btn->position < GroupButtonStyleOption::Begin || 
+                btn->position > GroupButtonStyleOption::End)
                 break;
             QRect br = btn->rect;
             int dbi = proxy()->pixelMetric(PM_ButtonDefaultIndicator, btn, widget);
@@ -137,7 +139,8 @@ void USMProxyStyle::drawPrimitive(QStyle::PrimitiveElement element, const QStyle
     case PE_PanelButtonCommand:
     {
         if (const GroupButtonStyleOption *btn = qstyleoption_cast<const GroupButtonStyleOption *>(option)) {
-            if (btn->position == GroupButtonStyleOption::OnlyOne)
+            if (btn->position < GroupButtonStyleOption::Begin || 
+                btn->position > GroupButtonStyleOption::End)
                 break;
             QRect rect = btn->rect;
             if (!(btn->state & QStyle::State_Enabled)) {

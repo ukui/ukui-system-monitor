@@ -23,7 +23,6 @@
 #include "gui/ktableview.h"
 #include "gui/processtableview.h"
 #include "process/process_monitor.h"
-#include "style/usmproxystyle.h"
 
 #include "util.h"
 #include <QFileSystemWatcher>
@@ -88,46 +87,8 @@ SystemMonitor::SystemMonitor(QWidget *parent)
     connect(m_titleWidget,SIGNAL(SearchFocusOut()),newProcessDialog,SLOT(onSearchFocusOut()));
     newProcessDialog->onChangeProcessFilter(m_titleWidget->whichProcType());
     getTransparentData();
-    initCustomStyle();
     this->moveCenter();
     qDebug()<<"--+--"<<version;
-}
-
-void SystemMonitor::initCustomStyle()
-{
-    if (QGSettings::isSchemaInstalled(THEME_QT_SCHEMA)) {
-        styleSettings = new QGSettings(THEME_QT_SCHEMA);
-        connect(styleSettings, &QGSettings::changed, this, [=](const QString &key) {
-            if (key == "styleName") {
-                qDebug()<<"style name changed";
-                auto styleName = styleSettings->get("styleName").toString();
-
-                if (styleName == "ukui-default" || styleName == "ukui-dark" || styleName == "ukui-white"
-                        || styleName == "ukui-black" || styleName == "ukui-light" || styleName == "ukui") {
-                    if (styleName == "ukui")
-                        styleName = "ukui-default";
-                    else if (styleName == "ukui-black")
-                        styleName = "ukui-dark";
-                    else if (styleName == "ukui-white")
-                        styleName = "ukui-light";
-
-                    qApp->setStyle(new USMProxyStyle(styleName));
-                }
-            }
-        });
-        auto styleName = styleSettings->get("styleName").toString();
-        if (styleName == "ukui-default" || styleName == "ukui-dark" || styleName == "ukui-white"
-                || styleName == "ukui-black" || styleName == "ukui-light" || styleName == "ukui") {
-            if (styleName == "ukui")
-                styleName = "ukui-default";
-            else if (styleName == "ukui-black")
-                styleName = "ukui-dark";
-            else if (styleName == "ukui-white")
-                styleName = "ukui-light";
-
-            qApp->setStyle(new USMProxyStyle(styleName));
-        }
-    }
 }
 
 void SystemMonitor::getTransparentData()

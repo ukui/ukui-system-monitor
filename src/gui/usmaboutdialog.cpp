@@ -18,7 +18,7 @@ USMAboutDialog::USMAboutDialog(QWidget *parent)
 {
     setFixedSize(420, 480);
 
-    XAtomHelper::getInstance()->setUKUIDecoraiontHint(this->winId(), true);
+    //XAtomHelper::getInstance()->setUKUIDecoraiontHint(this->winId(), true);
     MotifWmHints hints;
     hints.flags = MWM_HINTS_FUNCTIONS|MWM_HINTS_DECORATIONS;
     hints.functions = MWM_FUNC_ALL;
