@@ -674,7 +674,7 @@ Are you sure to continue?</source>
     <message>
         <location filename="../gui/usmaboutdialog.cpp" line="139"/>
         <source>Service and support team:</source>
-        <translation type="unfinished">Service&amp;Support:</translation>
+        <translation type="unfinished">Service &amp; Support:</translation>
     </message>
 </context>
 <context>

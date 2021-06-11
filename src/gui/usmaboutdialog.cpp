@@ -16,7 +16,7 @@
 USMAboutDialog::USMAboutDialog(QWidget *parent)
     : QDialog(parent)
 {
-    setFixedSize(420, 480);
+    setFixedSize(420, 486);
 
     //XAtomHelper::getInstance()->setUKUIDecoraiontHint(this->winId(), true);
     MotifWmHints hints;
@@ -47,8 +47,20 @@ bool USMAboutDialog::initWidgets()
     m_introduceLayout = new QHBoxLayout();
     m_supportLayout = new QHBoxLayout();
 
-    m_mainVLayout->setContentsMargins(8, 4, 4, 4);
+    m_mainVLayout->setContentsMargins(0, 0, 0, 0);
+    m_mainVLayout->setSpacing(0);
+    m_titleLayout->setContentsMargins(8, 4, 4, 4);
     m_titleLayout->setSpacing(0);
+    m_logoIconLayout->setContentsMargins(0, 0, 0, 0);
+    m_logoIconLayout->setSpacing(0);
+    m_appNameLayout->setContentsMargins(0, 0, 0, 0);
+    m_appNameLayout->setSpacing(0);
+    m_versionLayout->setContentsMargins(0, 0, 0, 0);
+    m_versionLayout->setSpacing(0);
+    m_introduceLayout->setContentsMargins(0, 0, 0, 0);
+    m_introduceLayout->setSpacing(0);
+    m_supportLayout->setContentsMargins(0, 0, 0, 0);
+    m_supportLayout->setSpacing(8);
 
     initTitleWidget();
 
@@ -57,17 +69,17 @@ bool USMAboutDialog::initWidgets()
     initSupportWidget();
 
     m_mainVLayout->addLayout(m_titleLayout);
-    m_mainVLayout->addSpacing(38);
+    m_mainVLayout->addSpacing(34);
     m_mainVLayout->addLayout(m_logoIconLayout);
-    m_mainVLayout->addSpacing(16);
+    m_mainVLayout->addSpacing(12);
     m_mainVLayout->addLayout(m_appNameLayout);
-    m_mainVLayout->addSpacing(12);
+    m_mainVLayout->addSpacing(8);
     m_mainVLayout->addLayout(m_versionLayout);
-    m_mainVLayout->addSpacing(12);
+    m_mainVLayout->addSpacing(8);
     m_mainVLayout->addLayout(m_introduceLayout);
-    m_mainVLayout->addSpacing(24);
+    m_mainVLayout->addStretch();
     m_mainVLayout->addLayout(m_supportLayout);
-    m_mainVLayout->addSpacing(40);
+    m_mainVLayout->addStretch();
 
     this->setLayout(m_mainVLayout);
 
@@ -98,7 +110,7 @@ bool USMAboutDialog::initTitleWidget()
     m_btnClose->setFixedSize(30, 30);
 
     m_titleLayout->addWidget(m_labelTitleIcon);
-    m_titleLayout->addSpacing(8);
+    m_titleLayout->addSpacing(16);
     m_titleLayout->addWidget(m_labelTitleText);
     m_titleLayout->addStretch();
     m_titleLayout->addWidget(m_btnClose);
@@ -110,33 +122,27 @@ bool USMAboutDialog::initContentWidget()
     QIcon titleIcon = QIcon::fromTheme("ukui-system-monitor");
     m_labelLogoIcon = new QLabel();
     m_labelLogoIcon->setPixmap(titleIcon.pixmap(QSize(96, 96)));
-
     m_logoIconLayout->addStretch();
     m_logoIconLayout->addWidget(m_labelLogoIcon);
     m_logoIconLayout->addStretch();
 
     m_labelAppName = new QLabel(tr("Kylin System Monitor"));
-    m_labelAppName->setFixedHeight(32);
-
     m_appNameLayout->addStretch();
     m_appNameLayout->addWidget(m_labelAppName);
     m_appNameLayout->addStretch();
 
     m_labelVersion = new QLabel(tr("version: ") + getUsmVersion());
-    m_labelVersion->setFixedHeight(24);
-
     m_versionLayout->addStretch();
     m_versionLayout->addWidget(m_labelVersion);
     m_versionLayout->addStretch();
 
-    m_labelIntroduce = new QTextEdit(tr("System monitor is a desktop application that face desktop users of Kylin operating system,"
+    m_labelIntroduce = new QLabel(tr("System monitor is a desktop application that face desktop users of Kylin operating system,"
                                         "It meets the needs of users to monitor the system process, system resources and file system"));
-    m_labelIntroduce->setReadOnly(true);
-    m_labelIntroduce->setFrameStyle(QFrame::NoFrame);
-    m_labelIntroduce->setFixedWidth(356);
-    m_introduceLayout->addSpacing(32);
+    m_labelIntroduce->setMinimumSize(356, 0);
+    m_labelIntroduce->setMaximumSize(356, 16777215);
+    m_labelIntroduce->setWordWrap(true);
+    m_labelIntroduce->setAlignment(Qt::AlignJustify);
     m_introduceLayout->addWidget(m_labelIntroduce);
-    m_introduceLayout->addSpacing(32);
     return true;
 }
 
@@ -149,14 +155,13 @@ bool USMAboutDialog::initSupportWidget()
 
     m_btnSupportUrl = new QPushButton("support@kylinos.cn");
     m_btnSupportUrl->setFocusPolicy(Qt::NoFocus);
-    m_btnSupportUrl->setContentsMargins(0,0,0,0);
     m_btnSupportUrl->setCursor( QCursor(Qt::PointingHandCursor));
     m_btnSupportUrl->setStyleSheet("QPushButton{background: transparent;border-radius: 4px;text-decoration: underline;} ");
 
     m_supportLayout->addWidget(m_btnSupportUrl);
     m_supportLayout->setAlignment(Qt::AlignLeft);
     connect(m_btnSupportUrl, &QPushButton::clicked, this,[=] {
-        QDesktopServices::openUrl(QUrl(QLatin1String("mailto:support@kylinos.cn")));
+        QDesktopServices::openUrl(QUrl("mailto:support@kylinos.cn"));
     });
     return true;
 }
@@ -229,14 +234,6 @@ void USMAboutDialog::paintEvent(QPaintEvent *event)
     painter.setPen(Qt::transparent);
     painter.drawPath(path);
     QDialog::paintEvent(event);
-
-    QPalette pal = m_labelIntroduce->palette();
-    // 设置画刷，填充背景颜色
-    pal.setBrush(QPalette::Base, this->palette().base().color());
-    // 取消继承父类的背景样式
-    m_labelIntroduce->setAutoFillBackground(true);
-    // QTextEdit设置调色板
-    m_labelIntroduce->setPalette(pal);
 }
 
 void USMAboutDialog::onThemeFontChange(float fFontSize)
@@ -244,27 +241,7 @@ void USMAboutDialog::onThemeFontChange(float fFontSize)
     if (m_btnSupportUrl) {
         setFontSize(m_btnSupportUrl, fFontSize);
     }
-    #if 0
-    if (m_labelIntroduce) {
-        int otherHeight = 72+96+16+28+12+24+12+24+24+40; //348
-        int maxHeight = 560;
-        int maxTextHeight = maxHeight - otherHeight;
-        int textHeight = 0;
-        int textMaxWidth = 356;
-        QFontMetrics fontMetrics(m_labelIntroduce->font());
-        int textWidth = fontMetrics.width(m_labelIntroduce->toPlainText());
-        int addLine = (textWidth%textMaxWidth) == 0 ? 0 : 1;
-        int textLines = addLine + textWidth/textMaxWidth;
-        int lineHeight = fontMetrics.height()+12;
-        textHeight = textLines*lineHeight;
-        int totalHeight = otherHeight + textHeight;
-        totalHeight = totalHeight > maxHeight ? maxHeight : totalHeight;
-        setFixedHeight(totalHeight);
-        qInfo()<<"edit font:"<<fontMetrics.height()<<","<<textWidth<<",TextHeight:"<<textHeight<<",totalHeight:"<<totalHeight
-            <<",lineHeight:"<<lineHeight<<",textLines:"<<textLines<<",textFrameHeight:"<<m_labelIntroduce->rect().height();
-    }
-    #endif
     if (m_labelAppName) {
-        setFontSize(m_labelAppName, fFontSize + 2);
+        setFontSize(m_labelAppName, fFontSize * 1.3);
     }
 }

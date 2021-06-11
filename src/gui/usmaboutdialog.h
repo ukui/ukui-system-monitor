@@ -38,7 +38,7 @@ private:
     QLabel *m_labelLogoIcon = nullptr;
     QLabel *m_labelAppName = nullptr;
     QLabel *m_labelVersion = nullptr;
-    QTextEdit *m_labelIntroduce = nullptr;
+    QLabel *m_labelIntroduce = nullptr;
     QLabel *m_labelSupport = nullptr;
     QPushButton *m_btnSupportUrl = nullptr;
 

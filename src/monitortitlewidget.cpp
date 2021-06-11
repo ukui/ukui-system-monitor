@@ -760,7 +760,7 @@ void MonitorTitleWidget::initWidgets()
     QHBoxLayout* queryWidLayout = new QHBoxLayout;
     queryWidLayout->setContentsMargins(4,4,0,0);
     queryWidLayout->setAlignment(Qt::AlignJustify);
-    queryWidLayout->setSpacing(0);
+    queryWidLayout->setSpacing(8);
     m_queryWid->setLayout(queryWidLayout);
 
     m_queryIcon->setFixedWidth(pixmap.width());
@@ -770,11 +770,11 @@ void MonitorTitleWidget::initWidgets()
     queryWidLayout->setAlignment(m_queryIcon,Qt::AlignVCenter);
     queryWidLayout->setAlignment(m_queryText,Qt::AlignVCenter);
     
-    m_rectSeachAnimationBegin.setX((m_searchEditNew->width() - (m_queryIcon->width()+m_queryText->width()+10))/2);
+    m_rectSeachAnimationBegin.setX((m_searchEditNew->width() - (m_queryIcon->width()+m_queryText->width()+18))/2);
     m_rectSeachAnimationBegin.setY(0);
-    m_rectSeachAnimationBegin.setWidth(m_queryIcon->width()+m_queryText->width()+10);
+    m_rectSeachAnimationBegin.setWidth(m_queryIcon->width()+m_queryText->width()+18);
     m_rectSeachAnimationBegin.setHeight((m_searchEditNew->height() + 30)/2);
-    m_rectSeachAnimationEnd.setX(0);
+    m_rectSeachAnimationEnd.setX(6);
     m_rectSeachAnimationEnd.setY(0);
     m_rectSeachAnimationEnd.setWidth(m_queryIcon->width()+5);
     m_rectSeachAnimationEnd.setHeight((m_searchEditNew->height()+30)/2);
