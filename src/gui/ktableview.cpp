@@ -92,8 +92,12 @@ KTableView::KTableView(QWidget *parent)
 
     prop.setScrollMetric(QScrollerProperties::AxisLockThreshold, 1);
     scroller->setScrollerProperties(prop);
+    // disable HScroll
+    this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     // enable touch gesture
     QScroller::grabGesture(viewport(), QScroller::TouchGesture);
+    m_lastSize = size();
+    m_isFirstResize = true;
 }
 
 KTableView::~KTableView()
@@ -166,4 +170,50 @@ bool KTableView::viewportEvent(QEvent *event)
 void KTableView::scrollTo(const QModelIndex &index, QAbstractItemView::ScrollHint hint)
 {
     QTreeView::scrollTo(index, hint);
+}
+
+void KTableView::adjustColumnsSize()
+{
+    if (!model())
+        return;
+
+    if (model()->columnCount() == 0)
+        return;
+    
+    header()->resizeSections(QHeaderView::ResizeToContents);
+
+    int rightPartsSize = 0;
+    for (int column = 1; column < model()->columnCount(); column++) {
+        int columnSize = header()->sectionSize(column);
+        rightPartsSize += columnSize;
+    }
+
+    //set column 0 minimum width, fix header icon overlap with name issue
+    if(columnWidth(0) < columnWidth(1))
+        setColumnWidth(0, columnWidth(1));
+
+    if (this->width() - rightPartsSize < COLUMN_FIRST_WIDTH_MIN) {
+        int size = width() - COLUMN_FIRST_WIDTH_MIN;
+        size /= header()->count() - 1;
+        setColumnWidth(0, COLUMN_FIRST_WIDTH_MIN);
+        for (int column = 1; column < model()->columnCount(); column++) {
+            setColumnWidth(column, size);
+        }
+        return;
+    }
+
+    header()->resizeSection(0, this->viewport()->width() - rightPartsSize);
+}
+
+void KTableView::resizeEvent(QResizeEvent *e)
+{
+    QTreeView::resizeEvent(e);
+    if (m_lastSize != size()) {
+        m_lastSize = size();
+        if (m_isFirstResize) {
+            m_isFirstResize = false;
+        } else {
+            adjustColumnsSize();
+        }
+    }
 }

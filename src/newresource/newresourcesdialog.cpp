@@ -312,6 +312,11 @@ NewResouresDialog::~NewResouresDialog()
     }
 }
 
+void NewResouresDialog::onWndClose()
+{
+    
+}
+
 void NewResouresDialog::setChangeNetSpeedLabel()
 {
     connect(networkChart,&NetWorkChart::speedToLowKib,this,[=](){

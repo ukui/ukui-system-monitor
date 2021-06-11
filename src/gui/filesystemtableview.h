@@ -58,6 +58,9 @@ public:
      */
     bool eventFilter(QObject *obj, QEvent *event) override;
 
+    // main Wnd close
+    virtual void onWndClose();
+
 signals:
 
 private Q_SLOTS:
@@ -65,6 +68,8 @@ private Q_SLOTS:
      * @brief Filesystem table item doubleclicked event
      */
     void onDoubleClicked(const QModelIndex &index);
+
+    virtual void adjustColumnsSize();
 
 protected:
     /**

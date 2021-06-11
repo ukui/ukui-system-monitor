@@ -38,7 +38,7 @@
 
 //#define VERSION "2.4.1"
 
-const QString UKUI_COMPANY_SETTING = "ukui/ukui-system-monitor";
+const QString UKUI_COMPANY_SETTING = "ukui";
 const QString UKUI_SETTING_FILE_NAME_SETTING = "ukui-system-monitor";
 
 enum CleanerModuleID {

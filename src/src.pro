@@ -109,7 +109,6 @@ HEADERS += \
     newresource/cpuhistorychart.h \
     newresource/swapandmemorychart.h \
     newresource/networkchart.h \
-    newaboutdialog.h \
 #    newresourcesdialog.h
     gui/kitemdelegate.h \
     gui/kheaderview.h \
@@ -117,6 +116,7 @@ HEADERS += \
     gui/processtableview.h \
     gui/procpropertiesdlg.h \
     gui/filesystemtableview.h \
+    gui/usmaboutdialog.h \
     process/process_data.h \
     process/process_list.h \
     process/process_monitor.h \
@@ -125,7 +125,9 @@ HEADERS += \
     model/processsortfilterproxymodel.h \
     model/filesystemmodel.h \
     model/filesystemsortfilterproxymodel.h \
-    desktopfileinfo.h
+    desktopfileinfo.h \
+    style/usmproxystyle.h \
+    control/kgroupbutton.h
 
 SOURCES += \
     ../shell/xatom-helper.cpp \
@@ -160,7 +162,6 @@ SOURCES += \
     newresource/cpuhistorychart.cpp \
     newresource/swapandmemorychart.cpp \
     newresource/networkchart.cpp \
-    newaboutdialog.cpp \
 #    newresourcesdialog.cpp
     gui/kitemdelegate.cpp \
     gui/kheaderview.cpp \
@@ -168,6 +169,7 @@ SOURCES += \
     gui/processtableview.cpp \
     gui/procpropertiesdlg.cpp \
     gui/filesystemtableview.cpp \
+    gui/usmaboutdialog.cpp \
     process/process_list.cpp \
     process/process_monitor.cpp \
     process/process_network.cpp \
@@ -175,7 +177,9 @@ SOURCES += \
     model/processsortfilterproxymodel.cpp \
     model/filesystemmodel.cpp \
     model/filesystemsortfilterproxymodel.cpp \
-    desktopfileinfo.cpp
+    desktopfileinfo.cpp \
+    style/usmproxystyle.cpp \
+    control/kgroupbutton.cpp
 
 OTHER_FILES += \
     systemmonitor.json

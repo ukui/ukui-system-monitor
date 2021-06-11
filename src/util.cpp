@@ -29,7 +29,9 @@
 #include <fstream>
 #include <sstream>
 #include <QSvgRenderer>
-const bool loadSvg(const QString &fileName, const int size, QPixmap& pixmap)
+#include <QProcess>
+
+bool loadSvg(const QString &fileName, const int size, QPixmap& pixmap)
 {
     pixmap = pixmap.scaled(size, size);
     QSvgRenderer renderer(fileName);
@@ -489,4 +491,28 @@ QSet<QString> getFileContentsLineByLine(const QString &filePath)
 {
     QString fileContent = getFileContent(filePath);
     return QSet<QString>::fromList(fileContent.split("\n"));
+}
+
+// 获取应用程序版本
+QString getUsmVersion()
+{
+    QString versionText;
+    QProcess proc;
+    QStringList options;
+    options << "-l" << "|" << "grep" << "ukui-system-monitor";
+    proc.start("dpkg", options);
+    proc.waitForFinished();
+    QString dpkgInfo = proc.readAll();
+    QStringList infoList = dpkgInfo.split("\n");
+    for (int n = 0; n < infoList.size(); n++) {
+        QString strInfoLine = infoList[n];
+        if (strInfoLine.contains("ukui-system-monitor")) {
+            QStringList lineInfoList = strInfoLine.split(QRegExp("[\\s]+"));
+            if (lineInfoList.size() >= 3) {
+                versionText = lineInfoList[2];
+            }
+            break;
+        }
+    }
+    return versionText;
 }

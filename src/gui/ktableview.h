@@ -30,6 +30,8 @@
 
 class QModelIndex;
 
+#define COLUMN_FIRST_WIDTH_MIN     150 
+
 /**
  * @brief Base class for common styled table view
  */
@@ -54,6 +56,9 @@ public:
      * @param model Item model to be set
      */
     void setModel(QAbstractItemModel *model) override;
+
+public Q_SLOTS:
+    virtual void adjustColumnsSize();
 
 protected:
     /**
@@ -93,6 +98,8 @@ protected:
      */
     void scrollTo(const QModelIndex &index, ScrollHint hint = EnsureVisible) override;
 
+    void resizeEvent(QResizeEvent *e) override;
+
 private:
     // Common styled item delegate for this table view
     KItemDelegate *m_itemDelegate {nullptr};
@@ -103,6 +110,10 @@ private:
     QModelIndex m_hover;
     // Current index (row) being pressed by mouse
     QModelIndex m_pressed;
+
+    // last widget size
+    QSize m_lastSize;
+    bool m_isFirstResize;
 
     int m_focusReason = Qt::TabFocusReason;
 };

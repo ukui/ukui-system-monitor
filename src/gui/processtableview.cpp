@@ -80,9 +80,14 @@ ProcessTableView::ProcessTableView(QSettings* proSettings, QWidget *parent)
 
 // destructor
 ProcessTableView::~ProcessTableView()
-{
+{    
     // start process monitor thread
     ProcessMonitorThread::instance()->stop();
+}
+
+void ProcessTableView::onWndClose()
+{
+    saveSettings();
 }
 
 // event filter
@@ -149,8 +154,6 @@ void ProcessTableView::onChangeProcessFilter(int index)
         if (this->m_strFilter != "all")
             this->displayAllProcess();
     }
-
-    saveSettings();
 }
 
 // initialize ui components
@@ -196,25 +199,25 @@ void ProcessTableView::initUI(bool settingsLoaded)
     m_headerContextMenu = new QMenu(this);
     m_headerContextMenu->setObjectName("MonitorMenu");
 
-    // show default style
-    // proc name
-    setColumnWidth(ProcessTableModel::ProcessNameColumn, namepadding);
-    // account
-    setColumnWidth(ProcessTableModel::ProcessUserColumn, userpadding);
-    // diskio
-    setColumnWidth(ProcessTableModel::ProcessDiskIoColumn, diskpadding);
-    // cpu
-    setColumnWidth(ProcessTableModel::ProcessCpuColumn, cpupadding);
-    // pid
-    setColumnWidth(ProcessTableModel::ProcessIdColumn, idpadding);
-    // flownet
-    setColumnWidth(ProcessTableModel::ProcessFlowNetColumn, networkpadding);
-    // memory
-    setColumnWidth(ProcessTableModel::ProcessMemoryColumn, memorypadding);
-    // priority
-    setColumnWidth(ProcessTableModel::ProcessNiceColumn, prioritypadding);
-
     if (!settingsLoaded) {
+        // show default style
+        // proc name
+        setColumnWidth(ProcessTableModel::ProcessNameColumn, namepadding);
+        // account
+        setColumnWidth(ProcessTableModel::ProcessUserColumn, userpadding);
+        // diskio
+        setColumnWidth(ProcessTableModel::ProcessDiskIoColumn, diskpadding);
+        // cpu
+        setColumnWidth(ProcessTableModel::ProcessCpuColumn, cpupadding);
+        // pid
+        setColumnWidth(ProcessTableModel::ProcessIdColumn, idpadding);
+        // flownet
+        setColumnWidth(ProcessTableModel::ProcessFlowNetColumn, networkpadding);
+        // memory
+        setColumnWidth(ProcessTableModel::ProcessMemoryColumn, memorypadding);
+        // priority
+        setColumnWidth(ProcessTableModel::ProcessNiceColumn, prioritypadding);
+
         setColumnHidden(ProcessTableModel::ProcessNameColumn, false);
         setColumnHidden(ProcessTableModel::ProcessUserColumn, false);
         setColumnHidden(ProcessTableModel::ProcessDiskIoColumn, false);
@@ -227,7 +230,6 @@ void ProcessTableView::initUI(bool settingsLoaded)
         //sort
         sortByColumn(ProcessTableModel::ProcessCpuColumn, Qt::DescendingOrder);
     }
-    saveSettings();
 }
 
 // initialize connections
@@ -288,9 +290,6 @@ void ProcessTableView::initConnections(bool settingsLoaded)
     m_contextMenu->addAction(propertiyAction);
 
     auto *h = header();
-    connect(h, &QHeaderView::sectionResized, this, [ = ]() { saveSettings(); });
-    connect(h, &QHeaderView::sectionMoved, this, [ = ]() { saveSettings(); });
-    connect(h, &QHeaderView::sortIndicatorChanged, this, [ = ]() { saveSettings(); });
     connect(h, &QHeaderView::customContextMenuRequested, this,
             &ProcessTableView::displayProcessTableHeaderContextMenu);
 
@@ -300,49 +299,42 @@ void ProcessTableView::initConnections(bool settingsLoaded)
     userHeaderAction->setCheckable(true);
     connect(userHeaderAction, &QAction::triggered, this, [this](bool b) {
         header()->setSectionHidden(ProcessTableModel::ProcessUserColumn, !b);
-        saveSettings();
     });
     // diskio action
     auto *diskioHeaderAction = m_headerContextMenu->addAction(tr("Disk"));
     diskioHeaderAction->setCheckable(true);
     connect(diskioHeaderAction, &QAction::triggered, this, [this](bool b) {
         header()->setSectionHidden(ProcessTableModel::ProcessDiskIoColumn, !b);
-        saveSettings();
     });
     // cpu action
     auto *cpuHeaderAction = m_headerContextMenu->addAction(tr("CPU"));
     cpuHeaderAction->setCheckable(true);
     connect(cpuHeaderAction, &QAction::triggered, this, [this](bool b) {
         header()->setSectionHidden(ProcessTableModel::ProcessCpuColumn, !b);
-        saveSettings();
     });
     // id action
     auto *idHeaderAction = m_headerContextMenu->addAction(tr("ID"));
     idHeaderAction->setCheckable(true);
     connect(idHeaderAction, &QAction::triggered, this, [this](bool b) {
         header()->setSectionHidden(ProcessTableModel::ProcessIdColumn, !b);
-        saveSettings();
     });
     // flownet action
     auto *flownetHeaderAction = m_headerContextMenu->addAction(tr("Flownet Persec"));
     flownetHeaderAction->setCheckable(true);
     connect(flownetHeaderAction, &QAction::triggered, this, [this](bool b) {
         header()->setSectionHidden(ProcessTableModel::ProcessFlowNetColumn, !b);
-        saveSettings();
     });
     // memory action
     auto *memHeaderAction = m_headerContextMenu->addAction(tr("Memory"));
     memHeaderAction->setCheckable(true);
     connect(memHeaderAction, &QAction::triggered, this, [this](bool b) {
         header()->setSectionHidden(ProcessTableModel::ProcessMemoryColumn, !b);
-        saveSettings();
     });
     // priority action
     auto *priHeaderAction = m_headerContextMenu->addAction(tr("Priority"));
     priHeaderAction->setCheckable(true);
     connect(priHeaderAction, &QAction::triggered, this, [this](bool b) {
         header()->setSectionHidden(ProcessTableModel::ProcessNiceColumn, !b);
-        saveSettings();
     });
 
     // set default header context menu checkable state when settings load without success
@@ -432,7 +424,7 @@ void ProcessTableView::resizeEvent(QResizeEvent *event)
     // adjust search result tip label's visibility & position when resizing
     adjustInfoLabelVisibility();
 
-    QTreeView::resizeEvent(event);
+    KTableView::resizeEvent(event);
 }
 
 // show event handler
@@ -494,9 +486,9 @@ void ProcessTableView::onSearchFocusOut()
 bool ProcessTableView::loadSettings()
 {
     if (m_proSettings) {
-        m_proSettings->beginGroup("PROCESS");
-        m_strFilter = m_proSettings->value("WhoseProcesses", m_strFilter).toString();
-        m_proSettings->endGroup();
+        // m_proSettings->beginGroup("PROCESS");
+        // m_strFilter = m_proSettings->value("WhoseProcesses", m_strFilter).toString();
+        // m_proSettings->endGroup();
         m_proSettings->beginGroup("PROCESS");
         QVariant opt = m_proSettings->value(SETTINGSOPTION_PROCESSTABLEHEADERSTATE);
         m_proSettings->endGroup();
@@ -513,14 +505,14 @@ bool ProcessTableView::loadSettings()
 void ProcessTableView::saveSettings()
 {
     if (m_proSettings) {
-        m_proSettings->beginGroup("PROCESS");
-        m_proSettings->setValue("WhoseProcesses", m_strFilter);
-        m_proSettings->endGroup();
+        // m_proSettings->beginGroup("PROCESS");
+        // m_proSettings->setValue("WhoseProcesses", m_strFilter);
+        // m_proSettings->endGroup();
         QByteArray buf = header()->saveState();
         m_proSettings->beginGroup("PROCESS");
         m_proSettings->setValue(SETTINGSOPTION_PROCESSTABLEHEADERSTATE, buf.toBase64());
         m_proSettings->endGroup();
-        m_proSettings->sync();
+        //m_proSettings->sync();
     }
 }
 
@@ -771,4 +763,47 @@ void ProcessTableView::changeProcPriority(int nice)
             }
         }
     }
+}
+
+void ProcessTableView::adjustColumnsSize()
+{
+    if (!model())
+        return;
+
+    if (model()->columnCount() == 0)
+        return;
+
+    // proc name
+    setColumnWidth(ProcessTableModel::ProcessNameColumn, namepadding);
+    // account
+    setColumnWidth(ProcessTableModel::ProcessUserColumn, userpadding);
+    // diskio
+    setColumnWidth(ProcessTableModel::ProcessDiskIoColumn, diskpadding);
+    // cpu
+    setColumnWidth(ProcessTableModel::ProcessCpuColumn, cpupadding);
+    // pid
+    setColumnWidth(ProcessTableModel::ProcessIdColumn, idpadding);
+    // flownet
+    setColumnWidth(ProcessTableModel::ProcessFlowNetColumn, networkpadding);
+    // memory
+    setColumnWidth(ProcessTableModel::ProcessMemoryColumn, memorypadding);
+    // priority
+    setColumnWidth(ProcessTableModel::ProcessNiceColumn, prioritypadding);
+
+    int rightPartsSize = userpadding + diskpadding + cpupadding + idpadding + networkpadding + memorypadding + prioritypadding;
+
+    //set column 0 minimum width, fix header icon overlap with name issue
+    if(columnWidth(0) < columnWidth(1))
+        setColumnWidth(0, columnWidth(1));
+
+    if (this->width() - rightPartsSize < namepadding) {
+        int size = width() - namepadding;
+        size /= header()->count() - 1;
+        setColumnWidth(0, namepadding);
+        for (int column = 1; column < model()->columnCount(); column++) {
+            setColumnWidth(column, size);
+        }
+        return;
+    }
+    header()->resizeSection(ProcessTableModel::ProcessNameColumn, this->viewport()->width() - rightPartsSize);
 }

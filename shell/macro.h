@@ -41,6 +41,11 @@
 // filesystem table view backup setting key
 #define SETTINGSOPTION_FILESYSTEMTABLEHEADERSTATE "filesystem_table_header_state"
 
+//main window size
+#define MAINWINDOW_SIZE_W   "window_w"
+#define MAINWINDOW_SIZE_H   "window_h"
+#define MAINWINDOW_SIZE_MAX   "window_ismax"
+
 /* QT图标主题 */
 #define ICON_QT_KEY "icon-theme-name"
 
@@ -71,8 +76,8 @@
 #define cpupadding 80
 #define idpadding 80
 #define networkpadding 80
-#define memorypadding 120
-#define prioritypadding 80
+#define memorypadding 100
+#define prioritypadding 100
 #define direciconposition 100
 
 //file system setting

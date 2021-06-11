@@ -21,6 +21,7 @@
 #include "monitortitlewidget.h"
 #include "../shell/macro.h"
 #include "util.h"
+#include "gui/usmaboutdialog.h"
 
 #include <QApplication>
 #include <QDebug>
@@ -34,6 +35,7 @@
 #include <QStandardItemModel>
 #include <QMenu>
 #include <QPainterPath>
+#include "style/usmproxystyle.h"
 
 #define MENU_SCHEMA "org.ukui.system-monitor.menu"
 #define WHICH_MENU "which-menu"
@@ -191,14 +193,6 @@ void MonitorTitleWidget::initFontSize()
             fontSize = fontSettings->get(FONT_SIZE).toString().toFloat();
             this->onThemeFontChange(fontSize);
         }
-//        QFont font;
-//        font.setPointSize(fontSize);
-//        titleLabel->setFont(font);
-//        m_queryText->setFont(font);
-
-//        QFont changeBoxFont;
-//        changeBoxFont.setPointSize(fontSize);
-//        m_changeBox->setFont(changeBoxFont);
     });
     fontSize = fontSettings->get(FONT_SIZE).toString().toFloat();
 }
@@ -322,18 +316,10 @@ bool MonitorTitleWidget::eventFilter(QObject *obj, QEvent *event)    //set the e
 
 void MonitorTitleWidget::setSearchEditFocus()
 {
-//    if (m_searchEdit->searchedText() != "") {
-//        m_searchEdit->getLineEdit()->setFocus();
-//    } else {
-//        m_searchEdit->setFocus();
-//    }
 }
 
 void MonitorTitleWidget::onRefreshSearchResult()
 {
-//    if (m_searchEdit->searchedText() == searchTextCache) {
-//        emit this->searchSignal(searchTextCache);
-//    }
     if (m_searchEditNew->text() == searchTextCache) {
         emit this->searchSignal(searchTextCache);
     }
@@ -341,7 +327,6 @@ void MonitorTitleWidget::onRefreshSearchResult()
 
 void MonitorTitleWidget::handleSearchTextChanged()
 {
-//    searchTextCache = m_searchEdit->searchedText();
     searchTextCache = m_searchEditNew->text();
     if (searchTextCache.isEmpty()) {
         m_isSearching = false;
@@ -356,7 +341,6 @@ void MonitorTitleWidget::handleSearchTextChanged()
 
 void MonitorTitleWidget::onCancelSearchBtnClicked(bool b)
 {
-//    m_searchEdit->clearAndFocusEdit();
     emit canelSearchEditFocus();
 }
 
@@ -374,43 +358,20 @@ void MonitorTitleWidget::mouseDoubleClickEvent(QMouseEvent *e)
 
 void MonitorTitleWidget::initTitlebarLeftContent()
 {
-//    QWidget *w = new QWidget;
-//    m_titleLeftLayout = new QHBoxLayout(w);
-//    m_titleLeftLayout->setContentsMargins(6, 0, 0, 0);
-//    m_titleLeftLayout->setSpacing(0);
-//    emptyLabel = new QLabel;
-//    m_titleLeftLayout->addWidget(emptyLabel);
-//    m_topLayout->addWidget(w, 1, Qt::AlignLeft);
     QWidget *w = new QWidget;
     m_titleMiddleLayout = new QHBoxLayout(w);
     m_titleMiddleLayout->setContentsMargins(8, 4, 0, 0);
     titleLabel = new QLabel;
     m_picLabel = new QLabel();
-    QFont font;
-    font.setPointSize(fontSize);
-//    titleLabel->setFont(font);
     titleLabel->setText(tr("Kylin System Monitor"));
     m_picLabel->setPixmap(QIcon::fromTheme("ukui-system-monitor").pixmap(24,24));
     m_titleMiddleLayout->addWidget(m_picLabel);
     m_titleMiddleLayout->addWidget(titleLabel);
-    m_topLayout->addWidget(w/*,1,Qt::AlignLeft*/);
+    m_topLayout->addWidget(w);
 }
 
 void MonitorTitleWidget::initTitlebarMiddleContent()
 {
-//    QWidget *w = new QWidget;
-//    m_titleMiddleLayout = new QHBoxLayout(w);
-//    m_titleMiddleLayout->setContentsMargins(0, 0, 0, 0);
-//    titleLabel = new QLabel;
-//    QLabel *picLabel = new QLabel;
-//    QFont font;
-//    font.setPointSize(fontSize);
-//    titleLabel->setFont(font);
-//    titleLabel->setText(tr("Kylin System Monitor"));
-//    picLabel->setPixmap(QPixmap(":img/ukui-system-monitor.png"));
-//    m_titleMiddleLayout->addWidget(picLabel);
-//    m_titleMiddleLayout->addWidget(titleLabel);
-//    m_topLayout->addWidget(w/*,1,Qt::AlignLeft*/);
 }
 
 void MonitorTitleWidget::initTitlebarRightContent()
@@ -463,7 +424,7 @@ void MonitorTitleWidget::initTitlebarRightContent()
         }
     });
     connect(aboutAction,&QAction::triggered,this,[=]{
-            newaboutdialog *showaboutdialog = new newaboutdialog(this);
+            USMAboutDialog *showaboutdialog = new USMAboutDialog(this);
             showaboutdialog->setAttribute(Qt::WA_DeleteOnClose);
             showaboutdialog->setModal(true);
             showaboutdialog->show();
@@ -489,6 +450,7 @@ void MonitorTitleWidget::initTitlebarRightContent()
     maxTitleBtn->setAutoRaise(true);
     maxTitleBtn->setIcon(QIcon::fromTheme("window-maximize-symbolic"));
     connect(maxTitleBtn, SIGNAL(clicked()), this, SLOT(onMaxBtnClicked()));
+    
     QToolButton *closeBtn = new QToolButton(this);
     closeBtn->setToolTip(tr("close"));
     closeBtn->setIcon(QIcon::fromTheme("window-close-symbolic"));
@@ -503,7 +465,6 @@ void MonitorTitleWidget::initTitlebarRightContent()
     m_changeBox->setCurrentIndex(whichNum);
     switchChangeItemProcessSignal(whichNum);
     connect(m_changeBox,SIGNAL(currentIndexChanged(int)),this,SLOT(switchChangeItemProcessSignal(int)));
-    setMyComBoxTootip(whichNum);
     m_titleRightLayout->addWidget(menuBtn);
     m_titleRightLayout->addSpacing(4);
     m_titleRightLayout->addWidget(minBtn);
@@ -542,19 +503,27 @@ void MonitorTitleWidget::showGuide(QString appName)
     }
 }
 
+void MonitorTitleWidget::onUpdateMaxBtnState()
+{
+    if (maxTitleBtn) {
+        if(window()->isMaximized()) {
+            maxTitleBtn->setIcon(QIcon::fromTheme("window-restore-symbolic"));
+        } else {
+            maxTitleBtn->setIcon(QIcon::fromTheme("window-maximize-symbolic"));
+        }
+    }
+}
+
 void MonitorTitleWidget::setMyComBoxTootip(int index)
 {
-    if(index == 0)
-    {
+    if(index == 0) {
         m_changeBox->setToolTip(tr("Active Processes"));
-    }
-    if(index == 1)
-    {
+    } else if(index == 1) {
         m_changeBox->setToolTip(tr("My Processes"));
-    }
-    if(index == 2)
-    {
+    } else if(index == 2) {
         m_changeBox->setToolTip(tr("All Process"));
+    } else if(index == 3) {
+        m_changeBox->setToolTip(tr("Applications"));
     }
 }
 
@@ -588,7 +557,7 @@ void MonitorTitleWidget::onCloseBtnClicked()
 
 void MonitorTitleWidget::switchChangeItemProcessSignal(int a)
 {
-    //qDebug()<<"whichNum----"<<whichNum;
+    qDebug()<<"whichNum----"<<whichNum;
     emit changeProcessItemDialog(a);
     whichNum = ifsettings->get(WHICH_MENU).toInt();
     ifsettings->set(WHICH_MENU,a);
@@ -601,22 +570,25 @@ void MonitorTitleWidget::onUpdateMaxBtnStatusChanged()
 
 void MonitorTitleWidget::initToolbarLeftContent()
 {
-    m_processButton = new QPushButton();
+    m_processButton = new KGroupButton();
     m_processButton->setCheckable(true);
     m_processButton->setAutoExclusive(true);
     m_processButton->setChecked(true);
+    m_processButton->setPosition(GroupButtonStyleOption::Begin);
     m_processButton->setFixedSize(NORMALWIDTH,NORMALHEIGHT);
 
-    m_resourceButton = new QPushButton();
+    m_resourceButton = new KGroupButton();
     m_resourceButton->setChecked(false);
     m_resourceButton->setCheckable(true);
     m_resourceButton->setAutoExclusive(true);
+    m_resourceButton->setPosition(GroupButtonStyleOption::Middle);
     m_resourceButton->setFixedSize(NORMALWIDTH,NORMALHEIGHT);
 
-    m_filesystemButton = new QPushButton();
+    m_filesystemButton = new KGroupButton();
     m_filesystemButton->setChecked(false);
     m_filesystemButton->setCheckable(true);
     m_filesystemButton->setAutoExclusive(true);
+    m_filesystemButton->setPosition(GroupButtonStyleOption::End);
     m_filesystemButton->setFixedSize(NORMALWIDTH,NORMALHEIGHT);
 
     connect(m_processButton, &QPushButton::clicked, this, [=] {
@@ -657,10 +629,61 @@ void MonitorTitleWidget::initToolbarLeftContent()
     m_bottomLayout->addWidget(m_resourceButton);
     m_bottomLayout->addWidget(m_filesystemButton);
     m_bottomLayout->addWidget(emptyWidget, 3);
+    m_bottomLayout->setSpacing(1);
+    if (qtSettings) {
+        connect(qtSettings, &QGSettings::changed, this, [=](const QString &key) {
+            if (key == "styleName") {
+                qDebug()<<"style name changed";
+                auto styleName = qtSettings->get("styleName").toString();
+
+                if (styleName == "ukui-default" || styleName == "ukui-dark" || styleName == "ukui-white"
+                        || styleName == "ukui-black" || styleName == "ukui-light" || styleName == "ukui") {
+                    if (styleName == "ukui")
+                        styleName = "ukui-default";
+                    else if (styleName == "ukui-black")
+                        styleName = "ukui-dark";
+                    else if (styleName == "ukui-white")
+                        styleName = "ukui-light";
+
+                    m_processButton->setStyle(new USMProxyStyle(styleName));
+                    m_resourceButton->setStyle(new USMProxyStyle(styleName));
+                    m_filesystemButton->setStyle(new USMProxyStyle(styleName));
+                }
+            }
+        });
+        auto styleName = qtSettings->get("styleName").toString();
+        if (styleName == "ukui-default" || styleName == "ukui-dark" || styleName == "ukui-white"
+                || styleName == "ukui-black" || styleName == "ukui-light" || styleName == "ukui") {
+            if (styleName == "ukui")
+                styleName = "ukui-default";
+            else if (styleName == "ukui-black")
+                styleName = "ukui-dark";
+            else if (styleName == "ukui-white")
+                styleName = "ukui-light";
+
+            m_processButton->setStyle(new USMProxyStyle(styleName));
+            m_resourceButton->setStyle(new USMProxyStyle(styleName));
+            m_filesystemButton->setStyle(new USMProxyStyle(styleName));
+        }
+    }
 }
 
 void MonitorTitleWidget::onThemeFontChange(unsigned uFontSize)
 {
+    int nEditHeight = NORMALHEIGHT;
+    if (m_searchEditNew) {
+        QFont eFont = m_searchEditNew->font();
+        if (uFontSize >= 14) {
+            eFont.setPointSize(14);
+            m_searchEditNew->setFont(eFont);
+            m_searchEditNew->setFixedSize(SPECIALWIDTH, NORMALHEIGHT+6);
+        } else {
+            eFont.setPointSize(12);
+            m_searchEditNew->setFont(eFont);
+            m_searchEditNew->setFixedSize(SPECIALWIDTH, NORMALHEIGHT+3);
+        }
+        nEditHeight = m_searchEditNew->height();
+    }
     if (m_processButton) {
         QString strContent = tr("Processes");
         if (!strContent.isEmpty()) {
@@ -672,7 +695,7 @@ void MonitorTitleWidget::onThemeFontChange(unsigned uFontSize)
                 m_processButton->setToolTip("");
             }
         }
-        m_processButton->setFixedSize(NORMALWIDTH, NORMALHEIGHT+(uFontSize-DEFAULT_FONT_SIZE)*1);
+        m_processButton->setFixedSize(NORMALWIDTH, nEditHeight);
     }
     if (m_resourceButton) {
         QString strContent = tr("Resources");
@@ -685,7 +708,7 @@ void MonitorTitleWidget::onThemeFontChange(unsigned uFontSize)
                 m_resourceButton->setToolTip("");
             }
         }
-        m_resourceButton->setFixedSize(NORMALWIDTH, NORMALHEIGHT+(uFontSize-DEFAULT_FONT_SIZE)*1);
+        m_resourceButton->setFixedSize(NORMALWIDTH, nEditHeight);
     }
     if (m_filesystemButton) {
         QString strContent = tr("File Systems");
@@ -698,19 +721,10 @@ void MonitorTitleWidget::onThemeFontChange(unsigned uFontSize)
                 m_filesystemButton->setToolTip("");
             }
         }
-        m_filesystemButton->setFixedSize(NORMALWIDTH, NORMALHEIGHT+(uFontSize-DEFAULT_FONT_SIZE)*1);
+        m_filesystemButton->setFixedSize(NORMALWIDTH, nEditHeight);
     }
-    if (m_searchEditNew) {
-        QFont eFont = m_searchEditNew->font();
-        if (uFontSize >= 14) {
-            eFont.setPointSize(14);
-            m_searchEditNew->setFont(eFont);
-            m_searchEditNew->setFixedSize(SPECIALWIDTH, NORMALHEIGHT+6);
-        } else {
-            eFont.setPointSize(12);
-            m_searchEditNew->setFont(eFont);
-            m_searchEditNew->setFixedSize(SPECIALWIDTH, NORMALHEIGHT+3);
-        }
+    if (m_changeBox) {
+        m_changeBox->setFixedHeight(nEditHeight);
     }
     if (m_queryText) {
         m_queryText->update();
@@ -746,7 +760,7 @@ void MonitorTitleWidget::initWidgets()
     QHBoxLayout* queryWidLayout = new QHBoxLayout;
     queryWidLayout->setContentsMargins(4,4,0,0);
     queryWidLayout->setAlignment(Qt::AlignJustify);
-    queryWidLayout->setSpacing(0);
+    queryWidLayout->setSpacing(8);
     m_queryWid->setLayout(queryWidLayout);
 
     m_queryIcon->setFixedWidth(pixmap.width());
@@ -756,14 +770,14 @@ void MonitorTitleWidget::initWidgets()
     queryWidLayout->setAlignment(m_queryIcon,Qt::AlignVCenter);
     queryWidLayout->setAlignment(m_queryText,Qt::AlignVCenter);
     
-    m_rectSeachAnimationBegin.setX((m_searchEditNew->width() - (m_queryIcon->width()+m_queryText->width()+10))/2);
+    m_rectSeachAnimationBegin.setX((m_searchEditNew->width() - (m_queryIcon->width()+m_queryText->width()+18))/2);
     m_rectSeachAnimationBegin.setY(0);
-    m_rectSeachAnimationBegin.setWidth(m_queryIcon->width()+m_queryText->width()+10);
+    m_rectSeachAnimationBegin.setWidth(m_queryIcon->width()+m_queryText->width()+18);
     m_rectSeachAnimationBegin.setHeight((m_searchEditNew->height() + 30)/2);
-    m_rectSeachAnimationEnd.setX(0);
+    m_rectSeachAnimationEnd.setX(6);
     m_rectSeachAnimationEnd.setY(0);
     m_rectSeachAnimationEnd.setWidth(m_queryIcon->width()+5);
-    m_rectSeachAnimationEnd.setHeight((m_searchEditNew->height()+20)/2);
+    m_rectSeachAnimationEnd.setHeight((m_searchEditNew->height()+30)/2);
     m_queryWid->setGeometry(m_rectSeachAnimationBegin.x(), m_rectSeachAnimationBegin.y(), 
         m_rectSeachAnimationBegin.width(), m_rectSeachAnimationBegin.height());   //设置显示label的区域
 
@@ -785,8 +799,8 @@ void MonitorTitleWidget::initWidgets()
 
     QWidget *bottomWidget = new QWidget;
     m_bottomLayout = new QHBoxLayout(bottomWidget);
-//    m_bottomLayout->setContentsMargins(10, 0, 10, 0);
-    m_layout->addWidget(bottomWidget);
+    m_bottomLayout->setContentsMargins(20, 0, 20, 0);
+    m_layout->addWidget(bottomWidget, 0, Qt::AlignTop);
 //    m_layout->setContentsMargins(0,0,0,0);
 
     this->setLayout(m_layout);

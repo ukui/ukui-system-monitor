@@ -75,6 +75,11 @@ FileSystemTableView::~FileSystemTableView()
 {
 }
 
+void FileSystemTableView::onWndClose()
+{
+    saveSettings();
+}
+
 // event filter
 bool FileSystemTableView::eventFilter(QObject *obj, QEvent *event)
 {
@@ -118,23 +123,23 @@ void FileSystemTableView::initUI(bool settingsLoaded)
     m_headerContextMenu = new QMenu(this);
     m_headerContextMenu->setObjectName("MonitorMenu");
 
-    // show default style
-    // dev name
-    setColumnWidth(FileSystemModel::DeviceNameColumn, devicepadding);
-    // mount uri
-    setColumnWidth(FileSystemModel::MountUriColumn, mounturiadding);
-    // type
-    setColumnWidth(FileSystemModel::FileSystemTypeColumn, typepadding);
-    // total
-    setColumnWidth(FileSystemModel::TotalCapcityColumn, totalcapacitypadding);
-    // free
-    setColumnWidth(FileSystemModel::FreeCapcityColumn, idlepadding);
-    // avalid
-    setColumnWidth(FileSystemModel::AvalidCapcityColumn, avaliablepadding);
-    // used
-    setColumnWidth(FileSystemModel::UsedCapcityColumn, usedpadding);
-
     if (!settingsLoaded) {
+        // show default style
+        // dev name
+        setColumnWidth(FileSystemModel::DeviceNameColumn, devicepadding);
+        // mount uri
+        setColumnWidth(FileSystemModel::MountUriColumn, mounturiadding);
+        // type
+        setColumnWidth(FileSystemModel::FileSystemTypeColumn, typepadding);
+        // total
+        setColumnWidth(FileSystemModel::TotalCapcityColumn, totalcapacitypadding);
+        // free
+        setColumnWidth(FileSystemModel::FreeCapcityColumn, idlepadding);
+        // avalid
+        setColumnWidth(FileSystemModel::AvalidCapcityColumn, avaliablepadding);
+        // used
+        setColumnWidth(FileSystemModel::UsedCapcityColumn, usedpadding);
+
         setColumnHidden(FileSystemModel::DeviceNameColumn, false);
         setColumnHidden(FileSystemModel::MountUriColumn, false);
         setColumnHidden(FileSystemModel::FileSystemTypeColumn, false);
@@ -146,7 +151,6 @@ void FileSystemTableView::initUI(bool settingsLoaded)
         //sort
         sortByColumn(FileSystemModel::DeviceNameColumn, Qt::DescendingOrder);
     }
-    saveSettings();
 }
 
 // initialize connections
@@ -162,9 +166,6 @@ void FileSystemTableView::initConnections(bool settingsLoaded)
     m_contextMenu->addAction(refreshAction);//刷新
 
     auto *h = header();
-    connect(h, &QHeaderView::sectionResized, this, [ = ]() { saveSettings(); });
-    connect(h, &QHeaderView::sectionMoved, this, [ = ]() { saveSettings(); });
-    connect(h, &QHeaderView::sortIndicatorChanged, this, [ = ]() { saveSettings(); });
     connect(h, &QHeaderView::customContextMenuRequested, this,
             &FileSystemTableView::displayProcessTableHeaderContextMenu);
 
@@ -174,42 +175,36 @@ void FileSystemTableView::initConnections(bool settingsLoaded)
     mountUriHeaderAction->setCheckable(true);
     connect(mountUriHeaderAction, &QAction::triggered, this, [this](bool b) {
         header()->setSectionHidden(FileSystemModel::MountUriColumn, !b);
-        saveSettings();
     });
     // type action
     auto *typeHeaderAction = m_headerContextMenu->addAction(tr("Type"));
     typeHeaderAction->setCheckable(true);
     connect(typeHeaderAction, &QAction::triggered, this, [this](bool b) {
         header()->setSectionHidden(FileSystemModel::FileSystemTypeColumn, !b);
-        saveSettings();
     });
     // total action
     auto *totalHeaderAction = m_headerContextMenu->addAction(tr("Total"));
     totalHeaderAction->setCheckable(true);
     connect(totalHeaderAction, &QAction::triggered, this, [this](bool b) {
         header()->setSectionHidden(FileSystemModel::TotalCapcityColumn, !b);
-        saveSettings();
     });
     // free action
     auto *freeHeaderAction = m_headerContextMenu->addAction(tr("Free"));
     freeHeaderAction->setCheckable(true);
     connect(freeHeaderAction, &QAction::triggered, this, [this](bool b) {
         header()->setSectionHidden(FileSystemModel::FreeCapcityColumn, !b);
-        saveSettings();
     });
     // avalid action
     auto *avalidHeaderAction = m_headerContextMenu->addAction(tr("Available"));
     avalidHeaderAction->setCheckable(true);
     connect(avalidHeaderAction, &QAction::triggered, this, [this](bool b) {
         header()->setSectionHidden(FileSystemModel::AvalidCapcityColumn, !b);
-        saveSettings();
     });
     // used action
     auto *usedHeaderAction = m_headerContextMenu->addAction(tr("Used"));
     usedHeaderAction->setCheckable(true);
     connect(usedHeaderAction, &QAction::triggered, this, [this](bool b) {
         header()->setSectionHidden(FileSystemModel::UsedCapcityColumn, !b);
-        saveSettings();
     });
 
     // set default header context menu checkable state when settings load without success
@@ -270,7 +265,7 @@ void FileSystemTableView::displayProcessTableHeaderContextMenu(const QPoint &p)
 // resize event handler
 void FileSystemTableView::resizeEvent(QResizeEvent *event)
 {
-    QTreeView::resizeEvent(event);
+    KTableView::resizeEvent(event);
 }
 
 // backup current selected item's pid when selection changed
@@ -334,7 +329,47 @@ void FileSystemTableView::saveSettings()
         m_proSettings->beginGroup("FileSystem");
         m_proSettings->setValue(SETTINGSOPTION_FILESYSTEMTABLEHEADERSTATE, buf.toBase64());
         m_proSettings->endGroup();
-        m_proSettings->sync();
+        //m_proSettings->sync();
     }
 }
 
+void FileSystemTableView::adjustColumnsSize()
+{
+    if (!model())
+        return;
+
+    if (model()->columnCount() == 0)
+        return;
+
+    // dev name
+    setColumnWidth(FileSystemModel::DeviceNameColumn, devicepadding);
+    // mount uri
+    setColumnWidth(FileSystemModel::MountUriColumn, mounturiadding);
+    // type
+    setColumnWidth(FileSystemModel::FileSystemTypeColumn, typepadding);
+    // total
+    setColumnWidth(FileSystemModel::TotalCapcityColumn, totalcapacitypadding);
+    // free
+    setColumnWidth(FileSystemModel::FreeCapcityColumn, idlepadding);
+    // avalid
+    setColumnWidth(FileSystemModel::AvalidCapcityColumn, avaliablepadding);
+    // used
+    setColumnWidth(FileSystemModel::UsedCapcityColumn, usedpadding);
+
+    int rightPartsSize = mounturiadding + typepadding + totalcapacitypadding + idlepadding + avaliablepadding + usedpadding;
+
+    //set column 0 minimum width, fix header icon overlap with name issue
+    if(columnWidth(0) < columnWidth(1))
+        setColumnWidth(0, columnWidth(1));
+
+    if (this->width() - rightPartsSize < devicepadding) {
+        int size = width() - devicepadding;
+        size /= header()->count() - 1;
+        setColumnWidth(0, devicepadding);
+        for (int column = 1; column < model()->columnCount(); column++) {
+            setColumnWidth(column, size);
+        }
+        return;
+    }
+    header()->resizeSection(FileSystemModel::DeviceNameColumn, this->viewport()->width() - rightPartsSize);
+}

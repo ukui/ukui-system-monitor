@@ -30,7 +30,7 @@
 #include <QObject>
 #include <QPainter>
 
-#define MONITOR_TITLE_WIDGET_HEIGHT 97
+#define MONITOR_TITLE_WIDGET_HEIGHT 88
 #define TITLE_WIDGET_HEIGHT 39
 #define DEVICE_MOUNT_PONINT_RECORD_FILE "/proc/mounts"
 #define FontSize 12
@@ -56,10 +56,13 @@ QString getElidedText(QFont font, QString str, int MaxWidth);
 QString getMiddleElidedText(QFont font, QString str, int MaxWidth);
 QSet<QString> getFileContentsLineByLine(const QString &filePath);
 
-const bool loadSvg(const QString &fileName, const int size, QPixmap& pixmap);
+bool loadSvg(const QString &fileName, const int size, QPixmap& pixmap);
 
 //图片反白
 QPixmap drawSymbolicColoredPixmap(const QPixmap &source);
 
 //图片反黑
 QPixmap drawSymbolicBlackColoredPixmap(const QPixmap &source);
+
+// 获取应用程序版本
+QString getUsmVersion();
