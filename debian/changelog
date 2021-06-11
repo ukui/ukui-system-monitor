@@ -1,3 +1,25 @@
+ukui-system-monitor (2.0.7-1) v101; urgency=medium
+
+  * bug号：60860 关于界面未按规范
+           60859 搜索框图标和文字间距未按设计稿实现
+  * 需求号：无
+  * 其他改动说明：无
+
+ -- Yang Min <yangmin@kylinos.cn>  Fri, 11 Jun 2021 15:59:30 +0800
+
+ukui-system-monitor (2.0.7) v101; urgency=medium
+
+  * BUG号：无
+  * 需求号：6492 默认界面需要显示活动的进程，并非所有进程
+            6489 用户修改窗口尺寸后，下次重启应为最后修改的尺寸
+            6488 搜索框：图标在输入状态时会位移
+            6487 关于界面未按照设计稿规范实现
+            6485 控件样式未按照设计稿实现
+            6493 不应出现左右滚动条
+  * 其他改动说明：无
+
+ -- Yang Min <yangmin@kylinos.cn>  Thu, 03 Jun 2021 19:04:33 +0800
+
 ukui-system-monitor (2.0.6hw3) v101.hw; urgency=medium
 
   * BUG号：52677 安卓兼容应用进程名与包名不一致
