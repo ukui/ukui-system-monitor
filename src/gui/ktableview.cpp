@@ -97,7 +97,6 @@ KTableView::KTableView(QWidget *parent)
     // enable touch gesture
     QScroller::grabGesture(viewport(), QScroller::TouchGesture);
     m_lastSize = size();
-    m_isFirstResize = true;
 }
 
 KTableView::~KTableView()
@@ -210,10 +209,6 @@ void KTableView::resizeEvent(QResizeEvent *e)
     QTreeView::resizeEvent(e);
     if (m_lastSize != size()) {
         m_lastSize = size();
-        if (m_isFirstResize) {
-            m_isFirstResize = false;
-        } else {
-            adjustColumnsSize();
-        }
+        adjustColumnsSize();
     }
 }

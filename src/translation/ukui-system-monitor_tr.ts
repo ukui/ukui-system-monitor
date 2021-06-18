@@ -179,12 +179,12 @@
 <context>
     <name>FileSystemTableView</name>
     <message>
-        <location filename="../gui/filesystemtableview.cpp" line="160"/>
+        <location filename="../gui/filesystemtableview.cpp" line="164"/>
         <source>Refresh</source>
         <translation type="unfinished">Yenile</translation>
     </message>
     <message>
-        <location filename="../gui/filesystemtableview.cpp" line="173"/>
+        <location filename="../gui/filesystemtableview.cpp" line="174"/>
         <source>Directory</source>
         <translation type="unfinished">Dizin</translation>
     </message>
@@ -194,22 +194,22 @@
         <translation type="unfinished">Tür</translation>
     </message>
     <message>
-        <location filename="../gui/filesystemtableview.cpp" line="187"/>
+        <location filename="../gui/filesystemtableview.cpp" line="186"/>
         <source>Total</source>
         <translation type="unfinished">Toplam</translation>
     </message>
     <message>
-        <location filename="../gui/filesystemtableview.cpp" line="194"/>
+        <location filename="../gui/filesystemtableview.cpp" line="192"/>
         <source>Free</source>
         <translation type="unfinished">Boş</translation>
     </message>
     <message>
-        <location filename="../gui/filesystemtableview.cpp" line="201"/>
+        <location filename="../gui/filesystemtableview.cpp" line="198"/>
         <source>Available</source>
         <translation type="unfinished">Mevcut</translation>
     </message>
     <message>
-        <location filename="../gui/filesystemtableview.cpp" line="208"/>
+        <location filename="../gui/filesystemtableview.cpp" line="204"/>
         <source>Used</source>
         <translation type="unfinished">Kullanılan</translation>
     </message>
@@ -328,90 +328,90 @@
 <context>
     <name>MonitorTitleWidget</name>
     <message>
-        <location filename="../monitortitlewidget.cpp" line="83"/>
-        <location filename="../monitortitlewidget.cpp" line="551"/>
+        <location filename="../monitortitlewidget.cpp" line="84"/>
+        <location filename="../monitortitlewidget.cpp" line="520"/>
         <source>Active Processes</source>
         <translation>Aktif Süreçler</translation>
     </message>
     <message>
-        <location filename="../monitortitlewidget.cpp" line="84"/>
-        <location filename="../monitortitlewidget.cpp" line="555"/>
+        <location filename="../monitortitlewidget.cpp" line="85"/>
+        <location filename="../monitortitlewidget.cpp" line="522"/>
         <source>My Processes</source>
         <translation>Süreçlerim</translation>
     </message>
     <message>
-        <location filename="../monitortitlewidget.cpp" line="85"/>
-        <location filename="../monitortitlewidget.cpp" line="559"/>
+        <location filename="../monitortitlewidget.cpp" line="86"/>
+        <location filename="../monitortitlewidget.cpp" line="524"/>
         <source>All Process</source>
         <translation>Tüm İşlemler</translation>
     </message>
     <message>
-        <location filename="../monitortitlewidget.cpp" line="86"/>
+        <location filename="../monitortitlewidget.cpp" line="526"/>
         <source>Applications</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../monitortitlewidget.cpp" line="394"/>
+        <location filename="../monitortitlewidget.cpp" line="366"/>
         <source>Kylin System Monitor</source>
         <translation type="unfinished">System Monitor</translation>
     </message>
     <message>
-        <location filename="../monitortitlewidget.cpp" line="427"/>
+        <location filename="../monitortitlewidget.cpp" line="386"/>
         <source>menu</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../monitortitlewidget.cpp" line="435"/>
+        <location filename="../monitortitlewidget.cpp" line="394"/>
         <source>theme</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../monitortitlewidget.cpp" line="436"/>
+        <location filename="../monitortitlewidget.cpp" line="395"/>
         <source>help</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../monitortitlewidget.cpp" line="437"/>
+        <location filename="../monitortitlewidget.cpp" line="396"/>
         <source>about</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../monitortitlewidget.cpp" line="438"/>
+        <location filename="../monitortitlewidget.cpp" line="397"/>
         <source>quit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../monitortitlewidget.cpp" line="446"/>
+        <location filename="../monitortitlewidget.cpp" line="405"/>
         <source>following theme</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../monitortitlewidget.cpp" line="447"/>
+        <location filename="../monitortitlewidget.cpp" line="406"/>
         <source>dark theme</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../monitortitlewidget.cpp" line="448"/>
+        <location filename="../monitortitlewidget.cpp" line="407"/>
         <source>light theme</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../monitortitlewidget.cpp" line="478"/>
+        <location filename="../monitortitlewidget.cpp" line="437"/>
         <source>minimize</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../monitortitlewidget.cpp" line="487"/>
+        <location filename="../monitortitlewidget.cpp" line="446"/>
         <source>maximize/restore</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../monitortitlewidget.cpp" line="495"/>
+        <location filename="../monitortitlewidget.cpp" line="455"/>
         <source>close</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../monitortitlewidget.cpp" line="744"/>
+        <location filename="../monitortitlewidget.cpp" line="756"/>
         <source>Search</source>
         <translation type="unfinished"></translation>
     </message>
@@ -432,17 +432,17 @@
         <translation type="vanished">:/img/close.png</translation>
     </message>
     <message>
-        <location filename="../monitortitlewidget.cpp" line="667"/>
+        <location filename="../monitortitlewidget.cpp" line="688"/>
         <source>Processes</source>
         <translation>Süreçler</translation>
     </message>
     <message>
-        <location filename="../monitortitlewidget.cpp" line="680"/>
+        <location filename="../monitortitlewidget.cpp" line="701"/>
         <source>Resources</source>
         <translation>Kaynaklar</translation>
     </message>
     <message>
-        <location filename="../monitortitlewidget.cpp" line="693"/>
+        <location filename="../monitortitlewidget.cpp" line="714"/>
         <source>File Systems</source>
         <translation>Dosya Sistemi</translation>
     </message>
@@ -492,68 +492,12 @@
 <context>
     <name>NewResouresDialog</name>
     <message>
-        <location filename="../newresource/newresourcesdialog.cpp" line="318"/>
-        <location filename="../newresource/newresourcesdialog.cpp" line="319"/>
-        <location filename="../newresource/newresourcesdialog.cpp" line="320"/>
-        <location filename="../newresource/newresourcesdialog.cpp" line="321"/>
-        <location filename="../newresource/newresourcesdialog.cpp" line="322"/>
-        <location filename="../newresource/newresourcesdialog.cpp" line="326"/>
-        <location filename="../newresource/newresourcesdialog.cpp" line="327"/>
-        <location filename="../newresource/newresourcesdialog.cpp" line="328"/>
-        <location filename="../newresource/newresourcesdialog.cpp" line="329"/>
-        <location filename="../newresource/newresourcesdialog.cpp" line="330"/>
         <source>KiB</source>
-        <translation type="unfinished">KB</translation>
+        <translation type="obsolete">KB</translation>
     </message>
     <message>
-        <location filename="../newresource/newresourcesdialog.cpp" line="346"/>
-        <source>CPU: </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../newresource/newresourcesdialog.cpp" line="355"/>
-        <source>memory:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../newresource/newresourcesdialog.cpp" line="359"/>
-        <source>swap:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../newresource/newresourcesdialog.cpp" line="368"/>
-        <source>receive:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../newresource/newresourcesdialog.cpp" line="370"/>
-        <source>send:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../newresource/newresourcesdialog.cpp" line="405"/>
-        <source>CPU history</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../newresource/newresourcesdialog.cpp" line="474"/>
-        <source>memory and swap history</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../newresource/newresourcesdialog.cpp" line="500"/>
-        <location filename="../newresource/newresourcesdialog.cpp" line="510"/>
-        <location filename="../newresource/newresourcesdialog.cpp" line="515"/>
-        <location filename="../newresource/newresourcesdialog.cpp" line="520"/>
-        <location filename="../newresource/newresourcesdialog.cpp" line="525"/>
-        <location filename="../newresource/newresourcesdialog.cpp" line="539"/>
         <source>GiB</source>
-        <translation type="unfinished">GB</translation>
-    </message>
-    <message>
-        <location filename="../newresource/newresourcesdialog.cpp" line="557"/>
-        <source>net work history</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">GB</translation>
     </message>
 </context>
 <context>
@@ -726,57 +670,57 @@ Devam etmek istediğinizden emin misiniz?</translation>
 <context>
     <name>ProcessTableModel</name>
     <message>
-        <location filename="../model/processtablemodel.cpp" line="242"/>
+        <location filename="../model/processtablemodel.cpp" line="234"/>
         <source>Process Name</source>
         <translation type="unfinished">İşlem Adı</translation>
     </message>
     <message>
-        <location filename="../model/processtablemodel.cpp" line="246"/>
+        <location filename="../model/processtablemodel.cpp" line="238"/>
         <source>User</source>
         <translation type="unfinished">Kullanıcı</translation>
     </message>
     <message>
-        <location filename="../model/processtablemodel.cpp" line="250"/>
+        <location filename="../model/processtablemodel.cpp" line="242"/>
         <source>Disk</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../model/processtablemodel.cpp" line="253"/>
+        <location filename="../model/processtablemodel.cpp" line="245"/>
         <source>CPU</source>
         <translation type="unfinished">İşlemci</translation>
     </message>
     <message>
-        <location filename="../model/processtablemodel.cpp" line="256"/>
+        <location filename="../model/processtablemodel.cpp" line="248"/>
         <source>ID</source>
         <translation type="unfinished">ID</translation>
     </message>
     <message>
-        <location filename="../model/processtablemodel.cpp" line="259"/>
+        <location filename="../model/processtablemodel.cpp" line="251"/>
         <source>Flownet Persec</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../model/processtablemodel.cpp" line="262"/>
+        <location filename="../model/processtablemodel.cpp" line="254"/>
         <source>Memory</source>
         <translation type="unfinished">Hafıza</translation>
     </message>
     <message>
-        <location filename="../model/processtablemodel.cpp" line="265"/>
+        <location filename="../model/processtablemodel.cpp" line="257"/>
         <source>Priority</source>
         <translation type="unfinished">Öncelik</translation>
     </message>
     <message>
-        <location filename="../model/processtablemodel.cpp" line="299"/>
+        <location filename="../model/processtablemodel.cpp" line="291"/>
         <source>Suspend</source>
         <translation type="unfinished">Askıya al</translation>
     </message>
     <message>
-        <location filename="../model/processtablemodel.cpp" line="302"/>
+        <location filename="../model/processtablemodel.cpp" line="294"/>
         <source>No response</source>
         <translation type="unfinished">Cevap yok</translation>
     </message>
     <message>
-        <location filename="../model/processtablemodel.cpp" line="305"/>
+        <location filename="../model/processtablemodel.cpp" line="297"/>
         <source>Uninterruptible</source>
         <translation type="unfinished">Kesintisiz</translation>
     </message>
@@ -784,132 +728,132 @@ Devam etmek istediğinizden emin misiniz?</translation>
 <context>
     <name>ProcessTableView</name>
     <message>
-        <location filename="../gui/processtableview.cpp" line="171"/>
+        <location filename="../gui/processtableview.cpp" line="165"/>
         <source>No search result</source>
         <translation type="unfinished">Arama sonucu yok</translation>
     </message>
     <message>
-        <location filename="../gui/processtableview.cpp" line="255"/>
+        <location filename="../gui/processtableview.cpp" line="248"/>
         <source>Stop process</source>
         <translation type="unfinished">İşlemi durdur</translation>
     </message>
     <message>
-        <location filename="../gui/processtableview.cpp" line="257"/>
+        <location filename="../gui/processtableview.cpp" line="250"/>
         <source>Continue process</source>
         <translation type="unfinished">İşleme devam et</translation>
     </message>
     <message>
-        <location filename="../gui/processtableview.cpp" line="259"/>
-        <location filename="../gui/processtableview.cpp" line="677"/>
+        <location filename="../gui/processtableview.cpp" line="252"/>
+        <location filename="../gui/processtableview.cpp" line="660"/>
         <source>End process</source>
         <translation type="unfinished">İşlemi bitir</translation>
     </message>
     <message>
-        <location filename="../gui/processtableview.cpp" line="261"/>
-        <location filename="../gui/processtableview.cpp" line="703"/>
+        <location filename="../gui/processtableview.cpp" line="254"/>
+        <location filename="../gui/processtableview.cpp" line="686"/>
         <source>Kill process</source>
         <translation type="unfinished">İşlemi öldür</translation>
     </message>
     <message>
-        <location filename="../gui/processtableview.cpp" line="275"/>
+        <location filename="../gui/processtableview.cpp" line="268"/>
         <source>Very High</source>
         <translation type="unfinished">Çok Yüksek</translation>
     </message>
     <message>
-        <location filename="../gui/processtableview.cpp" line="276"/>
+        <location filename="../gui/processtableview.cpp" line="269"/>
         <source>High</source>
         <translation type="unfinished">Yüksek</translation>
     </message>
     <message>
-        <location filename="../gui/processtableview.cpp" line="277"/>
+        <location filename="../gui/processtableview.cpp" line="270"/>
         <source>Normal</source>
         <translation type="unfinished">Normal</translation>
     </message>
     <message>
-        <location filename="../gui/processtableview.cpp" line="278"/>
+        <location filename="../gui/processtableview.cpp" line="271"/>
         <source>Low</source>
         <translation type="unfinished">Düşük</translation>
     </message>
     <message>
-        <location filename="../gui/processtableview.cpp" line="279"/>
+        <location filename="../gui/processtableview.cpp" line="272"/>
         <source>Very Low</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gui/processtableview.cpp" line="280"/>
+        <location filename="../gui/processtableview.cpp" line="273"/>
         <source>Custom</source>
         <translation type="unfinished">Özel</translation>
     </message>
     <message>
-        <location filename="../gui/processtableview.cpp" line="285"/>
+        <location filename="../gui/processtableview.cpp" line="278"/>
         <source>Change Priority</source>
         <translation type="unfinished">Önceliği Değiştir</translation>
     </message>
     <message>
-        <location filename="../gui/processtableview.cpp" line="287"/>
+        <location filename="../gui/processtableview.cpp" line="280"/>
         <source>Properties</source>
         <translation type="unfinished">Özellikler</translation>
     </message>
     <message>
-        <location filename="../gui/processtableview.cpp" line="308"/>
+        <location filename="../gui/processtableview.cpp" line="298"/>
         <source>User</source>
         <translation type="unfinished">Kullanıcı</translation>
     </message>
     <message>
-        <location filename="../gui/processtableview.cpp" line="315"/>
+        <location filename="../gui/processtableview.cpp" line="304"/>
         <source>Disk</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gui/processtableview.cpp" line="322"/>
+        <location filename="../gui/processtableview.cpp" line="310"/>
         <source>CPU</source>
         <translation type="unfinished">İşlemci</translation>
     </message>
     <message>
-        <location filename="../gui/processtableview.cpp" line="329"/>
+        <location filename="../gui/processtableview.cpp" line="316"/>
         <source>ID</source>
         <translation type="unfinished">ID</translation>
     </message>
     <message>
-        <location filename="../gui/processtableview.cpp" line="336"/>
+        <location filename="../gui/processtableview.cpp" line="322"/>
         <source>Flownet Persec</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gui/processtableview.cpp" line="343"/>
+        <location filename="../gui/processtableview.cpp" line="328"/>
         <source>Memory</source>
         <translation type="unfinished">Hafıza</translation>
     </message>
     <message>
-        <location filename="../gui/processtableview.cpp" line="350"/>
+        <location filename="../gui/processtableview.cpp" line="334"/>
         <source>Priority</source>
         <translation type="unfinished">Öncelik</translation>
     </message>
     <message>
-        <location filename="../gui/processtableview.cpp" line="672"/>
+        <location filename="../gui/processtableview.cpp" line="655"/>
         <source>End the selected process &quot;%1&quot;(PID:%2)?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gui/processtableview.cpp" line="673"/>
+        <location filename="../gui/processtableview.cpp" line="656"/>
         <source>Ending a process may destroy data, break the session or introduce a security risk. Only unresponsive processes should be ended.
 Are you sure to continue?</source>
         <translation type="unfinished">Bir işlemi sonlandırmak verileri yok edebilir, oturumu bozabilir veya güvenlik riski oluşturabilir. Sadece tepkisiz süreçler sona erdirilmelidir.
 Devam etmek istediğinizden emin misiniz?</translation>
     </message>
     <message>
-        <location filename="../gui/processtableview.cpp" line="676"/>
-        <location filename="../gui/processtableview.cpp" line="702"/>
+        <location filename="../gui/processtableview.cpp" line="659"/>
+        <location filename="../gui/processtableview.cpp" line="685"/>
         <source>Cancel</source>
         <translation type="unfinished">İptal</translation>
     </message>
     <message>
-        <location filename="../gui/processtableview.cpp" line="698"/>
+        <location filename="../gui/processtableview.cpp" line="681"/>
         <source>Kill the selected process &quot;%1&quot;(PID:%2)?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gui/processtableview.cpp" line="699"/>
+        <location filename="../gui/processtableview.cpp" line="682"/>
         <source>Killing a process may destroy data, break the session or introduce a security risk. Only unresponsive processes should be killed.
 Are you sure to continue?</source>
         <translation type="unfinished">Bir işlemi öldürmek verileri yok edebilir, oturumu bozabilir veya güvenlik riski oluşturabilir. Sadece tepkisiz süreçler öldürülmelidir.
@@ -935,22 +879,22 @@ Devam etmek istediğinizden emin misiniz?</translation>
         <translation>Yürütülüyor</translation>
     </message>
     <message>
-        <location filename="../model/processtablemodel.cpp" line="298"/>
-        <location filename="../model/processtablemodel.cpp" line="386"/>
+        <location filename="../model/processtablemodel.cpp" line="290"/>
+        <location filename="../model/processtablemodel.cpp" line="378"/>
         <location filename="../util.cpp" line="394"/>
         <source>Stopped</source>
         <translation>Durduruldu</translation>
     </message>
     <message>
-        <location filename="../model/processtablemodel.cpp" line="301"/>
-        <location filename="../model/processtablemodel.cpp" line="389"/>
+        <location filename="../model/processtablemodel.cpp" line="293"/>
+        <location filename="../model/processtablemodel.cpp" line="381"/>
         <location filename="../util.cpp" line="398"/>
         <source>Zombie</source>
         <translation>Ölü</translation>
     </message>
     <message>
-        <location filename="../model/processtablemodel.cpp" line="304"/>
-        <location filename="../model/processtablemodel.cpp" line="392"/>
+        <location filename="../model/processtablemodel.cpp" line="296"/>
+        <location filename="../model/processtablemodel.cpp" line="384"/>
         <location filename="../util.cpp" line="402"/>
         <source>Uninterruptible</source>
         <translation>Kesintisiz</translation>
@@ -1051,47 +995,47 @@ Devam etmek istediğinizden emin misiniz?</translation>
         <translation type="vanished">bayt/s</translation>
     </message>
     <message>
-        <location filename="../newresource/newresourcesdialog.cpp" line="78"/>
-        <location filename="../newresource/newresourcesdialog.cpp" line="220"/>
+        <location filename="../newresource/resourcedlg.cpp" line="79"/>
+        <location filename="../newresource/resourcedlg.cpp" line="221"/>
         <source>KiB</source>
         <translation>KB</translation>
     </message>
     <message>
-        <location filename="../newresource/newresourcesdialog.cpp" line="222"/>
+        <location filename="../newresource/resourcedlg.cpp" line="223"/>
         <source>KiB/s</source>
         <translation>KB/s</translation>
     </message>
     <message>
         <location filename="../model/processtablemodel.cpp" line="50"/>
-        <location filename="../newresource/newresourcesdialog.cpp" line="83"/>
-        <location filename="../newresource/newresourcesdialog.cpp" line="226"/>
+        <location filename="../newresource/resourcedlg.cpp" line="84"/>
+        <location filename="../newresource/resourcedlg.cpp" line="227"/>
         <source>MiB</source>
         <translation>MB</translation>
     </message>
     <message>
-        <location filename="../newresource/newresourcesdialog.cpp" line="228"/>
+        <location filename="../newresource/resourcedlg.cpp" line="229"/>
         <source>MiB/s</source>
         <translation>MB/s</translation>
     </message>
     <message>
-        <location filename="../newresource/newresourcesdialog.cpp" line="88"/>
-        <location filename="../newresource/newresourcesdialog.cpp" line="232"/>
+        <location filename="../newresource/resourcedlg.cpp" line="89"/>
+        <location filename="../newresource/resourcedlg.cpp" line="233"/>
         <source>GiB</source>
         <translation>GB</translation>
     </message>
     <message>
-        <location filename="../newresource/newresourcesdialog.cpp" line="234"/>
+        <location filename="../newresource/resourcedlg.cpp" line="235"/>
         <source>GiB/s</source>
         <translation>GB/s</translation>
     </message>
     <message>
-        <location filename="../newresource/newresourcesdialog.cpp" line="93"/>
-        <location filename="../newresource/newresourcesdialog.cpp" line="238"/>
+        <location filename="../newresource/resourcedlg.cpp" line="94"/>
+        <location filename="../newresource/resourcedlg.cpp" line="239"/>
         <source>TiB</source>
         <translation>TB</translation>
     </message>
     <message>
-        <location filename="../newresource/newresourcesdialog.cpp" line="240"/>
+        <location filename="../newresource/resourcedlg.cpp" line="241"/>
         <source>TiB/s</source>
         <translation>TB/s</translation>
     </message>
@@ -1211,6 +1155,79 @@ Devam etmek istediğinizden emin misiniz?</translation>
     </message>
 </context>
 <context>
+    <name>ResouresDlg</name>
+    <message>
+        <location filename="../newresource/resourcedlg.cpp" line="276"/>
+        <source>CPU history</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../newresource/resourcedlg.cpp" line="281"/>
+        <source>100%</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../newresource/resourcedlg.cpp" line="283"/>
+        <source>75%</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../newresource/resourcedlg.cpp" line="285"/>
+        <source>50%</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../newresource/resourcedlg.cpp" line="287"/>
+        <source>25%</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../newresource/resourcedlg.cpp" line="289"/>
+        <source>0%</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../newresource/resourcedlg.cpp" line="345"/>
+        <source>memory and swap history</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../newresource/resourcedlg.cpp" line="421"/>
+        <source>net work history</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../newresource/resourcedlg.cpp" line="598"/>
+        <source>GiB</source>
+        <translation type="unfinished">GB</translation>
+    </message>
+    <message>
+        <location filename="../newresource/resourcedlg.cpp" line="704"/>
+        <source>CPU: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../newresource/resourcedlg.cpp" line="713"/>
+        <source>memory:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../newresource/resourcedlg.cpp" line="717"/>
+        <source>swap:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../newresource/resourcedlg.cpp" line="726"/>
+        <source>receive:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../newresource/resourcedlg.cpp" line="728"/>
+        <source>send:</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>ShredDialog</name>
     <message>
         <source>All Files(*)</source>
@@ -1239,23 +1256,23 @@ Devam etmek istediğinizden emin misiniz?</translation>
 <context>
     <name>USMAboutDialog</name>
     <message>
-        <location filename="../gui/usmaboutdialog.cpp" line="82"/>
-        <location filename="../gui/usmaboutdialog.cpp" line="110"/>
+        <location filename="../gui/usmaboutdialog.cpp" line="123"/>
+        <location filename="../gui/usmaboutdialog.cpp" line="149"/>
         <source>Kylin System Monitor</source>
         <translation type="unfinished">System Monitor</translation>
     </message>
     <message>
-        <location filename="../gui/usmaboutdialog.cpp" line="118"/>
+        <location filename="../gui/usmaboutdialog.cpp" line="154"/>
         <source>version: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gui/usmaboutdialog.cpp" line="126"/>
+        <location filename="../gui/usmaboutdialog.cpp" line="159"/>
         <source>System monitor is a desktop application that face desktop users of Kylin operating system,It meets the needs of users to monitor the system process, system resources and file system</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gui/usmaboutdialog.cpp" line="139"/>
+        <location filename="../gui/usmaboutdialog.cpp" line="171"/>
         <source>Service and support team:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1274,35 +1291,12 @@ Devam etmek istediğinizden emin misiniz?</translation>
 <context>
     <name>newaboutdialog</name>
     <message>
-        <location filename="../newaboutdialog.cpp" line="55"/>
-        <location filename="../newaboutdialog.cpp" line="97"/>
         <source>Kylin System Monitor</source>
-        <translation type="unfinished">System Monitor</translation>
+        <translation type="obsolete">System Monitor</translation>
     </message>
     <message>
-        <location filename="../newaboutdialog.cpp" line="107"/>
-        <source>close</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../newaboutdialog.cpp" line="135"/>
         <source>kylin system monitor</source>
-        <translation type="unfinished">System Monitor</translation>
-    </message>
-    <message>
-        <location filename="../newaboutdialog.cpp" line="156"/>
-        <source>version: </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../newaboutdialog.cpp" line="174"/>
-        <source>System monitor is a desktop application that face desktop users of Kylin operating system,It meets the needs of users to monitor the system process, system resources and file system</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../newaboutdialog.cpp" line="192"/>
-        <source>Service and support team:</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">System Monitor</translation>
     </message>
 </context>
 </TS>

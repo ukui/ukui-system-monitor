@@ -290,7 +290,7 @@ void SystemMonitor::initPanelStack()
     newProcessDialog = new ProcessTableView(proSettings);
     newProcessDialog->installEventFilter(this);
 
-    resources_dialog = new NewResouresDialog;
+    resources_dialog = new ResouresDlg;
 
     filesystemView = new FileSystemTableView(proSettings);
     filesystemView->installEventFilter(this);

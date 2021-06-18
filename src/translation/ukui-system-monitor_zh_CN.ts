@@ -1370,43 +1370,43 @@ Kylin Team &lt;ubuntukylin-members@list.launchpad.net&gt;</source>
     <name>NewResouresDialog</name>
     <message>
         <source>memory:</source>
-        <translation type="unfinished">内存:</translation>
+        <translation type="obsolete">内存:</translation>
     </message>
     <message>
         <source>swap:</source>
-        <translation type="unfinished">交换空间:</translation>
+        <translation type="obsolete">交换空间:</translation>
     </message>
     <message>
         <source>receive:</source>
-        <translation type="unfinished">接收:</translation>
+        <translation type="obsolete">接收:</translation>
     </message>
     <message>
         <source>send:</source>
-        <translation type="unfinished">发送:</translation>
+        <translation type="obsolete">发送:</translation>
     </message>
     <message>
         <source>CPU history</source>
-        <translation type="unfinished">处理器历史</translation>
+        <translation type="obsolete">处理器历史</translation>
     </message>
     <message>
         <source>CPU: </source>
-        <translation type="unfinished">处理器: </translation>
+        <translation type="obsolete">处理器: </translation>
     </message>
     <message>
         <source>memory and swap history</source>
-        <translation type="unfinished">内存和交换空间历史</translation>
+        <translation type="obsolete">内存和交换空间历史</translation>
     </message>
     <message>
         <source>net work history</source>
-        <translation type="unfinished">网络历史</translation>
+        <translation type="obsolete">网络历史</translation>
     </message>
     <message>
         <source>KiB</source>
-        <translation type="unfinished">KB</translation>
+        <translation type="obsolete">KB</translation>
     </message>
     <message>
         <source>GiB</source>
-        <translation type="unfinished">GB</translation>
+        <translation type="obsolete">GB</translation>
     </message>
 </context>
 <context>
@@ -2569,6 +2569,65 @@ Are you sure to continue?</source>
     </message>
 </context>
 <context>
+    <name>ResouresDlg</name>
+    <message>
+        <source>CPU history</source>
+        <translation type="unfinished">处理器历史</translation>
+    </message>
+    <message>
+        <source>100%</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>75%</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>50%</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>25%</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>0%</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>memory and swap history</source>
+        <translation type="unfinished">内存和交换空间历史</translation>
+    </message>
+    <message>
+        <source>net work history</source>
+        <translation type="unfinished">网络历史</translation>
+    </message>
+    <message>
+        <source>GiB</source>
+        <translation type="unfinished">GB</translation>
+    </message>
+    <message>
+        <source>CPU: </source>
+        <translation type="unfinished">处理器: </translation>
+    </message>
+    <message>
+        <source>memory:</source>
+        <translation type="unfinished">内存:</translation>
+    </message>
+    <message>
+        <source>swap:</source>
+        <translation type="unfinished">交换空间:</translation>
+    </message>
+    <message>
+        <source>receive:</source>
+        <translation type="unfinished">接收:</translation>
+    </message>
+    <message>
+        <source>send:</source>
+        <translation type="unfinished">发送:</translation>
+    </message>
+</context>
+<context>
     <name>SelectListWidget</name>
     <message>
         <source>Clean Items:</source>
@@ -2814,23 +2873,23 @@ Are you sure to continue?</source>
     <name>newaboutdialog</name>
     <message>
         <source>Kylin System Monitor</source>
-        <translation type="unfinished">系统监视器</translation>
+        <translation type="obsolete">系统监视器</translation>
     </message>
     <message>
         <source>close</source>
-        <translation type="unfinished">关闭</translation>
+        <translation type="obsolete">关闭</translation>
     </message>
     <message>
         <source>kylin system monitor</source>
-        <translation type="unfinished">系统监视器</translation>
+        <translation type="obsolete">系统监视器</translation>
     </message>
     <message>
         <source>version: </source>
-        <translation type="unfinished">版本号: </translation>
+        <translation type="obsolete">版本号: </translation>
     </message>
     <message>
         <source>System monitor is a desktop application that face desktop users of Kylin operating system,It meets the needs of users to monitor the system process, system resources and file system</source>
-        <translation type="unfinished">系统监视器是一款面向麒麟操作系统用户的应用，它满足用户对系统监视器，进程资源和文件系统监控的需求</translation>
+        <translation type="obsolete">系统监视器是一款面向麒麟操作系统用户的应用，它满足用户对系统监视器，进程资源和文件系统监控的需求</translation>
     </message>
     <message>
         <source>Service and support team: support@kylinos.cn</source>
@@ -2838,7 +2897,7 @@ Are you sure to continue?</source>
     </message>
     <message>
         <source>Service and support team:</source>
-        <translation>服务与支持团队:</translation>
+        <translation type="vanished">服务与支持团队:</translation>
     </message>
 </context>
 </TS>

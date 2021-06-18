@@ -32,7 +32,7 @@ NetWorkChart::NetWorkChart(QWidget *parent):QWidget(parent)
   ,m_downLoadColor(QColor("#42b1eb"))
   ,m_upLoadColor(QColor("#f1bf48"))
 {
-    this->setMinimumSize(660,90);
+    this->setMinimumSize(640,90);
     this->setSizePolicy(QSizePolicy::MinimumExpanding,QSizePolicy::MinimumExpanding);
     m_pointsCount = NETHIS_POINT_COUNT_MAX;
     m_downLoadList.clear();

@@ -113,7 +113,6 @@ private:
 
     // last widget size
     QSize m_lastSize;
-    bool m_isFirstResize;
 
     int m_focusReason = Qt::TabFocusReason;
 };

@@ -799,7 +799,7 @@ void MonitorTitleWidget::initWidgets()
 
     QWidget *bottomWidget = new QWidget;
     m_bottomLayout = new QHBoxLayout(bottomWidget);
-    m_bottomLayout->setContentsMargins(20, 0, 20, 0);
+    m_bottomLayout->setContentsMargins(24, 0, 20, 0);
     m_layout->addWidget(bottomWidget, 0, Qt::AlignTop);
 //    m_layout->setContentsMargins(0,0,0,0);
 

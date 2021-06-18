@@ -31,7 +31,7 @@ CpuHistoryChart::CpuHistoryChart(QWidget *parent):QWidget(parent)
   ,m_outsideBorderColor("transparent")
   ,m_cpuHistoryColor(QColor("#F64F61"))
 {
-    this->setMinimumSize(660,90);
+    this->setMinimumSize(640,90);
     this->setSizePolicy(QSizePolicy::MinimumExpanding,QSizePolicy::Expanding);
     m_pointsCount = CPUHIS_POINT_COUNT_MAX;
     m_CpuHistoryList.clear();
