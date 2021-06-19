@@ -1,3 +1,11 @@
+ukui-system-monitor (2.0.7-2) v101; urgency=medium
+
+  * BUG号：62236,分区编辑器进程图标显示异常
+  * 需求号：6491，资源界面：标题样式和间距未按照设计稿实现
+  * 其他改动说明：无
+
+ -- Yang Min <yangmin@kylinos.cn>  Sat, 19 Jun 2021 09:06:45 +0800
+
 ukui-system-monitor (2.0.7-1) v101; urgency=medium
 
   * bug号：60860 关于界面未按规范
