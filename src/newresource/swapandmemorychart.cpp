@@ -58,7 +58,7 @@ SwapAndMemoryChart::SwapAndMemoryChart(QWidget *parent):QWidget(parent)
   ,m_memoryColor(QColor("#cc72ff"))
   ,m_swapColor(QColor("#26c3a1"))
 {
-    this->setMinimumSize(660,90);
+    this->setMinimumSize(640,90);
     this->setSizePolicy(QSizePolicy::MinimumExpanding,QSizePolicy::Expanding);
     m_pointsCount = MEMHIS_POINT_COUNT_MAX;
     m_memoryDataList.clear();

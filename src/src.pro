@@ -105,7 +105,7 @@ HEADERS += \
     singleProcessNet/decpcap.h \
     smoothlinegenerator.h \
     newresource/sigcheck.h \
-    newresource/newresourcesdialog.h \
+    newresource/resourcedlg.h \
     newresource/cpuhistorychart.h \
     newresource/swapandmemorychart.h \
     newresource/networkchart.h \
@@ -157,7 +157,7 @@ SOURCES += \
  #   singleProcessNet/refreshthread.cpp \
     singleProcessNet/decpcap.c \
     smoothlinegenerator.cpp \
-    newresource/newresourcesdialog.cpp \
+    newresource/resourcedlg.cpp \
     newresource/sigcheck.cpp \
     newresource/cpuhistorychart.cpp \
     newresource/swapandmemorychart.cpp \
