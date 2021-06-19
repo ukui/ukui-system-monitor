@@ -755,6 +755,8 @@ void ResouresDlg::cpuHistoySetText(double value)
 
 void ResouresDlg::memoryandswapSetText(const QString &infoMemory, double percentMemory,const QString &infoSwap, double percentSwap)
 {
+    Q_UNUSED(percentMemory);
+    Q_UNUSED(percentSwap);
     QString showMemoryValue;
     showMemoryValue = infoMemory;
     QString sMemory = tr("memory:")+infoMemory;
@@ -767,6 +769,8 @@ void ResouresDlg::memoryandswapSetText(const QString &infoMemory, double percent
 
 void ResouresDlg::networkSetText(quint64 recvTotalBytes, quint64 sentTotalBytes, quint64 recvRateBytes, quint64 sentRateBytes)
 {
+    Q_UNUSED(recvTotalBytes);
+    Q_UNUSED(sentTotalBytes);
     const QString downloadRate = formatNetworkRate(recvRateBytes);
     const QString uploadRate = formatNetworkRate(sentRateBytes);
     QString showReceiveValue = downloadRate;

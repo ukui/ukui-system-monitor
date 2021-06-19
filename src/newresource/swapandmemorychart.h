@@ -29,6 +29,9 @@
 #include <glibtop/swap.h>
 #include <QPainterPath>
 #include "smoothlinegenerator.h"
+#include <QtCharts>
+
+QT_CHARTS_USE_NAMESPACE
 
 class SwapAndMemoryChart : public QWidget
 {
@@ -43,30 +46,31 @@ protected:
     void resizeEvent(QResizeEvent *event);
 
 private:
-    QColor m_outsideBorderColor;
     QColor m_memoryColor;
     QColor m_swapColor;
     QColor m_bgColor;
-
-    float m_memoryData;
-    float m_swapData;
 
     QList<float> m_memoryDataList;
     QList<float> m_swapDataList;
 
     int m_pointsCount;
-    int m_pointSpace;
-
-    int m_memoryMaxHeight;
-    int m_swapMaxHeight;
+#if 0
     QPainterPath m_memoryPath;
     QPainterPath m_swapPath;
-    int countWidth;
+#endif
 
-    QList<qreal> xList; //x数据链
-    QList<qreal> yDrawList; //y数据链
-    int showValue;
     qreal m_curMaxMemSpace = 1;
+
+    QChart *m_chart = nullptr;
+    QChartView *m_chartView = nullptr;
+    QLineSeries *m_upLineSeriesMem = nullptr;
+    QLineSeries *m_lowLineSeriesMem = nullptr;
+    QAreaSeries *m_areaSeriesMem = nullptr;
+    QLineSeries *m_upLineSeriesSwap = nullptr;
+    QLineSeries *m_lowLineSeriesSwap = nullptr;
+    QAreaSeries *m_areaSeriesSwap = nullptr;
+    QValueAxis *m_valueAxisX = nullptr;
+    QValueAxis *m_valueAxisY = nullptr;
 
 public slots:
     void onUpdateMemoryAndSwapData(float,double,float,double);

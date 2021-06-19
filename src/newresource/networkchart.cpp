@@ -24,11 +24,11 @@
 #include <QPainter>
 #include <QDebug>
 #include <QPainterPath>
+#include <QLinearGradient>
 
 #define NETHIS_POINT_COUNT_MAX      100
 
 NetWorkChart::NetWorkChart(QWidget *parent):QWidget(parent)
-  ,m_outsideBorderColor("transparent")
   ,m_downLoadColor(QColor("#42b1eb"))
   ,m_upLoadColor(QColor("#f1bf48"))
 {
@@ -39,6 +39,64 @@ NetWorkChart::NetWorkChart(QWidget *parent):QWidget(parent)
     m_upLoadList.clear();
     m_curMaxLoadSpeed = 20 * 1024;
     m_bgColor = (QColor("#131414"));
+
+    QHBoxLayout *chartLayout = new QHBoxLayout();
+    chartLayout->setMargin(0);
+    chartLayout->setSpacing(0);
+    chartLayout->setContentsMargins(0,0,0,0);
+    m_chart = new QChart();
+    m_chart->legend()->hide();
+    m_chart->setMargins(QMargins(-8,-8,-8,-8));
+    m_chartView = new QChartView(this);
+    m_chartView->setChart(m_chart);
+    m_chartView->setRenderHint(QPainter::Antialiasing);
+    m_chartView->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
+    m_chartView->setContentsMargins(0,0,0,0);
+    chartLayout->addWidget(m_chartView);
+    //dnload
+    m_upLineSeriesDnload = new QLineSeries(this);
+    m_lowLineSeriesDnload = new QLineSeries(this);
+    m_areaSeriesDnload = new QAreaSeries(this);
+    m_areaSeriesDnload->setPen(m_downLoadColor);
+    QLinearGradient linearGrad(QPointF(0, 0), QPointF(0, 100)); 
+    linearGrad.setColorAt(0, QColor("#A635D1CE"));
+    linearGrad.setColorAt(1, QColor("#A62AB1E8"));
+    m_areaSeriesDnload->setBrush(QBrush(linearGrad));
+    m_areaSeriesDnload->setUpperSeries(m_upLineSeriesDnload);
+    m_areaSeriesDnload->setLowerSeries(m_lowLineSeriesDnload);
+    m_chart->addSeries(m_areaSeriesDnload);
+    //upload
+    m_upLineSeriesUpload = new QLineSeries(this);
+    m_lowLineSeriesUpload = new QLineSeries(this);
+    m_areaSeriesUpload = new QAreaSeries(this);
+    m_areaSeriesUpload->setPen(m_upLoadColor);
+    linearGrad.setColorAt(0, QColor("#A6F2C54C"));
+    linearGrad.setColorAt(1, QColor("#A6F08A2C"));
+    m_areaSeriesUpload->setBrush(QBrush(linearGrad));
+    m_areaSeriesUpload->setUpperSeries(m_upLineSeriesUpload);
+    m_areaSeriesUpload->setLowerSeries(m_lowLineSeriesUpload);
+    m_chart->addSeries(m_areaSeriesUpload);
+
+    m_valueAxisX = new QValueAxis(this);
+    m_valueAxisY = new QValueAxis(this);
+    m_valueAxisX->setRange(0, 100.0);
+    m_valueAxisX->setVisible(false);
+    m_valueAxisX->setReverse();
+    m_valueAxisY->setRange(0, 100.0);
+    m_valueAxisY->setVisible(false);
+
+    m_chart->addAxis(m_valueAxisX, Qt::AlignBottom);
+    m_areaSeriesUpload->attachAxis(m_valueAxisX);
+    m_areaSeriesDnload->attachAxis(m_valueAxisX);
+    m_chart->addAxis(m_valueAxisY, Qt::AlignLeft);
+    m_areaSeriesUpload->attachAxis(m_valueAxisY);
+    m_areaSeriesDnload->attachAxis(m_valueAxisY);
+
+    m_chart->setBackgroundVisible(false);
+    setAttribute(Qt::WA_TranslucentBackground); 
+    m_chartView->setStyleSheet("background: transparent");
+
+    this->setLayout(chartLayout);
 }
 
 NetWorkChart::~NetWorkChart()
@@ -74,6 +132,7 @@ void NetWorkChart::paintEvent(QPaintEvent *event)
     painter.restore();
 
 // calculate download path
+#if 0
     qreal lfPointSpace = (qreal)width()/m_pointsCount;
     qreal lfPointYP = (qreal)height()/100;
     QList<QPointF> downloadPoints;
@@ -137,11 +196,14 @@ void NetWorkChart::paintEvent(QPaintEvent *event)
     painter.setPen(penUpload);
     painter.drawPath(m_upLoadPath);
     painter.restore();
+#endif
     QWidget::paintEvent(event);
 }
 
 void NetWorkChart::onUpdateDownloadAndUploadData(quint64 recvTotalBytes, quint64 sentTotalBytes, quint64 recvRateBytes, quint64 sentRateBytes)
 {
+    Q_UNUSED(recvTotalBytes);
+    Q_UNUSED(sentTotalBytes);
     quint64 lluMaxNetSpeed = 0;
     m_downLoadList.append(recvRateBytes);
     while (m_downLoadList.size() > m_pointsCount) {
@@ -193,6 +255,52 @@ void NetWorkChart::onUpdateDownloadAndUploadData(quint64 recvTotalBytes, quint64
         m_curMaxLoadSpeed = (quint64)2 * 1024 * 1024 * 1024;
     }
     emit this->speedToDynamicMax(m_curMaxLoadSpeed);
+
+    QList<QPointF> listUp;
+    QList<QPointF> listLow;
+    // upload
+    for (int n = 0; n < m_upLoadList.size(); n++) {
+        QPointF pointUp;
+        QPointF pointLow;
+        pointUp.setX(n);
+        pointUp.setY(m_upLoadList[m_upLoadList.size()-1-n]*100/m_curMaxLoadSpeed);
+        listUp.append(pointUp);
+        pointLow.setX(n);
+        pointLow.setY(0);
+        listLow.append(pointLow);
+    }
+
+    m_upLineSeriesUpload->clear();
+    m_upLineSeriesUpload->replace(listUp);
+
+    m_lowLineSeriesUpload->clear();
+    m_lowLineSeriesUpload->replace(listLow);
+
+    m_areaSeriesUpload->setUpperSeries(m_upLineSeriesUpload);
+    m_areaSeriesUpload->setLowerSeries(m_lowLineSeriesUpload);
+
+    // dnload
+    listUp.clear();
+    listLow.clear();
+    for (int n = 0; n < m_downLoadList.size(); n++) {
+        QPointF pointUp;
+        QPointF pointLow;
+        pointUp.setX(n);
+        pointUp.setY(m_downLoadList[m_downLoadList.size()-1-n]*100/m_curMaxLoadSpeed);
+        listUp.append(pointUp);
+        pointLow.setX(n);
+        pointLow.setY(0);
+        listLow.append(pointLow);
+    }
+
+    m_upLineSeriesDnload->clear();
+    m_upLineSeriesDnload->replace(listUp);
+
+    m_lowLineSeriesDnload->clear();
+    m_lowLineSeriesDnload->replace(listLow);
+
+    m_areaSeriesDnload->setUpperSeries(m_upLineSeriesDnload);
+    m_areaSeriesDnload->setLowerSeries(m_lowLineSeriesDnload);
 }
 
 void NetWorkChart::resizeEvent(QResizeEvent *event)

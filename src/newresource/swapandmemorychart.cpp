@@ -23,6 +23,7 @@
 #include <QPainter>
 #include <math.h>
 #include <QPainterPath>
+#include <QLinearGradient>
 
 inline double formatMemory(double size)
 {
@@ -54,7 +55,6 @@ inline double formatMemory(double size)
 #define MEMHIS_POINT_COUNT_MAX      100
 
 SwapAndMemoryChart::SwapAndMemoryChart(QWidget *parent):QWidget(parent)
-  ,m_outsideBorderColor("transparent")
   ,m_memoryColor(QColor("#cc72ff"))
   ,m_swapColor(QColor("#26c3a1"))
 {
@@ -64,6 +64,64 @@ SwapAndMemoryChart::SwapAndMemoryChart(QWidget *parent):QWidget(parent)
     m_memoryDataList.clear();
     m_swapDataList.clear();
     m_bgColor = (QColor("#131414"));
+
+    QHBoxLayout *chartLayout = new QHBoxLayout();
+    chartLayout->setMargin(0);
+    chartLayout->setSpacing(0);
+    chartLayout->setContentsMargins(0,0,0,0);
+    m_chart = new QChart();
+    m_chart->legend()->hide();
+    m_chart->setMargins(QMargins(-8,-8,-8,-8));
+    m_chartView = new QChartView(this);
+    m_chartView->setChart(m_chart);
+    m_chartView->setRenderHint(QPainter::Antialiasing);
+    m_chartView->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
+    m_chartView->setContentsMargins(0,0,0,0);
+    chartLayout->addWidget(m_chartView);
+    //Mem
+    m_upLineSeriesMem = new QLineSeries(this);
+    m_lowLineSeriesMem = new QLineSeries(this);
+    m_areaSeriesMem = new QAreaSeries(this);
+    m_areaSeriesMem->setPen(m_memoryColor);
+    QLinearGradient linearGrad(QPointF(0, 0), QPointF(0, 100)); 
+    linearGrad.setColorAt(0, QColor("#A6B472F2")); 
+    linearGrad.setColorAt(1, QColor("#A6DC72F7"));
+    m_areaSeriesMem->setBrush(QBrush(linearGrad));
+    m_areaSeriesMem->setUpperSeries(m_upLineSeriesMem);
+    m_areaSeriesMem->setLowerSeries(m_lowLineSeriesMem);
+    m_chart->addSeries(m_areaSeriesMem);
+    //Swap
+    m_upLineSeriesSwap = new QLineSeries(this);
+    m_lowLineSeriesSwap = new QLineSeries(this);
+    m_areaSeriesSwap = new QAreaSeries(this);
+    m_areaSeriesSwap->setPen(m_swapColor);
+    linearGrad.setColorAt(0, QColor("#A65BD564"));
+    linearGrad.setColorAt(1, QColor("#A626C3A1"));
+    m_areaSeriesSwap->setBrush(QBrush(linearGrad));
+    m_areaSeriesSwap->setUpperSeries(m_upLineSeriesSwap);
+    m_areaSeriesSwap->setLowerSeries(m_lowLineSeriesSwap);
+    m_chart->addSeries(m_areaSeriesSwap);
+
+    m_valueAxisX = new QValueAxis(this);
+    m_valueAxisY = new QValueAxis(this);
+    m_valueAxisX->setRange(0, 100.0);
+    m_valueAxisX->setVisible(false);
+    m_valueAxisX->setReverse();
+    m_valueAxisY->setRange(0, 100.0);
+    m_valueAxisY->setVisible(false);
+
+    m_chart->addAxis(m_valueAxisX, Qt::AlignBottom);
+    m_areaSeriesMem->attachAxis(m_valueAxisX);
+    m_areaSeriesSwap->attachAxis(m_valueAxisX);
+    m_chart->addAxis(m_valueAxisY, Qt::AlignLeft);
+    m_areaSeriesMem->attachAxis(m_valueAxisY);
+    m_areaSeriesSwap->attachAxis(m_valueAxisY);
+
+    m_chart->setBackgroundVisible(false);
+    setAttribute(Qt::WA_TranslucentBackground); 
+    m_chartView->setStyleSheet("background: transparent");
+
+    this->setLayout(chartLayout);
 }
 
 SwapAndMemoryChart::~SwapAndMemoryChart()
@@ -103,6 +161,52 @@ void SwapAndMemoryChart::refreshMemoryAndSwapData(float memoryUsed, double memor
     }
     m_curMaxMemSpace = getMemMaxSpace(m_curMaxMemSpace);
     emit this->spaceToDynamicMax(m_curMaxMemSpace);
+
+    QList<QPointF> listUp;
+    QList<QPointF> listLow;
+    // Mem
+    for (int n = 0; n < m_memoryDataList.size(); n++) {
+        QPointF pointUp;
+        QPointF pointLow;
+        pointUp.setX(n);
+        pointUp.setY(m_memoryDataList[m_memoryDataList.size()-1-n]*100/m_curMaxMemSpace);
+        listUp.append(pointUp);
+        pointLow.setX(n);
+        pointLow.setY(0);
+        listLow.append(pointLow);
+    }
+
+    m_upLineSeriesMem->clear();
+    m_upLineSeriesMem->replace(listUp);
+
+    m_lowLineSeriesMem->clear();
+    m_lowLineSeriesMem->replace(listLow);
+
+    m_areaSeriesMem->setUpperSeries(m_upLineSeriesMem);
+    m_areaSeriesMem->setLowerSeries(m_lowLineSeriesMem);
+
+    // Swap
+    listUp.clear();
+    listLow.clear();
+    for (int n = 0; n < m_swapDataList.size(); n++) {
+        QPointF pointUp;
+        QPointF pointLow;
+        pointUp.setX(n);
+        pointUp.setY(m_swapDataList[m_swapDataList.size()-1-n]*100/m_curMaxMemSpace);
+        listUp.append(pointUp);
+        pointLow.setX(n);
+        pointLow.setY(0);
+        listLow.append(pointLow);
+    }
+
+    m_upLineSeriesSwap->clear();
+    m_upLineSeriesSwap->replace(listUp);
+
+    m_lowLineSeriesSwap->clear();
+    m_lowLineSeriesSwap->replace(listLow);
+
+    m_areaSeriesSwap->setUpperSeries(m_upLineSeriesSwap);
+    m_areaSeriesSwap->setLowerSeries(m_lowLineSeriesSwap);
 }
 
 void SwapAndMemoryChart::setBgColor(QColor bgColor)
@@ -140,6 +244,7 @@ void SwapAndMemoryChart::paintEvent(QPaintEvent *event)
     painter.restore();
 
 // calculate memory path
+#if 0
     qreal lfPointSpace = (qreal)width()/m_pointsCount;
     qreal lfPointYP = (qreal)height()/100;
     QList<QPointF> memoryPoints;
@@ -202,5 +307,6 @@ void SwapAndMemoryChart::paintEvent(QPaintEvent *event)
     painter.setPen(penSwap);
     painter.drawPath(m_swapPath);//绘制前面创建的path:m_downloadPath
     painter.restore();
+#endif
     QWidget::paintEvent(event);
 }

@@ -24,6 +24,9 @@
 #include <QWidget>
 #include <QStyleOption>
 #include <QPainterPath>
+#include <QtCharts>
+
+QT_CHARTS_USE_NAMESPACE
 
 class NetWorkChart : public QWidget
 {
@@ -39,18 +42,29 @@ protected:
     void resizeEvent(QResizeEvent *event);
 
 private:
-    QColor m_outsideBorderColor;
     QColor m_downLoadColor;
     QColor m_upLoadColor;
-
+#if 0
     QPainterPath m_downLoadPath;
     QPainterPath m_upLoadPath;
+#endif
     int m_pointsCount;
     QColor m_bgColor;
     quint64 m_curMaxLoadSpeed;
 
     QList<quint64> m_downLoadList;
     QList<quint64> m_upLoadList;
+
+    QChart *m_chart = nullptr;
+    QChartView *m_chartView = nullptr;
+    QLineSeries *m_upLineSeriesUpload = nullptr;
+    QLineSeries *m_lowLineSeriesUpload = nullptr;
+    QAreaSeries *m_areaSeriesUpload = nullptr;
+    QLineSeries *m_upLineSeriesDnload = nullptr;
+    QLineSeries *m_lowLineSeriesDnload = nullptr;
+    QAreaSeries *m_areaSeriesDnload = nullptr;
+    QValueAxis *m_valueAxisX = nullptr;
+    QValueAxis *m_valueAxisY = nullptr;
 
 public slots:
     void onUpdateDownloadAndUploadData(quint64,quint64,quint64,quint64);
