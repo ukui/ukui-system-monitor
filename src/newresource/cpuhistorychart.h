@@ -25,6 +25,9 @@
 #include <QStyleOption>
 #include <QPainterPath>
 #include <QMap>
+#include <QtCharts>
+
+QT_CHARTS_USE_NAMESPACE
 
 class CpuHistoryChart : public QWidget
 {
@@ -39,22 +42,23 @@ public:
 protected:
     void paintEvent(QPaintEvent *event);
 
-private:   
-    QPointF point;
-    QColor m_outsideBorderColor;
+private:
     QColor m_cpuHistoryColor;
 
-    QPainterPath m_cpuHistoryPath;
     QList<double> m_CpuHistoryList;
-    QList<qreal> xList; //x数据链
-    QList<qreal> yDrawList; //y数据链
 
     int m_pointsCount;
     QColor m_bgColor;
     double m_Cpu;
     double m_cpuMaxHeight;
 
-    int showValue;
+    QChart *m_chart = nullptr;
+    QChartView *m_chartView = nullptr;
+    QLineSeries *m_upLineSeriesCpu = nullptr;
+    QLineSeries *m_lowLineSeriesCpu = nullptr;
+    QAreaSeries *m_areaSeriesCpu = nullptr;
+    QValueAxis *m_valueAxisX = nullptr;
+    QValueAxis *m_valueAxisY = nullptr;
 
 public slots:
     void onUpdateCpuPercent(double value);
