@@ -57,6 +57,19 @@ public:
      * @return Hint size
      */
     QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const override;
+
+    /**
+     * @brief helpEvent Function to handle help events
+     * @param e Help event
+     * @param view View that generated this help event
+     * @param option Style option
+     * @param index Current index
+     * @return Returns true if the delegate can handle the event; otherwise returns false.
+     */
+    bool helpEvent(QHelpEvent *e,
+                   QAbstractItemView *view,
+                   const QStyleOptionViewItem &option,
+                   const QModelIndex &index) override;
 };
 
 #endif  // __KITEMDELEGATE_H__
