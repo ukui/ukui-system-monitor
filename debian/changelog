@@ -1,3 +1,12 @@
+ukui-system-monitor (2.0.8) v101; urgency=medium
+
+  * BUG号：无
+  * 需求号：6486，英文环境下，表格中未显示完整的内容需用“...”显示，并支持tooltips显示完整内容
+  	    6490，资源界面：波形图的样式未按照设计稿实现
+  * 其他改动说明：根据最新界面更新用户手册
+
+ -- Yang Min <yangmin@kylinos.cn>  Mon, 21 Jun 2021 10:21:22 +0800
+
 ukui-system-monitor (2.0.7-2) v101; urgency=medium
 
   * BUG号：62236,分区编辑器进程图标显示异常
