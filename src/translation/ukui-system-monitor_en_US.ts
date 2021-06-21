@@ -232,7 +232,7 @@
     <message>
         <location filename="../model/processtablemodel.cpp" line="251"/>
         <source>Flownet Persec</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Netflow</translation>
     </message>
     <message>
         <location filename="../model/processtablemodel.cpp" line="254"/>
@@ -352,7 +352,7 @@
     <message>
         <location filename="../gui/processtableview.cpp" line="322"/>
         <source>Flownet Persec</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Netflow</translation>
     </message>
     <message>
         <location filename="../gui/processtableview.cpp" line="328"/>
