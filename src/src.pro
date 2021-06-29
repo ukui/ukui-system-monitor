@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT += core x11extras gui dbus network KWindowSystem charts
+QT += core x11extras gui dbus network KWindowSystem charts xml
 
 isEqual(QT_MAJOR_VERSION, 5) {
     QT += widgets gui svg x11extras
@@ -121,6 +121,7 @@ HEADERS += \
     process/process_list.h \
     process/process_monitor.h \
     process/process_network.h \
+    process/process_oplimit.h \
     model/processtablemodel.h \
     model/processsortfilterproxymodel.h \
     model/filesystemmodel.h \
@@ -173,6 +174,7 @@ SOURCES += \
     process/process_list.cpp \
     process/process_monitor.cpp \
     process/process_network.cpp \
+    process/process_oplimit.cpp \
     model/processtablemodel.cpp \
     model/processsortfilterproxymodel.cpp \
     model/filesystemmodel.cpp \

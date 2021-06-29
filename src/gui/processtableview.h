@@ -28,6 +28,7 @@
 #include "../widgets/myactiongroupitem.h"
 #include "../widgets/myaction.h"
 #include "../renicedialog.h"
+#include "process/process_oplimit.h"
 
 #include <QLabel>
 #include <QTreeView>
@@ -78,7 +79,6 @@ signals:
     void startScanProcess();
     void stopScanProcess();
     void changeColumnVisible(int index, bool visible, QList<bool> columnVisible);
-    void closeDialog();
 
 public Q_SLOTS:
     /**
@@ -113,6 +113,10 @@ public Q_SLOTS:
      * @brief show kill proc dialog
      */
     void showKillProcessDialog();
+    /**
+     * @brief show Optionlimit Warning Dialog
+     */
+    void showOpWarningDialog(QString strTitle);
     /**
      * @brief on end dialog btn clicked
      */
@@ -254,6 +258,8 @@ private:
     QString m_strFilter = "all";
     // change nice dialog
     ReniceDialog *m_dlgRenice = nullptr;
+    // check process permissions
+    ProcessOpLimit *m_procOpLimit = nullptr;
 };
 
 #endif  // __PROCESSTABLEVIEW_H__

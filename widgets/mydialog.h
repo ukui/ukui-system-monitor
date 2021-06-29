@@ -40,7 +40,12 @@ class MyDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit MyDialog(const QString &title, const QString& message, QWidget *parent = 0);
+    enum SIZE_MODEL{
+        LARGE,
+        MIDDLE,
+        SMALL
+    };
+    explicit MyDialog(const QString &title, const QString& message, QWidget *parent = 0, SIZE_MODEL sizeModel = MIDDLE);
     ~MyDialog();
 
     void updateSize();
@@ -98,6 +103,7 @@ private:
 
     QPoint dragPosition;
     bool mousePressed;
+    SIZE_MODEL m_sizeModel;
 };
 
 #endif // MYDIALOG_H

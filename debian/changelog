@@ -1,3 +1,11 @@
+ukui-system-monitor (2.0.8-1) v101; urgency=medium
+
+  * BUG号：63343，【系统监视器】安全中心设置程序防杀死，系统监视器杀死进程时应提示不允许的操作
+  * 需求号：无
+  * 其他改动说明：无
+
+ -- Yang Min <yangmin@kylinos.cn>  Tue, 29 Jun 2021 15:18:56 +0800
+
 ukui-system-monitor (2.0.8) v101; urgency=medium
 
   * BUG号：无

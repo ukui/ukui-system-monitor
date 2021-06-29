@@ -57,7 +57,7 @@ static void crashHandler(int sig)
 
         char logStr[BUFF_SIZE] = "0";
         sprintf(logStr,"!!!--- [%s]pid:%d received signal: %d=%s ---!!!\n version = %s, Stack trace\r\n", 
-            QDateTime::currentDateTime().toString().toStdString().c_str(),getpid(),sig,strsignal(sig), "2.0.6");
+            QDateTime::currentDateTime().toString().toStdString().c_str(),getpid(),sig,strsignal(sig), "2.0.8");
         fwrite(logStr,sizeof(char),sizeof(logStr),fp);
         for (i = 0; i < size; i++)
         {
@@ -129,7 +129,7 @@ int main(int argc, char *argv[])
     if(app.isRunning())
     {
         app.sendMessage(QApplication::arguments().length() > 1 ? QApplication::arguments().at(1) : app.applicationFilePath());
-        qDebug() << QObject::tr("ukui-system-monitor is already running!");
+        qInfo() << QObject::tr("ukui-system-monitor is already running!");
         return EXIT_SUCCESS;
     }
     else
