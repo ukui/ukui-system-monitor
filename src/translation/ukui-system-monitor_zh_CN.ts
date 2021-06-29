@@ -1803,6 +1803,14 @@ Are you sure to continue?</source>
         <source>Kill the selected process &quot;%1&quot;(PID:%2)?</source>
         <translation type="unfinished">杀死所选进程 &quot;%1&quot;(进程号:%2)?</translation>
     </message>
+    <message>
+        <source>Not allowed operation!</source>
+        <translation type="unfinished">不允许的操作</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation type="unfinished">确定</translation>
+    </message>
 </context>
 <context>
     <name>PropertiesDialog</name>

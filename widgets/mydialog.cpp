@@ -35,7 +35,7 @@
 #include <QPainter>
 #include <QPainterPath>
 
-MyDialog::MyDialog(const QString &title, const QString &message, QWidget *parent) :
+MyDialog::MyDialog(const QString &title, const QString &message, QWidget *parent, SIZE_MODEL sizeModel) :
     QDialog(parent)
     , m_titleWidth(0)
     , mousePressed(false)
@@ -46,10 +46,20 @@ MyDialog::MyDialog(const QString &title, const QString &message, QWidget *parent
     hints.decorations = MWM_DECOR_BORDER;
     XAtomHelper::getInstance()->setWindowMotifHint(this->winId(), hints);
     //this->setWindowFlags(this->windowFlags() | Qt::Tool | Qt::WindowCloseButtonHint);
+    m_sizeModel = sizeModel;
 
     this->setAttribute(Qt::WA_TranslucentBackground);
     this->setAttribute(Qt::WA_Resized, false);
-    this->setFixedSize(660, 240);
+    switch (m_sizeModel)
+    {
+    case LARGE:
+    case MIDDLE:
+        this->setFixedSize(660, 240);
+        break;
+    default:
+        this->setFixedSize(320, 160);
+        break;
+    }
 
     const QByteArray id(THEME_QT_SCHEMA);
     if(QGSettings::isSchemaInstalled(id))
@@ -61,32 +71,35 @@ MyDialog::MyDialog(const QString &title, const QString &message, QWidget *parent
 
     m_titleIcon = new QLabel;
     m_titleIcon->setPixmap(QIcon::fromTheme("ukui-system-monitor").pixmap(24,24));
-    m_titleIcon->setFixedWidth(30);
+    m_titleIcon->setFixedWidth(24);
 
     QHBoxLayout* titleLayout = new QHBoxLayout();
-    titleLayout->setContentsMargins(5, 5, 5, 0);
-    titleLayout->setSpacing(10);
+    titleLayout->setContentsMargins(8, 4, 4, 0);
+    titleLayout->setSpacing(8);
 
     m_topLayout = new QHBoxLayout;
-    m_topLayout->setContentsMargins(20, 14, 20, 14);
-    m_topLayout->setSpacing(20);
+    m_topLayout->setContentsMargins(20, 0, 20, 0);
 
     m_titleLabel = new QLabel;
     m_titleLabel->hide();
-    titleLayout->addWidget(m_titleIcon, 0, Qt::AlignLeft);
-    titleLayout->addWidget(m_titleLabel, 0, Qt::AlignLeft);
+    titleLayout->addWidget(m_titleIcon, 0, Qt::AlignLeft|Qt::AlignTop);
+    titleLayout->addWidget(m_titleLabel, 0, Qt::AlignLeft|Qt::AlignTop);
 
     m_messageLabel = new QLabel;
     m_messageLabel->hide();
     m_messageLabel->setAttribute(Qt::WA_TransparentForMouseEvents);
     m_messageLabel->setWordWrap(true);//QLabel自动换行
-    m_messageLabel->setFixedSize(620, 120);
 
-    QVBoxLayout *textLayout = new QVBoxLayout;
+    QHBoxLayout *textLayout = new QHBoxLayout;
     textLayout->setContentsMargins(0, 0, 0, 0);
-    textLayout->setSpacing(5);
+    textLayout->setSpacing(8);
+    if (m_sizeModel == SMALL) {
+        QLabel *msgIcon = new QLabel();
+        msgIcon->setPixmap(QIcon::fromTheme(QLatin1String("messagebox_warning")).pixmap(32));
+        textLayout->addWidget(msgIcon, 0, Qt::AlignLeft|Qt::AlignTop);
+    }
     textLayout->addWidget(m_messageLabel, 0, Qt::AlignLeft);
-    //textLayout->addStretch();
+    textLayout->addStretch();
 
     m_topLayout->addLayout(textLayout);
 
@@ -101,20 +114,28 @@ MyDialog::MyDialog(const QString &title, const QString &message, QWidget *parent
     closeButton->setAttribute(Qt::WA_NoMousePropagation);
     closeButton->setProperty("isWindowButton", 0x2);
     closeButton->setProperty("useIconHighlightEffect", 0x8);
-    closeButton->setFixedWidth(36);
+    closeButton->setFixedSize(30, 30);
     titleLayout->addWidget(closeButton, 0, Qt::AlignTop | Qt::AlignRight);
 
     m_buttonLayout = new QHBoxLayout;
     m_buttonLayout->setMargin(0);
     m_buttonLayout->setSpacing(0);
-    m_buttonLayout->setContentsMargins(20, 14, 20, 14);
+    if (m_sizeModel == SMALL) {
+        m_buttonLayout->setSpacing(24);
+        m_buttonLayout->addStretch(1);
+        m_buttonLayout->setContentsMargins(20, 14, 8, 10);
+    } else {
+        m_buttonLayout->setContentsMargins(20, 14, 20, 14);
+    }
 
     QVBoxLayout *mainLayout = new QVBoxLayout;
     mainLayout->setContentsMargins(0, 0, 0, 0);
-    mainLayout->setSpacing(10);
+    mainLayout->setSpacing(4);
 
     mainLayout->addLayout(titleLayout);
+    mainLayout->addStretch(1);
     mainLayout->addLayout(m_topLayout);
+    mainLayout->addStretch(1);
     mainLayout->addLayout(m_buttonLayout);
 
     QAction *button_action = new QAction(this);
@@ -182,8 +203,8 @@ void MyDialog::initThemeStyle()
 
 void MyDialog::onThemeFontChange(qreal lfFontSize)
 {
+    Q_UNUSED(lfFontSize);
     if (m_titleLabel && this->m_titleWidth > 0) {
-        qDebug()<<"width:"<<this->m_titleWidth;
         QString strTitle = getElidedText(m_titleLabel->font(), m_title, this->m_titleWidth-2);
         m_titleLabel->setText(strTitle);
         if (strTitle != m_title) {

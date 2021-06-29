@@ -76,6 +76,8 @@ ProcessTableView::ProcessTableView(QSettings* proSettings, QWidget *parent)
 
     // start process monitor thread
     ProcessMonitorThread::instance()->start();
+
+    m_procOpLimit = new ProcessOpLimit();
 }
 
 // destructor
@@ -83,6 +85,10 @@ ProcessTableView::~ProcessTableView()
 {    
     // start process monitor thread
     ProcessMonitorThread::instance()->stop();
+    if (m_procOpLimit) {
+        delete m_procOpLimit;
+        m_procOpLimit = nullptr;
+    }
 }
 
 void ProcessTableView::onWndClose()
@@ -526,11 +532,19 @@ void ProcessTableView::stopProcesses()
     pid_t selectPid = qvariant_cast<pid_t>(m_selectedPID);
 
     if (selectPid != currentPid) {
+        if (m_procOpLimit->isProtectedProc(
+            ProcessMonitor::instance()->processList()->getProcessById(selectPid).getProcArgments())) {
+            showOpWarningDialog(tr("Stop process"));
+            return;
+        }
         if (kill(selectPid, SIGSTOP) != 0) {
             //qDebug() << QString("Stop process %1 failed, permission denied.").arg(pid);
             QProcess process;
             process.execute(QString("pkexec %1 %2 %3 ").arg("kill").arg("-STOP").arg(selectPid));
         }
+    } else {
+        showOpWarningDialog(tr("Stop process"));
+        return;
     }
 }
 
@@ -556,6 +570,11 @@ void ProcessTableView::endProcesses()
         return ;
     }
     pid_t selectPid = qvariant_cast<pid_t>(m_selectedPID);
+    if (m_procOpLimit->isProtectedProc(
+        ProcessMonitor::instance()->processList()->getProcessById(selectPid).getProcArgments())) {
+        showOpWarningDialog(tr("End process"));
+        return;
+    }
     error = kill(selectPid, SIGTERM);
     if(error != -1)  {
         //qDebug() << "success.....";
@@ -589,6 +608,11 @@ void ProcessTableView::killProcesses()
         return ;
     }
     pid_t selectPid = qvariant_cast<pid_t>(m_selectedPID);
+    if (m_procOpLimit->isProtectedProc(
+        ProcessMonitor::instance()->processList()->getProcessById(selectPid).getProcArgments())) {
+        showOpWarningDialog(tr("Kill process"));
+        return;
+    }
     error = kill(selectPid, SIGTERM);
     if(error != -1)  {
         //qDebug() << "success.....";
@@ -650,6 +674,10 @@ void ProcessTableView::showEndProcessDialog()
     if (!info.isValid()) {
         return;
     }
+    if (m_procOpLimit->isProtectedProc(info.getProcArgments())) {
+        showOpWarningDialog(tr("End process"));
+        return;
+    }
     QString strProcName = info.getDisplayName().isEmpty()?info.getProcName():info.getDisplayName();
     strProcName = getMiddleElidedText(this->font(), strProcName, 200);
     MyDialog* endProcessDialog = new MyDialog(QString(tr("End the selected process \"%1\"(PID:%2)?")).arg(strProcName).arg(selectPid), 
@@ -659,7 +687,6 @@ void ProcessTableView::showEndProcessDialog()
     endProcessDialog->addButton(QString(tr("Cancel")), false);
     endProcessDialog->addButton(QString(tr("End process")), true);
     connect(endProcessDialog, &MyDialog::buttonClicked, this, &ProcessTableView::endDialogButtonClicked);
-    connect(this,&ProcessTableView::closeDialog,endProcessDialog,&MyDialog::onButtonClicked);
     endProcessDialog->setAttribute(Qt::WA_DeleteOnClose);
     endProcessDialog->setModal(true);
     endProcessDialog->show();
@@ -676,6 +703,10 @@ void ProcessTableView::showKillProcessDialog()
     if (!info.isValid()) {
         return;
     }
+    if (m_procOpLimit->isProtectedProc(info.getProcArgments())) {
+        showOpWarningDialog(tr("Kill process"));
+        return;
+    }
     QString strProcName = info.getDisplayName().isEmpty()?info.getProcName():info.getDisplayName();
     strProcName = getMiddleElidedText(this->font(), strProcName, 200);
     MyDialog* killProcessDialog = new MyDialog(QString(tr("Kill the selected process \"%1\"(PID:%2)?")).arg(strProcName).arg(selectPid), 
@@ -685,16 +716,23 @@ void ProcessTableView::showKillProcessDialog()
     killProcessDialog->addButton(QString(tr("Cancel")), false);
     killProcessDialog->addButton(QString(tr("Kill process")), true);
     connect(killProcessDialog, &MyDialog::buttonClicked, this, &ProcessTableView::killDialogButtonClicked);
-    connect(this,&ProcessTableView::closeDialog,killProcessDialog,&MyDialog::onButtonClicked);
     killProcessDialog->setAttribute(Qt::WA_DeleteOnClose);
     killProcessDialog->setModal(true);
     killProcessDialog->show();
 }
 
+void ProcessTableView::showOpWarningDialog(QString strTitle)
+{
+    MyDialog* opWarningDialog = new MyDialog(strTitle, tr("Not allowed operation!"), this, MyDialog::SIZE_MODEL::SMALL);
+    opWarningDialog->addButton(QString(tr("OK")), true);
+    opWarningDialog->setAttribute(Qt::WA_DeleteOnClose);
+    opWarningDialog->setModal(true);
+    opWarningDialog->show();
+}
+
 // on end dialog btn clicked
 void ProcessTableView::endDialogButtonClicked(int index, QString buttonText)
 {
-    emit closeDialog();
     if (index == 1) {//cancel:0   ok:1
         endProcesses();
     }
@@ -703,7 +741,6 @@ void ProcessTableView::endDialogButtonClicked(int index, QString buttonText)
 // on kill dialog btn clicked
 void ProcessTableView::killDialogButtonClicked(int index, QString buttonText)
 {
-    emit closeDialog();
     if (index == 1) {//cancel:0   ok:1
         killProcesses();
     }
