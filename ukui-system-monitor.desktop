@@ -2,11 +2,14 @@
 Name=System Monitor
 Name[zh_CN]=系统监视器
 Name[tr_TR]=Sistem İzleyici
+Name[bo_CN]=རྒྱུད་ཁོངས་སོ་ལྟ་ཆས།
 GenericName=System Monitor
 GenericName[zh_CN]=系统监视器
+GenericName[bo_CN]=རྒྱུད་ཁོངས་སོ་ལྟ་ཆས།
 Comment=System Monitor
 Comment[zh_CN]=系统监视器
 Comment[tr_TR]=Sistem İzleyici
+Comment[bo_CN]=རྒྱུད་ཁོངས་སོ་ལྟ་ཆས།
 Keywords=guide; 
 Exec=/usr/bin/ukui-system-monitor
 Icon=ukui-system-monitor
