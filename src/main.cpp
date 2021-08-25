@@ -140,9 +140,14 @@ int main(int argc, char *argv[])
         QString locale = QLocale::system().name();
         QTranslator translator;
         if(locale == "zh_CN" || locale == "es" || locale == "fr" || locale == "de" 
-            || locale == "ru" || locale == "en_US") {//中文 西班牙语 法语 德语 俄语 英语
+            || locale == "ru" || locale == "en_US" || locale == "bo_CN") {//中文 西班牙语 法语 德语 俄语 英语
+            #if 0
             if(!translator.load("ukui-system-monitor_" + locale + ".qm",
                                 ":/translation/"))
+            #else
+            if(!translator.load("ukui-system-monitor_" + locale + ".qm",
+                                "/usr/share/ukui-system-monitor/translations/"))
+            #endif
                 qDebug() << "Load translation file："<< "ukui-system-monitor_" + locale + ".qm" << " failed!";
             else
             {

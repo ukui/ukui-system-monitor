@@ -1,2 +1,3 @@
 data/kylin-system-monitor /usr/share/kylin-user-guide/data/guide
 data/png /usr/share/icons/hicolor/
+src/translation/*.qm /usr/share/ukui-system-monitor/translations/
