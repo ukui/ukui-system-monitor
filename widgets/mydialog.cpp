@@ -258,7 +258,7 @@ int MyDialog::addButton(const QString &text, bool isDefault)
     QAbstractButton *button = new QPushButton(text);
     button->setFocusPolicy(Qt::NoFocus);
     button->setAttribute(Qt::WA_NoMousePropagation);
-    button->setFixedSize(124, 36);
+    button->setFixedSize(156, 36);
 
     this->m_buttonLayout->insertWidget(index+1, button);
     this->buttonList << button;

@@ -586,13 +586,13 @@ void ProcessTableView::endProcesses()
 
             if (QFileInfo("/usr/bin/pkexec").exists()) {//sudo apt install policykit-1
                 QProcess process;
-                process.execute(QString("pkexec --disable-internal-agent %1 %2 %3").arg("kill").arg(SIGTERM).arg(selectPid));
+                process.execute(QString("pkexec --disable-internal-agent %1 -%2 %3").arg("kill").arg(SIGTERM).arg(selectPid));
             } else if (QFileInfo("/usr/bin/gksudo").exists()) {//sudo apt install gksu
                 QProcess process;
-                process.execute(QString("gksudo \"%1 %2 %3\"").arg("kill").arg(SIGTERM).arg(selectPid));
+                process.execute(QString("gksudo \"%1 -%2 %3\"").arg("kill").arg(SIGTERM).arg(selectPid));
             } else if (QFileInfo("/usr/bin/gksu").exists()) {//sudo apt install gksu
                 QProcess process;
-                process.execute(QString("gksu \"%1 %2 %3\"").arg("kill").arg(SIGTERM).arg(selectPid));
+                process.execute(QString("gksu \"%1 -%2 %3\"").arg("kill").arg(SIGTERM).arg(selectPid));
             } else {
                 qWarning() << "Failed to choose a tool to end process " << selectPid;
             }
@@ -613,7 +613,7 @@ void ProcessTableView::killProcesses()
         showOpWarningDialog(tr("Kill process"));
         return;
     }
-    error = kill(selectPid, SIGTERM);
+    error = kill(selectPid, SIGKILL);
     if(error != -1)  {
         //qDebug() << "success.....";
     }
@@ -624,13 +624,13 @@ void ProcessTableView::killProcesses()
 
             if (QFileInfo("/usr/bin/pkexec").exists()) {//sudo apt install policykit-1
                 QProcess process;
-                process.execute(QString("pkexec --disable-internal-agent %1 %2 %3").arg("kill").arg(SIGTERM).arg(selectPid));
+                process.execute(QString("pkexec --disable-internal-agent %1 -%2 %3").arg("kill").arg(SIGKILL).arg(selectPid));
             } else if (QFileInfo("/usr/bin/gksudo").exists()) {//sudo apt install gksu
                 QProcess process;
-                process.execute(QString("gksudo \"%1 %2 %3\"").arg("kill").arg(SIGTERM).arg(selectPid));
+                process.execute(QString("gksudo \"%1 -%2 %3\"").arg("kill").arg(SIGKILL).arg(selectPid));
             } else if (QFileInfo("/usr/bin/gksu").exists()) {//sudo apt install gksu
                 QProcess process;
-                process.execute(QString("gksu \"%1 %2 %3\"").arg("kill").arg(SIGTERM).arg(selectPid));
+                process.execute(QString("gksu \"%1 -%2 %3\"").arg("kill").arg(SIGKILL).arg(selectPid));
             } else {
                 qWarning() << "Failed to choose a tool to end process " << selectPid;
             }

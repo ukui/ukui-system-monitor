@@ -475,6 +475,19 @@ void Process::setPreFlownetCount(qint64 nCount)
     }
 }
 
+unsigned Process::getProcThreads() const
+{
+    return d->m_uThreads;
+}
+
+void Process::setProcThreads(unsigned uThreads)
+{
+    if (d) {
+        uThreads = uThreads == 0 ? 1 : uThreads;
+        d->m_uThreads = uThreads;
+    }
+}
+
 QString Process::calcDiskIoPerSec(qint64 nNewCount)
 {
     qint64 bandwith = nNewCount - getPreDiskIoCount();
@@ -632,6 +645,93 @@ void Process::get_process_systemd_info()
     }
 }
 
+bool Process::getProcStat()
+{
+    bool b = false;
+    char path[256];
+    QScopedArrayPointer<char> buf(new char[1025] {});
+    int fd, rc;
+    ssize_t sz;
+    char *pos, *begin;
+
+    errno = 0;
+    sprintf(path, "/proc/%d/stat", pid());
+    // open /proc/[pid]/stat
+    if ((fd = open(path, O_RDONLY)) < 0) {
+        return b;
+    }
+
+    // read data
+    sz = read(fd, buf.data(), 1024);
+    if (sz < 0) {
+        close(fd);
+        return b;
+    }
+    buf.data()[sz] = '\0';
+    close(fd);
+
+    // get process name between (...)
+    begin = strchr(buf.data(), '(');
+    begin += 1;
+
+    pos = strrchr(buf.data(), ')');
+    if (!pos) {
+        return b;
+    }
+
+    *pos = '\0';
+    // process name (may be truncated by kernel if it's too long)
+    // setProcName(QString(begin));
+
+    pos += 2;
+    char state;                   // process state
+    pid_t ppid;                   // parent process
+    pid_t pgid;                   // process group id
+    unsigned long long utime;     // user time
+    unsigned long long stime;     // kernel time
+    long long cutime;             // user time on waiting children
+    long long cstime;             // kernel time on waiting children
+    unsigned long long start_time;  // start time since system boot in clock ticks
+    unsigned int processor;         // cpu number
+    unsigned int rt_prio;           // real time priority
+    unsigned int policy;            // scheduling policy
+    unsigned int nthreads;          // number of threads
+    int nice;                   // process nice
+    unsigned long long guest_time;  // guest time (virtual cpu time for guest os)
+    long long cguest_time;          // children guest time in clock ticks
+
+    //****************3**4**5*******************************************14***15**
+    rc = sscanf(pos, "%c %d %d %*d %*d %*d %*u %*u %*u %*u %*u %llu %llu"
+                //*16***17******19*20******22************************************
+                " %lld %lld %*d %d %u %*u %llu %*u %*u %*u %*u %*u %*u %*u %*u"
+                //********************************39*40*41******43***44**********
+                " %*u %*u %*u %*u %*u %*u %*u %*u %u %u %u %*u %llu %lld\n",
+                &state,           // 3
+                &ppid,            // 4
+                &pgid,            // 5
+                &utime,           // 14
+                &stime,           // 15
+                &cutime,          // 16
+                &cstime,          // 17
+                &nice,            // 19
+                &nthreads,        // 20
+                &start_time,      // 22
+                &processor,       // 39
+                &rt_prio,         // 40
+                &policy,          // 41
+                &guest_time,      // 43
+                &cguest_time);    // 44
+    if (rc < 15) {
+        return b;
+    }
+    // have guest & cguest time
+    if (rc < 17) {
+        guest_time = cguest_time = 0;
+    }
+    setProcThreads(nthreads);
+    return true;
+}
+
 void Process::UpdateProcInfo()
 {
     //    glibtop_proc_io procio;
@@ -671,6 +771,7 @@ void Process::UpdateProcInfo()
 //    info->cgroup_name = NULL;
 //    get_process_cgroup_info(info);
     get_process_systemd_info();
+    getProcStat();
 }
 
 ProcessList::ProcessList(QObject* parent)
@@ -887,8 +988,11 @@ void ProcessList::scanProcess()
         if (difference > 0)
             proc.setStatus(GLIBTOP_PROCESS_RUNNING);
         guint cpu_scale = 100 * this->num_cpus;
-        double sPcpu = (gdouble)difference * cpu_scale / this->cpu_total_time;
+        double sPcpu = (double)difference * cpu_scale / this->cpu_total_time;
         sPcpu = MIN(sPcpu, cpu_scale);
+        if (proc.getProcThreads() > 0) {
+            sPcpu = MIN(sPcpu, proc.getProcThreads()*100);
+        }
         proc.setCpuPercent(sPcpu);
 
 //        CPU 百分比使用 Solaris 模式，工作在“Solaris 模式”，其中任务的 CPU 使用量将被除以总的 CPU 数目。否则它将工作在“Irix 模式”。

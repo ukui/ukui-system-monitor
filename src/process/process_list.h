@@ -163,6 +163,9 @@ public:
     qint64 getPreFlownetCount() const;
     void setPreFlownetCount(qint64 nCount);
 
+    unsigned getProcThreads() const;
+    void setProcThreads(unsigned uThreads);
+
     void updateProcUser(unsigned uUid);
 
     void UpdateProcInfo();
@@ -172,6 +175,7 @@ public:
 private:
     void get_process_name(const gchar *cmd, const GStrv args);
     void get_process_systemd_info();
+    bool getProcStat();
 
 private:
     QSharedDataPointer<ProcessData> d;

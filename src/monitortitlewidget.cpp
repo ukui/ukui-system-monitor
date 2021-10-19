@@ -80,7 +80,7 @@ MonitorTitleWidget::MonitorTitleWidget(QSettings *settings, QWidget *parent)
     }
     
     m_changeBox = new QComboBox();
-    m_changeBox->setFixedSize(NORMALWIDTH+20,NORMALHEIGHT);
+    m_changeBox->setFixedSize(NORMALWIDTH+75,NORMALHEIGHT);
     m_changeBox->addItem(tr("Active Processes"));
     m_changeBox->addItem(tr("My Processes"));
     m_changeBox->addItem(tr("All Process"));
@@ -139,6 +139,8 @@ void MonitorTitleWidget::getTransparentData()
 
 void MonitorTitleWidget::initThemeMode()
 {
+    if (!qtSettings)
+        return ;
     //监听主题改变
     connect(qtSettings, &QGSettings::changed, this, [=](const QString &key)
     {
@@ -686,8 +688,9 @@ void MonitorTitleWidget::onThemeFontChange(unsigned uFontSize)
     }
     if (m_processButton) {
         QString strContent = tr("Processes");
+        m_processButton->setFixedSize(NORMALWIDTH, nEditHeight);
         if (!strContent.isEmpty()) {
-            QString ShowValue = getElidedText(m_processButton->font(), strContent, m_processButton->width()-4);
+            QString ShowValue = getElidedText(m_processButton->font(), strContent, m_processButton->width()-32);
             m_processButton->setText(ShowValue);
             if (ShowValue != strContent) {
                 m_processButton->setToolTip(strContent);
@@ -695,12 +698,12 @@ void MonitorTitleWidget::onThemeFontChange(unsigned uFontSize)
                 m_processButton->setToolTip("");
             }
         }
-        m_processButton->setFixedSize(NORMALWIDTH, nEditHeight);
     }
     if (m_resourceButton) {
         QString strContent = tr("Resources");
+        m_resourceButton->setFixedSize(NORMALWIDTH, nEditHeight);
         if (!strContent.isEmpty()) {
-            QString ShowValue = getElidedText(m_resourceButton->font(), strContent, m_resourceButton->width()-4);
+            QString ShowValue = getElidedText(m_resourceButton->font(), strContent, m_resourceButton->width()-32);
             m_resourceButton->setText(ShowValue);
             if (ShowValue != strContent) {
                 m_resourceButton->setToolTip(strContent);
@@ -708,12 +711,12 @@ void MonitorTitleWidget::onThemeFontChange(unsigned uFontSize)
                 m_resourceButton->setToolTip("");
             }
         }
-        m_resourceButton->setFixedSize(NORMALWIDTH, nEditHeight);
     }
     if (m_filesystemButton) {
         QString strContent = tr("File Systems");
+        m_filesystemButton->setFixedSize(NORMALWIDTH, nEditHeight);
         if (!strContent.isEmpty()) {
-            QString ShowValue = getElidedText(m_filesystemButton->font(), strContent, m_filesystemButton->width()-4);
+            QString ShowValue = getElidedText(m_filesystemButton->font(), strContent, m_filesystemButton->width()-32);
             m_filesystemButton->setText(ShowValue);
             if (ShowValue != strContent) {
                 m_filesystemButton->setToolTip(strContent);
@@ -721,7 +724,6 @@ void MonitorTitleWidget::onThemeFontChange(unsigned uFontSize)
                 m_filesystemButton->setToolTip("");
             }
         }
-        m_filesystemButton->setFixedSize(NORMALWIDTH, nEditHeight);
     }
     if (m_changeBox) {
         m_changeBox->setFixedHeight(nEditHeight);

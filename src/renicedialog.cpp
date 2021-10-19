@@ -70,6 +70,7 @@ ReniceDialog::ReniceDialog(const QString &procName, const QString &procId, QWidg
     closeButton->setIcon(QIcon::fromTheme("window-close-symbolic"));
     closeButton->setProperty("isWindowButton", 0x2);
     closeButton->setProperty("useIconHighlightEffect", 0x8);
+    closeButton->setFixedSize(30, 30);
 
     QHBoxLayout *title_H_BoxLayout = new QHBoxLayout();
     title_H_BoxLayout->setContentsMargins(5,5,5,0);
@@ -312,7 +313,7 @@ void ReniceDialog::onThemeFontChange(qreal lfFontSize)
     }
     if (m_cancelbtn) {
         QString strOrigCancel = tr("Cancel");
-        QString strCancel = getElidedText(m_cancelbtn->font(), strOrigCancel, m_cancelbtn->width()-4);
+        QString strCancel = getElidedText(m_cancelbtn->font(), strOrigCancel, m_cancelbtn->width()-32);
         m_cancelbtn->setText(strCancel);
         if (strCancel != strOrigCancel) {
             m_cancelbtn->setToolTip(strOrigCancel);
@@ -322,7 +323,7 @@ void ReniceDialog::onThemeFontChange(qreal lfFontSize)
     }
     if (m_changeBtn) {
         QString strOrigChange = tr("Change Priority");
-        QString strChange = getElidedText(m_changeBtn->font(), strOrigChange, m_changeBtn->width()-4);
+        QString strChange = getElidedText(m_changeBtn->font(), strOrigChange, m_changeBtn->width()-32);
         m_changeBtn->setText(strChange);
         if (strChange != strOrigChange) {
             m_changeBtn->setToolTip(strOrigChange);
@@ -332,7 +333,7 @@ void ReniceDialog::onThemeFontChange(qreal lfFontSize)
     }
     if (m_titleLabel) {
         QString strOrigNice = tr("Nice value:");
-        QString strNice = getElidedText(m_titleLabel->font(), strOrigNice, m_titleLabel->width()-4);
+        QString strNice = getElidedText(m_titleLabel->font(), strOrigNice, m_titleLabel->width()-32);
         m_titleLabel->setText(strNice);
         if (strNice != strOrigNice) {
             m_titleLabel->setToolTip(strOrigNice);

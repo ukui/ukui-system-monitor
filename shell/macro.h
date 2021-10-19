@@ -54,9 +54,9 @@
  */
 #define NORMALHEIGHT 34
 #define SPECIALWIDTH 200
-#define NORMALWIDTH 115
-#define MAINWINDOWHEIGHT 650
-#define MAINWINDOWWIDTH 760
+#define NORMALWIDTH 130
+#define MAINWINDOWHEIGHT 680
+#define MAINWINDOWWIDTH 860
 #define SEARCHBUTTON 16
 #define DEFAULT_FONT_SIZE 11
 
@@ -75,7 +75,7 @@
 #define diskpadding 80
 #define cpupadding 80
 #define idpadding 80
-#define networkpadding 80
+#define networkpadding 120
 #define memorypadding 100
 #define prioritypadding 100
 #define direciconposition 100

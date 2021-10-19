@@ -74,6 +74,7 @@ public:
         , m_frequency(1)
         , m_preDiskIoCount(0)
         , m_preFlownetCount(0)
+        , m_uThreads(1)
     {     
     }
     ProcessData(const ProcessData &other)
@@ -108,6 +109,7 @@ public:
         , m_frequency(other.m_frequency)
         , m_preDiskIoCount(other.m_preDiskIoCount)
         , m_preFlownetCount(other.m_preFlownetCount)
+        , m_uThreads(1)
     {
     }
     ~ProcessData() {}
@@ -152,6 +154,7 @@ private:
     QDateTime m_preFlownetTime;
     qint64 m_preDiskIoCount;
     qint64 m_preFlownetCount;
+    unsigned int m_uThreads;
 
     friend class Process;
 };

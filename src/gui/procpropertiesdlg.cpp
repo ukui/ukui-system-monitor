@@ -106,6 +106,7 @@ ProcPropertiesDlg::ProcPropertiesDlg(pid_t processId, QWidget *parent) : QDialog
     });
     closeButton->setProperty("isWindowButton", 0x2);
     closeButton->setProperty("useIconHighlightEffect", 0x8);
+    closeButton->setFixedSize(30, 30);
 
     m_iconLabel = new QLabel();
     m_iconLabel->setFixedSize(48, 48);

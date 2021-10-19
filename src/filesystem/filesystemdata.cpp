@@ -117,4 +117,6 @@ void FileSystemData::updateDiskInfo(QString mountDir, QString diskType, QString 
     m_lfFreeCapcity = lfFreeCapcity;
     m_lfAvalidCapcity = lfAvalidCapcity;
     m_lfUsedCapcity = lfUsedCapcity;
+    qInfo()<<"<<"<<mountDir<<","<<totalCapacity<<","<<freeCapacity<<","<<availCapacity<<","<<usedCapactiy<<","
+        <<QString::number(lfTotalCapcity)<<","<<lfFreeCapcity<<","<<lfAvalidCapcity<<","<<lfUsedCapcity;
 }

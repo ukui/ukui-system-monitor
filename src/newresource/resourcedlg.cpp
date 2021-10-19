@@ -702,7 +702,7 @@ void ResouresDlg::onThemeFontChange(float fFontSize)
     m_netrecvUnitDataLabel->setFont(fontContext);
     m_netsentUnitDataLabel->setFont(fontContext);
 
-    /*QString strMemInfo = getElidedText(m_memoryUnitDataLabel->font(), m_strCurMemInfo, m_memoryUnitDataLabel->width()-4);
+    /*QString strMemInfo = getElidedText(m_memoryUnitDataLabel->font(), m_strCurMemInfo, m_memoryUnitDataLabel->width()-32);
     m_memoryUnitDataLabel->setText(strMemInfo);
     if (strMemInfo != m_strCurMemInfo) {
         m_memoryUnitDataLabel->setToolTip(m_strCurMemInfo);

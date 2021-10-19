@@ -138,6 +138,11 @@ void ProcessTableModel::updateProcessListDelay()
             QIcon icon;
             if (!strIconPath.isEmpty()) {
                 if (strIconPath.contains("/")) {
+                    if (m_procIconMap.contains(strIconPath)) {
+                        m_processList[row].setIconPath(strIconPath);
+                        Q_EMIT dataChanged(index(row, 0), index(row, columnCount() - 1));
+                        continue;
+                    }
                     QFileInfo fileInfo(strIconPath);
                     if (fileInfo.exists()) {
                         icon = QIcon(strIconPath);
@@ -172,6 +177,11 @@ void ProcessTableModel::updateProcessListDelay()
             QIcon icon;
             if (!strIconPath.isEmpty()) {
                 if (strIconPath.contains("/")) {
+                    if (m_procIconMap.contains(strIconPath)) {
+                        m_processList[row].setIconPath(strIconPath);
+                        endInsertRows();
+                        continue;
+                    }
                     QFileInfo fileInfo(strIconPath);
                     if (fileInfo.exists()) {
                         icon = QIcon(strIconPath);
